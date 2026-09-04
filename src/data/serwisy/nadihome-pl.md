@@ -2,7 +2,7 @@
 nazwa: nadihome.pl
 adres: https://nadihome.pl/
 obrazek: ../../assets/serwisy/nadihome.jpg
-alt: Wnętrze nowoczesnego apartamentu — zdjęcie główne serwisu nadihome.pl
+alt: Dłonie przykładające czerwoną poziomicę do świeżo ułożonych białych płytek
 kolejnosc: 10
 ukryty: false
 ---

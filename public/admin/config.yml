@@ -1,0 +1,155 @@
+# config.yml — panel treści Sveltia CMS dla ecopowerpolska.pl
+#
+# 🔴 TEN PLIK JEST LUSTREM src/content.config.ts. Nazwy pól identyczne, typy zgodne.
+#    Rozjazd nie wychodzi w panelu — wychodzi czerwonym buildem w Actions, już PO
+#    zapisaniu wpisu przez klienta (potwor-cms-strony §D2).
+#
+# ⚠️ NIEURUCHOMIONE. Składnia widgetów pochodzi z dokumentacji Decapa (Sveltia ją honoruje),
+#    nie z naszego przebiegu. To pierwszy panel w tym warsztacie — pierwsze logowanie
+#    i pierwszy zapis są POMIAREM konfiguracji, nie formalnością.
+#
+# 🔴 `repo` niżej zakłada repozytorium `ecopowerpolska/ecopowerpolska.github.io`
+#    (witryna użytkownika, bez `base`). Jeśli Piotr wybierze inną nazwę repozytorium,
+#    trzeba poprawić TĘ linię i `site`/`base` w astro.config.mjs.
+
+backend:
+  name: github
+  repo: ecopowerpolska/ecopowerpolska.github.io
+  branch: main
+  # Logowanie: „Sign In with Token" — token GitHuba wklejany w ekranie logowania,
+  # trzymany w magazynie przeglądarki. 🔴 Token jest SEKRETEM: nie trafia do repo,
+  # do tego pliku ani do rozmowy (kontrakt warsztatu §4.4).
+  # Gdy klient ma logować się bez tokenu — `sveltia-cms-auth` na Cloudflare Workers
+  # i pole `base_url` wskazujące Workera (potwor-cms-strony §C2). Nie jest wdrożone.
+
+# Ścieżki mediów: obrazki kafelków MUSZĄ trafiać do src/assets/, nie do public/ —
+# tylko wtedy <Image> Astro je optymalizuje (obraz w public/ traci optymalizację).
+media_folder: "src/assets/serwisy"
+public_folder: "src/assets/serwisy"
+
+publish_mode: simple
+
+collections:
+  # ── KAFELKI ─────────────────────────────────────────────────────────────────
+  # Dołożenie serwisu = jeden wpis tutaj. Żadnej zmiany kodu.
+  - name: serwisy
+    label: "Serwisy (kafelki)"
+    label_singular: "Serwis"
+    description: >-
+      Jeden wpis = jeden kafelek na stronie głównej. Kliknięcie kafelka przenosi
+      pod adres docelowy. Kolejność ustala pole „Kolejność" (rosnąco).
+    folder: "src/data/serwisy"
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: nazwa
+    slug: "{{slug}}"
+    summary: "{{nazwa}} — {{adres}}"
+    sortable_fields: [kolejnosc, nazwa]
+    # Ścieżki WZGLĘDNE wobec pliku wpisu — dzięki temu we frontmatterze ląduje
+    # `../../assets/serwisy/plik.png`, a tego właśnie oczekuje helper image()
+    # ze schematu kolekcji Astro.
+    media_folder: "../../assets/serwisy"
+    public_folder: "../../assets/serwisy"
+    fields:
+      - name: nazwa
+        label: "Nazwa serwisu"
+        widget: string
+        required: true
+        hint: "Napis na kafelku, np. nadihome.pl"
+
+      - name: adres
+        label: "Adres docelowy"
+        widget: string
+        required: true
+        hint: "Pełny adres z https:// — tam prowadzi kliknięcie kafelka."
+        # Wzorzec musi być RÓWNIE OSTRY co schemat Zod (z.string().url()), inaczej panel
+        # przepuści adres, który zatrzyma build w Actions — już PO zapisie klienta.
+        # `[^\s]` odcina spacje w środku, na których luźne `.+` by przeszło.
+        pattern:
+          - "^https?://[^\\s]+\\.[^\\s]+$"
+          - "Adres musi zaczynać się od http:// albo https:// i nie może zawierać spacji"
+
+      - name: opis
+        label: "Krótki podpis (opcjonalnie)"
+        widget: string
+        required: false
+        # Limit 160 znaków egzekwuje schemat Zod przy buildzie. Bez tego wzorca panel
+        # przyjąłby dłuższy podpis, a strona przestałaby się budować po zapisie klienta.
+        pattern:
+          - "^.{0,160}$"
+          - "Podpis może mieć najwyżej 160 znaków"
+        hint: "Do 160 znaków. Puste pole jest w porządku — kafelek pokaże samą nazwę."
+
+      - name: obrazek
+        label: "Obrazek kafelka"
+        widget: image
+        required: false
+        hint: >-
+          Proporcje 16:9, zalecana szerokość co najmniej 720 px. Bez obrazka kafelek
+          pokazuje czytelny placeholder z inicjałami.
+
+      - name: alt
+        label: "Opis obrazka dla czytnika ekranu"
+        widget: string
+        required: false
+        hint: >-
+          ⚠️ WYMAGANY, GDY DODAJESZ OBRAZEK — bez niego strona nie zbuduje się po zapisie.
+          Opisz, co widać, np. „Wnętrze salonu Nadi Home".
+        # 🔴 ZNANE OGRANICZENIE PANELU, świadomie zostawione. Schemat kolekcji wymaga `alt`
+        # WARUNKOWO — tylko gdy wpis ma obrazek (reguła `.refine()` w content.config.ts).
+        # Decap ani Sveltia nie umieją wyrazić „wymagane zależnie od innego pola": `required`
+        # jest u nich stałe. Wybór stoi między:
+        #   (a) required: false — redaktor może dodać obrazek bez altu i zatrzymać build (TO WYBRANE),
+        #   (b) required: true  — alt trzeba wpisać ZAWSZE, także dla kafelka bez obrazka.
+        # Wybrano (a), bo (b) zmusza do wypełniania pola, które przy braku obrazka do niczego
+        # nie służy, a puste alty „na odczep" są gorsze niż zatrzymany build: build da się
+        # naprawić, a bezużyteczny alt zostaje na stronie i psuje ją dla czytnika ekranu.
+        # Siatką bezpieczeństwa jest build w Actions, nie panel. Do przemyślenia po pierwszym
+        # realnym zapisie klienta (docs/PIERWSZY-PRZEBIEG.md, sekcja 9).
+
+      - name: kolejnosc
+        label: "Kolejność"
+        widget: number
+        value_type: int
+        default: 100
+        required: true
+        hint: "Rosnąco: mniejsza liczba = wcześniejszy kafelek."
+
+      - name: ukryty
+        label: "Ukryty (zostaje w panelu, znika ze strony)"
+        widget: boolean
+        default: false
+        required: false
+
+  # ── DANE REJESTROWE W STOPCE ────────────────────────────────────────────────
+  - name: ustawienia
+    label: "Ustawienia"
+    files:
+      - name: firma
+        label: "Dane rejestrowe (stopka)"
+        file: "src/data/firma.json"
+        description: >-
+          Dane przepisane ze starej strony. Zmieniaj wyłącznie wtedy, gdy zmienił się
+          wpis w rejestrze. Puste pole nie renderuje się w stopce.
+        fields:
+          - { name: nazwaPelna, label: "Nazwa pełna (rejestrowa)", widget: string }
+          - { name: nazwaKrotka, label: "Nazwa skrócona", widget: string }
+          - { name: rejestr, label: "Rejestr", widget: string }
+          - { name: krs, label: "KRS", widget: string }
+          - { name: nip, label: "NIP", widget: string }
+          - { name: regon, label: "REGON", widget: string }
+          - { name: formaPrawna, label: "Forma prawna", widget: string }
+          - { name: adresWww, label: "Adres WWW", widget: string }
+          - { name: email, label: "E-mail", widget: string }
+          - name: adresSiedziby
+            label: "Adres siedziby"
+            widget: string
+            required: false
+            hint: "Puste = nie pokazuje się w stopce. Do uzupełnienia przez Piotra."
+          - name: telefon
+            label: "Telefon"
+            widget: string
+            required: false
+            hint: "Puste = nie pokazuje się w stopce. Do uzupełnienia przez Piotra."

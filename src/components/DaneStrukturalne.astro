@@ -1,0 +1,68 @@
+---
+// DaneStrukturalne.astro — JSON-LD dla węzła centralnego.
+//
+// 🔴 TYP: Organization, NIE LocalBusiness. LocalBusiness wymaga `address`, a adresu
+// siedziby Piotr nie podał (zlecenie: „nie wymyślaj"). Znacznik z wymyślonym adresem
+// przechodzi walidację i kłamie — gorsze niż jego brak. Gdy adres się pojawi,
+// podmiana typu na LocalBusiness to jedna linia (patrz docs/BRAKI.md).
+//
+// 🔴 CZEGO TU NIE MA i być nie ma: `sameAs` ani `subOrganization` na serwisy.
+// sameAs znaczy „to ten sam podmiot pod innym adresem", a subOrganization znaczy
+// „to spółka zależna" — żadnego z tych dwóch stosunków prawnych nie znamy.
+// ItemList mówi tylko tyle, ile jest prawdą: to lista serwisów pokazana na tej stronie.
+
+import firma from '../data/firma.json';
+
+interface Props {
+  serwisy: { nazwa: string; adres: string }[];
+}
+
+const { serwisy } = Astro.props;
+
+// Adresy jadą z konfiguracji, więc na podglądzie github.io i na docelowej domenie
+// dane strukturalne są spójne same z siebie — bez ręcznej podmiany.
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+
+const dane = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${baza}/#organizacja`,
+      name: firma.nazwaKrotka,
+      legalName: firma.nazwaPelna,
+      url: `${baza}/`,
+      email: firma.email.toLowerCase(),
+      taxID: firma.nip,
+      identifier: [
+        { '@type': 'PropertyValue', propertyID: 'KRS', value: firma.krs },
+        { '@type': 'PropertyValue', propertyID: 'NIP', value: firma.nip },
+        { '@type': 'PropertyValue', propertyID: 'REGON', value: firma.regon },
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${baza}/#witryna`,
+      url: `${baza}/`,
+      name: firma.nazwaKrotka,
+      inLanguage: 'pl-PL',
+      publisher: { '@id': `${baza}/#organizacja` },
+    },
+    {
+      '@type': 'ItemList',
+      '@id': `${baza}/#serwisy`,
+      name: `Serwisy — ${firma.nazwaKrotka}`,
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      numberOfItems: serwisy.length,
+      itemListElement: serwisy.map((s, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: s.nazwa,
+        url: s.adres,
+      })),
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(dane)} />

@@ -1,0 +1,181 @@
+---
+// index.astro — jedyna trasa treściowa. Kafelki pochodzą WYŁĄCZNIE z kolekcji,
+// więc dołożenie serwisu jest wpisem w panelu, nie zmianą tego pliku.
+//
+// Układ w stylu apple.com/pl (polecenie Piotra 2026-09-04): wąski pasek nawigacji,
+// duży wyśrodkowany nagłówek, siatka wypełnionych kart. Zero JavaScriptu — pasek
+// nie chowa się przy przewijaniu, bo to wymagałoby skryptu, a cała witryna jest
+// zadeklarowana jako zero-JS w guard.config.json.
+import { getCollection } from 'astro:content';
+import Bazowy from '../layouts/Bazowy.astro';
+import Kafelek from '../components/Kafelek.astro';
+import Stopka from '../components/Stopka.astro';
+import DaneStrukturalne from '../components/DaneStrukturalne.astro';
+import firma from '../data/firma.json';
+
+const serwisy = (await getCollection('serwisy', ({ data }) => !data.ukryty)).sort(
+  (a, b) =>
+    a.data.kolejnosc - b.data.kolejnosc ||
+    a.data.nazwa.localeCompare(b.data.nazwa, 'pl'),
+);
+
+const tytul = `${firma.nazwaKrotka} — serwisy spółki`;
+
+// 🟡 Opis techniczny (meta description), złożony wyłącznie z faktów ze zlecenia:
+// „firma rozliczeniowa i właściciel wielu serwisów WWW", „strona zbiera te serwisy
+// w jednym miejscu". Docelowe brzmienie podaje Piotr — patrz docs/BRAKI.md.
+const opis =
+  'EcoPower Polska sp. z o.o. — serwisy internetowe spółki zebrane w jednym miejscu.';
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <DaneStrukturalne
+    slot="head"
+    serwisy={serwisy.map((s) => ({ nazwa: s.data.nazwa, adres: s.data.adres }))}
+  />
+
+  <header class="pasek">
+    <div class="pasek__srodek">
+      <!-- Znak firmowy: placeholder. Logo poda Piotr (docs/BRAKI.md ④). -->
+      <span class="znak" aria-hidden="true">EP</span>
+      <span class="pasek__nazwa">{firma.nazwaKrotka}</span>
+    </div>
+  </header>
+
+  <main id="tresc">
+    <section class="hero">
+      <h1 class="hero__tytul">{firma.nazwaKrotka}</h1>
+    </section>
+
+    <section class="serwisy" aria-labelledby="naglowek-serwisow">
+      <h2 id="naglowek-serwisow" class="sr-only">Serwisy</h2>
+
+      {
+        serwisy.length === 0 ? (
+          <p class="pusto">Brak serwisów do pokazania.</p>
+        ) : (
+          <ul class="siatka">
+            {serwisy.map((s, i) => (
+              <li>
+                <Kafelek
+                  nazwa={s.data.nazwa}
+                  adres={s.data.adres}
+                  opis={s.data.opis}
+                  obrazek={s.data.obrazek}
+                  alt={s.data.alt}
+                  pierwszy={i === 0}
+                />
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  /* ── pasek nawigacji: wąski, przyklejony, półprzezroczysty ──────────────── */
+  .pasek {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: rgb(255 255 255 / 80%);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .pasek__srodek {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: var(--o-3);
+  }
+
+  /* Placeholder znaku firmowego — kwadrat z inicjałami, znika przy prawdziwym logo. */
+  .znak {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--tekst);
+    color: var(--tlo);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .pasek__nazwa {
+    font-size: var(--t-s);
+    font-weight: 500;
+  }
+
+  /* ── nagłówek strony ────────────────────────────────────────────────────── */
+  .hero {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-24) var(--o-6) var(--o-16);
+    text-align: center;
+  }
+
+  .hero__tytul {
+    margin: 0;
+    font-size: var(--t-xxl);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+
+  /* ── siatka kafelków ────────────────────────────────────────────────────── */
+  .serwisy {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6) var(--o-24);
+  }
+
+  .siatka {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-4);
+    grid-template-columns: 1fr;
+  }
+
+  .pusto {
+    color: var(--tekst-cichy);
+    text-align: center;
+  }
+
+  /* Nagłówek sekcji istnieje dla czytnika ekranu — hierarchia H1→H2 zostaje
+     kompletna, a oprawa wizualna nie zyskuje napisu, którego nikt nie zamawiał. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .hero__tytul {
+      font-size: var(--t-display);
+    }
+
+    .siatka {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--o-6);
+    }
+  }
+</style>

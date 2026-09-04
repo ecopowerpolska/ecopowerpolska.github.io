@@ -1,0 +1,69 @@
+# build-i-wdrozenie.yml — Astro → GitHub Pages
+#
+# 🔴 WERSJE AKCJI TO LICZNIKI STANU, NIE STAŁE. Trzy poniżej odczytane u źródła
+#    (docs.astro.build/en/guides/deploy/github/) dnia 2026-09-04; `actions/setup-node@v7`
+#    z dokumentu Potwora o CMS-ie, ta sama data. Zapis starszy niż 30 dni weryfikuj
+#    u źródła; nie podnoś wersji „na wyczucie".
+#
+# ⚠️ NIEURUCHOMIONE. To pierwszy przepływ Pages w tym warsztacie — pierwszy przebieg
+#    jest pomiarem, nie formalnością. Co dokładnie sprawdzić, mówi docs/PIERWSZY-PRZEBIEG.md.
+#
+# 🔴 ŻADNEGO SEKRETU W GitHub Secrets tego repozytorium. Pages autoryzuje się tokenem
+#    wydawanym na czas przebiegu przez blok `permissions:` niżej. To jedyna przewaga
+#    tej drogi nad wgraniem na lh.pl, gdzie trzeba by tam położyć klucz SSH.
+
+name: build-i-wdrozenie
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # Panel treści (Sveltia) commituje do `main`, więc zapis wpisu wyzwala `push`
+  # i przebudowuje stronę sam. Osobnego wyzwalacza nie potrzeba.
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Dwa wgrania nie mogą biec naraz; trwającego nie przerywamy w połowie.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@v7
+
+      - name: Node w wersji z .nvmrc
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      # Walidator ma zero zależności, więc biegnie PRZED instalacją.
+      # Czerwony guard zatrzymuje wdrożenie — to jest bramka, nie usterka.
+      - name: astro-guard — walidator kodu źródłowego
+        run: npm run guard
+
+      # Instaluje zależności (npm ci), buduje i pakuje artefakt dla Pages.
+      - name: Instalacja, build i spakowanie artefaktu
+        uses: withastro/action@v6
+
+      # Audyt tego, co naprawdę poleciało: waga JS/CSS per strona + podstawy SEO.
+      # Też zero zależności; czyta dist/ zostawiony przez krok wyżej.
+      - name: astro-guard — audyt dist
+        run: npm run guard:build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Wdrożenie na GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

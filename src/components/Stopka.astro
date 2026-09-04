@@ -1,0 +1,105 @@
+---
+// Stopka.astro — dane rejestrowe przepisane ze starej strony ZNAK W ZNAK.
+// Treść pochodzi z src/data/firma.json; pola puste nie renderują się wcale.
+import firma from '../data/firma.json';
+
+const mail = firma.email.toLowerCase();
+---
+
+<footer class="stopka">
+  <div class="stopka__srodek">
+    <p class="stopka__nazwa">{firma.nazwaPelna}</p>
+
+    <p class="stopka__rejestr">
+      {firma.rejestr}, KRS {firma.krs}, NIP {firma.nip}, REGON {firma.regon}
+    </p>
+
+    <dl class="stopka__dane">
+      <dt>Forma prawna:</dt>
+      <dd>{firma.formaPrawna}</dd>
+
+      <dt>Adres WWW:</dt>
+      <dd>{firma.adresWww}</dd>
+
+      <dt>E-mail:</dt>
+      <dd><a href={`mailto:${mail}`}>{firma.email}</a></dd>
+
+      {firma.adresSiedziby && (
+        <>
+          <dt>Adres:</dt>
+          <dd>{firma.adresSiedziby}</dd>
+        </>
+      )}
+
+      {firma.telefon && (
+        <>
+          <dt>Telefon:</dt>
+          <dd>{firma.telefon}</dd>
+        </>
+      )}
+    </dl>
+  </div>
+</footer>
+
+<style>
+  /* Stopka na wypełnieniu, bez kreski — tak samo jak kafelki. Do dołu dociska ją
+     wiersz `1fr` siatki na <body> (motyw.css), nie margines. */
+  .stopka {
+    background: var(--powierzchnia);
+  }
+
+  .stopka__srodek {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6);
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--tekst-cichy);
+  }
+
+  .stopka__nazwa {
+    margin: 0 0 var(--o-2);
+    color: var(--tekst);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .stopka__rejestr {
+    margin: 0 0 var(--o-4);
+  }
+
+  .stopka__dane {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--o-1) var(--o-3);
+    margin: 0;
+  }
+
+  .stopka__dane dt {
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  .stopka__dane dd {
+    margin: 0;
+  }
+
+  .stopka__dane a {
+    color: var(--akcent);
+  }
+
+  .stopka__dane a:hover {
+    color: var(--tekst);
+  }
+
+  @media (max-width: 34rem) {
+    .stopka__dane {
+      grid-template-columns: 1fr;
+      gap: 0 0;
+    }
+
+    .stopka__dane dd {
+      margin-bottom: var(--o-2);
+    }
+  }
+</style>

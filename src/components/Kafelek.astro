@@ -1,0 +1,139 @@
+---
+// Kafelek.astro — jeden serwis: obrazek + nazwa, całość jest linkiem wychodzącym.
+// Zero JavaScriptu: nawigację robi zwykły <a>, stany robi CSS.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  nazwa: string;
+  adres: string;
+  opis?: string;
+  obrazek?: ImageMetadata;
+  alt?: string;
+  /** Kandydat na LCP — dokładnie JEDEN kafelek na stronie dostaje true. */
+  pierwszy?: boolean;
+}
+
+const { nazwa, adres, opis, obrazek, alt, pierwszy = false } = Astro.props;
+
+// Inicjały do placeholdera: dwie pierwsze litery nazwy przed kropką.
+const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
+
+// Linki wychodzące NIE dostają rel="nofollow" — to jest właśnie linkowanie krzyżowe
+// do własnych serwisów spółki, za które ręczymy (potwor-www §K).
+---
+
+<a class="kafelek" href={adres}>
+  <span class="kafelek__obraz">
+    {
+      obrazek ? (
+        <Image
+          src={obrazek}
+          alt={alt ?? ''}
+          width={720}
+          loading={pierwszy ? 'eager' : 'lazy'}
+          fetchpriority={pierwszy ? 'high' : 'auto'}
+          decoding="async"
+        />
+      ) : (
+        <>
+          <span class="kafelek__inicjaly" aria-hidden="true">{inicjaly}</span>
+          <span class="kafelek__brak">grafika do uzupełnienia</span>
+        </>
+      )
+    }
+  </span>
+
+  <span class="kafelek__stopka">
+    <span class="kafelek__nazwa">{nazwa}</span>
+    {opis && <span class="kafelek__opis">{opis}</span>}
+  </span>
+</a>
+
+<style>
+  /* Karta WYPEŁNIONA, bez obwódki — granicę niesie tło, nie kreska. Powód nie jest
+     estetyczny: hairline #d2d2d7 daje na bieli 1,51:1, czyli poniżej progu 3:1 dla
+     elementu nietekstowego. Wypełnienie #f5f5f7 tego problemu nie ma, bo nie pełni
+     roli granicy niosącej znaczenie — treść kafelka i tak jest tekstem o kontraście
+     15,46:1 na tym tle. */
+  .kafelek {
+    display: flex;
+    flex-direction: column;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--tekst);
+    transition:
+      background-color 200ms ease,
+      transform 200ms ease;
+  }
+
+  /* Komplet stanów: spoczynek (wyżej), najechanie, aktywny, fokus (globalny
+     :focus-visible w motywie). Stanu „wyłączony" ten element nie ma — kafelek
+     albo istnieje, albo jest ukryty polem `ukryty` w panelu. */
+  .kafelek:hover {
+    background: var(--powierzchnia-mocna);
+    transform: scale(1.012);
+  }
+
+  .kafelek:hover .kafelek__nazwa {
+    color: var(--akcent);
+  }
+
+  .kafelek:active {
+    transform: scale(1);
+  }
+
+  .kafelek__obraz {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--o-2);
+    aspect-ratio: 4 / 3;
+  }
+
+  .kafelek__obraz :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .kafelek__inicjaly {
+    font-size: var(--t-xxl);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--tekst-cichy);
+  }
+
+  /* Znacznik braku — znika sam w chwili, gdy wpis dostanie obrazek w panelu. */
+  .kafelek__brak {
+    font-size: var(--t-xs);
+    color: var(--tekst-cichy);
+  }
+
+  .kafelek__stopka {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-1);
+    padding: 0 var(--o-6) var(--o-8);
+    text-align: center;
+  }
+
+  .kafelek__nazwa {
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    transition: color 200ms ease;
+  }
+
+  .kafelek__opis {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+    line-height: 1.45;
+  }
+</style>

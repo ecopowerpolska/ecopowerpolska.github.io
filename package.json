@@ -1,0 +1,26 @@
+{
+  "name": "ecopowerpolska-pl",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "guard": "node scripts/validate-astro.mjs",
+    "guard:build": "node scripts/audit-dist.mjs",
+    "verify": "npm run guard && astro check && astro build && npm run guard:build"
+  },
+  "_uwaga_zaleznosci": "Blok dependencies jest CELOWO pusty. Wersji Astro nie wpisuje się z pamięci (kontrakt CLAUDE.md §4.3 warsztatu, zakaz nr 5 skilla potwor-astro) — wypełnia go instalacja, którą uruchamia Piotr: npm install astro@latest @astrojs/sitemap@latest && npm install -D @astrojs/check@latest typescript@latest. Dopiero ta komenda zapisuje tu rozwiązane numery wersji i tworzy package-lock.json, którego wymaga `npm ci` w GitHub Actions.",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,52 @@
+---
+// Bazowy.astro — jedyny layout strony.
+// Świadomie BEZ <ClientRouter />: to komponent kliencki, a guard.config.json deklaruje
+// całą witrynę jako zero-JS. Przy jednej trasie nie ma między czym przechodzić.
+import '../styles/motyw.css';
+
+interface Props {
+  tytul: string;
+  opis: string;
+}
+
+const { tytul, opis } = Astro.props;
+
+// Kanoniczny adres budujemy z import.meta.env.SITE — dawne globalne pole `site`
+// na obiekcie Astro zostało usunięte w Astro 6 (reguła AG022 walidatora).
+const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tytul}</title>
+    <meta name="description" content={opis} />
+    <link rel="canonical" href={kanoniczny} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EcoPower Polska" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:title" content={tytul} />
+    <meta property="og:description" content={opis} />
+    <meta property="og:url" content={kanoniczny} />
+
+    <meta name="theme-color" content="#ffffff" />
+
+    {/* Favikona: placeholder do podmiany razem z logo (docs/BRAKI.md ④).
+        Bez tego wpisu przeglądarka pyta o /favicon.ico i dostaje 404 —
+        zmierzone w konsoli podglądu 2026-09-04. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* Nazwa pliku to sitemap.xml, nie sitemap-index.xml — hak astro:build:done
+        w astro.config.mjs zmienia nazwę po buildzie. */}
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#tresc">Przejdź do treści</a>
+    <slot />
+  </body>
+</html>

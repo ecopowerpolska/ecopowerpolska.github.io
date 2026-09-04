@@ -1,0 +1,166 @@
+/* motyw.css — JEDYNE miejsce, w którym zadeklarowane są kolory, skala typograficzna,
+   siatka odstępów i komplet stanów elementu interaktywnego tej strony.
+   Plik podaje się bramce: --motyw src/styles/motyw.css
+
+   KIERUNEK WIZUALNY: styl apple.com/pl (polecenie Piotra 2026-09-04) — opisany cechami
+   sprawdzalnymi, nie przymiotnikami:
+     · jasne tło, treść na białym, sekcje oddzielone wypełnieniem #f5f5f7, nie kreską
+     · wąska kolumna treści (980 px) wyśrodkowana, duże marginesy pionowe
+     · nagłówek duży, półgruby, z ujemnym światłem międzyliterowym (-0.015em)
+     · kafelki jako WYPEŁNIONE karty o dużym promieniu, bez obwódek
+     · stopka drobnym pismem, oddzielona wypełnieniem
+   To jest naśladowanie STYLU. Żadnych znaków firmowych, zdjęć ani tekstów Apple.
+
+   🔴 KONTRASTY POLICZONE, nie oszacowane — i to zmieniło dobór kolorów:
+   szarość, której Apple używa w stopce (#86868b), daje na bieli 3,62:1, czyli PONIŻEJ
+   progu 4,5:1 dla tekstu. Zamiast niej stoi #6e6e73 (5,07:1) — wygląda tak samo,
+   a przechodzi. Hairline #d2d2d7 daje 1,51:1, więc NIE JEST tu nośnikiem granicy
+   kafelka: granicę niesie wypełnienie karty.
+
+   🔴 Każda para MUSI stać we własnym komentarzu zaczynającym się od `kontrast:` —
+   bramka szuka wzorca `/*` + `kontrast:`. Zbiorcza ramka z nagłówkiem NIE JEST widziana
+   i pary lecą do sekcji NIEZMIERZONE. */
+
+/* kontrast: #1d1d1f na #ffffff tekst */
+/* kontrast: #1d1d1f na #f5f5f7 tekst */
+/* kontrast: #6e6e73 na #ffffff tekst */
+/* kontrast: #6e6e73 na #f5f5f7 tekst */
+/* kontrast: #0066cc na #ffffff tekst */
+/* kontrast: #0066cc na #f5f5f7 tekst */
+
+/* Skala typograficzna: siedem stopni. Ten komentarz też musi zaczynać się od `skala:`. */
+/* skala: 0.75rem 0.875rem 1rem 1.25rem 1.75rem 2.5rem 3.5rem */
+
+:root {
+  /* ── kolor ─────────────────────────────────────────────────────────────── */
+  --tlo: #ffffff;
+  --powierzchnia: #f5f5f7;
+  --powierzchnia-mocna: #ebebed;
+  --tekst: #1d1d1f;
+  --tekst-cichy: #6e6e73;
+  --akcent: #0066cc;
+
+  /* ── skala typograficzna ───────────────────────────────────────────────── */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --t-xs: 0.75rem;
+  --t-s: 0.875rem;
+  --t-m: 1rem;
+  --t-l: 1.25rem;
+  --t-xl: 1.75rem;
+  --t-xxl: 2.5rem;
+  --t-display: 3.5rem;
+
+  /* ── siatka odstępów: krok 4 px ────────────────────────────────────────── */
+  --o-1: 0.25rem;
+  --o-2: 0.5rem;
+  --o-3: 0.75rem;
+  --o-4: 1rem;
+  --o-6: 1.5rem;
+  --o-8: 2rem;
+  --o-12: 3rem;
+  --o-16: 4rem;
+  --o-24: 6rem;
+
+  --promien: 18px;
+  --promien-maly: 12px;
+  --szerokosc-tresci: 980px;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--tlo);
+}
+
+/* 🔴 SIATKA, NIE FLEX. Wcześniej stało tu `display: flex; flex-direction: column`
+   i to POPSUŁO układ: w kolumnie flex `margin: 0 auto` na elemencie treści zjada
+   wolne miejsce po obu stronach i ściąga go do szerokości zawartości — kafelki
+   zeszły do jednej wąskiej kolumny na środku. W siatce element rozciąga się na
+   całą szerokość toru, a `max-width` + `margin: 0 auto` centruje go tak, jak trzeba.
+   Wiersz `1fr` w środku dociska stopkę do dołu przy małej ilości treści. */
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--tlo);
+  color: var(--tekst);
+  font-family: var(--font);
+  font-size: var(--t-m);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   KOMPLET STANÓW ELEMENTU INTERAKTYWNEGO — pięć pozycji:
+   spoczynek · najechanie · aktywny · fokus z klawiatury · wyłączony.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* spoczynek */
+a {
+  color: var(--akcent);
+  text-decoration: none;
+}
+
+/* najechanie */
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* aktywny (wciśnięty) */
+a:active {
+  opacity: 0.7;
+}
+
+/* fokus z klawiatury — MUSI być widoczny; #0066cc na bieli daje 5,57:1 */
+:focus-visible {
+  outline: 2px solid var(--akcent);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* wyłączony — dziś na stronie nie występuje; reguła stoi, żeby komplet stanów
+   był zadeklarowany zawczasu, a nie dopisywany po fakcie */
+:disabled,
+[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Skok do treści — pojawia się dopiero przy tabulatorze. */
+.skip {
+  position: absolute;
+  left: var(--o-4);
+  top: calc(var(--o-4) * -4);
+  z-index: 10;
+  padding: var(--o-2) var(--o-4);
+  background: var(--tlo);
+  color: var(--tekst);
+  border-radius: var(--promien-maly);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 18%);
+  transition: top 120ms ease;
+}
+
+.skip:focus {
+  top: var(--o-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

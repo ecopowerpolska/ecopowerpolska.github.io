@@ -1,0 +1,11 @@
+# Zależności i wynik budowania — odtwarzalne jednym poleceniem
+node_modules/
+dist/
+.astro/
+
+# Środowisko i sekrety — wartości żyją w ~/.sekrety/ na Z440, nigdy w repo
+.env
+.env.*
+
+# Notatki lokalne sesji
+CLAUDE.local.md

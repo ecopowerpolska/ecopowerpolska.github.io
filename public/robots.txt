@@ -1,0 +1,71 @@
+# robots.txt — ecopowerpolska.pl
+#
+# DECYZJA O BOTACH AI — zapadła i jest zapisana tutaj (potwor-www §J: bramka sprawdza,
+# CZY decyzja zapadła, nie ocenia która; brak decyzji jest naruszeniem, obie odpowiedzi
+# są dopuszczalne).
+#
+#   TREŚĆ TEJ STRONY JEST OTWARTA DLA WSZYSTKICH BOTÓW, w tym trenujących modele.
+#   Powód: cała strona to publiczny wykaz serwisów spółki i dane rejestrowe, jawne
+#   już dziś w KRS. Jej jedynym zadaniem jest być znalezioną. Nie ma tu treści,
+#   której ograniczanie cokolwiek by chroniło.
+#
+# 🟡 Decyzja jest DOMYŚLNA, do potwierdzenia przez Piotra (docs/BRAKI.md poz. 6).
+#    Odwrót to dopisanie `Disallow: /` w grupie wybranego tokenu — reszta bez zmian.
+#
+# Tokeny wypisane jawnie, żeby decyzja była widoczna, a nie domniemana z „User-agent: *".
+# Nazwy pochodzą z dokumentacji dostawców przez dokument wartości Potwora §D
+# (progi-wydajnosci-formaty-obrazu-i-typy-danych-strukturalnych-stron-www.md), nie z pamięci.
+# 🔴 Grupy w robots.txt NIE DZIEDZICZĄ reguł — dlatego `Disallow: /admin/` powtarza się
+#    w każdej grupie. Pominięcie go w grupie oznacza dla niej zgodę na /admin/.
+# Podstawa formalna: RFC 9309.
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# ── OpenAI ────────────────────────────────────────────────────────────────────
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+
+# ── Anthropic ─────────────────────────────────────────────────────────────────
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin/
+
+# ── Perplexity ────────────────────────────────────────────────────────────────
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin/
+
+# ── Google (token treningowy; NIE wpływa na obecność w Wyszukiwarce ani na ranking) ──
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+
+# Nazwa pliku to `sitemap.xml`, nie `sitemap-index.xml` — astro.config.mjs zmienia
+# nazwę indeksu wygenerowanego przez @astrojs/sitemap w haku astro:build:done, bo
+# bramka przed publikacją szuka dosłownie `dist/sitemap.xml`.
+# 🔴 STAN 1 — adres podglądu. Przy przełączeniu domeny ta linia MUSI zmienić się na
+#    https://ecopowerpolska.pl/sitemap.xml (docs/przelaczenie-domeny.md, krok 5).
+Sitemap: https://ecopowerpolska.github.io/sitemap.xml

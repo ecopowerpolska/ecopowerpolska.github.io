@@ -1,0 +1,46 @@
+---
+// 404.astro → buduje się do 404.html; GitHub Pages podaje ten plik przy nietrafionym adresie.
+// Własnej strony 500 na witrynie statycznej NIE MA i nie obiecujemy jej (potwor-astro §D).
+import Bazowy from '../layouts/Bazowy.astro';
+import Stopka from '../components/Stopka.astro';
+---
+
+<Bazowy
+  tytul="Nie ma takiej strony — EcoPower Polska"
+  opis="Pod tym adresem nic nie ma. Wróć na stronę główną z listą serwisów EcoPower Polska."
+>
+  <main id="tresc" class="tresc">
+    <h1>Nie ma takiej strony</h1>
+    <p>Pod tym adresem nic nie ma.</p>
+    <p><a href="/">Wróć na stronę główną z listą serwisów</a></p>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .tresc {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-12) var(--o-4) 0;
+  }
+
+  h1 {
+    margin: 0 0 var(--o-4);
+    font-size: var(--t-xl);
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0 0 var(--o-3);
+    color: var(--tekst-cichy);
+  }
+
+  a {
+    color: var(--akcent);
+  }
+
+  a:hover {
+    color: var(--tekst);
+  }
+</style>

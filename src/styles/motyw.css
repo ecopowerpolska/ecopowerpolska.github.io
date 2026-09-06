@@ -64,12 +64,12 @@
   color-scheme: light dark;
 
   /* ── typografia ────────────────────────────────────────────────────────────
-     Zmienne --font-display / --font-sans definiuje <Font cssVariable="…" />
-     (Fonts API, Bazowy.astro) — Source Serif 4 i IBM Plex Sans, self-hosted
-     przy buildzie. Zapasy w var(…, tu) trzymają layout, gdyby zmienna z jakiegoś
-     powodu nie została wstrzyknięta (np. strona renderowana bez layoutu). */
-  --font-display: var(--font-display, ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif);
-  --font-sans: var(--font-sans, ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif);
+     Zmienne --font-display / --font-sans definiuje <Font cssVariable="..." />
+     (Fonts API, Bazowy.astro) - Source Serif 4 i IBM Plex Sans, self-hosted
+     przy buildzie, z wlasnym fallbackiem metrycznym. TU ICH NIE DEKLARUJEMY:
+     zapis `--font-x: var(--font-x, ...)` odwoluje sie do samego siebie (cykl),
+     wygrywa kaskade z deklaracja Fonts API i daje wartosc nieprawidlowa -
+     strona renderowala sie w Times New Roman (kontrola nadi 2026-09-06). */
 
   --t-xs: 0.8125rem;
   --t-s: 0.9375rem;

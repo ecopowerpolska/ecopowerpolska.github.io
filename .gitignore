@@ -11,5 +11,5 @@ dist/
 CLAUDE.local.md
 
 # Zrzuty ekranu i ślady automatu przeglądarki z sesji roboczych (wzorzec z repo warsztatu)
-/*.png
+*.png
 .playwright-mcp/

@@ -4,6 +4,14 @@ EPP jest węzłem centralnym: **stąd** linki do serwisów robią kafelki na str
 (automatycznie, z kolekcji). Ten dokument dotyczy **drugiego kierunku** — tego, co trzeba
 wkleić **na tamtych stronach**, żeby linkowały zwrotnie do EPP i do siebie nawzajem.
 
+**Po co ten link:** trzy powody naraz. (1) **Wzajemne powiązanie serwisów** — użytkownik na
+`nadihome.pl` widzi, że to część tej samej spółki co `studioagat.pl` i EPP, zamiast trzech
+niepowiązanych stron. (2) **Wiarygodność** — jawna, widoczna informacja o wspólnym właścicielu
+działa lepiej niż jej brak; ukrywanie tego wyglądałoby podejrzanie, nie profesjonalnie.
+(3) **SEO** — linkowanie krzyżowe między własnymi serwisami pod wspólnym wydawcą (`publisher`
+w danych strukturalnych, sekcja 4) pomaga wyszukiwarce sklejać je w jeden byt. **Miejsce:
+stopka** — dyskretny wiersz linków, obecny na każdej podstronie, nie zaśmiecający treści.
+
 ---
 
 ## 🔴 Jedno zastrzeżenie, przeczytaj przed wklejeniem
@@ -121,11 +129,30 @@ w żadnej kopii.**
 
 ---
 
-## 5. Kiedy to wklejać
+## 5. Kiedy to wklejać — i pod jaki adres
 
-⏳ **Dopiero PO przełączeniu domeny** (`docs/przelaczenie-domeny.md`). Wcześniej wszystkie
-odsyłacze prowadziłyby na starego WordPressa, a `@id` wskazywałby adres, pod którym nie ma
-jeszcze pasujących danych strukturalnych. Fragmenty leżą tu gotowe i czekają.
+🔴 **Stan na 2026-09-06, sprawdzony:** `https://ecopowerpolska.pl/` **jeszcze nie prowadzi**
+do tej strony — DNS domeny wciąż wskazuje starego WordPressa na lh.pl. Do czasu przełączenia
+(`docs/przelaczenie-domeny.md`, robi Piotr ręcznie, dopiero po akceptacji podglądu) **strona
+faktycznie odpowiada pod `https://ecopowerpolska.github.io/`** (sprawdzone: 200).
+
+**Który adres wkleić, zależnie od tego, kiedy wklejasz:**
+
+- **Fragmenty linku widocznego (sekcje 1 i 2 — `<nav class="epp-serwisy">`):** jeśli wklejasz
+  **PRZED** przełączeniem DNS, a chcesz mieć link już teraz, zamień `href` na
+  `https://ecopowerpolska.github.io/` — działa od razu. Po przełączeniu DNS adres
+  `ecopowerpolska.github.io` zacznie sam przekierowywać na `ecopowerpolska.pl`
+  (`docs/przelaczenie-domeny.md` §3), więc taki tymczasowy link nie przestanie działać —
+  ale zostanie z dodatkowym przeskokiem przekierowania, który rozmywa sygnał linku (ta sama
+  zasada co przy `www` niżej). **Lepiej wtedy podmienić** `href` z powrotem na
+  `https://ecopowerpolska.pl/` — wersje w sekcjach 1–2 niżej są już w tej, docelowej formie,
+  do wklejenia bez zmian **PO** przełączeniu. Wklejenie dopiero po przełączeniu oszczędza tę
+  jedną podmianę — to jest rekomendacja, jeśli nie zależy Ci na linku natychmiast.
+- **Dane strukturalne (sekcja 4 — `<script type="application/ld+json">`):** **czekają na
+  przełączenie DNS, bez wariantu tymczasowego.** `@id` ma być stabilnym identyfikatorem
+  organizacji — wklejenie go najpierw z adresem `github.io`, a potem podmiana na
+  `ecopowerpolska.pl`, zostawiłoby w historii dwa różne `@id` dla tego samego bytu. Lepiej
+  poczekać i wkleić raz, w docelowej, ostatecznej formie z sekcji 4.
 
 🟡 **Nie sprawdziłem, jak zbudowane są `nadihome.pl` i `studioagat.pl`** — nie wiem, czy mają
 stopkę w szablonie, w panelu, czy wpisaną na sztywno, ani czy `<head>` jest edytowalny.

@@ -4,9 +4,12 @@
 #    Rozjazd nie wychodzi w panelu — wychodzi czerwonym buildem w Actions, już PO
 #    zapisaniu wpisu przez klienta (potwor-cms-strony §D2).
 #
-# ⚠️ NIEURUCHOMIONE. Składnia widgetów pochodzi z dokumentacji Decapa (Sveltia ją honoruje),
-#    nie z naszego przebiegu. To pierwszy panel w tym warsztacie — pierwsze logowanie
-#    i pierwszy zapis są POMIAREM konfiguracji, nie formalnością.
+# ⚠️ PANEL SIĘ ŁADUJE, ZAPIS JESZCZE NIE PRZETESTOWANY (stan 2026-09-06). Sprawdzone
+#    na żywo: https://ecopowerpolska.github.io/admin/ renderuje ekran logowania bez
+#    błędów blokujących. Ale ŻADEN wpis nie został jeszcze zapisany przez panel —
+#    pierwsze logowanie i pierwszy zapis Piotra są POMIAREM tej konfiguracji,
+#    nie formalnością. Składnia widgetów: dokumentacja Decapa (Sveltia ją honoruje);
+#    ustalenia o samym logowaniu — z kodu źródłowego Sveltii, patrz komentarz w `backend`.
 #
 # 🔴 `repo` niżej zakłada repozytorium `ecopowerpolska/ecopowerpolska.github.io`
 #    (witryna użytkownika, bez `base`). Jeśli Piotr wybierze inną nazwę repozytorium,
@@ -16,11 +19,35 @@ backend:
   name: github
   repo: ecopowerpolska/ecopowerpolska.github.io
   branch: main
-  # Logowanie: „Sign In with Token" — token GitHuba wklejany w ekranie logowania,
-  # trzymany w magazynie przeglądarki. 🔴 Token jest SEKRETEM: nie trafia do repo,
-  # do tego pliku ani do rozmowy (kontrakt warsztatu §4.4).
-  # Gdy klient ma logować się bez tokenu — `sveltia-cms-auth` na Cloudflare Workers
-  # i pole `base_url` wskazujące Workera (potwor-cms-strony §C2). Nie jest wdrożone.
+  # LOGOWANIE — pełna instrukcja krok po kroku dla Piotra: docs/CMS-LOGOWANIE.md.
+  # Skrót ustaleń (sprawdzone w KODZIE Sveltii, gałąź main, 2026-09-06):
+  #
+  # 🔴 `auth_methods: [token]` — zostaje TYLKO przycisk „Zaloguj się za pomocą tokenu
+  # dostępu". Bez tej linii panel pokazuje TAKŻE „Zaloguj się przez GitHub" (OAuth),
+  # a ten przycisk i tak nie działa: wymaga Workera `sveltia-cms-auth`, który nie jest
+  # wdrożony (zob. `base_url` niżej). Klikalny, ale zepsuty przycisk jest gorszy niż
+  # jego brak. Źródło: src/lib/components/entrance/sign-in.svelte (Sveltia chowa
+  # przycisk OAuth, gdy `auth_methods` go nie wymienia) i
+  # src/lib/services/config/parser/backend.js (nazwa i składnia klucza).
+  auth_methods: [token]
+  #
+  # base_url: https://sveltia-cms-auth.<TWOJA-SUBDOMENA>.workers.dev
+  # ↑ ZAKOMENTOWANE CELOWO. Odkomentuj DOPIERO gdy Worker `sveltia-cms-auth` będzie
+  # wdrożony na Cloudflare (docs/CMS-LOGOWANIE.md, „POZYCJE DLA PIOTRA") — podmień
+  # <TWOJA-SUBDOMENA> na rzeczywisty adres z panelu Cloudflare Workers. Gdy ta linia
+  # wraca, zmień też linię wyżej na `auth_methods: [token, oauth]` (albo usuń ją
+  # całkiem), żeby przycisk OAuth znów się pokazał.
+  #
+  # Token GitHuba do logowania „za pomocą tokenu": FINE-GRAINED (nowy typ), nie
+  # klasyczny. Sveltia sama generuje link do
+  # github.com/settings/personal-access-tokens/new z uprawnieniem „Contents: write"
+  # wstawionym z góry (src/lib/services/backends/git/github/auth.js, funkcja
+  # getTokenPageURL — sprawdzone 2026-09-06). Repozytorium/właściciela trzeba wybrać
+  # na tamtej stronie ręcznie — Sveltia tego nie robi za Piotra.
+  # Token trafia do magazynu przeglądarki (localStorage) — wklejany RAZ na
+  # przeglądarkę/urządzenie, nie przy każdym logowaniu.
+  # 🔴 Token jest SEKRETEM: nie trafia do repo, do tego pliku ani do rozmowy
+  # (kontrakt warsztatu §4.4).
 
 # Ścieżki mediów: obrazki kafelków MUSZĄ trafiać do src/assets/, nie do public/ —
 # tylko wtedy <Image> Astro je optymalizuje (obraz w public/ traci optymalizację).
@@ -46,7 +73,7 @@ collections:
     identifier_field: nazwa
     slug: "{{slug}}"
     summary: "{{nazwa}} — {{adres}}"
-    sortable_fields: [kolejnosc, nazwa]
+    sortable_fields: [kolejnosc, nazwa, kategoria]
     # Ścieżki WZGLĘDNE wobec pliku wpisu — dzięki temu we frontmatterze ląduje
     # `../../assets/serwisy/plik.png`, a tego właśnie oczekuje helper image()
     # ze schematu kolekcji Astro.
@@ -81,6 +108,26 @@ collections:
           - "^.{0,160}$"
           - "Podpis może mieć najwyżej 160 znaków"
         hint: "Do 160 znaków. Puste pole jest w porządku — kafelek pokaże samą nazwę."
+
+      - name: kategoria
+        label: "Kategoria / branża (opcjonalnie)"
+        widget: string
+        required: false
+        # Limit 60 znaków egzekwuje schemat Zod przy buildzie — bez tego wzorca panel
+        # przyjąłby dłuższą kategorię, a strona przestałaby się budować po zapisie.
+        pattern:
+          - "^.{0,60}$"
+          - "Kategoria może mieć najwyżej 60 znaków"
+        hint: >-
+          Np. „Wnętrza i remonty". Strona zaczyna grupować kafelki w sekcje dopiero
+          wtedy, gdy są DWIE różne kategorie — przy jednej albo przy żadnej pokazuje
+          zwykłą siatkę. Wpisy bez kategorii trafiają wtedy do sekcji „Inne".
+          ⚠️ Dopasowanie idzie po TREŚCI, nie po identyfikatorze: literówka tworzy
+          nową kategorię. Przepisuj nazwę dokładnie tak, jak w poprzednim wpisie.
+        # 🔴 WOLNY TEKST, nie zamknięta lista (`widget: select`), bo taksonomia serwisów
+        # jeszcze nie istnieje — dziś żaden wpis nie ma kategorii. Gdy lista branż się
+        # ustabilizuje, to pole warto zamienić na `select` z `options`: znika wtedy
+        # ryzyko literówki. Decyzja należy do Piotra.
 
       - name: obrazek
         label: "Obrazek kafelka"

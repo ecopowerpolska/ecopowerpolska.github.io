@@ -1,11 +1,15 @@
 # Braki i decyzje do podjęcia — ecopowerpolska.pl
 
-Stan na **2026-09-04**. Zlecenie mówiło wprost: *„Piotr poda, NIE WYMYŚLAJ"*. Poniżej jest
-wszystko, czego nie wymyśliłem — z informacją, co strona robi w międzyczasie i co dokładnie
-trzeba zmienić, gdy brak zostanie uzupełniony.
+Otwarte pozycje na **2026-09-06** (dokument założony 2026-09-04). Zlecenie mówiło wprost:
+*„Piotr poda, NIE WYMYŚLAJ"*. Poniżej jest wszystko, czego nie wymyśliłem — z informacją,
+co strona robi w międzyczasie i co dokładnie trzeba zmienić, gdy brak zostanie uzupełniony.
 
 **Pozycje ① i ② są ROZSTRZYGNIĘTE — decyzja Piotra z 2026-09-04, zapis niżej.**
-Reszta nie blokuje budowy ani wdrożenia; blokuje **publikację** (bramka przed publikacją).
+**Pozycja ③ jest ROZSTRZYGNIĘTA — grafiki wgrane 2026-09-04, zapis niżej.**
+Strona jest **zbudowana i wdrożona na GitHub Pages** (podgląd `https://ecopowerpolska.github.io/`,
+przepływ `build-i-wdrozenie` zakończony sukcesem trzykrotnie) — reszta pozycji nie blokuje
+budowy ani wdrożenia na podgląd; blokuje **publikację** na docelową domenę (bramka przed
+publikacją, przełączenie DNS) i pełny dostęp Piotra do panelu treści.
 
 ---
 
@@ -80,13 +84,13 @@ konwencja warsztatu mówi o **adresie strony**, nie o nazwie repo (`strony/READM
 
 ---
 
-## ③ Pliki graficzne kafelków
+## ③ ~~Pliki graficzne kafelków~~ ROZSTRZYGNIĘTE — grafiki wgrane 2026-09-04
 
-**Czego nie ma:** obrazków dla `nadihome.pl` i `studioagat.pl`.
-**Co robi strona teraz:** kafelek pokazuje pole 16:9 z inicjałami (`NA`, `ST`) i podpisem
-„grafika do uzupełnienia".
-**Jak uzupełnić:** panel → Serwisy → wpis → pole „Obrazek kafelka" + „Opis obrazka dla czytnika
-ekranu". Podpis „grafika do uzupełnienia" znika sam. **Żadnej zmiany kodu.**
+**Stan teraz:** `src/assets/serwisy/nadihome.jpg` i `src/assets/serwisy/studioagat.jpg`
+istnieją i są w repozytorium. Kafelek NIE pokazuje już pola z inicjałami ani podpisu
+„grafika do uzupełnienia" dla tych dwóch serwisów.
+**Jak dołożyć kolejny kafelek z obrazkiem (dla przyszłego serwisu):** panel → Serwisy →
+wpis → pole „Obrazek kafelka" + „Opis obrazka dla czytnika ekranu". **Żadnej zmiany kodu.**
 **Format:** proporcje 16:9, szerokość ≥ 720 px, WebP albo JPEG (zdjęcia); reszta to robota
 `<Image>` Astro. Materiał ze starych stron zbiera się narzędziami Potwora — `zbierz-zdjecia-www.py`,
 `przemiel-zdjecia.py` (kontrakt warsztatu §5), uruchamia Piotr.

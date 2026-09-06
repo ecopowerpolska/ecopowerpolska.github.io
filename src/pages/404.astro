@@ -1,7 +1,12 @@
 ---
 // 404.astro → buduje się do 404.html; GitHub Pages podaje ten plik przy nietrafionym adresie.
 // Własnej strony 500 na witrynie statycznej NIE MA i nie obiecujemy jej (potwor-astro §D).
+//
+// Pasek marki (PasekMarki) wspólny z index.astro — tożsamość ma być widoczna także
+// tu, nie tylko na trasie ze spisem serwisów. Bez licznika serwisów: to informacja
+// właściwa dla strony ze spisem, nie dla strony błędu.
 import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 ---
 
@@ -9,6 +14,8 @@ import Stopka from '../components/Stopka.astro';
   tytul="Nie ma takiej strony — EcoPower Polska"
   opis="Pod tym adresem nic nie ma. Wróć na stronę główną z listą serwisów EcoPower Polska."
 >
+  <PasekMarki />
+
   <main id="tresc" class="tresc">
     <h1>Nie ma takiej strony</h1>
     <p>Pod tym adresem nic nie ma.</p>
@@ -22,17 +29,17 @@ import Stopka from '../components/Stopka.astro';
   .tresc {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
-    padding: var(--o-12) var(--o-4) 0;
+    padding: var(--o-16) var(--o-6);
   }
 
   h1 {
     margin: 0 0 var(--o-4);
     font-size: var(--t-xl);
-    font-weight: 600;
   }
 
   p {
     margin: 0 0 var(--o-3);
+    max-width: var(--miara);
     color: var(--tekst-cichy);
   }
 

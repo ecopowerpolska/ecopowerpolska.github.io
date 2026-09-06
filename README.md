@@ -10,12 +10,22 @@ stopka z danymi rejestrowymi. Bez podstron opisowych, bez schematu połączeń, 
 - **Panel treści:** Sveltia CMS pod `/admin/` — **dołożenie kafelka to wpis w panelu,
   nie zmiana kodu.**
 
-## 🔴 Zanim cokolwiek uruchomisz
+## Stan na 2026-09-06
 
-1. **`docs/BRAKI.md`** — dwie pozycje BLOKUJĄCE (publiczne czy prywatne repozytorium; nazwa repo)
-   plus wszystko, czego Piotr nie podał.
-2. **`docs/PIERWSZY-PRZEBIEG.md`** — polecenia po kolei. Instalacje i buildy uruchamia Piotr.
-3. **`CLAUDE.md`** — kontrakt pracy nad kodem Astro tej strony. Wiążący dla każdej sesji tutaj.
+Strona jest **zbudowana i wdrożona na GitHub Pages** (`https://ecopowerpolska.github.io/`,
+przepływ `build-i-wdrozenie` zakończony sukcesem trzykrotnie, status Pages „built"; `/admin/`
+i `/admin/config.yml` odpowiadają). Domena `ecopowerpolska.pl` wciąż wskazuje starego
+WordPressa na lh.pl — przełączenie ręczne, dopiero po akceptacji podglądu przez Piotra
+(`docs/przelaczenie-domeny.md`). Piotr nie ma jeszcze działającego dostępu do panelu treści —
+stan i kolejne kroki w `docs/CMS-LOGOWANIE.md`.
+
+## 🔴 Zanim cokolwiek zmienisz
+
+1. **`docs/BRAKI.md`** — co zostało otwarte (dane firmowe, referencje wyglądu, decyzje
+   o botach); pozycje ①②③ są już rozstrzygnięte, zapis w pliku to teraz historia decyzji.
+2. **`docs/CMS-LOGOWANIE.md`** — dostęp Piotra do panelu treści.
+3. **`docs/PIERWSZY-PRZEBIEG.md`** — zapis tego, co się wydarzyło przy pierwszym uruchomieniu.
+4. **`CLAUDE.md`** — kontrakt pracy nad kodem Astro tej strony. Wiążący dla każdej sesji tutaj.
 
 ## Gdzie co leży
 
@@ -23,7 +33,7 @@ stopka z danymi rejestrowymi. Bez podstron opisowych, bez schematu połączeń, 
 |---|---|
 | `src/data/serwisy/*.md` | **kafelki** — jeden plik = jeden serwis; pisze je panel |
 | `src/data/firma.json` | dane rejestrowe stopki; edytowalne z panelu |
-| `src/assets/serwisy/` | obrazki kafelków (wgrywa panel; dziś pusty) |
+| `src/assets/serwisy/` | obrazki kafelków (wgrywa panel; dziś nadihome.jpg i studioagat.jpg) |
 | `src/content.config.ts` | schemat kolekcji — **lustro `public/admin/config.yml`** |
 | `src/pages/index.astro` | jedyna trasa treściowa |
 | `src/styles/motyw.css` | **jedyne** miejsce z kolorami, skalą typograficzną i siatką odstępów |
@@ -32,6 +42,7 @@ stopka z danymi rejestrowymi. Bez podstron opisowych, bez schematu połączeń, 
 | `scripts/`, `guard.config.json`, `docs/rules.md` | pakiet walidatora astro-guard |
 | `docs/przelaczenie-domeny.md` | DNS, CNAME, `site` — runbook przełączenia |
 | `docs/link-zwrotny-dla-serwisow.md` | gotowe fragmenty do wklejenia na tamtych stronach |
+| `docs/CMS-LOGOWANIE.md` | dostęp Piotra do panelu treści — stan i kroki |
 
 ## Dwie rzeczy, o które najłatwiej się potknąć
 

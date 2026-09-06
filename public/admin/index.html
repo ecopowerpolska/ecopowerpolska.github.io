@@ -13,13 +13,22 @@
       Sveltia CMS — panel treści git-based (potwor-cms-strony §B: Sveltia pierwszym
       wyborem, Decap odwrotem; ta sama config.yml).
 
-      ⚠️ WERSJA NIEPRZYPIĘTA. Adres bez `@<wersja>` bierze wydanie bieżące, a Sveltia
-      wydaje niemal codziennie. Przypięcie (`@sveltia/cms@<wersja>`) to licznik stanu:
-      jeśli je zrobisz, dopisz obok datę i powód (potwor-cms-strony §D1).
+      🔴 WERSJA PRZYPIĘTA: 0.206.1 — wydanie z 2026-09-06 (dzień tej zmiany), zdjęte
+      z npm (`registry.npmjs.org/@sveltia/cms`, dist-tag `latest`) i sprawdzone pod
+      tym samym adresem (HTTP 200 na unpkg tego dnia). Powód przypięcia: adres bez
+      `@<wersja>` bierze wydanie BIEŻĄCE, a Sveltia wydaje niemal codziennie —
+      własna dokumentacja mówi wprost „still in beta … potentially breaking changes
+      before the stable 1.0 release" (sveltiacms.app/en/docs/start). Panel ma być
+      używany przez Piotra do zwykłej, cotygodniowej edycji — cicha podmiana wersji
+      w tle nie jest pożądana. Podbicie numeru jest ŚWIADOMĄ decyzją: sprawdź listę
+      zmian (github.com/sveltia/sveltia-cms/releases), podmień numer w adresie niżej
+      i dopisz tu nową datę i powód (potwor-cms-strony §D1).
 
       Panel jest wyłączony z indeksowania dwiema drogami: `noindex` wyżej
       i `Disallow: /admin/` w public/robots.txt.
+
+      Logowanie i dodawanie kafelków — instrukcja dla Piotra: docs/CMS-LOGOWANIE.md.
     -->
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script src="https://unpkg.com/@sveltia/cms@0.206.1/dist/sveltia-cms.js"></script>
   </body>
 </html>

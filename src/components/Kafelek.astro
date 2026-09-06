@@ -1,6 +1,6 @@
 ---
-// Kafelek.astro — jeden serwis: obrazek + nazwa, całość jest linkiem wychodzącym.
-// Zero JavaScriptu: nawigację robi zwykły <a>, stany robi CSS.
+// Kafelek.astro — jeden serwis: obrazek + nazwa + opis + domena, całość jest linkiem
+// wychodzącym. Zero JavaScriptu: nawigację robi zwykły <a>, stany robi CSS.
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -16,8 +16,29 @@ interface Props {
 
 const { nazwa, adres, opis, obrazek, alt, pierwszy = false } = Astro.props;
 
-// Inicjały do placeholdera: dwie pierwsze litery nazwy przed kropką.
-const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
+// Domena widoczna na kafelku — liczona z `adres`, nie osobne pole w schemacie.
+// Dziś `nazwa` już JEST domeną („nadihome.pl”), więc pokazanie jej drugi raz byłoby
+// powtórzeniem tego samego napisu w dwóch miejscach kafelka. Domenę pokazujemy
+// osobno TYLKO gdy różni się od `nazwa` — czyli gdy w przyszłości ktoś wpisze
+// nazwę marketingową („Nadi Home — studio wnętrz”), a adres zostanie techniczny.
+// To samo pole `adres` służy więc podwójnie: celowi linku i etykiecie domeny.
+let domena = '';
+try {
+  domena = new URL(adres).hostname.replace(/^www\./i, '');
+} catch {
+  domena = '';
+}
+const pokazDomene = domena !== '' && domena.toLowerCase() !== nazwa.trim().toLowerCase();
+
+// Inicjały do placeholdera: dla nazwy domenopodobnej („nadihome.pl”) — dwie pierwsze
+// litery przed kropką (jak dotąd: „NA”). Dla nazwy złożonej z kilku słów bez kropki
+// („Nadi Home”) — pierwsza litera dwóch pierwszych słów („NH”), bo to czytelniejszy
+// skrót niż dwie litery jednego słowa.
+const slowa = nazwa.trim().split(/\s+/);
+const inicjaly =
+  slowa.length >= 2 && !nazwa.includes('.')
+    ? (slowa[0][0] + slowa[1][0]).toUpperCase()
+    : nazwa.split('.')[0].slice(0, 2).toUpperCase();
 
 // Linki wychodzące NIE dostają rel="nofollow" — to jest właśnie linkowanie krzyżowe
 // do własnych serwisów spółki, za które ręczymy (potwor-www §K).
@@ -31,15 +52,17 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
           src={obrazek}
           alt={alt ?? ''}
           width={720}
+          height={480}
+          format="webp"
+          densities={[1, 2]}
           loading={pierwszy ? 'eager' : 'lazy'}
           fetchpriority={pierwszy ? 'high' : 'auto'}
           decoding="async"
         />
       ) : (
-        <>
-          <span class="kafelek__inicjaly" aria-hidden="true">{inicjaly}</span>
-          <span class="kafelek__brak">grafika do uzupełnienia</span>
-        </>
+        <span class="kafelek__zastepnik" aria-hidden="true">
+          {inicjaly}
+        </span>
       )
     }
   </span>
@@ -47,15 +70,15 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
   <span class="kafelek__stopka">
     <span class="kafelek__nazwa">{nazwa}</span>
     {opis && <span class="kafelek__opis">{opis}</span>}
+    {pokazDomene && <span class="kafelek__domena">{domena}</span>}
   </span>
 </a>
 
 <style>
   /* Karta WYPEŁNIONA, bez obwódki — granicę niesie tło, nie kreska. Powód nie jest
-     estetyczny: hairline #d2d2d7 daje na bieli 1,51:1, czyli poniżej progu 3:1 dla
-     elementu nietekstowego. Wypełnienie #f5f5f7 tego problemu nie ma, bo nie pełni
-     roli granicy niosącej znaczenie — treść kafelka i tak jest tekstem o kontraście
-     15,46:1 na tym tle. */
+     estetyczny: hairline na jasnym tle nie dobija do progu 3:1 dla elementu
+     nietekstowego (patrz motyw.css). Wypełnienie tego problemu nie ma, bo nie pełni
+     roli granicy niosącej znaczenie — treść kafelka jest tekstem, zmierzonym osobno. */
   .kafelek {
     display: flex;
     flex-direction: column;
@@ -64,17 +87,15 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
     overflow: hidden;
     text-decoration: none;
     color: var(--tekst);
-    transition:
-      background-color 200ms ease,
-      transform 200ms ease;
+    height: 100%;
+    transition: background-color 160ms ease;
   }
 
   /* Komplet stanów: spoczynek (wyżej), najechanie, aktywny, fokus (globalny
-     :focus-visible w motywie). Stanu „wyłączony" ten element nie ma — kafelek
+     :focus-visible w motywie). Stanu „wyłączony” ten element nie ma — kafelek
      albo istnieje, albo jest ukryty polem `ukryty` w panelu. */
   .kafelek:hover {
     background: var(--powierzchnia-mocna);
-    transform: scale(1.012);
   }
 
   .kafelek:hover .kafelek__nazwa {
@@ -82,7 +103,7 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
   }
 
   .kafelek:active {
-    transform: scale(1);
+    opacity: 0.85;
   }
 
   .kafelek__obraz {
@@ -90,9 +111,8 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: var(--o-2);
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
+    background: var(--powierzchnia-mocna);
   }
 
   .kafelek__obraz :global(img) {
@@ -102,16 +122,16 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
     display: block;
   }
 
-  .kafelek__inicjaly {
+  /* Zastępnik zdjęcia: inicjały w kroju nagłówkowym, na wyraźnie ciemniejszym
+     wypełnieniu niż reszta karty — to samodzielny, dopracowany element (odznaka
+     z monogramem), a nie „dziura po brakującym pliku”. Świadomie BEZ podpisu
+     „grafika do uzupełnienia": to była notatka redakcyjna, nie treść dla gościa
+     strony — w panelu redaktor i tak widzi puste pole „Obrazek kafelka”. */
+  .kafelek__zastepnik {
+    font-family: var(--font-display);
     font-size: var(--t-xxl);
     font-weight: 600;
     letter-spacing: -0.02em;
-    color: var(--tekst-cichy);
-  }
-
-  /* Znacznik braku — znika sam w chwili, gdy wpis dostanie obrazek w panelu. */
-  .kafelek__brak {
-    font-size: var(--t-xs);
     color: var(--tekst-cichy);
   }
 
@@ -119,21 +139,28 @@ const inicjaly = nazwa.split('.')[0].slice(0, 2).toUpperCase();
     display: flex;
     flex-direction: column;
     gap: var(--o-1);
-    padding: 0 var(--o-6) var(--o-8);
-    text-align: center;
+    flex: 1;
+    padding: var(--o-4) var(--o-4) var(--o-6);
   }
 
   .kafelek__nazwa {
+    font-family: var(--font-display);
     font-size: var(--t-l);
     font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-    transition: color 200ms ease;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    transition: color 160ms ease;
   }
 
   .kafelek__opis {
     font-size: var(--t-s);
     color: var(--tekst-cichy);
-    line-height: 1.45;
+    line-height: 1.5;
+  }
+
+  .kafelek__domena {
+    margin-top: var(--o-2);
+    font-size: var(--t-xs);
+    color: var(--tekst-cichy);
   }
 </style>

@@ -2,56 +2,84 @@
    siatka odstępów i komplet stanów elementu interaktywnego tej strony.
    Plik podaje się bramce: --motyw src/styles/motyw.css
 
-   KIERUNEK WIZUALNY: styl apple.com/pl (polecenie Piotra 2026-09-04) — opisany cechami
-   sprawdzalnymi, nie przymiotnikami:
-     · jasne tło, treść na białym, sekcje oddzielone wypełnieniem #f5f5f7, nie kreską
-     · wąska kolumna treści (980 px) wyśrodkowana, duże marginesy pionowe
-     · nagłówek duży, półgruby, z ujemnym światłem międzyliterowym (-0.015em)
-     · kafelki jako WYPEŁNIONE karty o dużym promieniu, bez obwódek
-     · stopka drobnym pismem, oddzielona wypełnieniem
-   To jest naśladowanie STYLU. Żadnych znaków firmowych, zdjęć ani tekstów Apple.
+   KIERUNEK WIZUALNY — „rejestr sieci" (przebudowa 2026-09-06, zastępuje poprzedni
+   kierunek „styl apple.com/pl"). Poprzedni układ — wyśrodkowany nagłówek, dwie
+   identyczne wypełnione karty o promieniu 18px, pusty pasek u góry — to dokładnie
+   „SaaS-card kit" z listy domyślnych szablonów AI (jeden promień na wszystkim, karty
+   nie do odróżnienia od dowolnej innej strony). EcoPower Polska jest spółką prowadzącą
+   PUBLICZNY REJESTR własnych serwisów (KRS/NIP/REGON w stopce to fakt, nie ozdoba) —
+   kierunek czerpie z tego wprost, cechami sprawdzalnymi, nie przymiotnikiem:
+     · układ lewostronny, jedna wspólna szerokość kontenera od nagłówka po stopkę
+       (krawędzie się nie gubią przy przewijaniu — czytelny „margines akt"),
+     · promień kart ZREDUKOWANY (6px, nie 18px) — karta wygląda jak wpis w rejestrze,
+       nie jak bąbel interfejsu telefonu,
+     · dwa kroje o jasno różnych rolach: nagłówki serifem (powaga rejestru), reszta
+       grotesk techniczny (IBM Plex — skojarzenie z infrastrukturą, bez dosłownej
+       ikonografii „mocy"),
+     · JEDEN gest koloru: głęboka zieleń morska jako akcent (liczba serwisów, linki,
+       fokus) — nie zielony-eco-cliché (limonka), nie identyczny z żadnym znanym
+       akcentem narzędzi AI,
+     · sekcje oddzielone wypełnieniem, nie kreską — kreska na tle 3:1 nie przechodzi
+       (patrz D97 niżej), wypełnienie niesie granicę i jest zmierzone jak tekst.
 
-   🔴 KONTRASTY POLICZONE, nie oszacowane — i to zmieniło dobór kolorów:
-   szarość, której Apple używa w stopce (#86868b), daje na bieli 3,62:1, czyli PONIŻEJ
-   progu 4,5:1 dla tekstu. Zamiast niej stoi #6e6e73 (5,07:1) — wygląda tak samo,
-   a przechodzi. Hairline #d2d2d7 daje 1,51:1, więc NIE JEST tu nośnikiem granicy
-   kafelka: granicę niesie wypełnienie karty.
+   🔴 KONTRASTY POLICZONE (WCAG 2.2, wzór relatywnej luminancji), nie oszacowane —
+   policzone skryptem Node przy doborze palety, nie odczytane z oka. Każda para MUSI
+   stać we własnym komentarzu zaczynającym się od `kontrast:` — bramka szuka tego
+   wzorca. Zbiorcza ramka z nagłówkiem NIE JEST widziana i pary lecą do NIEZMIERZONE.
+   Próg tekstu zwykłego: 4,5:1. Poniżej — WSZYSTKIE pary użyte jako tekst na tle,
+   włącznie ze stanem najechania (hover), bo akcent na --powierzchnia-mocna jest
+   najciaśniejszą parą w całym motywie i to ona rozstrzyga, czy dobór koloru się broni. */
 
-   🔴 Każda para MUSI stać we własnym komentarzu zaczynającym się od `kontrast:` —
-   bramka szuka wzorca `/*` + `kontrast:`. Zbiorcza ramka z nagłówkiem NIE JEST widziana
-   i pary lecą do sekcji NIEZMIERZONE. */
+/* ── jasny motyw ─────────────────────────────────────────────────────────────── */
+/* kontrast: #15201a na #f4f5f1 tekst */
+/* kontrast: #15201a na #e8eae2 tekst */
+/* kontrast: #4b5a4f na #f4f5f1 tekst */
+/* kontrast: #4b5a4f na #e8eae2 tekst */
+/* kontrast: #166653 na #f4f5f1 tekst */
+/* kontrast: #166653 na #e8eae2 tekst */
+/* kontrast: #166653 na #dcdfd3 tekst */
+/* ── ciemny motyw ────────────────────────────────────────────────────────────── */
+/* kontrast: #edf1e9 na #0e1512 tekst */
+/* kontrast: #edf1e9 na #182019 tekst */
+/* kontrast: #9fb0a2 na #0e1512 tekst */
+/* kontrast: #9fb0a2 na #182019 tekst */
+/* kontrast: #5bc9a5 na #0e1512 tekst */
+/* kontrast: #5bc9a5 na #182019 tekst */
 
-/* kontrast: #1d1d1f na #ffffff tekst */
-/* kontrast: #1d1d1f na #f5f5f7 tekst */
-/* kontrast: #6e6e73 na #ffffff tekst */
-/* kontrast: #6e6e73 na #f5f5f7 tekst */
-/* kontrast: #0066cc na #ffffff tekst */
-/* kontrast: #0066cc na #f5f5f7 tekst */
-
-/* Skala typograficzna: siedem stopni. Ten komentarz też musi zaczynać się od `skala:`. */
-/* skala: 0.75rem 0.875rem 1rem 1.25rem 1.75rem 2.5rem 3.5rem */
+/* Skala typograficzna: siedem stopni, krok bliski 1,2–1,45 (Elements of Typographic
+   Style: kontrast stopni czytelny na pierwszy rzut oka, bez stopni „prawie takich
+   samych"). Ten komentarz też musi zaczynać się od `skala:` — bramka go szuka. */
+/* skala: 0.8125rem 0.9375rem 1.0625rem 1.375rem 1.875rem 2.75rem 4.25rem */
 
 :root {
-  /* ── kolor ─────────────────────────────────────────────────────────────── */
-  --tlo: #ffffff;
-  --powierzchnia: #f5f5f7;
-  --powierzchnia-mocna: #ebebed;
-  --tekst: #1d1d1f;
-  --tekst-cichy: #6e6e73;
-  --akcent: #0066cc;
+  /* ── kolor: jasny (domyślny) ──────────────────────────────────────────────── */
+  --tlo: #f4f5f1;
+  --powierzchnia: #e8eae2;
+  --powierzchnia-mocna: #dcdfd3;
+  --tekst: #15201a;
+  --tekst-cichy: #4b5a4f;
+  --akcent: #166653;
+  --linia: #c7ccc0;
 
-  /* ── skala typograficzna ───────────────────────────────────────────────── */
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
-  --t-xs: 0.75rem;
-  --t-s: 0.875rem;
-  --t-m: 1rem;
-  --t-l: 1.25rem;
-  --t-xl: 1.75rem;
-  --t-xxl: 2.5rem;
-  --t-display: 3.5rem;
+  color-scheme: light dark;
 
-  /* ── siatka odstępów: krok 4 px ────────────────────────────────────────── */
+  /* ── typografia ────────────────────────────────────────────────────────────
+     Zmienne --font-display / --font-sans definiuje <Font cssVariable="…" />
+     (Fonts API, Bazowy.astro) — Source Serif 4 i IBM Plex Sans, self-hosted
+     przy buildzie. Zapasy w var(…, tu) trzymają layout, gdyby zmienna z jakiegoś
+     powodu nie została wstrzyknięta (np. strona renderowana bez layoutu). */
+  --font-display: var(--font-display, ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif);
+  --font-sans: var(--font-sans, ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif);
+
+  --t-xs: 0.8125rem;
+  --t-s: 0.9375rem;
+  --t-m: 1.0625rem;
+  --t-l: 1.375rem;
+  --t-xl: 1.875rem;
+  --t-xxl: 2.75rem;
+  --t-display: 4.25rem;
+
+  /* ── siatka odstępów: krok 4 px u dołu, rośnie geometrycznie u góry ─────────── */
   --o-1: 0.25rem;
   --o-2: 0.5rem;
   --o-3: 0.75rem;
@@ -62,11 +90,34 @@
   --o-16: 4rem;
   --o-24: 6rem;
 
-  --promien: 18px;
-  --promien-maly: 12px;
-  --szerokosc-tresci: 980px;
+  /* Promień ZREDUKOWANY względem poprzedniej wersji (było 18px/12px) — patrz nota
+     wyżej: karta ma czytać się jak wpis w rejestrze, nie jak kafelek aplikacji. */
+  --promien: 6px;
+  --promien-maly: 4px;
 
-  color-scheme: light;
+  /* Jedna szerokość kontenera dla CAŁEJ strony — nagłówek, hero, siatka i stopka
+     dzielą tę samą lewą/prawą krawędź. To jest zamierzona różnica wobec poprzedniej
+     wersji (wąska 980px kolumna wyśrodkowana jak apple.com): tu strona ma wyglądać
+     jak jeden dokument o stałym marginesie, nie jak wyspa treści na środku ekranu. */
+  --szerokosc-tresci: 76rem;
+  /* Miara akapitu (nie całej strony) — utrzymuje linię tekstu pod ~75 znaków. */
+  --miara: 36rem;
+}
+
+/* ── kolor: ciemny, wyłącznie na podstawie preferencji systemu (bez przełącznika:
+   przełącznik wymagałby JS, a guard.config.json deklaruje CAŁĄ witrynę jako zero-JS).
+   Dopracowany osobno, nie „ciemny na odczep" — własny akcent (jaśniejszy, żeby trzymać
+   4,5:1 na ciemnym tle) i własna siatka luminancji, nie odwrócone wartości jasnego. ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tlo: #0e1512;
+    --powierzchnia: #182019;
+    --powierzchnia-mocna: #212b22;
+    --tekst: #edf1e9;
+    --tekst-cichy: #9fb0a2;
+    --akcent: #5bc9a5;
+    --linia: #2a352c;
+  }
 }
 
 *,
@@ -79,12 +130,11 @@ html {
   background: var(--tlo);
 }
 
-/* 🔴 SIATKA, NIE FLEX. Wcześniej stało tu `display: flex; flex-direction: column`
-   i to POPSUŁO układ: w kolumnie flex `margin: 0 auto` na elemencie treści zjada
-   wolne miejsce po obu stronach i ściąga go do szerokości zawartości — kafelki
-   zeszły do jednej wąskiej kolumny na środku. W siatce element rozciąga się na
-   całą szerokość toru, a `max-width` + `margin: 0 auto` centruje go tak, jak trzeba.
-   Wiersz `1fr` w środku dociska stopkę do dołu przy małej ilości treści. */
+/* 🔴 SIATKA, NIE FLEX — patrz historia w git blame: `display:flex;flex-direction:column`
+   ściągał kolumnę treści do szerokości zawartości (`margin:0 auto` w kolumnie flex
+   zjada wolne miejsce po obu stronach). W siatce element rozciąga się na całą
+   szerokość toru, `max-width` + `margin:0 auto` centruje poprawnie. Wiersz `1fr`
+   w środku dociska stopkę do dołu przy małej ilości treści. */
 body {
   margin: 0;
   min-height: 100dvh;
@@ -92,12 +142,22 @@ body {
   grid-template-rows: auto 1fr auto;
   background: var(--tlo);
   color: var(--tekst);
-  font-family: var(--font);
+  font-family: var(--font-sans);
   font-size: var(--t-m);
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  line-height: 1.55;
+  letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -122,15 +182,17 @@ a:active {
   opacity: 0.7;
 }
 
-/* fokus z klawiatury — MUSI być widoczny; #0066cc na bieli daje 5,57:1 */
+/* fokus z klawiatury — MUSI być widoczny. Kontrast obrysu wobec obu teł motywu
+   sprawdzony wyżej (para akcent/tło, akcent/powierzchnia — obie ≥ 4,5:1, więc
+   z zapasem mieszczą się też w progu 3:1 wymaganym dla elementu nietekstowego). */
 :focus-visible {
   outline: 2px solid var(--akcent);
-  outline-offset: 4px;
-  border-radius: 8px;
+  outline-offset: 3px;
+  border-radius: var(--promien-maly);
 }
 
-/* wyłączony — dziś na stronie nie występuje; reguła stoi, żeby komplet stanów
-   był zadeklarowany zawczasu, a nie dopisywany po fakcie */
+/* wyłączony — dziś na stronie nie występuje; reguła stoi zadeklarowana zawczasu,
+   żeby komplet pięciu stanów nie był dopisywany po fakcie przy pierwszym przycisku. */
 :disabled,
 [aria-disabled="true"] {
   opacity: 0.4;
@@ -145,10 +207,12 @@ a:active {
   top: calc(var(--o-4) * -4);
   z-index: 10;
   padding: var(--o-2) var(--o-4);
-  background: var(--tlo);
-  color: var(--tekst);
+  background: var(--tekst);
+  color: var(--tlo);
+  font-family: var(--font-sans);
+  font-weight: 600;
   border-radius: var(--promien-maly);
-  box-shadow: 0 4px 16px rgb(0 0 0 / 18%);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 24%);
   transition: top 120ms ease;
 }
 

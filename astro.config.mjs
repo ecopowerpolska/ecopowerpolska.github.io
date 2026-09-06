@@ -10,7 +10,7 @@
 // o innej nazwie trzeba by dopisać `base` — i usunąć je przy podpięciu domeny,
 // co jest najczęstszym cichym zepsuciem linków (github-pages-wizytowka §E).
 
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { fileURLToPath } from 'node:url';
 import { existsSync, renameSync, readdirSync, rmSync } from 'node:fs';
@@ -61,6 +61,41 @@ export default defineConfig({
 
   // `prefetch` świadomie WYŁĄCZONY (walidator zgłosi to jako AG004 INFO).
   // Powód: guard.config.json deklaruje całą witrynę jako zero-JS, a prefetch
-  // dokłada skrypt kliencki. Strona jest jednostronicowa i wszystkie kafelki
-  // prowadzą na ZEWNĘTRZNE adresy — prefetch nie miałby czego przyspieszyć.
+  // dokłada skrypt kliencki. Strona jest jednostronicowa (plus kotwice #kat-*
+  // do sekcji na tej samej stronie) i wszystkie kafelki prowadzą na ZEWNĘTRZNE
+  // adresy — prefetch nie miałby czego przyspieszyć.
+
+  // Fonts API (Astro 6+, wbudowane — NIE @fontsource, NIE <link> do Google Fonts,
+  // AG013/AG028). Provider `google()` POBIERA pliki czcionek W CZASIE BUDOWANIA
+  // i serwuje je z własnej domeny — w wyniku nie ma ani jednego zapytania do
+  // fonts.googleapis.com/fonts.gstatic.com z przeglądarki użytkownika (self-hosting,
+  // zero wycieku IP). Wymaga dostępu do sieci PRZY BUDOWANIU (sprawdzone `curl` do
+  // fonts.googleapis.com i fonts.gstatic.com, 2026-09-06, oba dostępne stąd) — GitHub
+  // Actions ma sieć zawsze; na maszynie bez sieci build tego kroku nie wykona.
+  //
+  // Dwie rodziny, każda innej roli (frontend-design: „typography carries personality"):
+  //   — Source Serif 4  → nagłówki: poważny, edytorski krój (Adobe), niesie ciężar
+  //     „spółka prowadząca rejestr serwisów", bez efekciarstwa.
+  //   — IBM Plex Sans    → tekst, etykiety, nawigacja: techniczny, inżynierski krój
+  //     (IBM), niesie skojarzenie z infrastrukturą/„Power" bez dosłownej ikonografii.
+  // `latin-ext` OBOWIĄZKOWY — bez niego polskie znaki (ą ć ę ł ń ó ś ź ż) w nagłówkach
+  // i tekście spadają cicho na font systemowy w środku zdania.
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: 'Source Serif 4',
+      cssVariable: '--font-display',
+      weights: [500, 600],
+      styles: ['normal'],
+      subsets: ['latin', 'latin-ext'],
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'IBM Plex Sans',
+      cssVariable: '--font-sans',
+      weights: [400, 600],
+      styles: ['normal'],
+      subsets: ['latin', 'latin-ext'],
+    },
+  ],
 });

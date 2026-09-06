@@ -27,6 +27,15 @@ const serwisy = defineCollection({
       adres: z.string().url(),
       // krótki podpis pod nazwą; pusty jest w porządku
       opis: z.string().max(160).optional(),
+      // kategoria/branża serwisu — OPCJONALNA. Wolny tekst (nie enum): dziś żaden
+      // wpis jej nie ma, taksonomia jeszcze nie istnieje, a wymuszenie zamkniętej
+      // listy w tym momencie byłoby zgadywaniem kategorii, których Piotr nie podał.
+      // Zachowanie strony przy braku/niepełnym pokryciu pola — patrz src/pages/index.astro,
+      // komentarz przy `grupowanieAktywne`: grupowanie włącza się dopiero od DWÓCH
+      // różnych kategorii wśród widocznych wpisów, więc dzisiejszy stan (zero kategorii)
+      // renderuje się dokładnie jak wcześniej — płaska siatka, bez pustego filtra
+      // i bez sekcji „Bez kategorii" nad dwoma kafelkami.
+      kategoria: z.string().max(60).optional(),
       // obrazek kafelka: plik w src/assets/serwisy/, ścieżka względna z pliku wpisu.
       // OPCJONALNY — dopóki Piotr nie poda grafik, kafelek renderuje czytelny
       // placeholder z samą nazwą (zero podrzuconych plików udających grafikę).

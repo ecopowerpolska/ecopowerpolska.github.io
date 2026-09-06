@@ -3,6 +3,7 @@
 // Świadomie BEZ <ClientRouter />: to komponent kliencki, a guard.config.json deklaruje
 // całą witrynę jako zero-JS. Przy jednej trasie nie ma między czym przechodzić.
 import '../styles/motyw.css';
+import { Font } from 'astro:assets';
 
 interface Props {
   tytul: string;
@@ -32,7 +33,18 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <meta property="og:description" content={opis} />
     <meta property="og:url" content={kanoniczny} />
 
-    <meta name="theme-color" content="#ffffff" />
+    {/* Dwa warianty zamiast jednego stałego koloru — kolor paska przeglądarki na
+        telefonie ma podążać za `prefers-color-scheme`, tak jak reszta motywu
+        (src/styles/motyw.css). Wartości to --tlo jasny/ciemny z tego pliku. */}
+    <meta name="theme-color" content="#f4f5f1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1512" media="(prefers-color-scheme: dark)" />
+
+    {/* Fonts API (Astro 6+, wbudowane) — NIGDY @fontsource, NIGDY <link> do Google
+        Fonts (AG013/AG028). Rodziny zadeklarowane w astro.config.mjs (`fonts: [...]`);
+        `preload` na obu, bo obie są używane nad foldem (nagłówek serifem, reszta
+        paska i hero groteskiem) — żadna nie jest opcjonalna dla pierwszego malowania. */}
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-sans" preload />
 
     {/* Favikona: placeholder do podmiany razem z logo (docs/BRAKI.md ④).
         Bez tego wpisu przeglądarka pyta o /favicon.ico i dostaje 404 —

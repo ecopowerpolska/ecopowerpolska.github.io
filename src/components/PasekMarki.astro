@@ -1,0 +1,106 @@
+---
+// PasekMarki.astro — górny pasek tożsamości: znak + nazwa spółki, opcjonalnie
+// licznik serwisów. Współdzielony przez index.astro i 404.astro, żeby marka była
+// widoczna wszędzie, nie tylko na trasie ze spisem serwisów — brief wprost wymaga,
+// żeby nagłówek „powiedział w sekundę, czym jest EcoPower".
+import firma from '../data/firma.json';
+
+interface Props {
+  /** Liczba widocznych serwisów. Pomijana (brak licznika) przy undefined albo 0 —
+   * strona nie ma zgadywać ani obiecywać liczby, której nie zna. */
+  liczbaSerwisow?: number;
+}
+
+const { liczbaSerwisow } = Astro.props;
+
+// Odmiana liczebnika: 1 serwis / 2–4 serwisy / 5+ serwisów (z wyjątkiem 12–14,
+// które mimo końcówki 2–4 biorą formę „serwisów").
+function odmiana(n: number): string {
+  if (n === 1) return 'serwis';
+  const ostatnia = n % 10;
+  const dziesiatki = n % 100;
+  if (ostatnia >= 2 && ostatnia <= 4 && !(dziesiatki >= 12 && dziesiatki <= 14)) return 'serwisy';
+  return 'serwisów';
+}
+---
+
+<header class="pasek">
+  <div class="pasek__srodek">
+    <div class="pasek__marka">
+      <!-- Znak firmowy: placeholder. Logo poda Piotr (docs/BRAKI.md ④) — wrażenie
+           ma nieść kompozycja i typografia, nie grafika. -->
+      <span class="znak" aria-hidden="true">EP</span>
+      <span class="pasek__nazwa">{firma.nazwaKrotka}</span>
+    </div>
+    {
+      !!liczbaSerwisow && liczbaSerwisow > 0 && (
+        <p class="pasek__licznik">
+          {liczbaSerwisow} {odmiana(liczbaSerwisow)} w sieci
+        </p>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  /* Pełna szerokość kontenera, przyklejony, z kreską u dołu. Świadomie BEZ
+     frosted-glass/blur z poprzedniej wersji (styl apple.com/pl) — płaska kreska
+     pasuje do kierunku „rejestr", blur nie wnosił nic poza cytatem z cudzego
+     interfejsu. */
+  .pasek {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--tlo);
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .pasek__srodek {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-3) var(--o-6);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--o-2) var(--o-6);
+  }
+
+  .pasek__marka {
+    display: flex;
+    align-items: center;
+    gap: var(--o-3);
+    min-width: 0;
+  }
+
+  /* Placeholder znaku firmowego — kwadrat z inicjałami, znika przy prawdziwym logo. */
+  .znak {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--promien-maly);
+    background: var(--tekst);
+    color: var(--tlo);
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .pasek__nazwa {
+    font-size: var(--t-s);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pasek__licznik {
+    margin: 0;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+    white-space: nowrap;
+  }
+</style>

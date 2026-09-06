@@ -5,8 +5,9 @@
 #    z dokumentu Potwora o CMS-ie, ta sama data. Zapis starszy niż 30 dni weryfikuj
 #    u źródła; nie podnoś wersji „na wyczucie".
 #
-# ⚠️ NIEURUCHOMIONE. To pierwszy przepływ Pages w tym warsztacie — pierwszy przebieg
-#    jest pomiarem, nie formalnością. Co dokładnie sprawdzić, mówi docs/PIERWSZY-PRZEBIEG.md.
+# ✅ URUCHOMIONY. Pierwszy przebieg odbył się 2026-09-04; trzy przebiegi zakończone
+#    sukcesem, Pages w stanie „built", pełny cykl build+deploy ok. 33 sekundy.
+#    Stan i to, co po tym przebiegu zostało otwarte, mówi docs/PIERWSZY-PRZEBIEG.md.
 #
 # 🔴 ŻADNEGO SEKRETU W GitHub Secrets tego repozytorium. Pages autoryzuje się tokenem
 #    wydawanym na czas przebiegu przez blok `permissions:` niżej. To jedyna przewaga

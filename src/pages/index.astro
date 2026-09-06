@@ -2,142 +2,248 @@
 // index.astro — jedyna trasa treściowa. Kafelki pochodzą WYŁĄCZNIE z kolekcji,
 // więc dołożenie serwisu jest wpisem w panelu, nie zmianą tego pliku.
 //
-// Układ w stylu apple.com/pl (polecenie Piotra 2026-09-04): wąski pasek nawigacji,
-// duży wyśrodkowany nagłówek, siatka wypełnionych kart. Zero JavaScriptu — pasek
-// nie chowa się przy przewijaniu, bo to wymagałoby skryptu, a cała witryna jest
-// zadeklarowana jako zero-JS w guard.config.json.
+// Kierunek „rejestr sieci" (przebudowa 2026-09-06, zastępuje poprzedni „styl
+// apple.com/pl" — patrz nota w src/styles/motyw.css). Układ lewostronny, jedna
+// szerokość kontenera od nagłówka po stopkę, grupowanie kafelków po kategorii
+// gdy kategorie realnie istnieją. Zero JavaScriptu: pasek nie chowa się przy
+// przewijaniu, spis kategorii to zwykłe kotwice — cała witryna jest zadeklarowana
+// jako zero-JS w guard.config.json.
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import Bazowy from '../layouts/Bazowy.astro';
 import Kafelek from '../components/Kafelek.astro';
+import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 import DaneStrukturalne from '../components/DaneStrukturalne.astro';
 import firma from '../data/firma.json';
 
-const serwisy = (await getCollection('serwisy', ({ data }) => !data.ukryty)).sort(
+const wszystkie = (await getCollection('serwisy', ({ data }) => !data.ukryty)).sort(
   (a, b) =>
     a.data.kolejnosc - b.data.kolejnosc ||
     a.data.nazwa.localeCompare(b.data.nazwa, 'pl'),
 );
 
+// ── grupowanie po kategorii ──────────────────────────────────────────────────
+// Pole `kategoria` (content.config.ts) jest OPCJONALNE i dziś nie ma go żaden
+// wpis. Grupowanie włącza się dopiero od DWÓCH RÓŻNYCH kategorii wśród widocznych
+// wpisów — jedna kategoria (albo jej brak, dzisiejszy stan) zostaje płaską siatką:
+// zero pustego filtra, zero sekcji „Bez kategorii" nad dwoma kafelkami.
+function kluczKategorii(k?: string): string | null {
+  const t = k?.trim();
+  return t ? t.toLowerCase() : null;
+}
+
+const kluczeUnikalne = new Set(
+  wszystkie.map((s) => kluczKategorii(s.data.kategoria)).filter((k): k is string => k !== null),
+);
+const grupowanieAktywne = kluczeUnikalne.size >= 2;
+
+function slugify(tekst: string): string {
+  const zamianaPl: Record<string, string> = {
+    ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z',
+  };
+  return (
+    'kat-' +
+    tekst
+      .toLowerCase()
+      .split('')
+      .map((znak) => zamianaPl[znak] ?? znak)
+      .join('')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-+|-+$)/g, '')
+  );
+}
+
+interface Sekcja {
+  etykieta: string;
+  kotwica: string;
+  wpisy: CollectionEntry<'serwisy'>[];
+  naglowekWidoczny: boolean;
+}
+
+let sekcje: Sekcja[];
+if (grupowanieAktywne) {
+  const mapa = new Map<string, Sekcja>();
+  for (const s of wszystkie) {
+    const klucz = kluczKategorii(s.data.kategoria) ?? '__inne__';
+    const etykieta = s.data.kategoria?.trim() || 'Inne';
+    if (!mapa.has(klucz)) {
+      mapa.set(klucz, { etykieta, kotwica: slugify(etykieta), wpisy: [], naglowekWidoczny: true });
+    }
+    mapa.get(klucz)!.wpisy.push(s);
+  }
+  sekcje = [...mapa.values()].sort(
+    (a, b) =>
+      Math.min(...a.wpisy.map((w) => w.data.kolejnosc)) -
+      Math.min(...b.wpisy.map((w) => w.data.kolejnosc)),
+  );
+} else {
+  // Płaska siatka: jedna sekcja, nagłówek istnieje wyłącznie dla czytnika ekranu
+  // (hierarchia H1→H2 zostaje kompletna), oprawa wizualna nie zyskuje napisu,
+  // którego nikt nie zamawiał.
+  sekcje = [{ etykieta: 'Serwisy', kotwica: 'naglowek-serwisow', wpisy: wszystkie, naglowekWidoczny: false }];
+}
+
+// Kolejność faktycznie widoczna na stronie, spłaszczona — zasila numerację ItemList
+// w danych strukturalnych ORAZ wybór kandydata na LCP (pierwszy element = eager+high).
+const kolejnoscWyswietlana = sekcje.flatMap((g) => g.wpisy);
+const idPierwszego = kolejnoscWyswietlana[0]?.id;
+
 const tytul = `${firma.nazwaKrotka} — serwisy spółki`;
 
-// 🟡 Opis techniczny (meta description), złożony wyłącznie z faktów ze zlecenia:
-// „firma rozliczeniowa i właściciel wielu serwisów WWW", „strona zbiera te serwisy
-// w jednym miejscu". Docelowe brzmienie podaje Piotr — patrz docs/BRAKI.md.
+// 🟡 Zdanie złożone wyłącznie z faktów zlecenia („spółka prowadzi kilka niezależnych
+// serwisów internetowych, strona je zbiera") — do potwierdzenia albo podmiany przez
+// Piotra, tak jak poprzedni opis (docs/BRAKI.md ⑥).
 const opis =
-  'EcoPower Polska sp. z o.o. — serwisy internetowe spółki zebrane w jednym miejscu.';
+  'EcoPower Polska sp. z o.o. prowadzi sieć niezależnych serwisów internetowych — wszystkie zebrane w jednym miejscu.';
 ---
 
 <Bazowy tytul={tytul} opis={opis}>
   <DaneStrukturalne
     slot="head"
-    serwisy={serwisy.map((s) => ({ nazwa: s.data.nazwa, adres: s.data.adres }))}
+    serwisy={kolejnoscWyswietlana.map((s) => ({ nazwa: s.data.nazwa, adres: s.data.adres }))}
   />
 
-  <header class="pasek">
-    <div class="pasek__srodek">
-      <!-- Znak firmowy: placeholder. Logo poda Piotr (docs/BRAKI.md ④). -->
-      <span class="znak" aria-hidden="true">EP</span>
-      <span class="pasek__nazwa">{firma.nazwaKrotka}</span>
-    </div>
-  </header>
+  <PasekMarki liczbaSerwisow={wszystkie.length} />
 
   <main id="tresc">
     <section class="hero">
       <h1 class="hero__tytul">{firma.nazwaKrotka}</h1>
+      <p class="hero__opis">
+        Spółka prowadzi kilka niezależnych serwisów internetowych. Tu znajdziesz je
+        wszystkie w jednym miejscu.
+      </p>
     </section>
 
-    <section class="serwisy" aria-labelledby="naglowek-serwisow">
-      <h2 id="naglowek-serwisow" class="sr-only">Serwisy</h2>
-
-      {
-        serwisy.length === 0 ? (
-          <p class="pusto">Brak serwisów do pokazania.</p>
-        ) : (
-          <ul class="siatka">
-            {serwisy.map((s, i) => (
+    {
+      grupowanieAktywne && (
+        <nav class="spis" aria-label="Kategorie serwisów">
+          <ul>
+            {sekcje.map((s) => (
               <li>
-                <Kafelek
-                  nazwa={s.data.nazwa}
-                  adres={s.data.adres}
-                  opis={s.data.opis}
-                  obrazek={s.data.obrazek}
-                  alt={s.data.alt}
-                  pierwszy={i === 0}
-                />
+                <a href={`#${s.kotwica}`}>
+                  {s.etykieta} <span class="spis__liczba">({s.wpisy.length})</span>
+                </a>
               </li>
             ))}
           </ul>
-        )
-      }
-    </section>
+        </nav>
+      )
+    }
+
+    {
+      wszystkie.length === 0 ? (
+        <p class="pusto">Brak serwisów do pokazania.</p>
+      ) : (
+        sekcje.map((s) => (
+          <section class="grupa" aria-labelledby={s.kotwica}>
+            <h2 id={s.kotwica} class={s.naglowekWidoczny ? 'grupa__naglowek' : 'grupa__naglowek sr-only'}>
+              {s.etykieta}
+            </h2>
+            <ul class="siatka">
+              {s.wpisy.map((wpis) => (
+                <li>
+                  <Kafelek
+                    nazwa={wpis.data.nazwa}
+                    adres={wpis.data.adres}
+                    opis={wpis.data.opis}
+                    obrazek={wpis.data.obrazek}
+                    alt={wpis.data.alt}
+                    pierwszy={wpis.id === idPierwszego}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      )
+    }
   </main>
 
   <Stopka />
 </Bazowy>
 
 <style>
-  /* ── pasek nawigacji: wąski, przyklejony, półprzezroczysty ──────────────── */
-  .pasek {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background: rgb(255 255 255 / 80%);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-  }
-
-  .pasek__srodek {
-    max-width: var(--szerokosc-tresci);
-    margin: 0 auto;
-    padding: 0 var(--o-6);
-    height: 48px;
-    display: flex;
-    align-items: center;
-    gap: var(--o-3);
-  }
-
-  /* Placeholder znaku firmowego — kwadrat z inicjałami, znika przy prawdziwym logo. */
-  .znak {
-    flex: 0 0 auto;
-    width: 28px;
-    height: 28px;
-    display: grid;
-    place-items: center;
-    border-radius: 8px;
-    background: var(--tekst);
-    color: var(--tlo);
-    font-size: var(--t-xs);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-
-  .pasek__nazwa {
-    font-size: var(--t-s);
-    font-weight: 500;
-  }
-
-  /* ── nagłówek strony ────────────────────────────────────────────────────── */
+  /* ── hero: lewostronny, nie wyśrodkowany — różnica wobec poprzedniej wersji jest
+     zamierzona (nota w motyw.css). Rozmiar H1 płynny (clamp), nie skokowy na jednym
+     breakpoincie, żeby na tabletach nie było „za dużego albo za małego" progu. */
   .hero {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
-    padding: var(--o-24) var(--o-6) var(--o-16);
-    text-align: center;
+    padding: var(--o-16) var(--o-6) var(--o-12);
   }
 
   .hero__tytul {
-    margin: 0;
-    font-size: var(--t-xxl);
-    font-weight: 600;
-    line-height: 1.05;
+    font-size: clamp(var(--t-xxl), 4vw + 1.6rem, var(--t-display));
     letter-spacing: -0.015em;
+    max-width: 24ch;
   }
 
-  /* ── siatka kafelków ────────────────────────────────────────────────────── */
-  .serwisy {
+  .hero__opis {
+    margin: var(--o-4) 0 0;
+    max-width: var(--miara);
+    font-size: var(--t-l);
+    color: var(--tekst-cichy);
+    line-height: 1.5;
+  }
+
+  /* ── spis kategorii: proste kotwice, nie zakładka wizualnie tożsama z kafelkiem —
+     celowo INNY język wizualny (kreski, nie wypełnienie), żeby nie powtarzać jednego
+     promienia zaokrąglenia na wszystkim (patrz frontend-design: „SaaS-card kit"). */
+  .spis {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
-    padding: 0 var(--o-6) var(--o-24);
+    padding: 0 var(--o-6) var(--o-8);
+  }
+
+  .spis ul {
+    list-style: none;
+    margin: 0;
+    padding: var(--o-4) 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-2) var(--o-6);
+    border-top: 1px solid var(--linia);
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .spis a {
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  .spis a:hover {
+    color: var(--akcent);
+    text-decoration: underline;
+  }
+
+  .spis__liczba {
+    font-weight: 400;
+    color: var(--tekst-cichy);
+  }
+
+  /* ── sekcje i siatka kafelków ──────────────────────────────────────────────── */
+  .grupa {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6) var(--o-16);
+  }
+
+  .grupa__naglowek {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-6);
+  }
+
+  /* Kreska nad nagłówkiem kategorii TYLKO od drugiej sekcji w kolejności — selektor
+     sąsiedztwa, nie :first-of-type: `.hero` jest też elementem <section>, więc
+     „pierwszy section wśród rodzeństwa" to hero, nie pierwsza `.grupa`, i pseudoklasa
+     nigdy by nie trafiła. Pierwsza `.grupa` (niezależnie od tego, czy poprzedza ją
+     hero, czy jeszcze spis kategorii) nie potrzebuje kreski — ma ją już pasek albo
+     spis nad sobą. */
+  .grupa + .grupa .grupa__naglowek {
+    padding-top: var(--o-8);
+    border-top: 1px solid var(--linia);
   }
 
   .siatka {
@@ -145,17 +251,68 @@ const opis =
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--o-4);
+    gap: var(--o-6);
     grid-template-columns: 1fr;
   }
 
-  .pusto {
-    color: var(--tekst-cichy);
-    text-align: center;
+  @media (min-width: 36rem) {
+    .siatka {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
-  /* Nagłówek sekcji istnieje dla czytnika ekranu — hierarchia H1→H2 zostaje
-     kompletna, a oprawa wizualna nie zyskuje napisu, którego nikt nie zamawiał. */
+  @media (min-width: 60rem) {
+    .siatka {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .siatka {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ── LICZBA KOLUMN LICZY SIĘ Z LICZBĄ KAFELKÓW ────────────────────────────────
+     Sama siatka 4-kolumnowa jest zbudowana pod docelowe kilkadziesiąt serwisów,
+     ale DZIŚ serwisy są dwa — i w czterech kolumnach zajmowały pół ekranu,
+     zostawiając drugie pół pustką. Pustka nie czytała się jako świadomy oddech,
+     tylko jako niedokończona strona: dokładnie ten zarzut, który zaczął tę robotę.
+     Poniżej siatka zwęża się, gdy kafelków jest mało, więc te dwa wypełniają wiersz
+     i niosą duże zdjęcie — a przy czwartym wpisie układ sam wraca do pełnych czterech
+     kolumn. Zero JavaScriptu (budżet `zeroJsRoutes` zostaje nienaruszony) i zero
+     ręcznej roboty przy dokładaniu serwisu.
+
+     `:has()` jest w tej roli bezpieczne: przeglądarka, która go nie zna, po prostu
+     pomija te reguły i pokazuje pełną siatkę — czyli stan sprzed tej poprawki.
+     Kolejność reguł jest znacząca: specyficzność obu jest równa, więc rozstrzyga
+     źródło — najpierw „mniej niż cztery", potem „mniej niż trzy". */
+  @media (min-width: 60rem) {
+    .siatka:not(:has(> :nth-child(3))) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .siatka:not(:has(> :nth-child(4))) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .siatka:not(:has(> :nth-child(3))) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .pusto {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6) var(--o-16);
+    color: var(--tekst-cichy);
+  }
+
+  /* Nagłówek sekcji istnieje dla czytnika ekranu w wariancie płaskim — hierarchia
+     H1→H2 zostaje kompletna, a oprawa wizualna nie zyskuje napisu, którego nikt
+     nie zamawiał. */
   .sr-only {
     position: absolute;
     width: 1px;
@@ -166,16 +323,5 @@ const opis =
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
-  }
-
-  @media (min-width: 48rem) {
-    .hero__tytul {
-      font-size: var(--t-display);
-    }
-
-    .siatka {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--o-6);
-    }
   }
 </style>

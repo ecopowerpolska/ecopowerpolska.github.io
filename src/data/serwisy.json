@@ -1,9 +1,9 @@
 {
   "serwisy": [
     {
-      "nazwa": "studioagat.pl",
+      "nazwa": "Studio Agat",
       "adres": "https://studioagat.pl/",
-      "opis": "",
+      "opis": "PROJEKTY WNĘTRZ WARSZAWA I OKOLICE",
       "kategoria": "",
       "obrazek": "../assets/serwisy/studioagat.jpg",
       "alt": "Zdjęcie główne serwisu studioagat.pl",

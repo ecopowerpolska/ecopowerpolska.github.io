@@ -11,5 +11,9 @@ dist/
 CLAUDE.local.md
 
 # Zrzuty ekranu i ślady automatu przeglądarki z sesji roboczych (wzorzec z repo warsztatu)
-*.png
+# 🔴 TYLKO katalog główny (`/*.png`), nie całe drzewo. Wzorzec `*.png` bez ukośnika
+# blokował także GRAFIKI STRONY — logo w `src/assets/` i ikonę zakładki w `public/`
+# — czyli pliki, które MUSZĄ być w repozytorium, bo bez nich build nie ma z czego
+# zbudować strony. Zrzuty z sesji lądują w katalogu głównym i tam ta reguła działa.
+/*.png
 .playwright-mcp/

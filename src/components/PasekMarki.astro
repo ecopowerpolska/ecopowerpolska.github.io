@@ -3,9 +3,12 @@
 // licznik serwisów. Współdzielony przez index.astro i 404.astro, żeby marka była
 // widoczna wszędzie, nie tylko na trasie ze spisem serwisów — brief wprost wymaga,
 // żeby nagłówek „powiedział w sekundę, czym jest EcoPower".
+import { Image } from 'astro:assets';
+
 import firma from '../data/firma.json';
 import strona from '../data/strona.json';
 import { tekst } from '../lib/tekst';
+import logo from '../assets/logo-ecopower-polska.png';
 
 interface Props {
   /** Liczba widocznych serwisów. Pomijana (brak licznika) przy undefined albo 0 —
@@ -32,24 +35,22 @@ function odmiana(n: number): string {
 
 <header class="pasek">
   <div class="pasek__srodek">
-    {/* Sam znak, BEZ nazwy — nazwa jest w H1 niżej (D2). Wariant A „E rejestrowe”,
-        wybrany przez Piotra 2026-09-07 (D5). Kolory z motywu, nie wpisane na sztywno.
-        viewBox przycięty do samego rysunku (x 12–50, y 11–53): przy pełnym 0 0 64 64
-        znak miał wokół siebie pas pustki i w pasku wychodził o jedną trzecią za mały.
-        Favikona zostaje przy 0 0 64 64 — tam pustka jest marginesem kafelka. */}
+    {/* Pełne logo firmowe: kwadrat EP + napis ECOPOWER POLSKA. Wybór Piotra
+        2026-09-07 — zastępuje rysowany w kodzie znak „E rejestrowe" (D5).
+        Plik jest RASTREM: Piotr dostarczył PNG, wersji wektorowej nie ma nigdzie
+        na dysku, a w systemie nie ma potrace ani autotrace. `<Image>` wyda z niego
+        WebP w potrzebnych szerokościach; źródło 3142 px starcza na każdy ekran.
+        `loading="eager"`, bo logo stoi nad foldem — ale BEZ `fetchpriority="high"`:
+        ten należy do zdjęcia pierwszego kafelka, kandydata na LCP (CLAUDE.md §4). */}
     <div class="pasek__marka">
-      <svg
+      <Image
         class="znak"
-        viewBox="10 11 42 42"
-        role="img"
-        aria-label={firma.nazwaKrotka}
-        focusable="false"
-      >
-        <rect x="12" y="11" width="8" height="42" rx="2" fill="var(--akcent)" />
-        <rect x="20" y="11" width="30" height="8" rx="2" fill="var(--tekst)" />
-        <rect x="20" y="28" width="22" height="8" rx="2" fill="var(--tekst)" />
-        <rect x="20" y="45" width="30" height="8" rx="2" fill="var(--tekst)" />
-      </svg>
+        src={logo}
+        alt={firma.nazwaKrotka}
+        width={180}
+        densities={[1.5, 2]}
+        loading="eager"
+      />
     </div>
     {
       !!liczbaSerwisow && liczbaSerwisow > 0 && (
@@ -95,11 +96,21 @@ function odmiana(n: number): string {
   /* Znak firmowy. Rysunek jest w kodzie, nie w pliku — 4 prostokąty ważą mniej niż
      zapytanie o obrazek i biorą kolory prosto z motywu. Ten sam rysunek w innych
      barwach stoi w public/favicon.svg; zmieniasz jeden — zmieniasz oba. */
+  /* Wysokość rządzi, szerokość idzie za proporcją — logo jest szerokie (5,6:1),
+     więc wiązanie go szerokością rozjeżdżałoby pasek na wąskich ekranach.
+     Atrybuty width/height z <Image> zostają w HTML-u i trzymają proporcję,
+     więc podmiana na `auto` nie wprowadza przeskoku układu (CLS). */
   .znak {
     flex: 0 0 auto;
-    width: 30px;
-    height: 30px;
+    height: 32px;
+    width: auto;
     display: block;
+  }
+
+  @media (max-width: 26rem) {
+    .znak {
+      height: 26px;
+    }
   }
 
   .pasek__licznik {

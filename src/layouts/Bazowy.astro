@@ -50,10 +50,15 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-sans" preload />
 
-    {/* Favikona: placeholder do podmiany razem z logo (docs/BRAKI.md ④).
-        Bez tego wpisu przeglądarka pyta o /favicon.ico i dostaje 404 —
-        zmierzone w konsoli podglądu 2026-09-04. */}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/* Ikona zakładki: sam kwadrat EP z logo firmowego, wycięty z pliku Piotra
+        (wybór Piotra 2026-09-07). Na jasnym kaflu w kolorze tła strony, nie na
+        przezroczystości — grafitowy znak na przezroczystym tle znika w ciemnym
+        motywie przeglądarki. Dwa rozmiary: 32 px odrysowany osobno, żeby cienkie
+        kreski ramki nie rozmyły się przy zmniejszaniu z 512.
+        Bez tego wpisu przeglądarka pyta o /favicon.ico i dostaje 404. */}
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
 
     {/* Nazwa pliku to sitemap.xml, nie sitemap-index.xml — hak astro:build:done
         w astro.config.mjs zmienia nazwę po buildzie. */}

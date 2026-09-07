@@ -199,3 +199,44 @@ serwisu jako widoczny tekst, więc zdjęcie jest ozdobne i `alt=""` to właściw
 **Reguła ogólna:** żadne pole treści nie może być wymagane warunkowo przez schemat, dopóki
 panel nie umie tego wymusić. Inaczej zapis klienta zamraża stronę na starej wersji,
 a klient nie widzi żadnego komunikatu.
+
+---
+
+## D11 — Logo firmowe zastępuje rysowany znak (2026-09-07)
+
+**Piotr dostarczył gotowe logo** (`~/Obrazy/ecopower-polska-logo.png`) i rozstrzygnął dwie rzeczy:
+
+- **w pasku strony stoi PEŁNE logo** — kwadrat „EP" razem z napisem ECOPOWER POLSKA;
+- **ikoną zakładki w przeglądarce jest SAM KWADRAT** z literami EP.
+
+To **zamyka D5** („znak firmowy: wybór otwarty") i **unieważnia wariant A »E rejestrowe«**,
+rysowany dotąd czterema prostokątami w `PasekMarki.astro`. Rysunek i `public/favicon.svg`
+zostały usunięte — są w historii gita, gdyby kiedyś wróciły.
+
+**Co się przez to zmienia w zasadach:** D2 mówiło „sam znak, BEZ nazwy — nazwa jest w H1 niżej".
+Logo niesie nazwę w sobie, więc napis pojawia się teraz dwa razy: w pasku (jako część znaku)
+i w H1. **To jest świadome** — tak wygląda każde logo z sygnaturą słowną. Dla czytnika ekranu
+logo ma `alt` równy nazwie skróconej, dokładnie jak poprzedni znak.
+
+**Dlaczego raster, nie wektor.** Piotr dał PNG; wersji wektorowej nie ma nigdzie na dysku
+(`find` po `Obrazy`, `Pobrane`, `Dokumenty`, `Pulpit`), a w systemie nie ma `potrace` ani
+`autotrace`, więc obrysu z bitmapy nie da się zrobić wiarygodnie. Inkscape 1.2.2 nie wystawia
+obrysu w wierszu poleceń. Źródło ma 3142 × 560 px, a `<Image>` wydaje z niego WebP w potrzebnych
+szerokościach — przy wyświetlanych 180 px zapasu starcza na każdy ekran.
+🟡 **Gdyby Piotr znalazł plik `.ai`, `.eps`, `.pdf` albo `.svg` z tym logo — warto podmienić:**
+wektor byłby ostrzejszy w druku i lżejszy o rząd wielkości.
+
+**Ikona zakładki na jasnym kaflu, nie na przezroczystości.** Kwadrat EP jest grafitowy; na
+przezroczystym tle zniknąłby w ciemnym motywie przeglądarki. Kafel ma kolor tła strony
+(`#f4f5f1`), więc ikona wygląda tak samo jak logo na stronie. Dwa rozmiary: 512 px i **osobno
+odrysowane 32 px** — cienkie kreski ramki rozmywają się przy zmniejszaniu z 512, a to jest
+rozmiar, w którym zakładkę widać naprawdę.
+
+**Kolor.** Tusz logo to `#424F54` (chłodny grafit) i **różni się** od tekstu strony (`#15201a`)
+oraz od akcentu (`#166653`, zielony). Logo jest więc odrobinę chłodniejsze niż napisy obok.
+Zostawione bez przemalowania: to znak firmowy, a nie element motywu — przemalowanie logo pod
+paletę strony byłoby zmianą marki, nie zmianą strony.
+
+**Odstępstwo walidatora, świadome.** `AG034 [INFO]` zgłasza, że logo ma `loading="eager"`
+bez `fetchpriority="high"`. Tak ma być: `fetchpriority` należy do zdjęcia pierwszego kafelka,
+czyli realnego kandydata na LCP (`CLAUDE.md` §4 — dokładnie jeden obraz na stronę).

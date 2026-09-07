@@ -380,6 +380,25 @@ collections:
           w pozycji menu Dane firmy — tutaj są tylko podpisy przed nimi. Wyczyszczenie
           pola przywraca napis domyślny.
         fields:
+          # Skróty rejestrowe stoją w jednym wierszu nad resztą — stąd na początku.
+          - name: etykietaKrs
+            label: "Podpis przed numerem KRS"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: KRS"
+
+          - name: etykietaNip
+            label: "Podpis przed numerem NIP"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: NIP"
+
+          - name: etykietaRegon
+            label: "Podpis przed numerem REGON"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: REGON"
+
           - name: etykietaFormaPrawna
             label: "Podpis przed formą prawną"
             widget: string

@@ -1,19 +1,25 @@
 # Kompletny CMS — plan wystawienia WSZYSTKICH tekstów strony do panelu
 
 **Rodzaj:** kryteria
-**Stan: NIEWYKONANE.** Zlecenie Piotra 2026-09-07 („całą zawartość strony mam mieć możliwość
-zmiany, każdego tekstu — to ma być kompletny CMS"). Robota została zaczęta i **przerwana na
-polecenie Piotra**, a pliki pośrednie usunięte, żeby w repozytorium nie leżał stan pół-działający.
-Ten dokument trzyma projekt w całości, żeby dało się to zrobić jednym przebiegiem.
+**Stan: WYKONANE 2026-09-07**, commit `fb6c496`. Dokument zostaje jako zapis, CO i DLACZEGO
+zostało wystawione — nie jako lista do zrobienia.
+
+**Co poszło ponad ten plan:** doszły **grupy kafelków** (`src/data/grupy.json`, kolekcja `grupy`,
+pole `grupa` w kafelku jako widget `relation`) i **menu panelu z czterech pozycji** po polsku:
+Grupy · Serwisy (kafelki) · Teksty strony · Dane firmy. Tego plan nie przewidywał — weszło
+z drugiej i czwartej skargi Piotra tego samego dnia.
+
+**Czego plan nie doceniał:** `og:site_name` i `napisLicznika` też były twardo w kodzie i też
+wyszły do panelu. Razem `strona.json` niesie 12 napisów, nie 8 jak niżej.
 
 ---
 
-## Co JUŻ jest edytowalne w panelu
+## Co JUŻ było edytowalne przed tą robotą
 
 Kafelki (nazwa, adres, podpis, kategoria, obrazek, opis obrazka, ukrycie, kolejność przez
 przeciąganie) · dane rejestrowe w stopce · zdanie pod kafelkami.
 
-## Co JEST TWARDO W KODZIE i ma trafić do panelu
+## Co BYŁO TWARDO W KODZIE i trafiło do panelu
 
 | Plik | Tekst |
 |---|---|

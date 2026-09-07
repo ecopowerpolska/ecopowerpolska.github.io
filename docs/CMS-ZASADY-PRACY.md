@@ -70,3 +70,35 @@ z niezwiązaną edycją danych firmy zrobioną minutę później.
 
 **Zasada ogólna:** walidacja treści należy do formularza, nie do builda. Build ma się udać zawsze —
 najgorsze, co wolno mu zrobić, to pokazać brzydki tekst; nigdy nie zamrozić strony.
+
+---
+
+## 🔴 ④ Obrazek-widmo zamrażał stronę tak samo jak `alt` — znalezione kontrolą, nie awarią
+
+**Objaw, którego jeszcze nie było u klienta:** wpis kafelka wskazuje plik obrazka, którego
+w repozytorium nie ma. Build staje, strona zostaje na starej wersji, w panelu cisza.
+
+**Przyczyna:** pole `obrazek` przechodzi przez `image()` z `astro:assets`, a to **sprawdza
+istnienie pliku** i przy jego braku przerywa build. Reguła ③ zdjęła walidację z pól tekstowych,
+ale `image()` została — awaria była zamknięta na polu `alt` i **otwarta o jedno pole dalej**.
+
+**Zmierzone 2026-09-07** (podmiana ścieżki na nieistniejący plik, `npm run build`):
+```
+[ImageNotFound] Could not find requested image `../assets/serwisy/nie-ma-takiego-pliku.jpg`
+kod wyjścia: 1
+```
+🔴 **Ukrycie kafelka NIE ratowało builda** — obrazki przetwarzane są przed filtrowaniem
+`ukryty`, więc zepsuty obrazek kafelka wyłączonego ze strony też ją zamrażał.
+
+**Kiedy to wystąpi naprawdę:** wgranie obrazka w panelu, które nie doszło do skutku (zerwane
+połączenie albo commit odrzucony przez przesunięty czubek gałęzi — pułapka ① wyżej), oraz
+ręczne skasowanie pliku z repozytorium.
+
+**Domknięcie mechanizmem:** parser w `src/content.config.ts` (`obrazekJesliIstnieje`) podaje
+ścieżkę **tylko wtedy, gdy plik naprawdę leży na dysku**; plik-widmo daje kafelek bez zdjęcia.
+Sprawdzone przebiegiem: dwa wpisy z plikami-widmami (jeden widoczny, jeden ukryty) —
+build **kod wyjścia 0**, wszystkie widoczne kafelki na stronie.
+
+**Zasada:** każde pole, które odwołuje się do PLIKU, jest walidacją zabijającą build, nawet
+jeśli w schemacie nie widać żadnego `.min()` ani `.regex()`. Traktuj je jak `required`
+warunkowe z reguły ③.

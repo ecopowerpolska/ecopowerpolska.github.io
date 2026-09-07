@@ -7,12 +7,47 @@
 // 🔴 TEN PLIK JEST LUSTREM public/admin/config.yml. Rozjazd nie wychodzi w panelu —
 // wychodzi czerwonym buildem w Actions, już PO zapisaniu wpisu przez klienta.
 
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { defineCollection } from 'astro:content';
 import { file } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /** Katalog obrazków kafelków, licząc od pliku src/data/serwisy.json. */
 const KATALOG_OBRAZKOW = '../assets/serwisy/';
+
+/** Ten sam katalog, licząc od katalogu projektu — do sprawdzenia, czy plik JEST. */
+const KATALOG_OBRAZKOW_NA_DYSKU = resolve(process.cwd(), 'src/assets/serwisy');
+
+/**
+ * 🔴 Ścieżka obrazka WYŁĄCZNIE wtedy, gdy plik naprawdę leży na dysku.
+ *
+ * Powód jest zmierzony, nie teoretyczny (2026-09-07): wpis wskazujący nieistniejący
+ * plik wywraca build błędem `[ImageNotFound]` z vite-plugin-content-assets, kodem
+ * wyjścia 1 — czyli ZAMRAŻA PUBLIKACJĘ CAŁEJ STRONY, bez żadnego komunikatu w panelu.
+ * To ta sama klasa awarii co pole `alt` tego samego dnia (docs/CMS-ZASADY-PRACY.md ③),
+ * tyle że schowana o jedno pole dalej: `z.string()` nie waliduje treści, ale `image()`
+ * sprawdza ISTNIENIE PLIKU i robi to fatalnie.
+ *
+ * Kiedy to wystąpi u klienta: wgranie obrazka w panelu, które nie doszło do skutku
+ * (zerwane połączenie, odrzucony commit z powodu przesuniętego czubka gałęzi —
+ * pułapka ① z CMS-ZASADY-PRACY.md), albo ręczne skasowanie pliku z repozytorium.
+ * Zapis wskazujący plik-widmo MUSI dać kafelek bez zdjęcia, nie martwą stronę.
+ *
+ * 🔴 Dotyczy to także kafelka `ukryty: true` — obrazki są przetwarzane przed
+ * filtrowaniem, więc ukrycie kafelka NIE ratuje builda przed jego zepsutym obrazkiem.
+ */
+const obrazekJesliIstnieje = (wartosc: unknown): string | undefined => {
+  if (wartosc == null || wartosc === '') return undefined;
+  // Panel zapisuje ścieżkę względnie, a liczba `../` zależy od jego konfiguracji;
+  // wszystkie obrazki kafelków leżą w jednym katalogu, więc sama nazwa wystarcza.
+  const nazwa = String(wartosc).split('/').pop();
+  if (!nazwa) return undefined;
+  return existsSync(resolve(KATALOG_OBRAZKOW_NA_DYSKU, nazwa))
+    ? KATALOG_OBRAZKOW + nazwa
+    : undefined;
+};
 
 /**
  * 🔴 KAŻDE pole sprowadzone do postaci, ktorej schemat na pewno nie odrzuci.
@@ -86,12 +121,10 @@ const serwisy = defineCollection({
         grupa: naTekst(wpis.grupa ?? wpis.kategoria),
         alt: naTekst(wpis.alt),
         ukryty: wpis.ukryty === true || wpis.ukryty === 'true',
-        // 🔴 Sciezka obrazka sprowadzona do jednej postaci: panel zapisuje ja wzglednie,
-        // a liczba `../` zalezy od jego konfiguracji. Wszystkie obrazki kafelkow leza
-        // w jednym katalogu, wiec sama nazwa pliku wystarcza.
-        obrazek: wpis.obrazek
-          ? KATALOG_OBRAZKOW + String(wpis.obrazek).split('/').pop()
-          : undefined,
+        // 🔴 Sciezka sprowadzona do jednej postaci ORAZ sprawdzona na dysku —
+        // plik-widmo daje kafelek bez zdjecia, nie zamrozona strone (patrz komentarz
+        // przy `obrazekJesliIstnieje`, zmierzone przebiegiem 2026-09-07).
+        obrazek: obrazekJesliIstnieje(wpis.obrazek),
       }));
     },
   }),

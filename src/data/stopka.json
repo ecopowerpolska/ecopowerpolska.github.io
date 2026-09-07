@@ -1,4 +1,7 @@
 {
+  "etykietaKrs": "KRS",
+  "etykietaNip": "NIP",
+  "etykietaRegon": "REGON",
   "etykietaFormaPrawna": "Forma prawna:",
   "etykietaAdresWww": "Adres WWW:",
   "etykietaEmail": "E-mail:",

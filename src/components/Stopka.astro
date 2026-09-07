@@ -10,21 +10,32 @@ import { tekst } from '../lib/tekst';
 const mail = firma.email.toLowerCase();
 
 // Etykiety i napisy z panelu; `tekst()` przywraca wartość domyślną po wyczyszczeniu pola.
+// Skróty rejestrowe też są edytowalne — pięć sąsiednich etykiet było, te trzy nie były,
+// i ta niekonsekwencja nie miała uzasadnienia (kontrola nadi 2026-09-07, K4).
+const etykietaKrs = tekst(napisyStopki.etykietaKrs, 'KRS');
+const etykietaNip = tekst(napisyStopki.etykietaNip, 'NIP');
+const etykietaRegon = tekst(napisyStopki.etykietaRegon, 'REGON');
 const etykietaFormaPrawna = tekst(napisyStopki.etykietaFormaPrawna, 'Forma prawna:');
 const etykietaAdresWww = tekst(napisyStopki.etykietaAdresWww, 'Adres WWW:');
 const etykietaEmail = tekst(napisyStopki.etykietaEmail, 'E-mail:');
 const etykietaAdres = tekst(napisyStopki.etykietaAdres, 'Adres:');
 const etykietaTelefon = tekst(napisyStopki.etykietaTelefon, 'Telefon:');
 const guzikKopiujWszystko = tekst(napisyStopki.guzikKopiujWszystko, 'Skopiuj dane spółki');
+
+// Nazwa rzeczy kopiowanej guzikiem zbiorczym, do komunikatu dla czytnika ekranu
+// („Skopiowano: dane spółki."). Liczona Z NAPISU Z PANELU, nie wpisana w skrypcie:
+// inaczej po zmianie napisu guzika w panelu czytnik ekranu mówiłby dalej stare
+// brzmienie i HTML rozjechałby się z JavaScriptem po cichu (kontrola nadi, K5).
+const nazwaZbiorcza = guzikKopiujWszystko.replace(/^skopiuj\s+/i, '');
 const potwierdzenieKopiowania = tekst(napisyStopki.potwierdzenieKopiowania, 'Skopiowano');
 const bladKopiowania = tekst(napisyStopki.bladKopiowania, 'Nie udało się skopiować.');
 
 // Blok kopiowany guzikiem zbiorczym — do wklejenia w umowę albo przelew.
 const daneSpolki = [
   firma.nazwaPelna,
-  `${firma.rejestr}, KRS ${firma.krs}`,
-  `NIP ${firma.nip}`,
-  `REGON ${firma.regon}`,
+  `${firma.rejestr}, ${etykietaKrs} ${firma.krs}`,
+  `${etykietaNip} ${firma.nip}`,
+  `${etykietaRegon} ${firma.regon}`,
   `${etykietaFormaPrawna} ${firma.formaPrawna}`,
   `${etykietaAdresWww} ${firma.adresWww}`,
   `${etykietaEmail} ${firma.email}`,
@@ -60,7 +71,7 @@ const daneSpolki = [
     <p class="stopka__rejestr">
       <span class="pozycja">{firma.rejestr}</span>
       <span class="pozycja"
-        >KRS <span class="dana"
+        >{etykietaKrs} <span class="dana"
           >{firma.krs}<button
             class="kopiuj"
             type="button"
@@ -71,7 +82,7 @@ const daneSpolki = [
         ></span
       >
       <span class="pozycja"
-        >NIP <span class="dana"
+        >{etykietaNip} <span class="dana"
           >{firma.nip}<button
             class="kopiuj"
             type="button"
@@ -82,7 +93,7 @@ const daneSpolki = [
         ></span
       >
       <span class="pozycja"
-        >REGON <span class="dana"
+        >{etykietaRegon} <span class="dana"
           >{firma.regon}<button
             class="kopiuj"
             type="button"
@@ -170,7 +181,13 @@ const daneSpolki = [
     </dl>
 
     <p class="stopka__zbiorczy">
-      <button class="kopiuj-wszystko" type="button" hidden data-kopiuj={daneSpolki}>
+      <button
+        class="kopiuj-wszystko"
+        type="button"
+        hidden
+        data-kopiuj={daneSpolki}
+        data-nazwa={nazwaZbiorcza}
+      >
         {guzikKopiujWszystko}
       </button>
     </p>
@@ -212,9 +229,14 @@ const daneSpolki = [
           guzik.textContent = napisy?.potwierdzenie ?? '';
         }
         if (stan) {
-          // „dane spółki" i wzorzec „Skopiuj " to mechanika czytnika ekranu, nie treść:
-          // idą w parze z aria-label guzików, które zostają w kodzie świadomie.
-          const co = guzik.getAttribute('aria-label')?.replace(/^Skopiuj /, '') ?? 'dane spółki';
+          // Guzik zbiorczy niesie nazwę w `data-nazwa` (liczoną z napisu z panelu),
+          // guziki przy danych — w swoim aria-label. Wzorzec „Skopiuj " to mechanika
+          // czytnika ekranu, nie treść: idzie w parze z aria-label, które zostają
+          // w kodzie świadomie. Zapas na końcu nie powinien się nigdy odezwać.
+          const co =
+            guzik.dataset.nazwa ??
+            guzik.getAttribute('aria-label')?.replace(/^Skopiuj /, '') ??
+            '';
           stan.textContent = `${napisy?.potwierdzenie ?? ''}: ${co}.`;
         }
 

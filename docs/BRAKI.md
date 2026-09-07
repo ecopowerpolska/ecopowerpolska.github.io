@@ -4,6 +4,30 @@ Otwarte pozycje na **2026-09-06** (dokument założony 2026-09-04). Zlecenie mó
 *„Piotr poda, NIE WYMYŚLAJ"*. Poniżej jest wszystko, czego nie wymyśliłem — z informacją,
 co strona robi w międzyczasie i co dokładnie trzeba zmienić, gdy brak zostanie uzupełniony.
 
+---
+
+## 🔴 ZERO — dlaczego zmiany z panelu NIE POKAZUJĄ SIĘ na ecopowerpolska.pl (2026-09-07)
+
+**To nie jest usterka panelu ani builda.** Zmierzone tego dnia:
+
+| ogniwo łańcucha | stan |
+|---|---|
+| zapis w panelu → commit na `main` | ✅ działa (`1d78709`, committer `GitHub`, podpis PGP) |
+| commit → przebieg `build-i-wdrozenie` | ✅ działa (przebiegi 22–27, wszystkie `success`) |
+| przebieg → publikacja na `ecopowerpolska.github.io` | ✅ działa (strona żywa ~40 s po commicie) |
+| **`ecopowerpolska.pl` → GitHub Pages** | 🔴 **NIE ISTNIEJE** |
+
+`dig ecopowerpolska.pl` oddaje **`178.211.137.59`** — to stary **WordPress 7.1 na Apache w lh.pl**,
+a nie GitHub Pages (`185.199.108–111.153`). Pole `cname` w konfiguracji Pages jest **puste**.
+Panel jest sprawny; Piotr patrzy po prostu pod adres, którego GitHub nie obsługuje.
+
+**Zamknięcie:** `docs/przelaczenie-domeny.md`, przejechany do końca, w podanej tam kolejności
+(najpierw CNAME w repozytorium, potem DNS — odwrotna daje 404 i realną przerwę w działaniu).
+**Wykonuje Piotr.** Dopóki tego nie zrobi, jedynym adresem, pod którym widać efekt pracy
+w panelu, jest `https://ecopowerpolska.github.io`.
+
+---
+
 **Pozycje ① i ② są ROZSTRZYGNIĘTE — decyzja Piotra z 2026-09-04, zapis niżej.**
 **Pozycja ③ jest ROZSTRZYGNIĘTA — grafiki wgrane 2026-09-04, zapis niżej.**
 Strona jest **zbudowana i wdrożona na GitHub Pages** (podgląd `https://ecopowerpolska.github.io/`,

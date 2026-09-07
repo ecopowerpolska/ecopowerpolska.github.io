@@ -1,9 +1,12 @@
 // astro.config.mjs — ecopowerpolska.pl (agregat serwisów EcoPower)
 // ESM, Astro 6/7. Wzorce: skill astro-guard.
 //
-// 🔴 DWA STANY `site` — patrz docs/przelaczenie-domeny.md
-//   STAN 1 (teraz, podgląd):  site: 'https://ecopowerpolska.github.io'
-//   STAN 2 (po przełączeniu DNS): site: 'https://ecopowerpolska.pl'
+// 🔴 `site` = DOCELOWA domena z „www" — patrz docs/przelaczenie-domeny.md.
+// Adresem kanonicznym jest `https://www.ecopowerpolska.pl`; apex bez „www"
+// przekierowuje na niego 301 (robi to GitHub Pages sam, gdy apex wskazuje jego
+// cztery adresy A, a `public/CNAME` niesie wariant z „www").
+// Z tej jednej linii biorą się: canonical w layoucie, `og:url`, sitemapa
+// i pole `url` w danych strukturalnych — nie ma drugiego miejsca do poprawienia.
 // `base` NIE WYSTĘPUJE i wystąpić nie ma: repozytorium nazywa się
 // `ecopowerpolska.github.io`, więc to witryna użytkownika serwowana z korzenia
 // (docs.astro.build/en/guides/deploy/github/, odczyt 2026-09-04). Przy repozytorium
@@ -55,7 +58,7 @@ function sitemapJakoPlikSitemapXml() {
 }
 
 export default defineConfig({
-  site: 'https://ecopowerpolska.github.io',
+  site: 'https://www.ecopowerpolska.pl',
   output: 'static',
   integrations: [sitemap(), sitemapJakoPlikSitemapXml()],
 

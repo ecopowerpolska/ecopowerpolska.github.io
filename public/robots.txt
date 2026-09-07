@@ -68,4 +68,4 @@ Disallow: /admin/
 # bramka przed publikacją szuka dosłownie `dist/sitemap.xml`.
 # 🔴 STAN 1 — adres podglądu. Przy przełączeniu domeny ta linia MUSI zmienić się na
 #    https://ecopowerpolska.pl/sitemap.xml (docs/przelaczenie-domeny.md, krok 5).
-Sitemap: https://ecopowerpolska.github.io/sitemap.xml
+Sitemap: https://www.ecopowerpolska.pl/sitemap.xml

@@ -1,141 +1,152 @@
-# Przełączenie ecopowerpolska.pl na GitHub Pages
+# Przełączenie ecopowerpolska.pl na GitHub Pages — adresem docelowym jest www
 
-**Wykonuje Piotr.** Dopóki ten dokument nie zostanie przejechany do końca, strona żyje
-na starym WordPressie na lh.pl i nic jej nie grozi.
+**Rodzaj:** instrukcja
+**Wykonuje Piotr** (rekordy DNS). Sesja WWW robi część repozytoryjną i sprawdzenia.
+**Stan zmierzony 2026-09-07** — pełny komplet rekordów sprzed zmiany, z TTL-ami i sposobem
+cofnięcia, leży w **`docs/dns-stan-przed.md`**. Ten dokument mówi, CO zrobić; tamten — do czego wrócić.
+
+🔴 **Dopóki ten dokument nie zostanie przejechany do końca, strona żyje na starym WordPressie
+na lh.pl i nic jej nie grozi.**
 
 ---
 
-## 1. Stan zmierzony 2026-09-04 (`dig`, nie z pamięci)
+## 1. Rejestrator to OVH, ale STREFA jest w lh.pl — od tego zależy, gdzie klikać
 
-| Rekord | Wartość dzisiaj | Co robimy |
+| pytanie | odpowiedź (2026-09-07) | czym sprawdzone |
 |---|---|---|
-| `NS` | `ns.lh.pl`, `ns2.lighthosting.net` | 🟢 **NIE RUSZAMY** — strefa zostaje na lh.pl |
-| `A` dla `@` | `178.211.137.59` (WordPress na lh.pl) | 🔴 **podmieniamy** na 4 adresy GitHuba |
-| `A` dla `www` | `178.211.137.59` | 🔴 **kasujemy i zastępujemy** rekordem `CNAME` |
-| `MX` | `5 mail17.lh.pl` | 🟢 **NIE RUSZAMY** |
-| `TXT` (SPF) | `v=spf1 include:_spf.lh.pl -all` | 🟢 **NIE RUSZAMY** |
-| `TXT` `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:dmarc-report@lh.pl;` | 🟢 **NIE RUSZAMY** |
-| `CNAME` `autodiscover` | brak (zapytanie nie zwróciło nic — **nie ma też wildcardu**) | 🟢 nic do przepisania |
+| Kto jest **rejestratorem**? | **OVH SAS** | RDAP rejestru NASK |
+| Gdzie **edytuje się rekordy**? | **w panelu lh.pl** — `ns.lh.pl`, `ns2.lighthosting.net` | `dig NS`, potwierdzone `SOA` |
 
-🔴 **Dlaczego poczta jest tu bezpieczna, choć zwykle to ona pada:** ostrzeżenie z `potwor-www` §O
-dotyczy **przepięcia serwerów nazw** — wtedy cała strefa przenosi się do nowego dostawcy i MX, SPF,
-DKIM, DMARC oraz `autodiscover`/`autoconfig` trzeba przepisać ręcznie, a zapomniany rekord psuje
-pocztę po cichu. **Tutaj serwery nazw zostają na `ns.lh.pl`.** Zmieniamy dwa rekordy adresowe
-wewnątrz strefy, która zostaje na miejscu — reszta wpisów jej nie zauważy.
-**Warunek: zmieniaj wyłącznie rekordy z kolumny „podmieniamy". Nie „przenoś domeny".**
+🔴 **Wpisanie rekordów w edytorze strefy OVH nie zmieni NICZEGO, dopóki serwery nazw wskazują
+lh.pl** — a wygląda przy tym jak robota wykonana. Liczy się wyłącznie strefa u tego, na kogo
+wskazują `NS`. W OVH zmienia się **delegację NS**, nie rekordy.
+
+**Dwie drogi — rozstrzyga Piotr:**
+
+| | Co robimy | Poczta | Ile pracy |
+|---|---|---|---|
+| **(a) ZOSTAWIAMY NS na lh.pl** — rekomendacja | dwie zmiany rekordów w panelu lh.pl | 🟢 **zero ryzyka** — MX, SPF, DKIM, DMARC zostają nietknięte, bo strefa się nie przenosi | kilka minut |
+| **(b) przenosimy strefę do OVH** | w OVH zmienić NS na własne, potem **odtworzyć CAŁĄ strefę** z `docs/dns-stan-przed.md`, łącznie z MX, SPF, DKIM i DMARC | 🔴 **realne ryzyko przerwy** — zapomniany rekord psuje pocztę po cichu, a `potwor-www` §O ostrzega przed tym wprost | godziny plus czas propagacji |
+
+**Rekomendacja: (a).** Zadanie brzmi „strona ma stanąć na GitHub Pages, poczta zostaje na lh.pl".
+Droga (a) robi dokładnie to i nie dotyka ani jednego rekordu poczty. Droga (b) rozwiązuje problem,
+którego nie mamy, i wprowadza ten, którego najbardziej nie chcemy.
+🔴 **Selektory DKIM inne niż `default` są NIEUSTALONE** (DNS nie pozwala listować poddomen) —
+przy drodze (b) trzeba je najpierw wyciągnąć z panelu lh.pl, **przed** przeniesieniem, nie po.
 
 ---
 
-## 2. Adresy GitHub Pages — odczytane u źródła 2026-09-04
+## 2. Adresy GitHub Pages — odczytane u źródła
 
 `docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site`
 
-🔴 **To są liczniki stanu.** Przed wpisaniem sprawdź tę stronę ponownie, jeśli od dziś minął
-miesiąc. Nie przepisuj ich z pamięci przy kolejnej stronie.
+🔴 **To są liczniki stanu.** Sprawdź tę stronę ponownie, jeśli od dziś minął miesiąc.
 
-**`A` dla `@` (cztery rekordy, wszystkie):**
-```
-185.199.108.153
-185.199.109.153
-185.199.110.153
-185.199.111.153
-```
+**`A` dla `@` (cztery rekordy):** `185.199.108.153` · `185.199.109.153` · `185.199.110.153` · `185.199.111.153`
+**`AAAA` dla `@` (opcjonalne, zalecane):** `2606:50c0:8000::153` · `2606:50c0:8001::153` · `2606:50c0:8002::153` · `2606:50c0:8003::153`
+**`www` — `CNAME` na `ecopowerpolska.github.io.`**
 
-**`AAAA` dla `@` (opcjonalne, ale zalecane — cztery rekordy):**
-```
-2606:50c0:8000::153
-2606:50c0:8001::153
-2606:50c0:8002::153
-2606:50c0:8003::153
-```
-
-**`www` — `CNAME`, nie `A`:**
-```
-www  CNAME  ecopowerpolska.github.io.
-```
-🔴 Cel `CNAME` to `<konto>.github.io` **bez nazwy repozytorium**, nawet gdy repozytorium
-nazywa się inaczej. Cytat ze źródła: *„The `CNAME` record should always point to
-`<user>.github.io` or `<organization>.github.io`, excluding the repository name."*
+🔴 Cel `CNAME` to `<konto>.github.io` **bez nazwy repozytorium**, nawet gdy repozytorium nazywa
+się inaczej. Cytat ze źródła: *„The `CNAME` record should always point to `<user>.github.io` or
+`<organization>.github.io`, excluding the repository name."*
 
 ---
 
-## 3. Kolejność — ta i żadna inna
+## 3. Dlaczego adresem kanonicznym jest `www`, a nie apex
 
-🔴 **Kolejność jest tu całą treścią.** Odwrotna daje albo utratę podglądu, albo realną przerwę
-w działaniu strony:
+Wybór Piotra 2026-09-07. Apex (`ecopowerpolska.pl`) **nie znika** — GitHub Pages przekierowuje
+go `301` na `www`, gdy apex wskazuje jego cztery adresy `A`, a `public/CNAME` niesie wariant
+z „www". Jeden adres jest kanoniczny, drugi na niego prowadzi; dokładnie jeden komplet treści
+w wyszukiwarkach.
 
-- **CNAME w repo przed DNS-em** → stary WordPress serwuje dalej, nowa strona czeka gotowa.
-  Przerwy nie ma. Podgląd `ecopowerpolska.github.io` zaczyna przekierowywać na docelową
-  domenę — **to nie jest usterka, tylko oczekiwane zachowanie**.
-- **DNS przed CNAME w repo** → apex wskazuje na GitHuba, GitHub nie wie, które repozytorium
-  obsługuje tę domenę, i oddaje **404**. To jest przerwa w działaniu strony.
+---
+
+## 4. Kolejność — ta i żadna inna
+
+🔴 **Kolejność jest tu całą treścią**, ale ma dziś JEDEN nowy warunek, którego nie było
+2026-09-04: **panel treści jest w użyciu.** Piotr edytuje stronę pod
+`https://ecopowerpolska.github.io/admin/`.
+
+🔴 **Wdrożenie `public/CNAME` sprawia, że `ecopowerpolska.github.io` zaczyna przekierowywać na
+`www.ecopowerpolska.pl`.** Dopóki DNS nie jest przełączony, ten adres pokazuje **stary WordPress**
+— czyli **panel przestaje być dostępny** aż do wpisania rekordów. To nie jest usterka, to
+mechanizm; ale to znaczy, że **krok repozytoryjny i krok DNS robi się w jednym posiedzeniu**,
+nie „kiedyś potem".
 
 ### Krok 1 — podgląd zaakceptowany
 Strona działa i wygląda jak ma wyglądać pod `https://ecopowerpolska.github.io`.
 Dopóki to nie jest prawdą, nie ruszaj dalej.
 
 ### Krok 2 — (opcjonalnie) skróć TTL
-W panelu lh.pl obniż TTL rekordów `@` i `www` do najniższej dopuszczalnej wartości
-i odczekaj tyle, ile wynosił stary TTL. Skraca to okno, w którym część świata widzi
-jeszcze stare adresy.
+W panelu lh.pl obniż TTL rekordów `@` i `www` (dziś **3600 s**) do najniższej dopuszczalnej
+wartości i odczekaj godzinę. Skraca okno, w którym część świata widzi jeszcze stare adresy.
 
-### Krok 3 — trzy zmiany w repozytorium, jednym commitem
+### Krok 3 — repozytorium (robi sesja WWW, jednym commitem)
+- `public/CNAME` z treścią `www.ecopowerpolska.pl`;
+- `astro.config.mjs` → `site: 'https://www.ecopowerpolska.pl'` (z tej jednej linii biorą się
+  canonical, `og:url`, sitemapa i `url` w danych strukturalnych — **nie ma drugiego miejsca**);
+- `public/robots.txt` → `Sitemap: https://www.ecopowerpolska.pl/sitemap.xml`;
+- `public/admin/index.html` → canonical panelu na `https://www.ecopowerpolska.pl/admin/`.
+Potem `npm run verify`, commit, push, przebieg Actions na zielono.
 
-1. **Nowy plik `public/CNAME`** — jedna linia, bez `https://`, bez ukośnika:
-   ```
-   ecopowerpolska.pl
-   ```
-2. **`astro.config.mjs`** — `site` na docelowy adres:
-   ```js
-   site: 'https://ecopowerpolska.pl',
-   ```
-   🔴 **`base` nie występuje i wystąpić nie ma** — repozytorium jest witryną użytkownika.
-   (Gdyby kiedyś było inne: to jest dokładnie ten moment, w którym `base` się USUWA.
-   Zostawione łamie wszystkie linki wewnętrzne po cichu — build przechodzi, strona wygląda
-   żywo, nawigacja prowadzi donikąd.)
-3. **`public/robots.txt`** — ostatnia linia:
-   ```
-   Sitemap: https://ecopowerpolska.pl/sitemap.xml
-   ```
-   🔴 Nazwa pliku to `sitemap.xml`, nie `sitemap-index.xml` — hak `astro:build:done`
-   w `astro.config.mjs` zmienia nazwę indeksu wygenerowanego przez `@astrojs/sitemap`
-   przy każdym buildzie, bo bramka przed publikacją szuka dosłownie `dist/sitemap.xml`.
+### Krok 4 — DNS w panelu lh.pl (klika Piotr) — lista w sekcji 5
 
-Commit → push do `main` → **poczekaj, aż przebieg Actions zaświeci na zielono.**
+### Krok 5 — GitHub: domena i certyfikat
+Settings → Pages → Custom domain: `www.ecopowerpolska.pl`. **`Enforce HTTPS` zaznacza się
+DOPIERO**, gdy GitHub napisze, że certyfikat jest wystawiony — wcześniej pole jest nieaktywne,
+bo Let's Encrypt musi najpierw zobaczyć domenę wskazującą na Pages.
+🔵 **Weryfikacja domeny** (Settings → Pages → Add a domain) dokłada rekord
+`TXT _github-pages-challenge-ecopowerpolska` i **blokuje przejęcie domeny przez cudze repo**.
+Token pokazuje się dopiero po kliknięciu „Add a domain" — nie da się go pobrać z API.
+Opcjonalne, ale zalecane.
 
-### Krok 4 — GitHub: Settings → Pages
-Pole **Custom domain** ma pokazywać `ecopowerpolska.pl` (podłapane z pliku `CNAME`).
-Jeśli nie — wpisz ręcznie i zapisz.
-
-### Krok 5 — DNS w panelu lh.pl
-Dopiero teraz. W strefie `ecopowerpolska.pl`:
-- **skasuj** rekord `A` dla `@` ze starą wartością `178.211.137.59`;
-- **dodaj** cztery rekordy `A` z §2 (i cztery `AAAA`, jeśli panel je przyjmuje);
-- **skasuj** rekord `A` dla `www` (`178.211.137.59`) i **dodaj** `CNAME` z §2.
-  ⚠️ Panel może odmówić dodania `CNAME`, dopóki istnieje `A` o tej samej nazwie — najpierw kasuj.
-- **niczego więcej nie dotykaj.**
-
-### Krok 6 — certyfikat i HTTPS
-GitHub wystawia certyfikat Let's Encrypt sam, po tym jak zobaczy poprawny DNS
-(bywa, że po kilkunastu minutach). Gdy w Settings → Pages przestanie się skarżyć,
-**zaznacz „Enforce HTTPS"**.
-
-### Krok 7 — sprawdzenie
-```bash
-dig +short A ecopowerpolska.pl          # cztery adresy 185.199.*
-dig +short CNAME www.ecopowerpolska.pl  # ecopowerpolska.github.io.
-dig +short MX ecopowerpolska.pl         # NADAL 5 mail17.lh.pl  ← poczta nietknięta
-dig +short TXT ecopowerpolska.pl        # NADAL v=spf1 include:_spf.lh.pl -all
-curl -sI https://ecopowerpolska.pl | head -3
-curl -sI https://www.ecopowerpolska.pl | head -3
-```
-Oraz: wyślij i odbierz jednego maila na `kontakt@ecopowerpolska.pl`. **To jest test, który
-naprawdę rozstrzyga** — `dig` pokazuje rekordy, list pokazuje działanie.
+### Krok 6 — sprawdzenie
+`https://www.ecopowerpolska.pl` → 200 i nowa strona · `https://ecopowerpolska.pl` → 301 na www ·
+`http://` → przekierowanie na `https` · `ecopowerpolska.github.io` → przekierowanie na www ·
+`https://www.ecopowerpolska.pl/admin/` → panel się ładuje ·
+**poczta: `dig MX` i `dig TXT` mają oddać to samo, co `docs/dns-stan-przed.md`** — i wyślij sobie
+próbną wiadomość na adres `@ecopowerpolska.pl`, bo `dig` sprawdza rekordy, nie doręczenie.
 
 ---
 
-## 4. Stara strona
+## 5. Lista rekordów dla panelu lh.pl — dokładnie to, co wpisać
 
-WordPress na lh.pl (`178.211.137.59`) **zostaje na miejscu i nietknięty** do końca tej procedury.
-Po przełączeniu przestaje być odwiedzany, ale nadal stoi — decyzję o jego zdjęciu podejmuje Piotr
-osobno, nie jest częścią tego dokumentu.
+| Akcja | Typ | Nazwa | TTL | Wartość |
+|---|---|---|---|---|
+| 🔴 **ZMIEŃ** | `A` | `@` | 3600 | `185.199.108.153` |
+| 🔴 **DODAJ** | `A` | `@` | 3600 | `185.199.109.153` |
+| 🔴 **DODAJ** | `A` | `@` | 3600 | `185.199.110.153` |
+| 🔴 **DODAJ** | `A` | `@` | 3600 | `185.199.111.153` |
+| 🔵 dodaj (zalecane) | `AAAA` | `@` | 3600 | `2606:50c0:8000::153` |
+| 🔵 dodaj (zalecane) | `AAAA` | `@` | 3600 | `2606:50c0:8001::153` |
+| 🔵 dodaj (zalecane) | `AAAA` | `@` | 3600 | `2606:50c0:8002::153` |
+| 🔵 dodaj (zalecane) | `AAAA` | `@` | 3600 | `2606:50c0:8003::153` |
+| 🔴 **SKASUJ** | `A` | `www` | — | `178.211.137.59` |
+| 🔴 **DODAJ** | `CNAME` | `www` | 3600 | `ecopowerpolska.github.io.` (z kropką na końcu) |
+| 🔵 dodaj (po kroku 5) | `TXT` | `_github-pages-challenge-ecopowerpolska` | 3600 | token z GitHuba |
+
+**ZOSTAJE BEZ ZMIAN — nie tykać (wartości sprzed zmiany, do porównania po):**
+
+| Typ | Nazwa | Wartość |
+|---|---|---|
+| `NS` | `@` | `ns.lh.pl.` · `ns2.lighthosting.net.` |
+| `SOA` | `@` | `ns.lh.pl. root.lh.pl. …` |
+| `MX` | `@` | `5 mail17.lh.pl.` |
+| `TXT` (SPF) | `@` | `v=spf1 include:_spf.lh.pl -all` |
+| `TXT` (DMARC) | `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:dmarc-report@lh.pl;` |
+| `TXT` (DKIM) | `default._domainkey` | klucz RSA — pełna wartość w `docs/dns-stan-przed.md` |
+
+🔴 **Apex `A` ma mieć CZTERY rekordy, nie jeden.** Jeden adres działa, ale znosi redundancję,
+dla której GitHub je publikuje.
+
+---
+
+## 6. Stara strona na lh.pl
+
+**Nie kasujemy jej.** Po przełączeniu DNS przestaje być widoczna pod tą domeną, ale pliki zostają
+na hostingu do decyzji Piotra. Hosting lh.pl pozostaje opłacony, bo **stoi na nim poczta**.
+
+## 7. Jak cofnąć
+
+Wartości sprzed zmiany i pełna procedura powrotu: **`docs/dns-stan-przed.md`**, sekcja
+„Jak cofnąć przełączenie".

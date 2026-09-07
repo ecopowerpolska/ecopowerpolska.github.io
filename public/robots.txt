@@ -66,6 +66,9 @@ Disallow: /admin/
 # Nazwa pliku to `sitemap.xml`, nie `sitemap-index.xml` — astro.config.mjs zmienia
 # nazwę indeksu wygenerowanego przez @astrojs/sitemap w haku astro:build:done, bo
 # bramka przed publikacją szuka dosłownie `dist/sitemap.xml`.
-# 🔴 STAN 1 — adres podglądu. Przy przełączeniu domeny ta linia MUSI zmienić się na
-#    https://ecopowerpolska.pl/sitemap.xml (docs/przelaczenie-domeny.md, krok 5).
+# Domena przełączona 2026-09-07 — adres poniżej jest już docelowy i kanoniczny
+# (apex bez „www" przekierowuje na niego 301). Ten plik NIE bierze adresu z `site`
+# w astro.config.mjs, bo leży w public/ i jedzie do dist/ bez przetwarzania —
+# przy zmianie domeny poprawia się go ręcznie, razem z canonical panelu
+# w public/admin/index.html. To dwa jedyne miejsca poza `site`.
 Sitemap: https://www.ecopowerpolska.pl/sitemap.xml

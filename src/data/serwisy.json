@@ -26,6 +26,15 @@
       "obrazek": "../assets/serwisy/pasted-image-1788774528782.png",
       "alt": "",
       "ukryty": false
+    },
+    {
+      "nazwa": "allegro",
+      "adres": "https://allegro.pl/",
+      "opis": "",
+      "kategoria": "",
+      "obrazek": "../assets/serwisy/pasted-image-1788775080217.png",
+      "alt": "",
+      "ukryty": false
     }
   ]
 }

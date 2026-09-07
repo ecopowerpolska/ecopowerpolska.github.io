@@ -1,219 +1,299 @@
-# Panel treści — logowanie i dodawanie kafelków (instrukcja dla Piotra)
+# Panel treści — logowanie i codzienna praca (instrukcja dla Piotra)
 
-Ten dokument opisuje, jak wejść do panelu, zalogować się **raz** (bez wklejania tokena
-za każdym razem) i dodać nowy kafelek serwisu. Napisany po ludzku, nie dla programisty.
+Stan na 2026-09-07. Panel to **Sveltia CMS** — mała aplikacja, która chodzi w Twojej
+przeglądarce. Nie ma osobnego serwera ani osobnego hasła: panel zapisuje zmiany prosto
+do repozytorium na GitHubie, a strona przebudowuje się sama (sekcja 6).
 
-Panel to **Sveltia CMS** — mała aplikacja w przeglądarce. Nie ma osobnego serwera:
-panel zapisuje zmiany bezpośrednio do repozytorium GitHub, a strona przebudowuje się
-sama (sekcja 4 niżej).
+Ten dokument mówi: gdzie wejść, jak zalogować się **raz**, co robi każda z czterech
+pozycji menu, jak dodać grupę i wstawić do niej serwis, i co zrobić, gdy coś nie działa.
+Wszystko, co wymaga Twojego kliknięcia w cudzym panelu (GitHub, Cloudflare), zebrane jest
+w JEDNEJ liście na samym końcu.
 
 ---
 
 ## 1. Adres panelu
 
-- **Dziś (etap podglądu):** `https://ecopowerpolska.github.io/admin/`
-- **Po przełączeniu domeny** (`docs/przelaczenie-domeny.md`, wykonuje Piotr osobno):
+- **Dziś:** `https://ecopowerpolska.github.io/admin/`
+- **Po przełączeniu domeny** (`docs/przelaczenie-domeny.md`, robisz osobno):
   `https://ecopowerpolska.pl/admin/`
 
-Adres wpisujesz w przeglądarce jak każdy inny. Panel nie jest w wynikach wyszukiwania
-(celowo — to narzędzie robocze, nie treść dla odwiedzających).
+Adres wpisujesz w przeglądarce jak każdy inny. Panel jest celowo wyłączony z wyszukiwarek
+(`noindex` w kodzie strony panelu i `Disallow: /admin/` w `public/robots.txt`).
 
 ---
 
-## 2. Pierwsze logowanie — wygenerowanie tokenu
+## 2. Logowanie — jedna droga, token wklejany raz
 
-Token to jednorazowo wygenerowany „klucz" do Twojego repozytorium na GitHubie. Panel
-poprosi o niego **tylko raz na tę przeglądarkę** (sekcja 3 wyjaśnia dlaczego).
+**Panel ma dokładnie jeden przycisk logowania: „Zaloguj się za pomocą tokenu dostępu".**
+Tak jest ustawione świadomie i nie ma tu drugiej drogi do włączania ani żadnych ustawień
+do przeklikania gdzie indziej. Token wklejasz **raz na przeglądarkę** — potem panel
+otwiera się od razu (sekcja 3 mówi, kiedy trzeba go wkleić ponownie).
 
-1. Wejdź na adres panelu (sekcja 1). Zobaczysz dwa przyciski logowania.
-2. **Kliknij dolny przycisk: „Zaloguj się za pomocą tokenu dostępu"** (nie górny —
-   górny to logowanie bez tokenu, które **dziś jeszcze nie działa**, opisane w sekcji 7).
-3. W okienku, które się otworzy, jest link „Token możesz wygenerować na stronie ustawień
-   użytkownika GitHub" — kliknij go. Otworzy się nowa karta z formularzem GitHuba,
-   już częściowo wypełnionym.
-4. Na stronie GitHuba sprawdź/uzupełnij:
-   - **Token name** — zostaw „Sveltia CMS" albo wpisz coś rozpoznawalnego, np.
-     „Panel ecopowerpolska.pl".
-   - **Resource owner** — wybierz **`ecopowerpolska`** (to konto, na którym jest
-     repozytorium strony).
-   - **Expiration (wygaśnięcie)** — dwie sensowne opcje:
-     - **No expiration** (bez wygaśnięcia) — najwygodniejsze, token działa, dopóki go
-       sam nie usuniesz. GitHub czasem to odradza ze względów bezpieczeństwa, ale przy
-       jednym użytkowniku i repozytorium bez danych wrażliwych to rozsądny wybór.
-     - Konkretna liczba dni (np. 90 albo maksymalne 365) — token przestanie działać
-       w tym dniu i trzeba będzie wygenerować nowy (sekcja 7 mówi, jak rozpoznać ten
-       moment).
-   - **Repository access** — zaznacz **„Only select repositories"**, a potem wybierz
-     **`ecopowerpolska.github.io`** (to jest repozytorium tej strony — nazwa różni się
-     od `ecopowerpolska.pl`, bo tak nazywa się na GitHubie, dopóki nie przełączymy
-     domeny; nazwa repozytorium się przez to NIE zmieni).
-   - **Repository permissions → Contents** — powinno już być ustawione na
-     **„Read and write"** (formularz przychodzi z tym gotowym z linku w panelu).
-     GitHub może dodatkowo sam zaznaczyć „Metadata: Read-only" — to jest wymagane
-     przez GitHuba automatycznie, zostaw jak jest. Innych uprawnień nie zaznaczaj.
-5. Przewiń w dół i kliknij **„Generate token"**.
-6. GitHub pokaże token **tylko raz**, w postaci długiego ciągu znaków zaczynającego
-   się od `github_pat_…`. Kliknij ikonę kopiowania obok niego.
-7. Wróć do karty z panelem, wklej token w pole „Osobisty token dostępu" i kliknij
-   **„Zaloguj się"**.
+> Sveltia umie też logowanie jednym kliknięciem przez GitHub (OAuth), ale wymaga ono
+> konta Cloudflare, wdrożenia własnego mikroserwisu i rejestracji aplikacji OAuth —
+> czyli dokładnie tych kolejnych progów wejścia do ustawień, których ma nie być.
+> Dlatego przycisk OAuth jest w panelu **schowany**, a nie zepsuty. Gdybyś kiedyś chciał
+> tę drogę mimo wszystko — kroki są w sekcji 9, punkt B.
 
-Jeśli wszystko się zgadza, zobaczysz listę kolekcji: **„Serwisy (kafelki)"** i
-**„Ustawienia"**.
+**Krok po kroku:**
 
-🔴 **Token jest sekretem** — traktuj go jak hasło. Nie wklejaj go nigdzie poza tym
-jednym oknem logowania panelu (nie do maila, nie na czacie, nie do pliku). Jeśli
-podejrzewasz, że gdzieś wyciekł: GitHub → `Settings → Developer settings → Fine-grained
-personal access tokens` → znajdź token po nazwie → **Delete**, potem wygeneruj nowy
-tą samą drogą.
+1. Wejdź na adres panelu (sekcja 1).
+2. Kliknij **„Zaloguj się za pomocą tokenu dostępu"** — to jedyny przycisk logowania.
+3. W okienku, które się otworzy, kliknij link **„Token możesz wygenerować na stronie
+   ustawień użytkownika GitHub"**. Otworzy się karta GitHuba z formularzem
+   `Personal access tokens (fine-grained)`, już częściowo wypełnionym przez panel.
+4. Na stronie GitHuba ustaw dokładnie tak:
+   - **Token name:** `Panel ecopowerpolska.pl` (dowolna rozpoznawalna nazwa).
+   - **Resource owner:** `ecopowerpolska`.
+   - **Expiration:** `No expiration` (token działa, dopóki go sam nie usuniesz) albo
+     konkretna liczba dni, np. `365` — wtedy w tym dniu przestanie działać i wygenerujesz
+     nowy tą samą drogą.
+   - **Repository access:** zaznacz **`Only select repositories`**, a niżej wybierz
+     **`ecopowerpolska.github.io`**. To jest repozytorium tej strony — nazywa się inaczej
+     niż domena i po przełączeniu domeny nazwa się NIE zmieni.
+   - **Repository permissions → Contents:** ma być **`Read and write`**. Panel wstawia to
+     uprawnienie z góry, więc zwykle jest już ustawione — sprawdź, czy nie zniknęło.
+     GitHub sam dołoży `Metadata: Read-only` — zostaw. **Innych uprawnień nie zaznaczaj.**
+5. Na dole kliknij **`Generate token`**.
+6. GitHub pokaże token **tylko raz** — długi ciąg zaczynający się od `github_pat_`.
+   Kliknij ikonę kopiowania obok niego.
+7. Wróć do karty z panelem, wklej token w pole i kliknij **„Zaloguj się"**.
+
+Po zalogowaniu w lewej kolumnie zobaczysz **cztery pozycje**: **Grupy**,
+**Serwisy (kafelki)**, **Teksty strony**, **Dane firmy**.
+
+🔴 **Token jest sekretem — traktuj go jak hasło.** Nie wklejaj go nigdzie poza tym jednym
+oknem logowania: nie do maila, nie na czacie, nie do pliku w repozytorium (repozytorium
+jest publiczne). Jeśli podejrzewasz, że wyciekł — sekcja 9, punkt C.
 
 ---
 
-## 3. Czy trzeba wklejać token przy KAŻDYM logowaniu?
+## 3. Czy token trzeba wklejać za każdym razem?
 
-**Nie.** Po pierwszym wklejeniu panel zapamiętuje token w tej przeglądarce (dokładnie:
-w jej lokalnej pamięci, tzw. `localStorage`) — kolejne wejścia na adres panelu w tej
-samej przeglądarce na tym samym komputerze/telefonie od razu pokazują listę kolekcji,
-bez pytania o token.
+**Nie.** Po pierwszym wklejeniu panel zapamiętuje token w tej przeglądarce (w jej lokalnej
+pamięci, `localStorage`). Kolejne wejścia na adres panelu w tej samej przeglądarce na tym
+samym urządzeniu od razu pokazują menu.
 
-Token trzeba wkleić ponownie tylko gdy:
-- otwierasz panel **w innej przeglądarce** albo **na innym urządzeniu** (telefon,
-  drugi komputer) — pierwszy raz na każdym z nich;
-- używasz **okna prywatnego/incognito** — ono nic nie pamięta po zamknięciu;
-- **wyczyściłeś dane przeglądania** (historia, ciasteczka, „dane witryn") w tej
-  przeglądarce;
-- token **wygasł** (jeśli przy generowaniu wybrałeś datę wygaśnięcia zamiast
-  „No expiration") albo **został usunięty** na GitHubie.
+Token wklejasz ponownie tylko wtedy, gdy:
 
-W żadnym z tych przypadków nic się nie psuje — po prostu powtarzasz sekcję 2.
+- otwierasz panel **w innej przeglądarce** albo **na innym urządzeniu** (telefon, drugi
+  komputer) — pierwszy raz na każdym z nich;
+- używasz **okna prywatnego / incognito** — ono nic nie pamięta po zamknięciu;
+- **wyczyściłeś dane przeglądania** (ciasteczka, dane witryn) w tej przeglądarce;
+- token **wygasł** albo **został usunięty** na GitHubie.
+
+W żadnym z tych przypadków nic się nie psuje — powtarzasz sekcję 2.
 
 ---
 
-## 4. Dodanie nowego kafelka serwisu
+## 4. Cztery pozycje menu — co robi która
 
-1. W panelu wejdź w kolekcję **„Serwisy (kafelki)"**.
-2. Kliknij **„New Serwis"** (albo podobny przycisk „+ Nowy wpis" — panel bywa
-   częściowo po angielsku).
-3. Wypełnij pola:
-   - **Nazwa serwisu** — napis na kafelku, np. „nadihome.pl". *(wymagane)*
-   - **Adres docelowy** — pełny adres z `https://`, np. `https://nadihome.pl` —
-     tam trafi kliknięcie kafelka. *(wymagane; panel odrzuci adres bez `http(s)://`
-     albo ze spacją w środku)*
-   - **Krótki podpis** — jedno zdanie pod nazwą, do 160 znaków. *(opcjonalne — puste
-     pole jest w porządku, kafelek pokaże samą nazwę)*
-   - **Obrazek kafelka** — zdjęcie/grafika w proporcji **16:9**, szerokość co najmniej
-     **720 pikseli**. *(opcjonalne — bez obrazka kafelek pokazuje czytelny placeholder
-     z inicjałami nazwy)*
-   - **Opis obrazka dla czytnika ekranu (alt)** — ⚠️ **WYMAGANE, JEŚLI dodałeś
-     obrazek.** Krótko opisz, co jest na zdjęciu, np. „Wnętrze salonu Nadi Home".
-     To pole istnieje dla osób niewidomych korzystających z czytnika ekranu — bez
-     tego opisu strona **nie zbuduje się po zapisie** (patrz sekcja 6, „build na
-     czerwono"). Jeśli **nie** dodajesz obrazka, to pole możesz zostawić puste.
-   - **Kolejność** — liczba; mniejsza = kafelek pojawia się wcześniej. Domyślnie 100.
-   - **Ukryty** — włącz, żeby wpis został w panelu, ale zniknął ze strony (np. serwis
-     tymczasowo nieczynny) — bez kasowania całego wpisu.
-4. Kliknij **„Save"** (zapisz) w prawym górnym rogu.
+| Pozycja | Co w niej ustawiasz | Plik, do którego zapisuje |
+|---|---|---|
+| **Grupy** | Sekcje, na jakie dzieli się strona główna: klucz, nazwa nagłówka, zdanie pod nagłówkiem. Kolejność na liście = kolejność sekcji na stronie. | `src/data/grupy.json` |
+| **Serwisy (kafelki)** | Kafelki na stronie głównej: nazwa, adres, podpis, **grupa (wybierana z listy)**, obrazek, opis obrazka, ukrycie. Kolejność na liście = kolejność kafelków. | `src/data/serwisy.json` |
+| **Teksty strony** | Trzy formularze napisów: **Strona główna**, **Stopka**, **Strona błędu 404**. Tytuły kart, opisy dla wyszukiwarek, nagłówki, etykiety, komunikaty. | `src/data/strona.json`, `src/data/stopka.json`, `src/data/strona-404.json` |
+| **Dane firmy** | Dane rejestrowe pokazywane w stopce: nazwa pełna i skrócona, rejestr, KRS, NIP, REGON, forma prawna, adres WWW, e-mail, adres siedziby, telefon. | `src/data/firma.json` |
 
-To samo okno służy do **edycji** istniejącego kafelka — wejdź w niego z listy zamiast
-klikać „New".
+Dwie rzeczy, o które łatwo się potknąć:
 
-**Dane rejestrowe w stopce** (KRS, NIP, telefon itd.) edytuje się w kolekcji
-**„Ustawienia" → „Dane rejestrowe (stopka)"** — jeden formularz, bez tworzenia nowych
-wpisów.
+- **Podpisy w stopce a dane w stopce to dwa różne miejsca.** Napis `NIP:` czy
+  `Forma prawna:` zmieniasz w **Teksty strony → Stopka**; sam numer NIP — w **Dane firmy**.
+- **Wyczyszczenie pola w „Teksty strony" nie kasuje napisu ze strony** — przywraca napis
+  domyślny wpisany w kodzie (żeby pusty formularz nie zostawił strony bez tytułu).
+  Każde pole ma to napisane w podpowiedzi pod sobą, razem z brzmieniem tego domyślnego
+  napisu. **Jedyny wyjątek: „Zdanie pod kafelkami"** — tam puste pole naprawdę oznacza
+  pusto i cała sekcja pod kafelkami znika ze strony.
 
 ---
 
-## 5. Co się dzieje po kliknięciu „Save"
+## 5. Grupy i kafelki
 
-1. Panel od razu zapisuje zmianę jako **commit w repozytorium** na GitHubie (widać go
-   w zakładce **Code → commits** repozytorium `ecopowerpolska.github.io` na koncie
-   `ecopowerpolska`).
-2. Ten commit **sam uruchamia przebudowę strony** — GitHub Actions (zakładka
-   **Actions** w repozytorium) buduje stronę od nowa i wgrywa ją na GitHub Pages.
-   Nie trzeba niczego dodatkowo klikać ani wołać Piotra do komputera.
-3. **Ile to trwa:** przy pomiarze na tej stronie (2026-09-04) cały przebieg —
-   budowa + wdrożenie — zajął około **pół minuty**. W praktyce licz na
-   „poniżej minuty, rzadko więcej niż kilka minut" — zależy od obciążenia serwerów
-   GitHuba, nie od Ciebie.
-4. **Gdzie zobaczyć, czy poszło:** zakładka **Actions** w repozytorium — najnowszy
-   wpis „build-i-wdrozenie" ma zielony ptaszek (poszło) albo czerwony X (coś nie
-   zbudowało się — sekcja 6 mówi, co wtedy).
-5. Po zielonym przebiegu odśwież stronę główną (`ecopowerpolska.github.io` albo
-   docelowa domena) — zmiana powinna być widoczna. Jeśli przeglądarka pokazuje
-   starą wersję, zrób twarde odświeżenie (Ctrl+Shift+R / Cmd+Shift+R) — to zwykle
-   pamięć podręczna przeglądarki, nie błąd strony.
+### 5.1 Dodanie grupy
+
+1. Wejdź w **Grupy** → **Grupy serwisów**.
+2. Kliknij **„+ Dodaj Grupa"** (przycisk dodawania pod listą).
+3. Wypełnij:
+   - **Klucz grupy** *(wymagany)* — identyfikator techniczny, małe litery bez polskich
+     znaków, cyfry i myślnik, np. `wykonczenia`. Nie widzi go nikt poza Tobą.
+     🔴 **Po zapisaniu go nie zmieniaj** — kafelki wskazują grupę właśnie tym napisem;
+     po zmianie klucza wypadną z sekcji i trafią na koniec strony.
+   - **Nazwa sekcji na stronie** *(wymagana)* — napis nagłówka, np. `Wykończenia wnętrz`.
+     To jedyne pole widoczne dla odwiedzającego.
+   - **Zdanie pod nagłówkiem sekcji** *(opcjonalne, do 200 znaków)* — puste pole znaczy,
+     że pod nagłówkiem nie ma nic; sam nagłówek zostaje.
+4. **Kolejność sekcji** ustawiasz przeciąganiem: chwyć grupę za uchwyt po lewej i przesuń.
+   Na telefonie służą do tego guziki w górę/w dół.
+5. Kliknij **„Save"** w prawym górnym rogu.
+
+### 5.2 Przypisanie serwisu do grupy
+
+1. Wejdź w **Serwisy (kafelki)** → **Kafelki na stronie głównej**.
+2. Rozwiń kafelek z listy (albo dodaj nowy przyciskiem dodawania).
+3. Pole **„Grupa (sekcja na stronie)"** to **lista do wyboru**, nie pole do wpisania —
+   pokazuje nazwy grup z pozycji **Grupy**. Wybierz jedną.
+   - Lista jest pusta, dopóki nie dodasz ani jednej grupy (punkt 5.1).
+   - Na górze listy jest **pozycja pusta** — wybierz ją, żeby zdjąć kafelkowi grupę.
+     Taki kafelek trafia na koniec strony, do sekcji **Inne** (jej nazwę zmienisz
+     w **Teksty strony → Strona główna**).
+4. Kliknij **„Save"**.
+
+### 5.3 Kiedy sekcje w ogóle się pokazują
+
+- **Mniej niż dwie realnie użyte grupy → strona pokazuje jedną wspólną siatkę kafelków**,
+  bez nagłówków sekcji i bez spisu odnośników. Tak wygląda dziś i to jest poprawne.
+- **Grupa bez ani jednego widocznego kafelka nie pokazuje się wcale** — ani nagłówek, ani
+  odnośnik w spisie. Kafelek zaznaczony jako **Ukryty** nie liczy się jako widoczny.
+- Kolejność kafelków **wewnątrz** sekcji to kolejność z listy w **Serwisy (kafelki)**.
+
+### 5.4 Pozostałe pola kafelka
+
+- **Nazwa serwisu** *(wymagana)* — napis na kafelku, np. `nadihome.pl`.
+- **Adres docelowy** *(wymagany)* — pełny adres z `https://`. Panel odrzuci adres bez
+  `http://`/`https://` albo ze spacją w środku — to jedyne miejsce, gdzie taka literówka
+  zostanie złapana, więc czytaj komunikat pod polem.
+- **Krótki podpis** *(opcjonalny, do 160 znaków)* — puste pole jest w porządku.
+- **Obrazek kafelka** *(opcjonalny)* — proporcje 3:2, szerokość co najmniej 720 px.
+- **Opis obrazka dla czytnika ekranu** *(opcjonalny)* — opisz krótko, co widać.
+  ⚠️ **Zmiana wobec starszej wersji tej instrukcji: to pole NIE jest już wymagane i brak
+  opisu NIE zatrzymuje przebudowy strony.** Wcześniej zatrzymywał — 2026-09-07 zapis bez
+  opisu zamroził publikację całej strony, więc reguła została usunięta. Puste pole znaczy
+  „zdjęcie ozdobne"; nazwę serwisu i tak widać na kafelku.
+- **Ukryty** — kafelek zostaje w panelu, znika ze strony. Do wyłączania serwisu bez
+  kasowania wpisu.
+- Pola **„Kolejność"** już nie ma. Kolejność ustawia się wyłącznie przeciąganiem.
 
 ---
 
-## 6. GDY NIE DZIAŁA
+## 6. Co się dzieje po kliknięciu „Save"
+
+1. Panel zapisuje zmianę jako **commit w repozytorium** `ecopowerpolska.github.io`
+   (widać go w zakładce **Code → commits**).
+2. Ten commit **sam uruchamia przebudowę** — GitHub Actions buduje stronę i wgrywa ją na
+   GitHub Pages. Nie trzeba niczego dodatkowo klikać.
+3. **Ile to trwa:** przy pomiarze na tej stronie cały przebieg zajął około pół minuty.
+   Licz na „poniżej minuty, rzadko kilka minut".
+4. **Gdzie sprawdzić:** zakładka **Actions** w repozytorium — najnowszy przebieg
+   `build-i-wdrozenie` ma zielony ptaszek albo czerwony X.
+5. Po zielonym przebiegu odśwież stronę. Jeśli widzisz starą wersję — twarde odświeżenie
+   (Ctrl+Shift+R / Cmd+Shift+R).
+
+---
+
+## 7. GDY NIE DZIAŁA
+
+### 🔴 Trzy pułapki, które naprawdę się zdarzyły (2026-09-07)
+
+**① Po każdej zmianie ustawień panelu odśwież twardo SAM adres `/admin/`.**
+Przeglądarka trzyma plik konfiguracji panelu przez dziesięć minut (GitHub Pages podaje go
+z `max-age=600`). Panel pracuje wtedy na **starej** konfiguracji i zapisuje w starym
+układzie — do plików, których strona już nie czyta. Trzy zapisy przepadły tak jednego dnia.
+Twarde odświeżenie (Ctrl+Shift+R) robi się **stojąc na `/admin/`**, nie na stronie
+głównej — to inny adres i inny wpis w pamięci przeglądarki.
+**Dziś to Ciebie dotyczy:** konfiguracja panelu właśnie się zmieniła (doszła pozycja
+**Grupy**, pole **Kategoria** w kafelku zamieniło się na listę **Grupa**), więc pierwsze
+wejście do panelu zacznij od Ctrl+Shift+R na `/admin/`.
+
+**② Nikt nie wypycha zmian z terminala, gdy Ty pracujesz w panelu.**
+Sveltia zapamiętuje stan gałęzi w chwili wczytania panelu i nie ponawia zapisu, gdy stan
+się przesunie — GitHub odrzuca wtedy zapis, a panel **nie pokazuje żadnego błędu**.
+Jeśli ktoś wypchnie zmianę z komputera, ma o tym powiedzieć wprost; Ty wtedy odświeżasz
+`/admin/` (Ctrl+Shift+R) **przed** kolejnym zapisem. Poznasz to po metadanych commitów:
+zapis z panelu ma autora `GitHub` i zweryfikowany podpis, push z komputera — `Piotr
+(EcoPower)` bez podpisu.
+
+**③ Walidacja należy do formularza, nie do przebudowy strony.**
+Reguły typu „adres musi mieć https://" i „podpis do 160 znaków" siedzą w formularzu panelu
+i widzisz je **od razu, pod polem**, zanim cokolwiek zapiszesz. Schemat po stronie budowy
+został z nich celowo ogołocony, żeby żaden wpis nie mógł zamrozić publikacji. Wniosek dla
+Ciebie: **czerwony komunikat pod polem to jedyne miejsce, gdzie panel Cię ostrzega —
+przeczytaj go, zamiast klikać Save drugi raz.**
+
+### Tabela objawów
 
 | Objaw | Najpierw sprawdź | Co zrobić |
 |---|---|---|
-| **Biały/pusty ekran** zamiast panelu | Konsola przeglądarki (F12 → Console) — czy jest czerwony błąd | Zwykle chwilowy problem z wczytaniem skryptu panelu (unpkg.com) — odśwież stronę za minutę. Jeśli nie pomaga, zgłoś to z opisem błędu z konsoli. |
-| **Błąd logowania** po wklejeniu tokenu | Treść komunikatu w okienku logowania | „Podany token jest nieprawidłowy" — wklejony fragment jest niepełny albo token został usunięty/wygasł na GitHubie → wygeneruj nowy (sekcja 2). „Nie masz dostępu do repozytorium" → token nie ma zaznaczonego repozytorium `ecopowerpolska.github.io` przy generowaniu → wygeneruj token od nowa i tym razem zaznacz repozytorium. |
-| **Kliknięcie „Zaloguj się przez GitHub"** (górny przycisk) nic nie robi albo pokazuje błąd | To jest oczekiwane — ta droga logowania **nie jest jeszcze wdrożona** (sekcja 7) | Użyj dolnego przycisku „Zaloguj się za pomocą tokenu dostępu" (sekcja 2). |
-| **Wpis zapisany w panelu, a na stronie bez zmian** | Zakładka **Actions** repozytorium — czy w ogóle pojawił się nowy przebieg | Brak nowego przebiegu → sprawdź zakładkę **Code → commits** — czy zapis w ogóle trafił do repozytorium (jeśli nie, to błąd zapisu w panelu, nie przebudowy). Przebieg jest, ale czerwony → zobacz wiersz niżej. Przebieg zielony, a strony wciąż nie widać → twarde odświeżenie przeglądarki (Ctrl+Shift+R); jeśli to nie pomaga, poczekaj chwilę — cache serwera GitHuba (kilka minut) też potrafi być przyczyną. |
-| **Przebieg w Actions czerwony (build padł)** | Wejdź w ten przebieg → krok `build`, rozwiń czerwony punkt | Najczęstsza przyczyna przy kafelkach: **dodałeś obrazek bez pola „Opis obrazka dla czytnika ekranu"** — build celowo się zatrzymuje, to nie jest awaria, tylko zabezpieczenie (sekcja 4). Wróć do wpisu w panelu, uzupełnij pole „alt", zapisz ponownie. Inna możliwa przyczyna: adres w polu „Adres docelowy" bez `http(s)://` — panel powinien to złapać sam, ale gdyby jednak przeszło, popraw adres i zapisz ponownie. |
+| **Biały/pusty ekran** zamiast panelu | Konsola przeglądarki (F12 → Console) — czy jest czerwony błąd | Zwykle chwilowy problem z wczytaniem skryptu panelu z unpkg.com — odśwież za minutę. Jeśli nie pomaga, przekaż treść błędu z konsoli. |
+| **Błąd po wklejeniu tokenu** | Treść komunikatu w okienku logowania | „Token nieprawidłowy" → wklejony fragment jest niepełny albo token wygasł/został usunięty → wygeneruj nowy (sekcja 2). „Brak dostępu do repozytorium" → przy generowaniu nie zaznaczyłeś `ecopowerpolska.github.io` → wygeneruj token od nowa i tym razem zaznacz. |
+| **Menu ma inne pozycje niż cztery z sekcji 4** (np. jest „Ustawienia", a nie ma „Grupy") | Czy zrobiłeś twarde odświeżenie na `/admin/` | To pułapka ① — Ctrl+Shift+R stojąc na `/admin/`. Dopóki menu wygląda staro, **nie zapisuj niczego**: zapis pójdzie w starym układzie. |
+| **Pole „Grupa" w kafelku jest puste, nie ma z czego wybierać** | Pozycja **Grupy** — czy jest tam choć jedna grupa | Lista bierze się z pozycji **Grupy**. Dodaj grupę (sekcja 5.1), zapisz, wróć do kafelka. |
+| **Zapisałem, a na stronie bez zmian** | Zakładka **Actions** — czy pojawił się nowy przebieg | Brak przebiegu → sprawdź **Code → commits**: jeśli nie ma commita, zapis nie doszedł do GitHuba (pułapka ② albo wygasły token) → odśwież `/admin/` i zapisz ponownie. Przebieg czerwony → wiersz niżej. Przebieg zielony → twarde odświeżenie strony, a potem chwila cierpliwości (pamięć podręczna GitHuba). |
+| **Przebieg w Actions czerwony** | Wejdź w przebieg → krok `build`, rozwiń czerwony punkt | Po zmianach z 2026-09-07 żaden wpis z panelu nie powinien już wywracać przebudowy. Jeśli mimo to padła — **to jest błąd do zgłoszenia, nie do naprawiania przez Ciebie**: skopiuj czerwony fragment i przekaż go. Strona zostaje tymczasem na poprzedniej, działającej wersji. |
+| **Kafelek stoi w złej sekcji** | Pole **Grupa** w kafelku i **Klucz grupy** w grupie | Kafelek z grupą, której klucz już nie istnieje, trafia do sekcji **Inne** na końcu strony. Zwykle znaczy to, że klucz grupy został zmieniony po zapisaniu (sekcja 5.1). Wybierz grupę w kafelku ponownie. |
 
-Jeśli żaden z powyższych opisów nie pasuje — zrzuć ekran z błędem (i z konsoli
-przeglądarki, jeśli jest widoczna) i przekaż go do dalszej analizy. Nic z tego nie
-wymaga grzebania w kodzie samodzielnie.
+Jeśli nic z powyższego nie pasuje — zrzuć ekran z błędem (i z konsoli przeglądarki, jeśli
+jest widoczna) i przekaż do analizy. Nic z tego nie wymaga grzebania w kodzie.
 
 ---
 
-## 7. Logowanie bez tokenu (dla przyszłości) — czego jeszcze brakuje
+## 8. Czego panel nie zmienia
 
-Dziś działa wyłącznie logowanie tokenem (sekcja 2) — jest proste i **działa od razu**,
-więc to jest droga zalecana na teraz. Sveltia CMS umie też logowanie „jednym
-kliknięciem" przez GitHub (bez wklejania tokenu w ogóle), ale wymaga to wdrożenia
-własnego, małego serwisu pośredniczącego (**`sveltia-cms-auth`**) na Cloudflare —
-Piotr korzysta z niego dopiero, gdy z panelu ma korzystać ktoś **inny niż on sam**
-(dla jednej osoby token jest prostszy i tyle samo bezpieczny). Poniżej dokładne kroki,
-gdyby jednak ta droga miała powstać — **nikt z automatu ich nie wykonał**, to lista
-do ręcznego przejścia w przeglądarce:
+Panel edytuje **treść**: kafelki, grupy, napisy, dane firmy. Nie zmienia wyglądu (kolory,
+układ, czcionki), nie dodaje nowych podstron ani zdjęć poza obrazkami kafelków. To wchodzi
+przez repozytorium — czyli przez pracę na komputerze, nie w przeglądarce.
 
-### Krok 1 — Cloudflare Workers
-Załóż konto na `cloudflare.com` (jeśli go nie ma) i wdróż projekt
-`sveltia-cms-auth` — najprościej przyciskiem „Deploy to Cloudflare Workers" na stronie
-`github.com/sveltia/sveltia-cms-auth`. Po wdrożeniu zapisz adres Workera — wygląda
-tak: `https://sveltia-cms-auth.<TWOJA-SUBDOMENA>.workers.dev`.
+---
 
-### Krok 2 — Aplikacja OAuth na GitHubie
-Zalogowany jako `ecopowerpolska`, wejdź na `github.com/settings/applications/new`
-i wypełnij:
-- **Application name:** `Sveltia CMS Authenticator` (dowolna nazwa rozpoznawalna)
-- **Homepage URL:** `https://github.com/sveltia/sveltia-cms-auth` (dowolny poprawny
-  adres — pole wymagane, ale nieużywane funkcjonalnie)
-- **Application description:** można zostawić puste
-- **Authorization callback URL:** `<adres Workera z kroku 1>/callback`, np.
-  `https://sveltia-cms-auth.twoja-subdomena.workers.dev/callback`
+## 9. Lista rzeczy do kliknięcia w cudzym panelu
 
-Po rejestracji kliknij **„Generate a new client secret"** — zapisz **Client ID**
-i **Client Secret** (Secret pokazuje się tylko raz).
+Wszystko, co wymaga Twojej ręki poza panelem treści. Punkt A jest jedynym potrzebnym do
+codziennej pracy.
 
-### Krok 3 — zmienne Workera na Cloudflare
-W panelu Cloudflare → usługa `sveltia-cms-auth` → **Settings → Variables**, dodaj:
-- `GITHUB_CLIENT_ID` — Client ID z kroku 2
-- `GITHUB_CLIENT_SECRET` — Client Secret z kroku 2 (zaznacz „Encrypt")
-- `ALLOWED_DOMAINS` — `ecopowerpolska.github.io` (dziś); po przełączeniu domeny
-  dopisz też `ecopowerpolska.pl` jako listę: `ecopowerpolska.github.io, ecopowerpolska.pl`
+### A. GitHub — wygenerowanie tokenu (potrzebne raz na przeglądarkę)
 
-Zapisz i wdróż.
+Adres: link „Token możesz wygenerować…" w oknie logowania panelu (prowadzi na
+`github.com/settings/personal-access-tokens/new`).
 
-### Krok 4 — dwie linijki w `public/admin/config.yml`
-Ten plik jest w zakresie sesji, która pisała ten dokument — poprosisz o wpięcie
-gotowego adresu Workera (odkomentowanie linii `base_url` przygotowanej w pliku)
-zamiast robić to samodzielnie.
+| Pole | Wartość |
+|---|---|
+| Token name | `Panel ecopowerpolska.pl` |
+| Resource owner | `ecopowerpolska` |
+| Expiration | `No expiration` (albo `365 days`) |
+| Repository access | `Only select repositories` → `ecopowerpolska.github.io` |
+| Repository permissions → Contents | `Read and write` |
+| Repository permissions → Metadata | `Read-only` (GitHub dokłada sam — zostaw) |
+| pozostałe uprawnienia | nie zaznaczaj żadnego |
 
-Po tych czterech krokach na ekranie logowania panelu pojawi się (obok tokenu)
-działający przycisk „Zaloguj się przez GitHub" — logowanie jednym kliknięciem,
-bez wklejania czegokolwiek.
+Na końcu: **`Generate token`** → skopiuj ciąg `github_pat_…` → wklej w oknie panelu.
+
+### B. Cloudflare + GitHub — logowanie bez tokenu (OPCJONALNE, dziś niepotrzebne)
+
+Robi się to **tylko wtedy**, gdy z panelu ma korzystać ktoś inny niż Ty. Dla jednej osoby
+token z punktu A jest prostszy i tak samo bezpieczny. Nikt tych kroków nie wykonał.
+
+1. **Cloudflare Workers** — załóż konto na `cloudflare.com` i wdróż projekt
+   `sveltia-cms-auth` (przycisk „Deploy to Cloudflare Workers" na
+   `github.com/sveltia/sveltia-cms-auth`). Zapisz adres Workera:
+   `https://sveltia-cms-auth.<TWOJA-SUBDOMENA>.workers.dev`.
+2. **Aplikacja OAuth na GitHubie** — `github.com/settings/applications/new`:
+   - Application name: `Sveltia CMS Authenticator`
+   - Homepage URL: `https://github.com/sveltia/sveltia-cms-auth`
+   - Authorization callback URL: `<adres Workera>/callback`
+   Po rejestracji: **„Generate a new client secret"** — zapisz **Client ID** i **Client
+   Secret** (Secret pokazuje się raz).
+3. **Zmienne Workera** (Cloudflare → usługa `sveltia-cms-auth` → Settings → Variables):
+   - `GITHUB_CLIENT_ID` — Client ID z kroku 2
+   - `GITHUB_CLIENT_SECRET` — Client Secret z kroku 2, zaznacz **Encrypt**
+   - `ALLOWED_DOMAINS` — `ecopowerpolska.github.io` (po przełączeniu domeny:
+     `ecopowerpolska.github.io, ecopowerpolska.pl`)
+   Zapisz i wdróż.
+4. **Dwie linijki w `public/admin/config.yml`** — odkomentowanie `base_url` z gotowym
+   adresem Workera i zmiana `auth_methods` na `[token, oauth]`. Tego nie robisz sam:
+   podajesz adres Workera i prosisz o wpięcie.
+
+`Client Secret` z kroku 2 to sekret — trafia wyłącznie do zaszyfrowanych zmiennych
+Workera, nigdzie indziej.
+
+### C. GitHub — unieważnienie tokenu (gdy podejrzewasz wyciek)
+
+`Settings → Developer settings → Personal access tokens → Fine-grained tokens` → znajdź
+token po nazwie → **`Delete`**. Potem wygeneruj nowy według punktu A.
 
 ---
 
 ## Bezpieczeństwo — przypomnienie
 
-- Token nie trafia nigdy do repozytorium, do żadnego pliku ani do rozmowy z Claude —
-  to repozytorium jest **publikowane publicznie** (GitHub Pages), więc każdy plik
-  w nim jest jawny.
-- `Client Secret` z kroku 2 w sekcji 7 to również sekret — trafia wyłącznie do
-  zmiennych Workera na Cloudflare (zaszyfrowanych), nigdzie indziej.
+- Token nie trafia nigdy do repozytorium, do żadnego pliku ani do rozmowy z Claude.
+  Repozytorium tej strony jest **publiczne** (GitHub Pages), więc każdy plik w nim jest jawny.
+- Sekrety w tym warsztacie mają jedno miejsce: `~/.sekrety/` na komputerze Z440. W plikach
+  projektu wolno wskazać lokalizację, nigdy wartość.

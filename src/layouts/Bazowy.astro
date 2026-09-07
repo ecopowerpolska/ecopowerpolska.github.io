@@ -4,6 +4,8 @@
 // całą witrynę jako zero-JS. Przy jednej trasie nie ma między czym przechodzić.
 import '../styles/motyw.css';
 import { Font } from 'astro:assets';
+import strona from '../data/strona.json';
+import { tekst } from '../lib/tekst';
 
 interface Props {
   tytul: string;
@@ -11,6 +13,11 @@ interface Props {
 }
 
 const { tytul, opis } = Astro.props;
+
+// Napisy z panelu. `tekst()` oddaje wartość domyślną, gdy pole zostanie wyczyszczone —
+// strona bez linku pomijania albo bez og:site_name to strata, nie decyzja redakcyjna.
+const nazwaWitryny = tekst(strona.nazwaWitryny, 'EcoPower Polska');
+const linkPomijania = tekst(strona.linkPomijania, 'Przejdź do treści');
 
 // Kanoniczny adres budujemy z import.meta.env.SITE — dawne globalne pole `site`
 // na obiekcie Astro zostało usunięte w Astro 6 (reguła AG022 walidatora).
@@ -27,7 +34,7 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <link rel="canonical" href={kanoniczny} />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="EcoPower Polska" />
+    <meta property="og:site_name" content={nazwaWitryny} />
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:title" content={tytul} />
     <meta property="og:description" content={opis} />
@@ -55,7 +62,7 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <slot name="head" />
   </head>
   <body>
-    <a class="skip" href="#tresc">Przejdź do treści</a>
+    <a class="skip" href="#tresc">{linkPomijania}</a>
     <slot />
   </body>
 </html>

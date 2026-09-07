@@ -4,8 +4,20 @@
 // 🔴 Guziki „skopiuj": układ wersów zostaje, bez JS stopka wygląda jak przed
 // zmianą (docs/DECYZJE-WIZUALNE.md D4, D6).
 import firma from '../data/firma.json';
+import napisyStopki from '../data/stopka.json';
+import { tekst } from '../lib/tekst';
 
 const mail = firma.email.toLowerCase();
+
+// Etykiety i napisy z panelu; `tekst()` przywraca wartość domyślną po wyczyszczeniu pola.
+const etykietaFormaPrawna = tekst(napisyStopki.etykietaFormaPrawna, 'Forma prawna:');
+const etykietaAdresWww = tekst(napisyStopki.etykietaAdresWww, 'Adres WWW:');
+const etykietaEmail = tekst(napisyStopki.etykietaEmail, 'E-mail:');
+const etykietaAdres = tekst(napisyStopki.etykietaAdres, 'Adres:');
+const etykietaTelefon = tekst(napisyStopki.etykietaTelefon, 'Telefon:');
+const guzikKopiujWszystko = tekst(napisyStopki.guzikKopiujWszystko, 'Skopiuj dane spółki');
+const potwierdzenieKopiowania = tekst(napisyStopki.potwierdzenieKopiowania, 'Skopiowano');
+const bladKopiowania = tekst(napisyStopki.bladKopiowania, 'Nie udało się skopiować.');
 
 // Blok kopiowany guzikiem zbiorczym — do wklejenia w umowę albo przelew.
 const daneSpolki = [
@@ -13,17 +25,24 @@ const daneSpolki = [
   `${firma.rejestr}, KRS ${firma.krs}`,
   `NIP ${firma.nip}`,
   `REGON ${firma.regon}`,
-  `Forma prawna: ${firma.formaPrawna}`,
-  `Adres WWW: ${firma.adresWww}`,
-  `E-mail: ${firma.email}`,
-  firma.adresSiedziby && `Adres: ${firma.adresSiedziby}`,
-  firma.telefon && `Telefon: ${firma.telefon}`,
+  `${etykietaFormaPrawna} ${firma.formaPrawna}`,
+  `${etykietaAdresWww} ${firma.adresWww}`,
+  `${etykietaEmail} ${firma.email}`,
+  firma.adresSiedziby && `${etykietaAdres} ${firma.adresSiedziby}`,
+  firma.telefon && `${etykietaTelefon} ${firma.telefon}`,
 ]
   .filter(Boolean)
   .join('\n');
 ---
 
-<footer class="stopka">
+{/* Trzy napisy dla skryptu klienckiego jadą atrybutami data-* — skrypt NIE WIDZI
+    zmiennych z frontmatteru, a te napisy pochodzą z panelu (KONTRAKT-CMS §5). */}
+<footer
+  class="stopka"
+  data-potwierdzenie={potwierdzenieKopiowania}
+  data-blad={bladKopiowania}
+  data-guzik={guzikKopiujWszystko}
+>
   <div class="stopka__srodek">
     <p class="stopka__nazwa">
       <span class="dana"
@@ -76,7 +95,7 @@ const daneSpolki = [
     </p>
 
     <dl class="stopka__dane">
-      <dt>Forma prawna:</dt>
+      <dt>{etykietaFormaPrawna}</dt>
       <dd
         ><span class="dana"
           >{firma.formaPrawna}<button
@@ -89,7 +108,7 @@ const daneSpolki = [
         ></dd
       >
 
-      <dt>Adres WWW:</dt>
+      <dt>{etykietaAdresWww}</dt>
       <dd
         ><span class="dana"
           >{firma.adresWww}<button
@@ -102,7 +121,7 @@ const daneSpolki = [
         ></dd
       >
 
-      <dt>E-mail:</dt>
+      <dt>{etykietaEmail}</dt>
       <dd
         ><span class="dana"
           ><a href={`mailto:${mail}`}>{firma.email}</a><button
@@ -117,7 +136,7 @@ const daneSpolki = [
 
       {firma.adresSiedziby && (
         <>
-          <dt>Adres:</dt>
+          <dt>{etykietaAdres}</dt>
           <dd
             ><span class="dana"
               >{firma.adresSiedziby}<button
@@ -134,7 +153,7 @@ const daneSpolki = [
 
       {firma.telefon && (
         <>
-          <dt>Telefon:</dt>
+          <dt>{etykietaTelefon}</dt>
           <dd
             ><span class="dana"
               >{firma.telefon}<button
@@ -152,7 +171,7 @@ const daneSpolki = [
 
     <p class="stopka__zbiorczy">
       <button class="kopiuj-wszystko" type="button" hidden data-kopiuj={daneSpolki}>
-        Skopiuj dane spółki
+        {guzikKopiujWszystko}
       </button>
     </p>
 
@@ -169,6 +188,10 @@ const daneSpolki = [
     const guziki = document.querySelectorAll<HTMLButtonElement>('[data-kopiuj]');
     const stan = document.querySelector<HTMLParagraphElement>('.stopka__stan');
 
+    // Napisy z panelu. Skrypt nie widzi frontmatteru, więc odczytuje je z atrybutów
+    // data-* postawionych na <footer> wyżej — nic tu nie jest wpisane na sztywno.
+    const napisy = document.querySelector<HTMLElement>('.stopka')?.dataset;
+
     for (const guzik of guziki) guzik.hidden = false;
 
     // `ReturnType<...>`, nie `number` — widoczne są typy Node'a (ts(2322)).
@@ -179,23 +202,27 @@ const daneSpolki = [
         try {
           await schowek.writeText(guzik.dataset.kopiuj ?? '');
         } catch {
-          if (stan) stan.textContent = 'Nie udało się skopiować.';
+          if (stan) stan.textContent = napisy?.blad ?? '';
           return;
         }
 
         // Potwierdzenie trzema drogami: ptaszek, napis na guziku zbiorczym, komunikat.
         guzik.dataset.ok = '1';
-        if (guzik.classList.contains('kopiuj-wszystko')) guzik.textContent = 'Skopiowano';
+        if (guzik.classList.contains('kopiuj-wszystko')) {
+          guzik.textContent = napisy?.potwierdzenie ?? '';
+        }
         if (stan) {
+          // „dane spółki" i wzorzec „Skopiuj " to mechanika czytnika ekranu, nie treść:
+          // idą w parze z aria-label guzików, które zostają w kodzie świadomie.
           const co = guzik.getAttribute('aria-label')?.replace(/^Skopiuj /, '') ?? 'dane spółki';
-          stan.textContent = `Skopiowano: ${co}.`;
+          stan.textContent = `${napisy?.potwierdzenie ?? ''}: ${co}.`;
         }
 
         clearTimeout(zegar);
         zegar = setTimeout(() => {
           for (const g of guziki) {
             delete g.dataset.ok;
-            if (g.classList.contains('kopiuj-wszystko')) g.textContent = 'Skopiuj dane spółki';
+            if (g.classList.contains('kopiuj-wszystko')) g.textContent = napisy?.guzik ?? '';
           }
           if (stan) stan.textContent = '';
         }, 2000);

@@ -15,6 +15,51 @@ import { z } from 'astro/zod';
 const KATALOG_OBRAZKOW = '../assets/serwisy/';
 
 /**
+ * 🔴 KAŻDE pole sprowadzone do postaci, ktorej schemat na pewno nie odrzuci.
+ * Powod jest jeden: blad walidacji zatrzymuje build, a to zamraza publikacje
+ * CALEJ strony — bez zadnego komunikatu w panelu (zdarzylo sie 2026-09-07 na polu
+ * `alt`). Panel moze zapisac `null` w wyczyszczonym polu opcjonalnym albo wartosc
+ * nietekstowa; jedno i drugie musi przejsc, a pilnowac ma formularz.
+ */
+const naTekst = (v: unknown): string | undefined =>
+  typeof v === 'string' ? v : v == null ? undefined : String(v);
+
+/**
+ * Grupy kafelków. Kolejność wpisów w pliku = kolejność sekcji na stronie
+ * (pola `kolejnosc` nie ma — porządek ustawia się przeciąganiem w panelu, D8).
+ * Kafelek wskazuje grupę polem `grupa` niosącym `klucz` stąd.
+ *
+ * Plik bywa PUSTĄ listą (`{"grupy": []}`) — to stan wyjściowy i poprawny:
+ * index.astro renderuje wtedy układ płaski.
+ */
+const grupy = defineCollection({
+  loader: file('src/data/grupy.json', {
+    parser: (tekst) => {
+      const dane = JSON.parse(tekst);
+      const lista = Array.isArray(dane) ? dane : (dane.grupy ?? []);
+
+      return lista.map((wpis: Record<string, unknown>, i: number) => ({
+        // Identyfikator wpisu — loader file() wymaga `id` albo `slug` w kazdym elemencie,
+        // a panel takiego pola nie zapisuje. Numer pozycji wystarcza: kafelki wskazuja
+        // grupe polem `klucz`, nie identyfikatorem wpisu.
+        id: String(i),
+        klucz: naTekst(wpis.klucz) ?? '',
+        nazwa: naTekst(wpis.nazwa) ?? '',
+        opis: naTekst(wpis.opis),
+      }));
+    },
+  }),
+  schema: z.object({
+    // 🔴 ZERO WALIDACJI ZABIJAJACEJ BUILD — ani `.min()`, ani `.regex()` na kluczu.
+    // Wzorca `^[a-z0-9-]+$` pilnuje FORMULARZ w public/admin/config.yml, gdzie blad
+    // widzi czlowiek. Tu kazdy blad jest niewidoczny i zamraza cala strone (D10).
+    klucz: z.string(),
+    nazwa: z.string(),
+    opis: z.string().optional(),
+  }),
+});
+
+/**
  * Serwisy leżą w JEDNYM pliku, bo tylko wtedy panel daje przeciąganie kafelków
  * myszą (widget `list`); przy jednym pliku na serwis Sveltia nie umie sortować
  * ręcznie. Kolejność w pliku = kolejność na stronie, pola `kolejnosc` już nie ma.
@@ -26,14 +71,6 @@ const serwisy = defineCollection({
       const dane = JSON.parse(tekst);
       const lista = Array.isArray(dane) ? dane : (dane.serwisy ?? []);
 
-      // 🔴 KAŻDE pole sprowadzone do postaci, ktorej schemat na pewno nie odrzuci.
-      // Powod jest jeden: blad walidacji zatrzymuje build, a to zamraza publikacje
-      // CALEJ strony — bez zadnego komunikatu w panelu (zdarzylo sie 2026-09-07 na polu
-      // `alt`). Panel moze zapisac `null` w wyczyszczonym polu opcjonalnym albo tekst
-      // dluzszy od limitu; jedno i drugie musi przejsc, a pilnowac ma formularz.
-      const naTekst = (v: unknown): string | undefined =>
-        typeof v === 'string' ? v : v == null ? undefined : String(v);
-
       return lista.map((wpis: Record<string, unknown>, i: number) => ({
         // Identyfikator wpisu — loader file() wymaga `id` albo `slug` w kazdym elemencie,
         // a panel takiego pola nie zapisuje. Numer pozycji wystarcza: nic w projekcie
@@ -42,7 +79,11 @@ const serwisy = defineCollection({
         nazwa: naTekst(wpis.nazwa) ?? '',
         adres: naTekst(wpis.adres) ?? '',
         opis: naTekst(wpis.opis),
-        kategoria: naTekst(wpis.kategoria),
+        // 🔴 Grupa: pole `grupa`, a gdy go w ogole nie ma — stare `kategoria`.
+        // Powod: przegladarka Piotra moze miec w pamieci podrecznej stara config.yml
+        // (GitHub Pages podaje ja z max-age=600) i zapisac wpis w starym ukladzie.
+        // Ubezpieczenie na te dziesiec minut, nie trwale dwutorowanie.
+        grupa: naTekst(wpis.grupa ?? wpis.kategoria),
         alt: naTekst(wpis.alt),
         ukryty: wpis.ukryty === true || wpis.ukryty === 'true',
         // 🔴 Sciezka obrazka sprowadzona do jednej postaci: panel zapisuje ja wzglednie,
@@ -62,7 +103,10 @@ const serwisy = defineCollection({
       nazwa: z.string(),
       adres: z.string(),
       opis: z.string().optional(),
-      kategoria: z.string().optional(),
+      // klucz grupy z src/data/grupy.json albo pusty tekst (kafelek bez przypisania).
+      // Klucz nieistniejacy w grupy.json NIE jest bledem — kafelek idzie do sekcji
+      // koncowej (kontrakt §3 regula 3).
+      grupa: z.string().optional(),
       // obrazek kafelka: plik w src/assets/serwisy/ (ścieżkę normalizuje parser wyżej)
       obrazek: image().optional(),
       // 🔴 Alt NIE JEST wymagany i wymagany być nie może: panel nie umie wymusić pola
@@ -79,4 +123,4 @@ const serwisy = defineCollection({
 // index.astro, tak samo jak dane firmy. Kolekcja z loaderem file() rozbiłaby pojedynczy
 // obiekt na osobne wpisy po jednym na klucz.
 
-export const collections = { serwisy };
+export const collections = { serwisy, grupy };

@@ -4,6 +4,8 @@
 // widoczna wszędzie, nie tylko na trasie ze spisem serwisów — brief wprost wymaga,
 // żeby nagłówek „powiedział w sekundę, czym jest EcoPower".
 import firma from '../data/firma.json';
+import strona from '../data/strona.json';
+import { tekst } from '../lib/tekst';
 
 interface Props {
   /** Liczba widocznych serwisów. Pomijana (brak licznika) przy undefined albo 0 —
@@ -13,8 +15,12 @@ interface Props {
 
 const { liczbaSerwisow } = Astro.props;
 
+// Dopisek licznika z panelu („3 serwisy w sieci").
+const napisLicznika = tekst(strona.napisLicznika, 'w sieci');
+
 // Odmiana liczebnika: 1 serwis / 2–4 serwisy / 5+ serwisów (z wyjątkiem 12–14,
-// które mimo końcówki 2–4 biorą formę „serwisów").
+// które mimo końcówki 2–4 biorą formę „serwisów"). Zostaje w kodzie świadomie:
+// to gramatyka polszczyzny, nie treść do redagowania w panelu.
 function odmiana(n: number): string {
   if (n === 1) return 'serwis';
   const ostatnia = n % 10;
@@ -48,7 +54,7 @@ function odmiana(n: number): string {
     {
       !!liczbaSerwisow && liczbaSerwisow > 0 && (
         <p class="pasek__licznik">
-          {liczbaSerwisow} {odmiana(liczbaSerwisow)} w sieci
+          {liczbaSerwisow} {odmiana(liczbaSerwisow)} {napisLicznika}
         </p>
       )
     }

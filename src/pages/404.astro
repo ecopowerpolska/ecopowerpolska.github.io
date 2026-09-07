@@ -8,18 +8,28 @@
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
+import teksty from '../data/strona-404.json';
+import { tekst } from '../lib/tekst';
+
+// Komplet napisów strony błędu z panelu. Wartości domyślne = dzisiejszy stan strony:
+// wyczyszczenie pola w panelu nie może zostawić 404 bez nagłówka ani bez drogi powrotu.
+const tytulKarty = tekst(teksty.tytulKarty, 'Nie ma takiej strony — EcoPower Polska');
+const opisWyszukiwarki = tekst(
+  teksty.opisWyszukiwarki,
+  'Pod tym adresem nic nie ma. Wróć na stronę główną z listą serwisów EcoPower Polska.'
+);
+const naglowek = tekst(teksty.naglowek, 'Nie ma takiej strony');
+const trescStrony = tekst(teksty.tekst, 'Pod tym adresem nic nie ma.');
+const linkPowrotu = tekst(teksty.linkPowrotu, 'Wróć na stronę główną z listą serwisów');
 ---
 
-<Bazowy
-  tytul="Nie ma takiej strony — EcoPower Polska"
-  opis="Pod tym adresem nic nie ma. Wróć na stronę główną z listą serwisów EcoPower Polska."
->
+<Bazowy tytul={tytulKarty} opis={opisWyszukiwarki}>
   <PasekMarki />
 
   <main id="tresc" class="tresc">
-    <h1>Nie ma takiej strony</h1>
-    <p>Pod tym adresem nic nie ma.</p>
-    <p><a href="/">Wróć na stronę główną z listą serwisów</a></p>
+    <h1>{naglowek}</h1>
+    <p>{trescStrony}</p>
+    <p><a href="/">{linkPowrotu}</a></p>
   </main>
 
   <Stopka />

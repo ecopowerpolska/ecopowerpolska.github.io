@@ -4,12 +4,29 @@
 #    Rozjazd nie wychodzi w panelu — wychodzi czerwonym buildem w Actions, już PO
 #    zapisaniu wpisu przez klienta (potwor-cms-strony §D2).
 #
-# ⚠️ PANEL SIĘ ŁADUJE, ZAPIS JESZCZE NIE PRZETESTOWANY (stan 2026-09-06). Sprawdzone
-#    na żywo: https://ecopowerpolska.github.io/admin/ renderuje ekran logowania bez
-#    błędów blokujących. Ale ŻADEN wpis nie został jeszcze zapisany przez panel —
-#    pierwsze logowanie i pierwszy zapis Piotra są POMIAREM tej konfiguracji,
-#    nie formalnością. Składnia widgetów: dokumentacja Decapa (Sveltia ją honoruje);
-#    ustalenia o samym logowaniu — z kodu źródłowego Sveltii, patrz komentarz w `backend`.
+# ⚠️ STAN 2026-09-07: PANEL ZAPISUJE NAPRAWDĘ. Pierwsze zapisy Piotra przeszły tego
+#    dnia (ostatni z panelu: commit 8221eb5, committer `GitHub`, podpis PGP). Ten sam
+#    dzień przyniósł trzy awarie klasy zapis ginie w ciszy — objawy, przyczyny
+#    i domknięcia opisuje docs/CMS-ZASADY-PRACY.md. Trzy rzeczy z tamtego dokumentu
+#    rządzą tym plikiem:
+#      ① nie wypycha się nic z terminala, gdy Piotr pracuje w panelu (Sveltia commituje
+#        z `expectedHeadOid` zapamiętanym przy wczytaniu i nie ponawia);
+#      ② po KAŻDEJ zmianie tego pliku trzeba przeładować twardo samo /admin/
+#        (GitHub Pages podaje config.yml z max-age=600 — panel pracuje wtedy na starej
+#        konfiguracji i zapisuje w starym układzie);
+#      ③ walidacja treści należy do TEGO pliku, nie do schematu Zod. Schemat kolekcji
+#        nie ma już nic, co mogłoby zatrzymać build — długości i postać adresu pilnuje
+#        formularz, gdzie błąd widzi człowiek i może go poprawić.
+#
+# 🔴 Wzorce `pattern` obejmują znak nowej linii: `[\s\S]`, nigdy `.`. Inaczej tekst
+#    wklejony z łamaniem wiersza nie przechodzi walidacji, a panel odmawia zapisu bez
+#    czytelnego powodu (zdarzyło się 2026-09-07).
+#
+# 🔴 Nowych wzorców nie dokłada się na zapas. W pliku zostają wyłącznie te, które
+#    były tu przed 2026-09-07 (adres kafelka, długość podpisu, długość zdania pod
+#    kafelkami) oraz dwa wymagane przez kontrakt danych (klucz grupy, długość opisu
+#    grupy). Pola tekstowe stron mają limity wyłącznie w podpowiedziach — jako zalecenie
+#    dla wyszukiwarek, nie jako blokada zapisu.
 #
 # 🔴 `repo` niżej zakłada repozytorium `ecopowerpolska/ecopowerpolska.github.io`
 #    (witryna użytkownika, bez `base`). Jeśli Piotr wybierze inną nazwę repozytorium,
@@ -20,32 +37,38 @@ backend:
   repo: ecopowerpolska/ecopowerpolska.github.io
   branch: main
   # LOGOWANIE — pełna instrukcja krok po kroku dla Piotra: docs/CMS-LOGOWANIE.md.
-  # Skrót ustaleń (sprawdzone w KODZIE Sveltii, gałąź main, 2026-09-06):
+  # Skrót ustaleń (sprawdzone w KODZIE Sveltii, wersja 0.206.1 — ta przypięta
+  # w public/admin/index.html):
   #
-  # 🔴 `auth_methods: [token]` — zostaje TYLKO przycisk „Zaloguj się za pomocą tokenu
-  # dostępu". Bez tej linii panel pokazuje TAKŻE „Zaloguj się przez GitHub" (OAuth),
+  # 🔴 `auth_methods: [token]` — zostaje TYLKO przycisk logowania tokenem dostępu.
+  # Bez tej linii panel pokazuje TAKŻE przycisk logowania przez GitHub (OAuth),
   # a ten przycisk i tak nie działa: wymaga Workera `sveltia-cms-auth`, który nie jest
   # wdrożony (zob. `base_url` niżej). Klikalny, ale zepsuty przycisk jest gorszy niż
   # jego brak. Źródło: src/lib/components/entrance/sign-in.svelte (Sveltia chowa
   # przycisk OAuth, gdy `auth_methods` go nie wymienia) i
   # src/lib/services/config/parser/backend.js (nazwa i składnia klucza).
+  #
+  # 🔴 TO ZOSTAJE ŚWIADOMIE, a nie z lenistwa. Token wkleja się RAZ na przeglądarkę
+  # (trafia do localStorage) i od tej chwili panel otwiera się od razu. OAuth
+  # kosztowałby Piotra konto Cloudflare, wdrożenie Workera, rejestrację aplikacji
+  # OAuth na GitHubie i trzy zmienne środowiskowe — czyli dokładnie te kolejne progi
+  # wejścia do ustawień, których ma nie być. Droga jest JEDNA i cała mieści się
+  # w oknie logowania panelu.
   auth_methods: [token]
   #
   # base_url: https://sveltia-cms-auth.<TWOJA-SUBDOMENA>.workers.dev
   # ↑ ZAKOMENTOWANE CELOWO. Odkomentuj DOPIERO gdy Worker `sveltia-cms-auth` będzie
-  # wdrożony na Cloudflare (docs/CMS-LOGOWANIE.md, „POZYCJE DLA PIOTRA") — podmień
-  # <TWOJA-SUBDOMENA> na rzeczywisty adres z panelu Cloudflare Workers. Gdy ta linia
-  # wraca, zmień też linię wyżej na `auth_methods: [token, oauth]` (albo usuń ją
+  # wdrożony na Cloudflare (docs/CMS-LOGOWANIE.md, sekcja o logowaniu bez tokenu) —
+  # podmień <TWOJA-SUBDOMENA> na rzeczywisty adres z panelu Cloudflare Workers. Gdy ta
+  # linia wraca, zmień też linię wyżej na `auth_methods: [token, oauth]` (albo usuń ją
   # całkiem), żeby przycisk OAuth znów się pokazał.
   #
-  # Token GitHuba do logowania „za pomocą tokenu": FINE-GRAINED (nowy typ), nie
+  # Token GitHuba do logowania za pomocą tokenu: FINE-GRAINED (nowy typ), nie
   # klasyczny. Sveltia sama generuje link do
-  # github.com/settings/personal-access-tokens/new z uprawnieniem „Contents: write"
+  # github.com/settings/personal-access-tokens/new z uprawnieniem Contents: write
   # wstawionym z góry (src/lib/services/backends/git/github/auth.js, funkcja
   # getTokenPageURL — sprawdzone 2026-09-06). Repozytorium/właściciela trzeba wybrać
   # na tamtej stronie ręcznie — Sveltia tego nie robi za Piotra.
-  # Token trafia do magazynu przeglądarki (localStorage) — wklejany RAZ na
-  # przeglądarkę/urządzenie, nie przy każdym logowaniu.
   # 🔴 Token jest SEKRETEM: nie trafia do repo, do tego pliku ani do rozmowy
   # (kontrakt warsztatu §4.4).
 
@@ -56,8 +79,69 @@ public_folder: "src/assets/serwisy"
 
 publish_mode: simple
 
+# ── MENU PANELU ───────────────────────────────────────────────────────────────
+# Cztery pozycje, w tej kolejności: Grupy → Serwisy (kafelki) → Teksty strony →
+# Dane firmy. Kolejność w tym pliku = kolejność w menu panelu.
 collections:
-  # ── KAFELKI ─────────────────────────────────────────────────────────────────
+  # ── ① GRUPY ─────────────────────────────────────────────────────────────────
+  # Sekcje, na które dzielą się kafelki. Kafelek wskazuje grupę polem `grupa`
+  # niosącym `klucz` stąd (kolekcja `serwisy` niżej, pole `grupa`, widget relation).
+  - name: grupy
+    label: "Grupy"
+    files:
+      - name: lista
+        label: "Grupy serwisów"
+        file: "src/data/grupy.json"
+        description: >-
+          Kolejność na tej liście = kolejność sekcji na stronie. Chwyć grupę za uchwyt
+          po lewej i przeciągnij; na telefonie użyj guzików w górę/w dół. Grupa, do
+          której nie jest przypisany ani jeden widoczny kafelek, NIE pokazuje się na
+          stronie wcale — ani nagłówek sekcji, ani odnośnik w spisie. Dopóki grup jest
+          mniej niż dwie, strona pokazuje jedną wspólną siatkę kafelków, bez nagłówków
+          sekcji.
+        fields:
+          - name: grupy
+            label: "Grupy"
+            label_singular: "Grupa"
+            widget: list
+            required: false
+            allow_add: true
+            collapsed: true
+            summary: "{{fields.nazwa}}"
+            fields:
+              - name: klucz
+                label: "Klucz grupy"
+                widget: string
+                required: true
+                pattern:
+                  - "^[a-z0-9-]+$"
+                  - "Tylko małe litery bez polskich znaków, cyfry i myślnik, np. wykonczenia"
+                hint: >-
+                  Identyfikator techniczny, po którym kafelek wskazuje tę grupę. Małe
+                  litery bez polskich znaków, np. wykonczenia. Musi być inny niż klucze
+                  pozostałych grup. Po zapisaniu NIE zmieniaj — kafelki wskazują grupę
+                  właśnie tym napisem i po zmianie klucza wypadną z sekcji.
+
+              - name: nazwa
+                label: "Nazwa sekcji na stronie"
+                widget: string
+                required: true
+                hint: >-
+                  Napis nagłówka sekcji, np. Wykończenia wnętrz. To jedyne z tych pól,
+                  które odwiedzający widzi.
+
+              - name: opis
+                label: "Zdanie pod nagłówkiem sekcji (opcjonalnie)"
+                widget: string
+                required: false
+                pattern:
+                  - "^[\\s\\S]{0,200}$"
+                  - "Zdanie może mieć najwyżej 200 znaków"
+                hint: >-
+                  Do 200 znaków. Puste pole = pod nagłówkiem sekcji nie pojawia się nic,
+                  sam nagłówek zostaje.
+
+  # ── ② SERWISY (KAFELKI) ─────────────────────────────────────────────────────
   # 🔴 JEDEN PLIK, NIE JEDEN PLIK NA SERWIS. Powód jest jeden i konkretny: uchwyt
   # do przeciągania ma wyłącznie widget `list`. Sveltia nie umie ręcznie sortować
   # wpisów kolekcji katalogowej, więc przy pliku na serwis kolejność dałoby się
@@ -93,8 +177,10 @@ collections:
                 widget: string
                 required: true
                 hint: "Pełny adres z https:// — tam prowadzi kliknięcie kafelka."
-                # Wzorzec równie ostry co schemat Zod (z.string().url()), inaczej panel
-                # przepuści adres, który zatrzyma build — już PO zapisie.
+                # Wzorzec stał tu przed 2026-09-07 i zostaje: schemat Zod nie sprawdza
+                # już postaci adresu (nie wolno mu — błąd schematu zamraża publikację),
+                # więc to JEDYNE miejsce, gdzie literówka w adresie zostanie złapana,
+                # i to na oczach człowieka.
                 pattern:
                   - "^https?://[^\\s]+\\.[^\\s]+$"
                   - "Adres musi zaczynać się od http:// albo https:// i nie może zawierać spacji"
@@ -106,18 +192,36 @@ collections:
                 pattern:
                   - "^[\\s\\S]{0,160}$"
                   - "Podpis może mieć najwyżej 160 znaków"
-                hint: "Do 160 znaków. Puste pole jest w porządku."
-
-              - name: kategoria
-                label: "Kategoria / branża (opcjonalnie)"
-                widget: string
-                required: false
-                pattern:
-                  - "^[\\s\\S]{0,60}$"
-                  - "Kategoria może mieć najwyżej 60 znaków"
                 hint: >-
-                  Strona grupuje kafelki w sekcje dopiero przy DWÓCH różnych kategoriach.
-                  Dopasowanie idzie po treści — literówka tworzy nową kategorię.
+                  Do 160 znaków. Puste pole jest w porządku — kafelek pokaże samą nazwę.
+
+              # 🔴 Zamiast dawnego pola `kategoria` (tekst dowolny, w którym literówka
+              # tworzyła nową kategorię) — WYBÓR z listy grup zdefiniowanych w pozycji
+              # menu Grupy. Sveltia 0.206.1 obsługuje wskazanie listy wewnątrz pliku
+              # kolekcji typu `files` przez gwiazdkę w `value_field` / `display_fields` /
+              # `search_fields` (dokumentacja: sveltiacms.app/en/docs/fields/relation,
+              # rozdział Referencing a File in a File Collection; w kodzie
+              # src/lib/services/contents/fields/relation/helpers/list-fields.js).
+              # Zapis bez klamer (`grupy.*.klucz`) też działa — Sveltia sama go opakowuje
+              # (helpers/field-names.js, funkcja normalizeFieldName) — ale trzymamy się
+              # postaci z dokumentacji.
+              # Pole jest opcjonalne, więc panel dokłada na górze listy pozycję pustą;
+              # wybranie jej zapisuje pusty tekst, nie usuwa pola.
+              - name: grupa
+                label: "Grupa (sekcja na stronie)"
+                widget: relation
+                required: false
+                collection: grupy
+                file: lista
+                value_field: "{{grupy.*.klucz}}"
+                display_fields: ["{{grupy.*.nazwa}}"]
+                search_fields: ["{{grupy.*.nazwa}}", "{{grupy.*.klucz}}"]
+                hint: >-
+                  Wybierz z listy sekcję, w której ma stanąć ten kafelek. Lista bierze
+                  się z pozycji menu Grupy — jeśli jest pusta, najpierw dodaj tam grupę.
+                  Puste pole (pozycja pusta na górze listy) = kafelek trafia na koniec
+                  strony, do sekcji Inne. Dopóki realnie użytych grup jest mniej niż
+                  dwie, strona i tak pokazuje jedną wspólną siatkę, bez nagłówków sekcji.
 
               - name: obrazek
                 label: "Obrazek kafelka"
@@ -139,14 +243,52 @@ collections:
                 default: false
                 required: false
 
-  # ── TEKSTY I DANE, KTORE NIE SA KAFELKAMI ───────────────────────────────────
-  - name: ustawienia
-    label: "Ustawienia"
+  # ── ③ TEKSTY STRONY ─────────────────────────────────────────────────────────
+  # 🔴 KAŻDE pole niżej przechodzi przez funkcję `tekst()` z src/lib/tekst.ts:
+  # puste pole NIE kasuje napisu ze strony, tylko przywraca napis domyślny wpisany
+  # w kodzie. Podpowiedź każdego pola podaje ten domyślny napis wprost.
+  # JEDYNY wyjątek: Zdanie pod kafelkami — tam puste pole naprawdę usuwa całą sekcję
+  # i tak jest napisane w jego podpowiedzi.
+  - name: teksty
+    label: "Teksty strony"
     files:
+      # ---- strona główna ----
       - name: strona
-        label: "Teksty strony głównej"
+        label: "Strona główna"
         file: "src/data/strona.json"
+        description: >-
+          Napisy strony głównej. Wyczyszczenie pola przywraca napis domyślny — strona
+          nie zostanie bez tytułu ani bez nagłówka. Wyjątkiem jest zdanie pod kafelkami:
+          puste pole usuwa tam całą sekcję.
         fields:
+          - name: tytulKarty
+            label: "Tytuł karty przeglądarki i wyniku w wyszukiwarce"
+            widget: string
+            required: false
+            hint: >-
+              Napis na karcie przeglądarki i w niebieskiej linii wyniku Google. Najlepiej
+              do 60 znaków — dłuższy Google urywa. Puste pole = wraca napis domyślny:
+              EcoPower Polska — serwisy spółki.
+
+          - name: opisWyszukiwarki
+            label: "Opis dla wyszukiwarek"
+            widget: text
+            required: false
+            hint: >-
+              Dwie linijki pod tytułem w wyniku Google, a także podpis strony przy
+              udostępnianiu w komunikatorach. Najlepiej do 160 znaków. Puste pole =
+              wraca napis domyślny: EcoPower Polska nadzoruje kilka niezależnych
+              serwisów internetowych.
+
+          - name: zdanieNaglowka
+            label: "Zdanie w nagłówku strony"
+            widget: string
+            required: false
+            hint: >-
+              Pierwsze zdanie, które odwiedzający czyta pod nazwą spółki. Puste pole =
+              wraca napis domyślny: Spółka nadzoruje kilka niezależnych serwisów
+              internetowych.
+
           - name: zdanieKoncowe
             label: "Zdanie pod kafelkami"
             widget: text
@@ -155,15 +297,200 @@ collections:
               - "^[\\s\\S]{0,400}$"
               - "Najwyżej 400 znaków"
             hint: >-
-              Zamknięcie strony pod listą serwisów. Puste pole = sekcja w ogóle się
-              nie pokazuje.
+              Zamknięcie strony pod listą serwisów. 🔴 To JEDYNE pole, w którym puste
+              znaczy pusto: sekcja w ogóle się wtedy nie pokazuje, żaden napis domyślny
+              nie wraca.
 
-      - name: firma
+          - name: napisLicznika
+            label: "Napis w pasku licznika"
+            widget: string
+            required: false
+            hint: >-
+              Człon po liczbie serwisów, np. 3 serwisy w sieci. Wpisujesz tylko drugą
+              część, liczbę strona liczy sama. Puste pole = wraca napis domyślny:
+              w sieci.
+
+          - name: nazwaGrupyBezPrzypisania
+            label: "Nazwa sekcji dla kafelków bez grupy"
+            widget: string
+            required: false
+            hint: >-
+              Nagłówek sekcji na końcu strony, do której trafiają kafelki bez wybranej
+              grupy. Widoczna dopiero wtedy, gdy takie kafelki są. Puste pole = wraca
+              napis domyślny: Inne.
+
+          - name: komunikatPustejListy
+            label: "Komunikat, gdy nie ma żadnego widocznego kafelka"
+            widget: string
+            required: false
+            hint: >-
+              Widoczny tylko wtedy, gdy wszystkie kafelki są ukryte albo skasowane.
+              Puste pole = wraca napis domyślny: Brak serwisów do pokazania.
+
+          - name: nazwaWitryny
+            label: "Nazwa witryny przy udostępnianiu"
+            widget: string
+            required: false
+            hint: >-
+              Nazwa nad podglądem strony wklejonej na Facebooka czy do komunikatora
+              (og:site_name). Na samej stronie niewidoczna. Puste pole = wraca napis
+              domyślny: EcoPower Polska.
+
+          - name: etykietaSekcjiZamykajacej
+            label: "Nazwa sekcji zamykającej (dla czytnika ekranu)"
+            widget: string
+            required: false
+            hint: >-
+              Opis sekcji ze zdaniem pod kafelkami, czytany przez czytnik ekranu osobie
+              niewidomej. Na ekranie niewidoczny. Puste pole = wraca napis domyślny:
+              O spółce.
+
+          - name: etykietaSpisuGrup
+            label: "Nazwa spisu odnośników do sekcji (dla czytnika ekranu)"
+            widget: string
+            required: false
+            hint: >-
+              Opis spisu odnośników prowadzących do sekcji, czytany przez czytnik ekranu.
+              Spis pojawia się dopiero przy dwóch grupach. Puste pole = wraca napis
+              domyślny: Grupy serwisów.
+
+          - name: ukrytyNaglowekSerwisow
+            label: "Ukryty nagłówek listy serwisów (dla czytnika ekranu)"
+            widget: string
+            required: false
+            hint: >-
+              Nagłówek listy kafelków istniejący wyłącznie dla czytnika ekranu, gdy
+              strona pokazuje jedną wspólną siatkę. Na ekranie niewidoczny. Puste pole =
+              wraca napis domyślny: Serwisy.
+
+          - name: linkPomijania
+            label: "Odnośnik pomijania nawigacji (dla klawiatury)"
+            widget: string
+            required: false
+            hint: >-
+              Odnośnik widoczny dopiero po naciśnięciu klawisza Tab, przeskakuje do
+              treści. Puste pole = wraca napis domyślny: Przejdź do treści.
+
+      # ---- stopka ----
+      - name: stopka
+        label: "Stopka"
+        file: "src/data/stopka.json"
+        description: >-
+          Etykiety i napisy stopki. Same DANE spółki (KRS, NIP, telefon) zmienia się
+          w pozycji menu Dane firmy — tutaj są tylko podpisy przed nimi. Wyczyszczenie
+          pola przywraca napis domyślny.
+        fields:
+          - name: etykietaFormaPrawna
+            label: "Podpis przed formą prawną"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Forma prawna:"
+
+          - name: etykietaAdresWww
+            label: "Podpis przed adresem WWW"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Adres WWW:"
+
+          - name: etykietaEmail
+            label: "Podpis przed adresem e-mail"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: E-mail:"
+
+          - name: etykietaAdres
+            label: "Podpis przed adresem siedziby"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Adres:"
+
+          - name: etykietaTelefon
+            label: "Podpis przed numerem telefonu"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Telefon:"
+
+          - name: guzikKopiujWszystko
+            label: "Napis na guziku kopiowania danych"
+            widget: string
+            required: false
+            hint: >-
+              Guzik, który kopiuje komplet danych spółki do schowka. Puste pole = wraca
+              napis domyślny: Skopiuj dane spółki.
+
+          - name: potwierdzenieKopiowania
+            label: "Napis po udanym skopiowaniu"
+            widget: string
+            required: false
+            hint: >-
+              Pojawia się na guziku na chwilę po kliknięciu. Puste pole = wraca napis
+              domyślny: Skopiowano.
+
+          - name: bladKopiowania
+            label: "Napis, gdy kopiowanie się nie uda"
+            widget: string
+            required: false
+            hint: >-
+              Widoczny rzadko — przeglądarka potrafi odmówić dostępu do schowka. Puste
+              pole = wraca napis domyślny: Nie udało się skopiować.
+
+      # ---- strona błędu 404 ----
+      - name: strona404
+        label: "Strona błędu 404"
+        file: "src/data/strona-404.json"
+        description: >-
+          Strona pokazywana, gdy ktoś wejdzie pod adres, którego u nas nie ma (literówka
+          w adresie, stary odnośnik). Wyczyszczenie pola przywraca napis domyślny.
+        fields:
+          - name: tytulKarty
+            label: "Tytuł karty przeglądarki"
+            widget: string
+            required: false
+            hint: >-
+              Puste pole = wraca napis domyślny: Nie ma takiej strony — EcoPower Polska.
+
+          - name: opisWyszukiwarki
+            label: "Opis dla wyszukiwarek"
+            widget: text
+            required: false
+            hint: >-
+              Puste pole = wraca napis domyślny: Pod tym adresem nic nie ma. Wróć na
+              stronę główną z listą serwisów EcoPower Polska.
+
+          - name: naglowek
+            label: "Nagłówek na stronie błędu"
+            widget: string
+            required: false
+            hint: >-
+              Największy napis, który zobaczy zagubiony odwiedzający. Puste pole = wraca
+              napis domyślny: Nie ma takiej strony.
+
+          - name: tekst
+            label: "Zdanie pod nagłówkiem"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Pod tym adresem nic nie ma."
+
+          - name: linkPowrotu
+            label: "Napis odnośnika powrotnego"
+            widget: string
+            required: false
+            hint: >-
+              Odnośnik prowadzący na stronę główną. Puste pole = wraca napis domyślny:
+              Wróć na stronę główną z listą serwisów.
+
+  # ── ④ DANE FIRMY ────────────────────────────────────────────────────────────
+  - name: firma
+    label: "Dane firmy"
+    files:
+      - name: dane
         label: "Dane rejestrowe (stopka)"
         file: "src/data/firma.json"
         description: >-
           Dane przepisane ze starej strony. Zmieniaj wyłącznie wtedy, gdy zmienił się
-          wpis w rejestrze. Puste pole nie renderuje się w stopce.
+          wpis w rejestrze. Puste pole nie renderuje się w stopce. Podpisy stojące przed
+          tymi danymi (Forma prawna:, NIP: i tak dalej) zmienia się w pozycji menu Teksty
+          strony, w formularzu Stopka.
         fields:
           - { name: nazwaPelna, label: "Nazwa pełna (rejestrowa)", widget: string }
           - name: nazwaKrotka

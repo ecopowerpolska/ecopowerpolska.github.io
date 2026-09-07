@@ -142,8 +142,8 @@ collections:
         widget: string
         required: false
         hint: >-
-          ⚠️ WYMAGANY, GDY DODAJESZ OBRAZEK — bez niego strona nie zbuduje się po zapisie.
-          Opisz, co widać, np. „Wnętrze salonu Nadi Home".
+          Opisz, co widać, np. „Wnętrze salonu Nadi Home". Puste pole jest w porządku —
+          zdjęcie jest wtedy ozdobne, a nazwę serwisu i tak widać na kafelku.
         # 🔴 ZNANE OGRANICZENIE PANELU, świadomie zostawione. Schemat kolekcji wymaga `alt`
         # WARUNKOWO — tylko gdy wpis ma obrazek (reguła `.refine()` w content.config.ts).
         # Decap ani Sveltia nie umieją wyrazić „wymagane zależnie od innego pola": `required`

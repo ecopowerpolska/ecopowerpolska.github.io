@@ -40,17 +40,17 @@ const serwisy = defineCollection({
       // OPCJONALNY — dopóki Piotr nie poda grafik, kafelek renderuje czytelny
       // placeholder z samą nazwą (zero podrzuconych plików udających grafikę).
       obrazek: image().optional(),
-      // tekst alternatywny obrazka — wymagany, gdy obrazek jest (kryterium bramki)
+      // Tekst alternatywny obrazka. 🔴 NIE JEST WYMAGANY i wymagany być NIE MOŻE:
+      // panel nie umie wymusić pola warunkowo, więc zapis bez altu zatrzymywał build
+      // w Actions i strona zostawała na starej wersji (zdarzyło się 2026-09-07,
+      // wpis „Pan Wylewka"). Puste = zdjęcie ozdobne, `alt=""` — poprawnie, bo nazwę
+      // serwisu niesie widoczny tekst kafelka.
       alt: z.string().optional(),
       // porządek kafelków rosnąco; równe wartości rozstrzyga nazwa
       kolejnosc: z.number().default(100),
       // kafelek zostaje w repo, znika ze strony
       ukryty: z.boolean().default(false),
-    })
-      .refine((d) => !d.obrazek || (d.alt && d.alt.trim().length > 0), {
-        message: 'Kafelek z obrazkiem musi mieć niepusty tekst alternatywny (alt).',
-        path: ['alt'],
-      }),
+    }),
 });
 
 export const collections = { serwisy };

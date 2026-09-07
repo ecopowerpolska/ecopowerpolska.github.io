@@ -38,8 +38,19 @@ Właściciel wpisany w rejestrze: STREFA BADAŃ PIOTR CZWARNOWSKI.
 | `TXT` (SPF) | `@` | `v=spf1 include:_spf.lh.pl -all` | 🟢 **NIE RUSZAMY** |
 | `TXT` (DMARC) | `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:dmarc-report@lh.pl;` | 🟢 **NIE RUSZAMY** |
 | `TXT` (DKIM) | `default._domainkey` | klucz RSA, selektor `default` — pełna wartość niżej | 🟢 **NIE RUSZAMY** |
+| `A` | `autoconfig` | `185.135.89.143` | 🟢 **NIE RUSZAMY** — automatyczna konfiguracja programów pocztowych |
+| `CNAME` | `pop3` · `smtp` · `imap` · `mail` | `mail17.lh.pl.` (każdy) | 🟢 **NIE RUSZAMY** — nazwy serwerów poczty dla klientów |
+| `SRV` | `_autodiscover._tcp` | `0 0 443 autodiscover.lh.pl.` | 🟢 **NIE RUSZAMY** — autokonfiguracja Outlooka |
 | `CAA` | `@` | **brak rekordu** | 🟢 brak jest w porządku — bez CAA każdy urząd może wystawić certyfikat, więc Let's Encrypt GitHuba nie jest blokowany |
 | `TXT` | `_github-pages-challenge-ecopowerpolska` | **brak rekordu** | 🔴 **zakładamy** wartością z API GitHuba (weryfikacja domeny) |
+
+🔴 **Sześć rekordów pocztowych wyżej (`autoconfig`, cztery `CNAME`, `SRV`) dopisano 2026-09-07
+po tym, jak Piotr pokazał pełną listę z panelu lh.pl** — pierwszy odczyt ich nie miał, bo `dig`
+nie pozwala wylistować poddomen i sprawdzałem tylko nazwy, które przewidziałem. To jest miara
+tej metody: **odczyt przez `dig` daje komplet TYLKO dla nazw, które ktoś zgadnie.** Pełną listę
+strefy daje wyłącznie panel u dostawcy. Przy drodze „zostawiamy NS w lh.pl" nie ma to znaczenia
+(strefa się nie przenosi), ale gdyby kiedykolwiek przenosić strefę — **listę bierze się z panelu,
+nigdy z `dig`**, bo brakujący rekord psuje pocztę po cichu.
 
 **Pełna wartość DKIM (selektor `default`), gdyby trzeba było ją odtworzyć:**
 

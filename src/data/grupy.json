@@ -1,3 +1,14 @@
 {
-  "grupy": []
+  "grupy": [
+    {
+      "klucz": "wnetrza",
+      "nazwa": "PROBA - Wnetrza",
+      "opis": ""
+    },
+    {
+      "klucz": "budowlanka",
+      "nazwa": "PROBA - Prace budowlane",
+      "opis": ""
+    }
+  ]
 }

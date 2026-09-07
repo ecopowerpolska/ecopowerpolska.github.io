@@ -104,7 +104,7 @@ collections:
                 widget: string
                 required: false
                 pattern:
-                  - "^.{0,160}$"
+                  - "^[\\s\\S]{0,160}$"
                   - "Podpis może mieć najwyżej 160 znaków"
                 hint: "Do 160 znaków. Puste pole jest w porządku."
 
@@ -113,7 +113,7 @@ collections:
                 widget: string
                 required: false
                 pattern:
-                  - "^.{0,60}$"
+                  - "^[\\s\\S]{0,60}$"
                   - "Kategoria może mieć najwyżej 60 znaków"
                 hint: >-
                   Strona grupuje kafelki w sekcje dopiero przy DWÓCH różnych kategoriach.

@@ -26,11 +26,10 @@ function odmiana(n: number): string {
 
 <header class="pasek">
   <div class="pasek__srodek">
+    {/* Sam znak, BEZ nazwy — nazwa jest w H1 niżej (D2). Znak to placeholder
+        do czasu wyboru wariantu (D5). */}
     <div class="pasek__marka">
-      <!-- Znak firmowy: placeholder. Logo poda Piotr (docs/BRAKI.md ④) — wrażenie
-           ma nieść kompozycja i typografia, nie grafika. -->
-      <span class="znak" aria-hidden="true">EP</span>
-      <span class="pasek__nazwa">{firma.nazwaKrotka}</span>
+      <span class="znak" role="img" aria-label={firma.nazwaKrotka}>EP</span>
     </div>
     {
       !!liczbaSerwisow && liczbaSerwisow > 0 && (
@@ -87,14 +86,6 @@ function odmiana(n: number): string {
     font-size: var(--t-xs);
     font-weight: 600;
     letter-spacing: -0.01em;
-  }
-
-  .pasek__nazwa {
-    font-size: var(--t-s);
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .pasek__licznik {

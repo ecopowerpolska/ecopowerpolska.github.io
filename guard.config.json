@@ -1,15 +1,13 @@
 {
-  "$comment": "Progi astro-guard dla ecopowerpolska.pl. Zmiana wobec wzorca warsztatu: zeroJsRoutes to '/**' — CAŁA witryna ma jechać bez JavaScriptu. To nie jest podniesienie budżetu, tylko jego ZACIŚNIĘCIE: strona jest jednostronicowym agregatem kafelków prowadzących na zewnętrzne adresy, więc nie ma tu czego hydratować. Każda przyszła wyspa client:* zapali B04 jako BŁĄD i wymusi świadomą decyzję zamiast cichego dodania skryptu.",
+  "$comment": "Progi astro-guard dla ecopowerpolska.pl. Do 2026-09-07 stalo tu zeroJsRoutes ['/**']; Piotr regule poluzowal swiadomie na rzecz guzikow kopiowania w stopce. W zamian twardy budzet jsGzipKB: 3 — kazda biblioteka albo wyspa client:* go przekroczy. Uzasadnienie: docs/DECYZJE-WIZUALNE.md D4.",
   "static": {
     "maxIslandsPerFile": 3,
     "minAstroMajor": 6
   },
   "budget": {
-    "jsGzipKB": 40,
+    "jsGzipKB": 3,
     "cssGzipKB": 30,
     "htmlGzipKB": 25,
-    "zeroJsRoutes": [
-      "/**"
-    ]
+    "zeroJsRoutes": []
   }
 }

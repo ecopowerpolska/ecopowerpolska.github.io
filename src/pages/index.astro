@@ -91,11 +91,8 @@ const idPierwszego = kolejnoscWyswietlana[0]?.id;
 
 const tytul = `${firma.nazwaKrotka} — serwisy spółki`;
 
-// 🟡 Zdanie złożone wyłącznie z faktów zlecenia („spółka prowadzi kilka niezależnych
-// serwisów internetowych, strona je zbiera") — do potwierdzenia albo podmiany przez
-// Piotra, tak jak poprzedni opis (docs/BRAKI.md ⑥).
-const opis =
-  'EcoPower Polska sp. z o.o. prowadzi sieć niezależnych serwisów internetowych — wszystkie zebrane w jednym miejscu.';
+// Musi brzmieć jak hero niżej — jedno zdanie, czasownik „nadzoruje" (D3).
+const opis = 'EcoPower Polska nadzoruje kilka niezależnych serwisów internetowych.';
 ---
 
 <Bazowy tytul={tytul} opis={opis}>
@@ -110,8 +107,7 @@ const opis =
     <section class="hero">
       <h1 class="hero__tytul">{firma.nazwaKrotka}</h1>
       <p class="hero__opis">
-        Spółka prowadzi kilka niezależnych serwisów internetowych. Tu znajdziesz je
-        wszystkie w jednym miejscu.
+        Spółka nadzoruje kilka niezależnych serwisów internetowych.
       </p>
     </section>
 

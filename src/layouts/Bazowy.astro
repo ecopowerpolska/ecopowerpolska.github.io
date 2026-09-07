@@ -33,11 +33,8 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <meta property="og:description" content={opis} />
     <meta property="og:url" content={kanoniczny} />
 
-    {/* Dwa warianty zamiast jednego stałego koloru — kolor paska przeglądarki na
-        telefonie ma podążać za `prefers-color-scheme`, tak jak reszta motywu
-        (src/styles/motyw.css). Wartości to --tlo jasny/ciemny z tego pliku. */}
-    <meta name="theme-color" content="#f4f5f1" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0e1512" media="(prefers-color-scheme: dark)" />
+    {/* Jeden kolor, bez wariantu ciemnego (D1). Wartość = --tlo z motyw.css. */}
+    <meta name="theme-color" content="#f4f5f1" />
 
     {/* Fonts API (Astro 6+, wbudowane) — NIGDY @fontsource, NIGDY <link> do Google
         Fonts (AG013/AG028). Rodziny zadeklarowane w astro.config.mjs (`fonts: [...]`);

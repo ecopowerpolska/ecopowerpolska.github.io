@@ -182,7 +182,10 @@ collections:
           wpis w rejestrze. Puste pole nie renderuje się w stopce.
         fields:
           - { name: nazwaPelna, label: "Nazwa pełna (rejestrowa)", widget: string }
-          - { name: nazwaKrotka, label: "Nazwa skrócona", widget: string }
+          - name: nazwaKrotka
+            label: "Nazwa skrócona (widoczna na stronie)"
+            widget: string
+            hint: "BEZ formy prawnej. Forma prawna stoi w nazwie pelnej w stopce."
           - { name: rejestr, label: "Rejestr", widget: string }
           - { name: krs, label: "KRS", widget: string }
           - { name: nip, label: "NIP", widget: string }

@@ -30,7 +30,7 @@
    włącznie ze stanem najechania (hover), bo akcent na --powierzchnia-mocna jest
    najciaśniejszą parą w całym motywie i to ona rozstrzyga, czy dobór koloru się broni. */
 
-/* ── jasny motyw ─────────────────────────────────────────────────────────────── */
+/* 🔴 Motyw jest JEDEN i jasny — bez wariantu ciemnego (docs/DECYZJE-WIZUALNE.md D1). */
 /* kontrast: #15201a na #f4f5f1 tekst */
 /* kontrast: #15201a na #e8eae2 tekst */
 /* kontrast: #4b5a4f na #f4f5f1 tekst */
@@ -38,13 +38,6 @@
 /* kontrast: #166653 na #f4f5f1 tekst */
 /* kontrast: #166653 na #e8eae2 tekst */
 /* kontrast: #166653 na #dcdfd3 tekst */
-/* ── ciemny motyw ────────────────────────────────────────────────────────────── */
-/* kontrast: #edf1e9 na #0e1512 tekst */
-/* kontrast: #edf1e9 na #182019 tekst */
-/* kontrast: #9fb0a2 na #0e1512 tekst */
-/* kontrast: #9fb0a2 na #182019 tekst */
-/* kontrast: #5bc9a5 na #0e1512 tekst */
-/* kontrast: #5bc9a5 na #182019 tekst */
 
 /* Skala typograficzna: siedem stopni, krok bliski 1,2–1,45 (Elements of Typographic
    Style: kontrast stopni czytelny na pierwszy rzut oka, bez stopni „prawie takich
@@ -61,7 +54,7 @@
   --akcent: #166653;
   --linia: #c7ccc0;
 
-  color-scheme: light dark;
+  color-scheme: light;
 
   /* ── typografia ────────────────────────────────────────────────────────────
      Zmienne --font-display / --font-sans definiuje <Font cssVariable="..." />
@@ -104,22 +97,6 @@
   --miara: 36rem;
 }
 
-/* ── kolor: ciemny, wyłącznie na podstawie preferencji systemu (bez przełącznika:
-   przełącznik wymagałby JS, a guard.config.json deklaruje CAŁĄ witrynę jako zero-JS).
-   Dopracowany osobno, nie „ciemny na odczep" — własny akcent (jaśniejszy, żeby trzymać
-   4,5:1 na ciemnym tle) i własna siatka luminancji, nie odwrócone wartości jasnego. ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --tlo: #0e1512;
-    --powierzchnia: #182019;
-    --powierzchnia-mocna: #212b22;
-    --tekst: #edf1e9;
-    --tekst-cichy: #9fb0a2;
-    --akcent: #5bc9a5;
-    --linia: #2a352c;
-  }
-}
-
 *,
 *::before,
 *::after {
@@ -128,6 +105,10 @@
 
 html {
   background: var(--tlo);
+
+  /* Kotwice nie mogą lądować pod przyklejonym paskiem; wartość = wysokość paska
+     (55 px) + oddech. Zmieniasz pasek — zmieniasz to (D7). */
+  scroll-padding-top: 4.5rem;
 }
 
 /* 🔴 SIATKA, NIE FLEX — patrz historia w git blame: `display:flex;flex-direction:column`

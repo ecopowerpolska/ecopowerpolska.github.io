@@ -1,45 +1,208 @@
 ---
-// Stopka.astro — dane rejestrowe przepisane ze starej strony ZNAK W ZNAK.
-// Treść pochodzi z src/data/firma.json; pola puste nie renderują się wcale.
+// Dane rejestrowe przepisane ze starej strony ZNAK W ZNAK; treść z firma.json,
+// pola puste nie renderują się wcale.
+// 🔴 Guziki „skopiuj": układ wersów zostaje, bez JS stopka wygląda jak przed
+// zmianą (docs/DECYZJE-WIZUALNE.md D4, D6).
 import firma from '../data/firma.json';
 
 const mail = firma.email.toLowerCase();
+
+// Blok kopiowany guzikiem zbiorczym — do wklejenia w umowę albo przelew.
+const daneSpolki = [
+  firma.nazwaPelna,
+  `${firma.rejestr}, KRS ${firma.krs}`,
+  `NIP ${firma.nip}`,
+  `REGON ${firma.regon}`,
+  `Forma prawna: ${firma.formaPrawna}`,
+  `Adres WWW: ${firma.adresWww}`,
+  `E-mail: ${firma.email}`,
+  firma.adresSiedziby && `Adres: ${firma.adresSiedziby}`,
+  firma.telefon && `Telefon: ${firma.telefon}`,
+]
+  .filter(Boolean)
+  .join('\n');
 ---
 
 <footer class="stopka">
   <div class="stopka__srodek">
-    <p class="stopka__nazwa">{firma.nazwaPelna}</p>
+    <p class="stopka__nazwa">
+      <span class="dana"
+        >{firma.nazwaPelna}<button
+          class="kopiuj"
+          type="button"
+          hidden
+          data-kopiuj={firma.nazwaPelna}
+          aria-label="Skopiuj nazwę spółki"><span class="kopiuj__znak" aria-hidden="true"></span></button
+        ></span
+      >
+    </p>
 
+    {/* Jeden wiersz, BEZ przecinków — granicę niesie odstęp (D6). */}
     <p class="stopka__rejestr">
-      {firma.rejestr}, KRS {firma.krs}, NIP {firma.nip}, REGON {firma.regon}
+      <span class="pozycja">{firma.rejestr}</span>
+      <span class="pozycja"
+        >KRS <span class="dana"
+          >{firma.krs}<button
+            class="kopiuj"
+            type="button"
+            hidden
+            data-kopiuj={firma.krs}
+            aria-label="Skopiuj numer KRS"><span class="kopiuj__znak" aria-hidden="true"></span></button
+          ></span
+        ></span
+      >
+      <span class="pozycja"
+        >NIP <span class="dana"
+          >{firma.nip}<button
+            class="kopiuj"
+            type="button"
+            hidden
+            data-kopiuj={firma.nip}
+            aria-label="Skopiuj numer NIP"><span class="kopiuj__znak" aria-hidden="true"></span></button
+          ></span
+        ></span
+      >
+      <span class="pozycja"
+        >REGON <span class="dana"
+          >{firma.regon}<button
+            class="kopiuj"
+            type="button"
+            hidden
+            data-kopiuj={firma.regon}
+            aria-label="Skopiuj numer REGON"><span class="kopiuj__znak" aria-hidden="true"></span></button
+          ></span
+        ></span
+      >
     </p>
 
     <dl class="stopka__dane">
       <dt>Forma prawna:</dt>
-      <dd>{firma.formaPrawna}</dd>
+      <dd
+        ><span class="dana"
+          >{firma.formaPrawna}<button
+            class="kopiuj"
+            type="button"
+            hidden
+            data-kopiuj={firma.formaPrawna}
+            aria-label="Skopiuj formę prawną"><span class="kopiuj__znak" aria-hidden="true"></span></button
+          ></span
+        ></dd
+      >
 
       <dt>Adres WWW:</dt>
-      <dd>{firma.adresWww}</dd>
+      <dd
+        ><span class="dana"
+          >{firma.adresWww}<button
+            class="kopiuj"
+            type="button"
+            hidden
+            data-kopiuj={firma.adresWww}
+            aria-label="Skopiuj adres WWW"><span class="kopiuj__znak" aria-hidden="true"></span></button
+          ></span
+        ></dd
+      >
 
       <dt>E-mail:</dt>
-      <dd><a href={`mailto:${mail}`}>{firma.email}</a></dd>
+      <dd
+        ><span class="dana"
+          ><a href={`mailto:${mail}`}>{firma.email}</a><button
+            class="kopiuj"
+            type="button"
+            hidden
+            data-kopiuj={firma.email}
+            aria-label="Skopiuj adres e-mail"><span class="kopiuj__znak" aria-hidden="true"></span></button
+          ></span
+        ></dd
+      >
 
       {firma.adresSiedziby && (
         <>
           <dt>Adres:</dt>
-          <dd>{firma.adresSiedziby}</dd>
+          <dd
+            ><span class="dana"
+              >{firma.adresSiedziby}<button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={firma.adresSiedziby}
+                aria-label="Skopiuj adres siedziby"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></dd
+          >
         </>
       )}
 
       {firma.telefon && (
         <>
           <dt>Telefon:</dt>
-          <dd>{firma.telefon}</dd>
+          <dd
+            ><span class="dana"
+              >{firma.telefon}<button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={firma.telefon}
+                aria-label="Skopiuj numer telefonu"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></dd
+          >
         </>
       )}
     </dl>
+
+    <p class="stopka__zbiorczy">
+      <button class="kopiuj-wszystko" type="button" hidden data-kopiuj={daneSpolki}>
+        Skopiuj dane spółki
+      </button>
+    </p>
+
+    {/* Potwierdzenie dla czytnika ekranu — zmiana ikony jest dla niego niema. */}
+    <p class="stopka__stan" role="status" aria-live="polite"></p>
   </div>
 </footer>
+
+<script>
+  // Guziki startują jako `hidden` i pokazują się dopiero tutaj — bez Clipboard API
+  // stopka zostaje taka, jaka była. Zero martwych guzików.
+  const schowek = navigator.clipboard;
+  if (schowek) {
+    const guziki = document.querySelectorAll<HTMLButtonElement>('[data-kopiuj]');
+    const stan = document.querySelector<HTMLParagraphElement>('.stopka__stan');
+
+    for (const guzik of guziki) guzik.hidden = false;
+
+    // `ReturnType<...>`, nie `number` — widoczne są typy Node'a (ts(2322)).
+    let zegar: ReturnType<typeof setTimeout> | undefined;
+
+    for (const guzik of guziki) {
+      guzik.addEventListener('click', async () => {
+        try {
+          await schowek.writeText(guzik.dataset.kopiuj ?? '');
+        } catch {
+          if (stan) stan.textContent = 'Nie udało się skopiować.';
+          return;
+        }
+
+        // Potwierdzenie trzema drogami: ptaszek, napis na guziku zbiorczym, komunikat.
+        guzik.dataset.ok = '1';
+        if (guzik.classList.contains('kopiuj-wszystko')) guzik.textContent = 'Skopiowano';
+        if (stan) {
+          const co = guzik.getAttribute('aria-label')?.replace(/^Skopiuj /, '') ?? 'dane spółki';
+          stan.textContent = `Skopiowano: ${co}.`;
+        }
+
+        clearTimeout(zegar);
+        zegar = setTimeout(() => {
+          for (const g of guziki) {
+            delete g.dataset.ok;
+            if (g.classList.contains('kopiuj-wszystko')) g.textContent = 'Skopiuj dane spółki';
+          }
+          if (stan) stan.textContent = '';
+        }, 2000);
+      });
+    }
+  }
+</script>
 
 <style>
   /* Stopka na wypełnieniu, bez kreski — tak samo jak kafelki. Do dołu dociska ją
@@ -90,6 +253,134 @@ const mail = firma.email.toLowerCase();
 
   .stopka__dane a:hover {
     color: var(--tekst);
+  }
+
+  /* Wartość i jej guzik łamią się razem albo wcale. */
+  .dana {
+    white-space: nowrap;
+  }
+
+  /* Odstęp zamiast przecinka — jedyna granica między pozycjami (D6). */
+  .pozycja {
+    white-space: nowrap;
+    margin-right: var(--o-4);
+  }
+
+  .pozycja:last-child {
+    margin-right: 0;
+  }
+
+  /* Guzik przy danej — celowo cichy; kolory to pary policzone w motyw.css. */
+  .kopiuj {
+    /* spoczynek */
+    appearance: none;
+    /* Ujemny prawy margines: guzik jest szerszy od ikony (pole kliknięcia) i bez
+       tego pusty pas odsuwał od wartości to, co stoi za nią. */
+    margin: 0 -0.2rem 0 0.1rem;
+    padding: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    vertical-align: -0.25em;
+    display: inline-grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    border-radius: var(--promien-maly);
+    color: var(--tekst-cichy);
+    cursor: pointer;
+  }
+
+  /* najechanie */
+  .kopiuj:hover {
+    color: var(--akcent);
+    background: var(--powierzchnia-mocna);
+  }
+
+  /* aktywny (wciśnięty) */
+  .kopiuj:active {
+    transform: translateY(1px);
+  }
+
+  /* Ikona z dwóch pudełek CSS, nie SVG — skaluje się z tekstem. */
+  .kopiuj__znak {
+    position: relative;
+    width: 0.6rem;
+    height: 0.7rem;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+  }
+
+  .kopiuj__znak::before {
+    content: '';
+    position: absolute;
+    left: -3.5px;
+    top: -3.5px;
+    width: 0.6rem;
+    height: 0.7rem;
+    border: 1.5px solid currentColor;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 2px 0 0 0;
+  }
+
+  /* Ta sama ramka zamienia się w ptaszka — bez zmiany szerokości guzika. */
+  .kopiuj[data-ok] {
+    color: var(--akcent);
+  }
+
+  .kopiuj[data-ok] .kopiuj__znak {
+    border: 0;
+    border-radius: 0;
+    width: 0.75rem;
+    height: 0.4rem;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg) translate(1px, -2px);
+  }
+
+  .kopiuj[data-ok] .kopiuj__znak::before {
+    content: none;
+  }
+
+  /* Guzik zbiorczy: ramka, nie wypełnienie — to narzędzie, nie CTA. */
+  .stopka__zbiorczy {
+    margin: var(--o-6) 0 0;
+  }
+
+  .kopiuj-wszystko {
+    /* spoczynek */
+    appearance: none;
+    padding: var(--o-2) var(--o-4);
+    background: none;
+    border: 1px solid var(--linia);
+    border-radius: var(--promien-maly);
+    color: var(--tekst);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* najechanie */
+  .kopiuj-wszystko:hover {
+    border-color: var(--akcent);
+    color: var(--akcent);
+  }
+
+  /* aktywny (wciśnięty) */
+  .kopiuj-wszystko:active {
+    transform: translateY(1px);
+  }
+
+  .kopiuj-wszystko[data-ok] {
+    border-color: var(--akcent);
+    color: var(--akcent);
+  }
+
+  /* Wysokość trzymana zawsze, żeby komunikat nie przesuwał stopki. */
+  .stopka__stan {
+    margin: var(--o-2) 0 0;
+    min-height: 1.6em;
+    color: var(--akcent);
   }
 
   @media (max-width: 34rem) {

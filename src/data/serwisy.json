@@ -1,21 +1,21 @@
 {
   "serwisy": [
     {
-      "nazwa": "nadihome.pl",
-      "adres": "https://nadihome.pl/",
-      "opis": "",
-      "kategoria": "",
-      "obrazek": "../assets/serwisy/nadihome.jpg",
-      "alt": "Dłonie przykładające czerwoną poziomicę do świeżo ułożonych białych płytek",
-      "ukryty": false
-    },
-    {
       "nazwa": "studioagat.pl",
       "adres": "https://studioagat.pl/",
       "opis": "",
       "kategoria": "",
       "obrazek": "../assets/serwisy/studioagat.jpg",
       "alt": "Zdjęcie główne serwisu studioagat.pl",
+      "ukryty": false
+    },
+    {
+      "nazwa": "nadihome.pl",
+      "adres": "https://nadihome.pl/",
+      "opis": "",
+      "kategoria": "",
+      "obrazek": "../assets/serwisy/nadihome.jpg",
+      "alt": "Dłonie przykładające czerwoną poziomicę do świeżo ułożonych białych płytek",
       "ukryty": false
     },
     {

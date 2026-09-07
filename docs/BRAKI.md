@@ -95,11 +95,15 @@ wpis → pole „Obrazek kafelka" + „Opis obrazka dla czytnika ekranu". **Żad
 `<Image>` Astro. Materiał ze starych stron zbiera się narzędziami Potwora — `zbierz-zdjecia-www.py`,
 `przemiel-zdjecia.py` (kontrakt warsztatu §5), uruchamia Piotr.
 
-## ④ Logo / znak firmowy
+## ④ Logo / znak firmowy — ZAMKNIĘTE 2026-09-07
 
-**Co robi strona teraz:** kwadrat z inicjałami `EP` obok nazwy w nagłówku.
-**Jak uzupełnić:** plik logo → `src/assets/`, podmiana bloku `.znak` w `src/pages/index.astro`.
-To jedyny brak z tej listy wymagający zmiany kodu (dwie linijki).
+Piotr wybrał wariant **A „E rejestrowe"** z trzech przedstawionych (docs/DECYZJE-WIZUALNE.md D5):
+litera E z rejestru — zielony pion to linia marginesu akt, trzy grafitowe ramiona to wiersze wpisu.
+
+Znak stoi w DWÓCH miejscach i zmienia się w obu naraz:
+- `src/components/PasekMarki.astro` — rysunek w kodzie, kolory z motywu (`var(--akcent)`, `var(--tekst)`);
+- `public/favicon.svg` — ten sam rysunek na grafitowym kafelku, barwy wpisane na sztywno
+  (plik nie zna zmiennych CSS).
 
 ## ⑤ Kolory marki
 

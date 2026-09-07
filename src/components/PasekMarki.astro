@@ -26,10 +26,24 @@ function odmiana(n: number): string {
 
 <header class="pasek">
   <div class="pasek__srodek">
-    {/* Sam znak, BEZ nazwy — nazwa jest w H1 niżej (D2). Znak to placeholder
-        do czasu wyboru wariantu (D5). */}
+    {/* Sam znak, BEZ nazwy — nazwa jest w H1 niżej (D2). Wariant A „E rejestrowe”,
+        wybrany przez Piotra 2026-09-07 (D5). Kolory z motywu, nie wpisane na sztywno.
+        viewBox przycięty do samego rysunku (x 12–50, y 11–53): przy pełnym 0 0 64 64
+        znak miał wokół siebie pas pustki i w pasku wychodził o jedną trzecią za mały.
+        Favikona zostaje przy 0 0 64 64 — tam pustka jest marginesem kafelka. */}
     <div class="pasek__marka">
-      <span class="znak" role="img" aria-label={firma.nazwaKrotka}>EP</span>
+      <svg
+        class="znak"
+        viewBox="10 11 42 42"
+        role="img"
+        aria-label={firma.nazwaKrotka}
+        focusable="false"
+      >
+        <rect x="12" y="11" width="8" height="42" rx="2" fill="var(--akcent)" />
+        <rect x="20" y="11" width="30" height="8" rx="2" fill="var(--tekst)" />
+        <rect x="20" y="28" width="22" height="8" rx="2" fill="var(--tekst)" />
+        <rect x="20" y="45" width="30" height="8" rx="2" fill="var(--tekst)" />
+      </svg>
     </div>
     {
       !!liczbaSerwisow && liczbaSerwisow > 0 && (
@@ -72,20 +86,14 @@ function odmiana(n: number): string {
     min-width: 0;
   }
 
-  /* Placeholder znaku firmowego — kwadrat z inicjałami, znika przy prawdziwym logo. */
+  /* Znak firmowy. Rysunek jest w kodzie, nie w pliku — 4 prostokąty ważą mniej niż
+     zapytanie o obrazek i biorą kolory prosto z motywu. Ten sam rysunek w innych
+     barwach stoi w public/favicon.svg; zmieniasz jeden — zmieniasz oba. */
   .znak {
     flex: 0 0 auto;
     width: 30px;
     height: 30px;
-    display: grid;
-    place-items: center;
-    border-radius: var(--promien-maly);
-    background: var(--tekst);
-    color: var(--tlo);
-    font-family: var(--font-sans);
-    font-size: var(--t-xs);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    display: block;
   }
 
   .pasek__licznik {

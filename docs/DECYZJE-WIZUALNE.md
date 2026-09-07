@@ -100,12 +100,17 @@ wielkości: duży, 30 px w pasku, 16 px jako favikona na jasnej i ciemnej karcie
 | B | **Pieczęć EP** | monogram w ramce, czyta się jak pieczęć na dokumencie rejestrowym |
 | C | **Nadzór** | spółka u góry, pod nią trzy serwisy — znak mówi to samo, co zdanie z D3 |
 
-Rekomendacja: **A** — jedyny, który przy 16 px nie traci ani jednego elementu, i jedyny
-niosący inicjał firmy zamiast ogólnego obrazka.
+**WYBRANY: A „E rejestrowe”** (decyzja Piotra 2026-09-07, zgodna z rekomendacją — jedyny
+wariant, który przy 16 px nie traci ani jednego elementu, i jedyny niosący inicjał firmy
+zamiast ogólnego obrazka).
 
-**Do czasu wyboru w pasku stoi placeholder** (kwadrat z „EP"), tak samo `public/favicon.svg`.
-Po wyborze podmienia się oba naraz — znak w `PasekMarki.astro` i favikonę — bo to ten sam
-rysunek w dwóch miejscach.
+Znak żyje w dwóch miejscach i zmienia się w obu naraz:
+- `src/components/PasekMarki.astro` — cztery prostokąty w kodzie, kolory brane z motywu
+  (`var(--akcent)` na pion, `var(--tekst)` na ramiona); rysunek w kodzie zamiast pliku,
+  bo waży mniej niż zapytanie o obrazek i podąża za paletą;
+- `public/favicon.svg` — ten sam rysunek na grafitowym kafelku (bez tła znak ginie na ciemnym
+  pasku kart), z zielenią rozjaśnioną do `#5fbf9d`. Plik nie zna zmiennych CSS — przy zmianie
+  palety trzeba go poprawić ręcznie.
 
 ---
 

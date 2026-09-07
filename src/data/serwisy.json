@@ -4,7 +4,7 @@
       "nazwa": "Studio Agat",
       "adres": "https://studioagat.pl/",
       "opis": "PROJEKTY WNĘTRZ WARSZAWA I OKOLICE",
-      "grupa": "",
+      "grupa": "wnetrza",
       "obrazek": "../assets/serwisy/studioagat.jpg",
       "alt": "Zdjęcie główne serwisu studioagat.pl",
       "ukryty": false
@@ -13,7 +13,7 @@
       "nazwa": "Nadi Home",
       "adres": "https://nadihome.pl/",
       "opis": "Kompleksowe remonty i wykończenia",
-      "grupa": "",
+      "grupa": "wnetrza",
       "obrazek": "../assets/serwisy/nadihome.jpg",
       "alt": "Dłonie przykładające czerwoną poziomicę do świeżo ułożonych białych płytek",
       "ukryty": false
@@ -22,7 +22,7 @@
       "nazwa": "Pan Wylewka",
       "adres": "https://panwylewka.pl/",
       "opis": "Wylewki Betonowe Warszawa i okolice",
-      "grupa": "",
+      "grupa": "budowlanka",
       "obrazek": "../assets/serwisy/pasted-image-1788774528782.png",
       "alt": "",
       "ukryty": false

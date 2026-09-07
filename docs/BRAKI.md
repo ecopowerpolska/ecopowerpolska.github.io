@@ -6,25 +6,24 @@ co strona robi w międzyczasie i co dokładnie trzeba zmienić, gdy brak zostani
 
 ---
 
-## 🔴 ZERO — dlaczego zmiany z panelu NIE POKAZUJĄ SIĘ na ecopowerpolska.pl (2026-09-07)
+## ✅ ZERO — domena przełączona 2026-09-07, strona jest pod www.ecopowerpolska.pl
 
-**To nie jest usterka panelu ani builda.** Zmierzone tego dnia:
+**Pozycja ZAMKNIĘTA.** Do 2026-09-07 stało tu wyjaśnienie, czemu zmiany robione w panelu nie
+pokazują się pod `ecopowerpolska.pl`: domena wskazywała stary WordPress na lh.pl, a nie GitHub
+Pages. To już nieaktualne — rekordy adresowe zostały przełączone.
 
-| ogniwo łańcucha | stan |
-|---|---|
-| zapis w panelu → commit na `main` | ✅ działa (`1d78709`, committer `GitHub`, podpis PGP) |
-| commit → przebieg `build-i-wdrozenie` | ✅ działa (przebiegi 22–27, wszystkie `success`) |
-| przebieg → publikacja na `ecopowerpolska.github.io` | ✅ działa (strona żywa ~40 s po commicie) |
-| **`ecopowerpolska.pl` → GitHub Pages** | 🔴 **NIE ISTNIEJE** |
+**Co jest teraz:**
+- adresem kanonicznym jest **`https://www.ecopowerpolska.pl`**, apex przekierowuje na niego `301`;
+- adres podglądu `ecopowerpolska.github.io` **przekierowuje na domenę docelową** — dlatego panel
+  treści stoi pod `https://www.ecopowerpolska.pl/admin/`, nie pod starym adresem;
+- **strefa DNS została w lh.pl** (serwery nazw bez zmian), zmieniliśmy wyłącznie rekordy adresowe
+  strony. **Poczta nietknięta**: `MX`, SPF, DKIM, DMARC, `autoconfig`, `pop3/smtp/imap/mail`
+  i `SRV _autodiscover` mają wartości sprzed zmiany;
+- rejestratorem domeny jest OVH, ale **strefę prowadzi lh.pl** — rekordy zmienia się w panelu
+  lh.pl; edytor strefy w OVH jest dla tej domeny bez znaczenia, dopóki serwery nazw wskazują lh.pl.
 
-`dig ecopowerpolska.pl` oddaje **`178.211.137.59`** — to stary **WordPress 7.1 na Apache w lh.pl**,
-a nie GitHub Pages (`185.199.108–111.153`). Pole `cname` w konfiguracji Pages jest **puste**.
-Panel jest sprawny; Piotr patrzy po prostu pod adres, którego GitHub nie obsługuje.
-
-**Zamknięcie:** `docs/przelaczenie-domeny.md`, przejechany do końca, w podanej tam kolejności
-(najpierw CNAME w repozytorium, potem DNS — odwrotna daje 404 i realną przerwę w działaniu).
-**Wykonuje Piotr.** Dopóki tego nie zrobi, jedynym adresem, pod którym widać efekt pracy
-w panelu, jest `https://ecopowerpolska.github.io`.
+**Punkt powrotu i procedura cofnięcia:** `docs/dns-stan-przed.md`.
+**Przebieg przełączenia i lista rekordów:** `docs/przelaczenie-domeny.md`.
 
 ---
 

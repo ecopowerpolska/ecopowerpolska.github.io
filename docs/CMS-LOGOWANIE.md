@@ -13,9 +13,11 @@ w JEDNEJ liście na samym końcu.
 
 ## 1. Adres panelu
 
-- **Dziś:** `https://ecopowerpolska.github.io/admin/`
-- **Po przełączeniu domeny** (`docs/przelaczenie-domeny.md`, robisz osobno):
-  `https://ecopowerpolska.pl/admin/`
+**`https://www.ecopowerpolska.pl/admin/`** — adres docelowy, obowiązuje od 2026-09-07.
+
+🔴 **Stary adres `https://ecopowerpolska.github.io/admin/` już nie działa** — przekierowuje
+na domenę docelową. To nie usterka: od chwili podpięcia własnej domeny GitHub przekierowuje
+cały adres podglądu. Jeśli masz go w zakładkach, podmień.
 
 Adres wpisujesz w przeglądarce jak każdy inny. Panel jest celowo wyłączony z wyszukiwarek
 (`noindex` w kodzie strony panelu i `Disallow: /admin/` w `public/robots.txt`).
@@ -274,8 +276,7 @@ token z punktu A jest prostszy i tak samo bezpieczny. Nikt tych kroków nie wyko
 3. **Zmienne Workera** (Cloudflare → usługa `sveltia-cms-auth` → Settings → Variables):
    - `GITHUB_CLIENT_ID` — Client ID z kroku 2
    - `GITHUB_CLIENT_SECRET` — Client Secret z kroku 2, zaznacz **Encrypt**
-   - `ALLOWED_DOMAINS` — `ecopowerpolska.github.io` (po przełączeniu domeny:
-     `ecopowerpolska.github.io, ecopowerpolska.pl`)
+   - `ALLOWED_DOMAINS` — `www.ecopowerpolska.pl`
    Zapisz i wdróż.
 4. **Dwie linijki w `public/admin/config.yml`** — odkomentowanie `base_url` z gotowym
    adresem Workera i zmiana `auth_methods` na `[token, oauth]`. Tego nie robisz sam:

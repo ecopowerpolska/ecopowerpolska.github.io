@@ -10,14 +10,20 @@ stopka z danymi rejestrowymi. Bez podstron opisowych, bez schematu połączeń, 
 - **Panel treści:** Sveltia CMS pod `/admin/` — **dołożenie kafelka to wpis w panelu,
   nie zmiana kodu.**
 
-## Stan na 2026-09-06
+## Stan na 2026-09-07
 
-Strona jest **zbudowana i wdrożona na GitHub Pages** (`https://ecopowerpolska.github.io/`,
-przepływ `build-i-wdrozenie` zakończony sukcesem trzykrotnie, status Pages „built"; `/admin/`
-i `/admin/config.yml` odpowiadają). Domena `ecopowerpolska.pl` wciąż wskazuje starego
-WordPressa na lh.pl — przełączenie ręczne, dopiero po akceptacji podglądu przez Piotra
-(`docs/przelaczenie-domeny.md`). Piotr nie ma jeszcze działającego dostępu do panelu treści —
-stan i kolejne kroki w `docs/CMS-LOGOWANIE.md`.
+**Strona stoi na docelowej domenie: `https://www.ecopowerpolska.pl`** (GitHub Pages, przepływ
+`build-i-wdrozenie`). Apex `ecopowerpolska.pl` przekierowuje na wariant z „www"; adres podglądu
+`ecopowerpolska.github.io` też — dlatego **panel treści jest pod `https://www.ecopowerpolska.pl/admin/`**,
+nie pod starym adresem (`docs/CMS-LOGOWANIE.md`).
+
+**Poczta została na lh.pl i nie była ruszana** — przełączyliśmy wyłącznie rekordy adresowe
+strony wewnątrz strefy, która została u dotychczasowego dostawcy. Komplet rekordów sprzed
+zmiany, z procedurą cofnięcia: `docs/dns-stan-przed.md`.
+
+**Panel treści jest kompletny:** cztery pozycje menu (Grupy · Serwisy (kafelki) · Teksty strony ·
+Dane firmy), grupowanie kafelków, wszystkie teksty strony edytowalne. Stary WordPress zostaje
+na hostingu do decyzji Piotra — nie kasujemy go.
 
 ## 🔴 Zanim cokolwiek zmienisz
 

@@ -1,56 +1,71 @@
 // src/content.config.ts — Content Layer (Astro 6/7). NIE src/content/config.ts (legacy, AG031).
 //
-// 🔴 `z` importowane z 'astro/zod'. Odczytane z ZAINSTALOWANEGO pakietu (astro 7.3.1,
-// node_modules/astro/types/content.d.ts), nie z pamięci ani ze skilla:
-//   „`import { z } from 'astro:content'` is deprecated and will be removed in Astro 8.
-//    Use `import { z } from 'astro/zod'` instead."
-// To samo ostrzeżenie dotyczy 'astro:schema'. Reguła AG043 walidatora nadal odsyła
-// do obu przestarzałych form — zgłoszone do kanonu. Sama reguła nie zapala się tutaj
-// i zapalać nie powinna: pilnuje importu z GOŁEGO pakietu 'zod', a to co innego.
+// 🔴 `z` importowane z 'astro/zod' (astro 7.3.1 — 'astro:content' i 'astro:schema' są
+// przestarzałe i znikają w Astro 8). Reguła AG043 walidatora pilnuje importu z GOŁEGO
+// pakietu 'zod', co jest czym innym, i tutaj się nie zapala.
 //
-// 🔴 TEN PLIK JEST LUSTREM public/admin/config.yml. Każde pole poniżej ma tam swój
-// odpowiednik o TEJ SAMEJ nazwie i zgodnym typie. Rozjazd nie wychodzi w panelu —
-// wychodzi dopiero czerwonym buildem w Actions (potwor-cms-strony §D2).
+// 🔴 TEN PLIK JEST LUSTREM public/admin/config.yml. Rozjazd nie wychodzi w panelu —
+// wychodzi czerwonym buildem w Actions, już PO zapisaniu wpisu przez klienta.
 
 import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { file } from 'astro/loaders';
 import { z } from 'astro/zod';
 
+/** Katalog obrazków kafelków, licząc od pliku src/data/serwisy.json. */
+const KATALOG_OBRAZKOW = '../assets/serwisy/';
+
+/**
+ * Serwisy leżą w JEDNYM pliku, bo tylko wtedy panel daje przeciąganie kafelków
+ * myszą (widget `list`); przy jednym pliku na serwis Sveltia nie umie sortować
+ * ręcznie. Kolejność w pliku = kolejność na stronie, pola `kolejnosc` już nie ma.
+ * Szczegóły: docs/DECYZJE-WIZUALNE.md D8.
+ */
 const serwisy = defineCollection({
-  // loader obowiązkowy — kolekcja bez niego nie istnieje w Astro 6+ (AG032)
-  loader: glob({ pattern: '**/*.md', base: './src/data/serwisy' }),
+  loader: file('src/data/serwisy.json', {
+    parser: (tekst) => {
+      const dane = JSON.parse(tekst);
+      const lista = Array.isArray(dane) ? dane : (dane.serwisy ?? []);
+
+      return lista.map((wpis: Record<string, unknown>, i: number) => ({
+        ...wpis,
+        // Identyfikator wpisu — loader file() wymaga `id` albo `slug` w każdym elemencie,
+        // a panel takiego pola nie zapisuje. Numer pozycji wystarcza: nic w projekcie
+        // nie linkuje do wpisu po identyfikatorze.
+        id: String(i),
+        // 🔴 Ścieżka obrazka SPROWADZONA DO JEDNEJ POSTACI. Panel zapisuje ją względnie
+        // i liczba `../` zależy od jego konfiguracji — rozjazd zatrzymywałby build,
+        // czyli publikację CAŁEJ strony (zdarzyło się 2026-09-07). Wszystkie obrazki
+        // kafelków leżą w jednym katalogu, więc sama nazwa pliku wystarcza.
+        obrazek: wpis.obrazek
+          ? KATALOG_OBRAZKOW + String(wpis.obrazek).split('/').pop()
+          : undefined,
+      }));
+    },
+  }),
   schema: ({ image }) =>
     z.object({
       // nazwa serwisu widoczna na kafelku
       nazwa: z.string(),
-      // adres docelowy — pełny URL z protokołem; przekierowanie po kliknięciu kafelka
+      // adres docelowy — pełny URL z protokołem
       adres: z.string().url(),
       // krótki podpis pod nazwą; pusty jest w porządku
       opis: z.string().max(160).optional(),
-      // kategoria/branża serwisu — OPCJONALNA. Wolny tekst (nie enum): dziś żaden
-      // wpis jej nie ma, taksonomia jeszcze nie istnieje, a wymuszenie zamkniętej
-      // listy w tym momencie byłoby zgadywaniem kategorii, których Piotr nie podał.
-      // Zachowanie strony przy braku/niepełnym pokryciu pola — patrz src/pages/index.astro,
-      // komentarz przy `grupowanieAktywne`: grupowanie włącza się dopiero od DWÓCH
-      // różnych kategorii wśród widocznych wpisów, więc dzisiejszy stan (zero kategorii)
-      // renderuje się dokładnie jak wcześniej — płaska siatka, bez pustego filtra
-      // i bez sekcji „Bez kategorii" nad dwoma kafelkami.
+      // kategoria/branża — wolny tekst; grupowanie włącza się od DWÓCH różnych kategorii
       kategoria: z.string().max(60).optional(),
-      // obrazek kafelka: plik w src/assets/serwisy/, ścieżka względna z pliku wpisu.
-      // OPCJONALNY — dopóki Piotr nie poda grafik, kafelek renderuje czytelny
-      // placeholder z samą nazwą (zero podrzuconych plików udających grafikę).
+      // obrazek kafelka: plik w src/assets/serwisy/ (ścieżkę normalizuje parser wyżej)
       obrazek: image().optional(),
-      // Tekst alternatywny obrazka. 🔴 NIE JEST WYMAGANY i wymagany być NIE MOŻE:
-      // panel nie umie wymusić pola warunkowo, więc zapis bez altu zatrzymywał build
-      // w Actions i strona zostawała na starej wersji (zdarzyło się 2026-09-07,
-      // wpis „Pan Wylewka"). Puste = zdjęcie ozdobne, `alt=""` — poprawnie, bo nazwę
-      // serwisu niesie widoczny tekst kafelka.
+      // 🔴 Alt NIE JEST wymagany i wymagany być nie może: panel nie umie wymusić pola
+      // warunkowo, więc zapis bez altu zatrzymywał build i strona zostawała na starej
+      // wersji. Puste = zdjęcie ozdobne, `alt=""` — poprawnie, bo nazwę serwisu niesie
+      // widoczny tekst kafelka.
       alt: z.string().optional(),
-      // porządek kafelków rosnąco; równe wartości rozstrzyga nazwa
-      kolejnosc: z.number().default(100),
-      // kafelek zostaje w repo, znika ze strony
+      // kafelek zostaje w panelu, znika ze strony
       ukryty: z.boolean().default(false),
     }),
 });
+
+// Teksty strony głównej (src/data/strona.json) NIE są kolekcją — importuje je wprost
+// index.astro, tak samo jak dane firmy. Kolekcja z loaderem file() rozbiłaby pojedynczy
+// obiekt na osobne wpisy po jednym na klucz.
 
 export const collections = { serwisy };

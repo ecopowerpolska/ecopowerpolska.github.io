@@ -16,12 +16,11 @@ import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 import DaneStrukturalne from '../components/DaneStrukturalne.astro';
 import firma from '../data/firma.json';
+import strona from '../data/strona.json';
 
-const wszystkie = (await getCollection('serwisy', ({ data }) => !data.ukryty)).sort(
-  (a, b) =>
-    a.data.kolejnosc - b.data.kolejnosc ||
-    a.data.nazwa.localeCompare(b.data.nazwa, 'pl'),
-);
+// 🔴 BEZ SORTOWANIA — kolejność kafelków to kolejność wpisów w src/data/serwisy.json,
+// czyli dokładnie ta, którą Piotr ustawia przeciągając kafelki w panelu (D8).
+const wszystkie = await getCollection('serwisy', ({ data }) => !data.ukryty);
 
 // ── grupowanie po kategorii ──────────────────────────────────────────────────
 // Pole `kategoria` (content.config.ts) jest OPCJONALNE i dziś nie ma go żaden
@@ -72,11 +71,9 @@ if (grupowanieAktywne) {
     }
     mapa.get(klucz)!.wpisy.push(s);
   }
-  sekcje = [...mapa.values()].sort(
-    (a, b) =>
-      Math.min(...a.wpisy.map((w) => w.data.kolejnosc)) -
-      Math.min(...b.wpisy.map((w) => w.data.kolejnosc)),
-  );
+  // Sekcje w kolejności PIERWSZEGO wystąpienia — Map zachowuje porządek wstawiania,
+  // a wpisy idą w kolejności z pliku, więc dodatkowe sortowanie tylko by ją psuło.
+  sekcje = [...mapa.values()];
 } else {
   // Płaska siatka: jedna sekcja, nagłówek istnieje wyłącznie dla czytnika ekranu
   // (hierarchia H1→H2 zostaje kompletna), oprawa wizualna nie zyskuje napisu,
@@ -154,6 +151,14 @@ const opis = 'EcoPower Polska nadzoruje kilka niezależnych serwisów internetow
         ))
       )
     }
+
+    {/* Zamknięcie treści pod kafelkami. Tekst edytowalny w panelu — Ustawienia →
+        Teksty strony głównej; pusty nie renderuje sekcji wcale. */}
+    {strona.zdanieKoncowe?.trim() && (
+      <section class="zamkniecie" aria-label="O spółce">
+        <p>{strona.zdanieKoncowe}</p>
+      </section>
+    )}
   </main>
 
   <Stopka />
@@ -297,6 +302,24 @@ const opis = 'EcoPower Polska nadzoruje kilka niezależnych serwisów internetow
     .siatka:not(:has(> :nth-child(3))) {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  /* Zamknięcie treści: kreska u góry i miara akapitu jak w hero — sekcja ma czytać
+     się jak domknięcie dokumentu, nie jak czwarty kafelek. */
+  .zamkniecie {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6) var(--o-24);
+  }
+
+  .zamkniecie p {
+    max-width: var(--miara);
+    margin: 0;
+    padding-top: var(--o-8);
+    border-top: 1px solid var(--linia);
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
   }
 
   .pusto {

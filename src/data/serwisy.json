@@ -1,0 +1,31 @@
+{
+  "serwisy": [
+    {
+      "nazwa": "nadihome.pl",
+      "adres": "https://nadihome.pl/",
+      "opis": "",
+      "kategoria": "",
+      "obrazek": "../assets/serwisy/nadihome.jpg",
+      "alt": "Dłonie przykładające czerwoną poziomicę do świeżo ułożonych białych płytek",
+      "ukryty": false
+    },
+    {
+      "nazwa": "studioagat.pl",
+      "adres": "https://studioagat.pl/",
+      "opis": "",
+      "kategoria": "",
+      "obrazek": "../assets/serwisy/studioagat.jpg",
+      "alt": "Zdjęcie główne serwisu studioagat.pl",
+      "ukryty": false
+    },
+    {
+      "nazwa": "Pan Wylewka",
+      "adres": "https://panwylewka.pl/",
+      "opis": "Wylewki Betonowe Warszawa i okolice",
+      "kategoria": "",
+      "obrazek": "../assets/serwisy/pasted-image-1788774528782.png",
+      "alt": "",
+      "ukryty": false
+    }
+  ]
+}

@@ -138,3 +138,59 @@ Sprawdzone na kotwicy do dolnego kafelka przy oknie 420×640: przed poprawką ce
 pasek, po poprawce stoi 17 px pod jego krawędzią.
 
 Wysokość paska (55 px) i ta wartość są związane — zmiana jednego wymaga zmiany drugiego.
+
+---
+
+## D8 — Serwisy w JEDNYM pliku, kolejność przez przeciąganie (2026-09-07)
+
+**Rozstrzygnięcie Piotra:** kolejność kafelków ustawia się w panelu **przeciąganiem**,
+nie wpisywaniem liczb.
+
+**Dlaczego zmienił się sposób trzymania treści:** uchwyt do przeciągania ma w Sveltii
+wyłącznie widget `list`, a ten wymaga jednego pliku. Ręcznego sortowania wpisów kolekcji
+katalogowej (jeden plik na serwis) Sveltia nie umie. Wybór był twardy: albo jeden plik
+i przeciąganie, albo pliki osobno i liczby.
+
+**Co się zmieniło:**
+- `src/data/serwisy/*.md` → **`src/data/serwisy.json`** (klucz `serwisy`, tablica wpisów);
+- loader `glob()` → **`file()`** z parserem dokładającym `id` (numer pozycji) — loader
+  wymaga identyfikatora, a panel takiego pola nie zapisuje;
+- **pole `kolejnosc` zniknęło** ze schematu, z panelu i z sortowania: kolejność w pliku
+  JEST kolejnością na stronie (sprawdzone: przestawienie wpisu przestawia kafelek);
+- sekcje kategorii idą w kolejności pierwszego wystąpienia, nie po najmniejszej liczbie.
+
+**Zabezpieczenie ścieżek obrazków:** parser sprowadza `obrazek` do jednej postaci
+(`../assets/serwisy/` + nazwa pliku). Panel zapisuje ścieżkę względnie i liczba `../`
+zależy od jego konfiguracji — rozjazd zatrzymywałby build, czyli publikację całej strony.
+Sprawdzone: wpis ze ścieżką `../../assets/…` buduje się poprawnie.
+
+⚠️ **Czego nie dało się sprawdzić stąd:** jak Sveltia zapisze plik po pierwszym
+przeciągnięciu i po pierwszym dodaniu kafelka z panelu. Pierwszy zapis Piotra jest
+pomiarem tej konfiguracji.
+
+---
+
+## D9 — Zdanie zamykające pod kafelkami (2026-09-07)
+
+Pod listą serwisów stoi krótkie domknięcie treści, **edytowalne w panelu**
+(Ustawienia → Teksty strony głównej → „Zdanie pod kafelkami”). Puste pole = sekcja
+nie renderuje się wcale.
+
+Tekst świadomie NIE powtarza zdania z nagłówka (D3) — powtórzony napis na jednym ekranie
+to ten sam błąd, który zdejmowaliśmy z nazwy spółki (D2).
+
+---
+
+## D10 — Pusty opis obrazka nie może zatrzymywać publikacji (2026-09-07)
+
+Schemat wymagał `alt` warunkowo (gdy jest zdjęcie). Panel nie umie wymusić pola zależnie
+od innego, więc warunek pilnował **builda**, nie formularza: pierwszy realny zapis Piotra
+ze zdjęciem bez opisu (wpis „Pan Wylewka”) zatrzymał publikację CAŁEJ strony — razem
+z niezwiązaną edycją danych firmy zrobioną minutę później.
+
+Warunek usunięty. Puste `alt` jest **poprawne**, nie ustępstwem: kafelek niesie nazwę
+serwisu jako widoczny tekst, więc zdjęcie jest ozdobne i `alt=""` to właściwy zapis.
+
+**Reguła ogólna:** żadne pole treści nie może być wymagane warunkowo przez schemat, dopóki
+panel nie umie tego wymusić. Inaczej zapis klienta zamraża stronę na starej wersji,
+a klient nie widzi żadnego komunikatu.

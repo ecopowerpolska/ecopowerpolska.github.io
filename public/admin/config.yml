@@ -58,122 +58,106 @@ publish_mode: simple
 
 collections:
   # ── KAFELKI ─────────────────────────────────────────────────────────────────
-  # Dołożenie serwisu = jeden wpis tutaj. Żadnej zmiany kodu.
+  # 🔴 JEDEN PLIK, NIE JEDEN PLIK NA SERWIS. Powód jest jeden i konkretny: uchwyt
+  # do przeciągania ma wyłącznie widget `list`. Sveltia nie umie ręcznie sortować
+  # wpisów kolekcji katalogowej, więc przy pliku na serwis kolejność dałoby się
+  # ustawiać tylko wpisywaniem liczb. docs/DECYZJE-WIZUALNE.md D8.
   - name: serwisy
     label: "Serwisy (kafelki)"
-    label_singular: "Serwis"
-    description: >-
-      Jeden wpis = jeden kafelek na stronie głównej. Kliknięcie kafelka przenosi
-      pod adres docelowy. Kolejność ustala pole „Kolejność" (rosnąco).
-    folder: "src/data/serwisy"
-    create: true
-    delete: true
-    extension: md
-    format: yaml-frontmatter
-    identifier_field: nazwa
-    slug: "{{slug}}"
-    summary: "{{nazwa}} — {{adres}}"
-    sortable_fields: [kolejnosc, nazwa, kategoria]
-    # Ścieżki WZGLĘDNE wobec pliku wpisu — dzięki temu we frontmatterze ląduje
-    # `../../assets/serwisy/plik.png`, a tego właśnie oczekuje helper image()
-    # ze schematu kolekcji Astro.
-    media_folder: "../../assets/serwisy"
-    public_folder: "../../assets/serwisy"
-    fields:
-      - name: nazwa
-        label: "Nazwa serwisu"
-        widget: string
-        required: true
-        hint: "Napis na kafelku, np. nadihome.pl"
+    files:
+      - name: lista
+        label: "Kafelki na stronie głównej"
+        file: "src/data/serwisy.json"
+        description: >-
+          Kolejność na tej liście = kolejność kafelków na stronie. Chwyć kafelek
+          za uchwyt po lewej i przeciągnij; na telefonie użyj guzików w górę/w dół.
+        media_folder: "../assets/serwisy"
+        public_folder: "../assets/serwisy"
+        fields:
+          - name: serwisy
+            label: "Kafelki"
+            label_singular: "Kafelek"
+            widget: list
+            allow_add: true
+            collapsed: true
+            summary: "{{fields.nazwa}} — {{fields.adres}}"
+            fields:
+              - name: nazwa
+                label: "Nazwa serwisu"
+                widget: string
+                required: true
+                hint: "Napis na kafelku, np. nadihome.pl"
 
-      - name: adres
-        label: "Adres docelowy"
-        widget: string
-        required: true
-        hint: "Pełny adres z https:// — tam prowadzi kliknięcie kafelka."
-        # Wzorzec musi być RÓWNIE OSTRY co schemat Zod (z.string().url()), inaczej panel
-        # przepuści adres, który zatrzyma build w Actions — już PO zapisie klienta.
-        # `[^\s]` odcina spacje w środku, na których luźne `.+` by przeszło.
-        pattern:
-          - "^https?://[^\\s]+\\.[^\\s]+$"
-          - "Adres musi zaczynać się od http:// albo https:// i nie może zawierać spacji"
+              - name: adres
+                label: "Adres docelowy"
+                widget: string
+                required: true
+                hint: "Pełny adres z https:// — tam prowadzi kliknięcie kafelka."
+                # Wzorzec równie ostry co schemat Zod (z.string().url()), inaczej panel
+                # przepuści adres, który zatrzyma build — już PO zapisie.
+                pattern:
+                  - "^https?://[^\\s]+\\.[^\\s]+$"
+                  - "Adres musi zaczynać się od http:// albo https:// i nie może zawierać spacji"
 
-      - name: opis
-        label: "Krótki podpis (opcjonalnie)"
-        widget: string
-        required: false
-        # Limit 160 znaków egzekwuje schemat Zod przy buildzie. Bez tego wzorca panel
-        # przyjąłby dłuższy podpis, a strona przestałaby się budować po zapisie klienta.
-        pattern:
-          - "^.{0,160}$"
-          - "Podpis może mieć najwyżej 160 znaków"
-        hint: "Do 160 znaków. Puste pole jest w porządku — kafelek pokaże samą nazwę."
+              - name: opis
+                label: "Krótki podpis (opcjonalnie)"
+                widget: string
+                required: false
+                pattern:
+                  - "^.{0,160}$"
+                  - "Podpis może mieć najwyżej 160 znaków"
+                hint: "Do 160 znaków. Puste pole jest w porządku."
 
-      - name: kategoria
-        label: "Kategoria / branża (opcjonalnie)"
-        widget: string
-        required: false
-        # Limit 60 znaków egzekwuje schemat Zod przy buildzie — bez tego wzorca panel
-        # przyjąłby dłuższą kategorię, a strona przestałaby się budować po zapisie.
-        pattern:
-          - "^.{0,60}$"
-          - "Kategoria może mieć najwyżej 60 znaków"
-        hint: >-
-          Np. „Wnętrza i remonty". Strona zaczyna grupować kafelki w sekcje dopiero
-          wtedy, gdy są DWIE różne kategorie — przy jednej albo przy żadnej pokazuje
-          zwykłą siatkę. Wpisy bez kategorii trafiają wtedy do sekcji „Inne".
-          ⚠️ Dopasowanie idzie po TREŚCI, nie po identyfikatorze: literówka tworzy
-          nową kategorię. Przepisuj nazwę dokładnie tak, jak w poprzednim wpisie.
-        # 🔴 WOLNY TEKST, nie zamknięta lista (`widget: select`), bo taksonomia serwisów
-        # jeszcze nie istnieje — dziś żaden wpis nie ma kategorii. Gdy lista branż się
-        # ustabilizuje, to pole warto zamienić na `select` z `options`: znika wtedy
-        # ryzyko literówki. Decyzja należy do Piotra.
+              - name: kategoria
+                label: "Kategoria / branża (opcjonalnie)"
+                widget: string
+                required: false
+                pattern:
+                  - "^.{0,60}$"
+                  - "Kategoria może mieć najwyżej 60 znaków"
+                hint: >-
+                  Strona grupuje kafelki w sekcje dopiero przy DWÓCH różnych kategoriach.
+                  Dopasowanie idzie po treści — literówka tworzy nową kategorię.
 
-      - name: obrazek
-        label: "Obrazek kafelka"
-        widget: image
-        required: false
-        hint: >-
-          Proporcje 16:9, zalecana szerokość co najmniej 720 px. Bez obrazka kafelek
-          pokazuje czytelny placeholder z inicjałami.
+              - name: obrazek
+                label: "Obrazek kafelka"
+                widget: image
+                required: false
+                hint: "Proporcje 3:2, szerokość co najmniej 720 px."
 
-      - name: alt
-        label: "Opis obrazka dla czytnika ekranu"
-        widget: string
-        required: false
-        hint: >-
-          Opisz, co widać, np. „Wnętrze salonu Nadi Home". Puste pole jest w porządku —
-          zdjęcie jest wtedy ozdobne, a nazwę serwisu i tak widać na kafelku.
-        # 🔴 ZNANE OGRANICZENIE PANELU, świadomie zostawione. Schemat kolekcji wymaga `alt`
-        # WARUNKOWO — tylko gdy wpis ma obrazek (reguła `.refine()` w content.config.ts).
-        # Decap ani Sveltia nie umieją wyrazić „wymagane zależnie od innego pola": `required`
-        # jest u nich stałe. Wybór stoi między:
-        #   (a) required: false — redaktor może dodać obrazek bez altu i zatrzymać build (TO WYBRANE),
-        #   (b) required: true  — alt trzeba wpisać ZAWSZE, także dla kafelka bez obrazka.
-        # Wybrano (a), bo (b) zmusza do wypełniania pola, które przy braku obrazka do niczego
-        # nie służy, a puste alty „na odczep" są gorsze niż zatrzymany build: build da się
-        # naprawić, a bezużyteczny alt zostaje na stronie i psuje ją dla czytnika ekranu.
-        # Siatką bezpieczeństwa jest build w Actions, nie panel. Do przemyślenia po pierwszym
-        # realnym zapisie klienta (docs/PIERWSZY-PRZEBIEG.md, sekcja 9).
+              - name: alt
+                label: "Opis obrazka dla czytnika ekranu"
+                widget: string
+                required: false
+                hint: >-
+                  Opisz, co widać. Puste pole jest w porządku — zdjęcie jest wtedy
+                  ozdobne, a nazwę serwisu i tak widać na kafelku.
 
-      - name: kolejnosc
-        label: "Kolejność"
-        widget: number
-        value_type: int
-        default: 100
-        required: true
-        hint: "Rosnąco: mniejsza liczba = wcześniejszy kafelek."
+              - name: ukryty
+                label: "Ukryty (zostaje w panelu, znika ze strony)"
+                widget: boolean
+                default: false
+                required: false
 
-      - name: ukryty
-        label: "Ukryty (zostaje w panelu, znika ze strony)"
-        widget: boolean
-        default: false
-        required: false
-
-  # ── DANE REJESTROWE W STOPCE ────────────────────────────────────────────────
+  # ── TEKSTY I DANE, KTORE NIE SA KAFELKAMI ───────────────────────────────────
   - name: ustawienia
     label: "Ustawienia"
     files:
+      - name: strona
+        label: "Teksty strony głównej"
+        file: "src/data/strona.json"
+        fields:
+          - name: zdanieKoncowe
+            label: "Zdanie pod kafelkami"
+            widget: text
+            required: false
+            pattern:
+              - "^[\\s\\S]{0,400}$"
+              - "Najwyżej 400 znaków"
+            hint: >-
+              Zamknięcie strony pod listą serwisów. Puste pole = sekcja w ogóle się
+              nie pokazuje.
+
       - name: firma
         label: "Dane rejestrowe (stopka)"
         file: "src/data/firma.json"

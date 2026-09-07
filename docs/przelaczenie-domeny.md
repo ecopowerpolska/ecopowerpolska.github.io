@@ -1,12 +1,15 @@
 # Przełączenie ecopowerpolska.pl na GitHub Pages — adresem docelowym jest www
 
 **Rodzaj:** instrukcja
-**Wykonuje Piotr** (rekordy DNS). Sesja WWW robi część repozytoryjną i sprawdzenia.
-**Stan zmierzony 2026-09-07** — pełny komplet rekordów sprzed zmiany, z TTL-ami i sposobem
-cofnięcia, leży w **`docs/dns-stan-przed.md`**. Ten dokument mówi, CO zrobić; tamten — do czego wrócić.
+**Stan: PRZEJECHANY DO KOŃCA 2026-09-07.** Strona stoi pod `https://www.ecopowerpolska.pl`,
+certyfikat obejmuje oba adresy, poczta została na lh.pl i nie była ruszana (sprawdzone
+porównaniem rekordów ORAZ realnym doręczeniem w obie strony). Dokument zostaje jako **zapis,
+co dokładnie zrobiono i jak to cofnąć** — nie jako lista do zrobienia.
 
-🔴 **Dopóki ten dokument nie zostanie przejechany do końca, strona żyje na starym WordPressie
-na lh.pl i nic jej nie grozi.**
+**Punkt powrotu:** `docs/dns-stan-przed.md` — komplet rekordów sprzed zmiany z TTL-ami.
+**Ogólna procedura dla KOLEJNYCH stron** nie mieszka już tutaj: wyszła do skilla warsztatu
+`przepinanie-domeny-dns`, razem z wzorcami poleceń w `narzedzia/dns/`. Ten plik jest kartą
+JEDNEJ domeny, tamten skill — metodą.
 
 ---
 

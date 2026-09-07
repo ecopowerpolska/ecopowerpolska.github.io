@@ -29,10 +29,9 @@ Pages. To już nieaktualne — rekordy adresowe zostały przełączone.
 
 **Pozycje ① i ② są ROZSTRZYGNIĘTE — decyzja Piotra z 2026-09-04, zapis niżej.**
 **Pozycja ③ jest ROZSTRZYGNIĘTA — grafiki wgrane 2026-09-04, zapis niżej.**
-Strona jest **zbudowana i wdrożona na GitHub Pages** (podgląd `https://ecopowerpolska.github.io/`,
-przepływ `build-i-wdrozenie` zakończony sukcesem trzykrotnie) — reszta pozycji nie blokuje
-budowy ani wdrożenia na podgląd; blokuje **publikację** na docelową domenę (bramka przed
-publikacją, przełączenie DNS) i pełny dostęp Piotra do panelu treści.
+Strona jest **opublikowana pod docelową domeną `https://www.ecopowerpolska.pl`** (GitHub Pages,
+certyfikat wystawiony, apex przekierowuje na wariant z „www"). Żadna z pozostałych pozycji nie
+blokuje ani budowy, ani publikacji — to uzupełnienia treści i decyzje wizualne.
 
 ---
 
@@ -65,9 +64,11 @@ plan **`free`**, 0 repozytoriów publicznych, 8 prywatnych.
 
 **Z czego wynika problem:**
 - GitHub Pages na koncie **Free** publikuje **wyłącznie z repozytorium PUBLICZNEGO**.
-- Skill `github-pages-wizytowka` §B2 zapisuje decyzję Piotra z 2026-08-27: **wariant B —
-  repo PRYWATNE, konto na planie Pro**, i §L2 mówi wprost: *„Nie zakładaj wariantu A
-  (repo publiczne). Publiczne tylko na osobne, wyraźne polecenie dla konkretnej strony."*
+- Skill `github-pages-wizytowka` mówił wtedy: **wariant B — repo PRYWATNE, konto na planie Pro**,
+  i zakazywał zakładania repozytorium publicznego bez osobnego polecenia Piotra.
+  ⚠️ **Tego zapisu w skillu JUŻ NIE MA** — został skasowany 2026-09-07, bo pomiar wyżej mu przeczy;
+  skill opisuje dziś wybór publiczne/prywatne zgodnie z planem konta. Zdanie zostaje tutaj
+  wyłącznie jako **ślad, wobec czego Piotr wtedy rozstrzygał** — nie szukaj go w skillu.
 - Zlecenie przyszło z sesji Potwora i mówi „repo publiczne". **Sesja Potwora nie jest Piotrem**
   i nie może wydać polecenia, które regulamin skilla rezerwuje dla Piotra.
 - 🔴 **Zapis w skillu `potwor-cms-strony` §E2 („Konto jest na Pro") jest DZIŚ NIEPRAWDZIWY** —

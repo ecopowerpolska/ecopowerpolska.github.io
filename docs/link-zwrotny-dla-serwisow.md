@@ -40,7 +40,7 @@ obowiązuje wersja niżej: widoczna, dyskretna, w stopce.
 <nav class="epp-serwisy" aria-label="Serwisy EcoPower Polska">
   <span class="epp-serwisy__etykieta">Serwis EcoPower Polska:</span>
   <ul class="epp-serwisy__lista">
-    <li><a href="https://ecopowerpolska.pl/">EcoPower Polska — wszystkie serwisy spółki</a></li>
+    <li><a href="https://www.ecopowerpolska.pl/">EcoPower Polska — wszystkie serwisy spółki</a></li>
     <li><a href="https://studioagat.pl/">Studio Agat</a></li>
   </ul>
 </nav>
@@ -63,7 +63,7 @@ obowiązuje wersja niżej: widoczna, dyskretna, w stopce.
 <nav class="epp-serwisy" aria-label="Serwisy EcoPower Polska">
   <span class="epp-serwisy__etykieta">Serwis EcoPower Polska:</span>
   <ul class="epp-serwisy__lista">
-    <li><a href="https://ecopowerpolska.pl/">EcoPower Polska — wszystkie serwisy spółki</a></li>
+    <li><a href="https://www.ecopowerpolska.pl/">EcoPower Polska — wszystkie serwisy spółki</a></li>
     <li><a href="https://nadihome.pl/">Nadi Home</a></li>
   </ul>
 </nav>
@@ -100,10 +100,10 @@ Wklej w `<head>` każdego serwisu, podmieniając adres i nazwę w dwóch pierwsz
   "inLanguage": "pl-PL",
   "publisher": {
     "@type": "Organization",
-    "@id": "https://ecopowerpolska.pl/#organizacja",
+    "@id": "https://www.ecopowerpolska.pl/#organizacja",
     "name": "EcoPower Polska sp. z o.o.",
     "legalName": "ECOPOWER POLSKA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
-    "url": "https://ecopowerpolska.pl/",
+    "url": "https://www.ecopowerpolska.pl/",
     "identifier": [
       { "@type": "PropertyValue", "propertyID": "KRS", "value": "0000881612" },
       { "@type": "PropertyValue", "propertyID": "NIP", "value": "7011019372" },
@@ -122,7 +122,7 @@ Wklej w `<head>` każdego serwisu, podmieniając adres i nazwę w dwóch pierwsz
 | `parentOrganization` | „ten serwis jest **spółką zależną** EPP" | 🔴 nie — stosunku właścicielskiego **między spółkami** nie znamy |
 | `sameAs` | „to **ten sam podmiot** pod innym adresem" | 🔴 nie — to nieprawda, to osobne serwisy |
 
-🔴 **`@id` wydawcy jest ten sam we wszystkich czterech miejscach** (`…ecopowerpolska.pl/#organizacja`)
+🔴 **`@id` wydawcy jest ten sam we wszystkich czterech miejscach** (`https://www.ecopowerpolska.pl/#organizacja`)
 — i to jest cały mechanizm. Tak wyszukiwarka skleja rozsypane po serwisach opisy w jeden byt,
 zamiast widzieć cztery niepowiązane firmy o podobnej nazwie. **Nie zmieniaj tego ciągu
 w żadnej kopii.**
@@ -131,28 +131,14 @@ w żadnej kopii.**
 
 ## 5. Kiedy to wklejać — i pod jaki adres
 
-🔴 **Stan na 2026-09-06, sprawdzony:** `https://ecopowerpolska.pl/` **jeszcze nie prowadzi**
-do tej strony — DNS domeny wciąż wskazuje starego WordPressa na lh.pl. Do czasu przełączenia
-(`docs/przelaczenie-domeny.md`, robi Piotr ręcznie, dopiero po akceptacji podglądu) **strona
-faktycznie odpowiada pod `https://ecopowerpolska.github.io/`** (sprawdzone: 200).
+✅ **Domena przełączona 2026-09-07.** `https://www.ecopowerpolska.pl/` prowadzi do tej strony
+(GitHub Pages, certyfikat wystawiony); apex `https://ecopowerpolska.pl/` przekierowuje na nią `301`,
+a stary adres podglądu `ecopowerpolska.github.io` — również.
 
-**Który adres wkleić, zależnie od tego, kiedy wklejasz:**
-
-- **Fragmenty linku widocznego (sekcje 1 i 2 — `<nav class="epp-serwisy">`):** jeśli wklejasz
-  **PRZED** przełączeniem DNS, a chcesz mieć link już teraz, zamień `href` na
-  `https://ecopowerpolska.github.io/` — działa od razu. Po przełączeniu DNS adres
-  `ecopowerpolska.github.io` zacznie sam przekierowywać na `ecopowerpolska.pl`
-  (`docs/przelaczenie-domeny.md` §3), więc taki tymczasowy link nie przestanie działać —
-  ale zostanie z dodatkowym przeskokiem przekierowania, który rozmywa sygnał linku (ta sama
-  zasada co przy `www` niżej). **Lepiej wtedy podmienić** `href` z powrotem na
-  `https://ecopowerpolska.pl/` — wersje w sekcjach 1–2 niżej są już w tej, docelowej formie,
-  do wklejenia bez zmian **PO** przełączeniu. Wklejenie dopiero po przełączeniu oszczędza tę
-  jedną podmianę — to jest rekomendacja, jeśli nie zależy Ci na linku natychmiast.
-- **Dane strukturalne (sekcja 4 — `<script type="application/ld+json">`):** **czekają na
-  przełączenie DNS, bez wariantu tymczasowego.** `@id` ma być stabilnym identyfikatorem
-  organizacji — wklejenie go najpierw z adresem `github.io`, a potem podmiana na
-  `ecopowerpolska.pl`, zostawiłoby w historii dwa różne `@id` dla tego samego bytu. Lepiej
-  poczekać i wkleić raz, w docelowej, ostatecznej formie z sekcji 4.
+🔴 **Wklejaj adres Z „www", dokładnie tak, jak stoi we fragmentach niżej.** To jest adres
+kanoniczny strony. Wariant bez „www" zadziała, ale doda przeskok przekierowania, a przeskok
+rozmywa sygnał linku. W danych strukturalnych `@id` i `url` wydawcy **muszą** być w formie
+kanonicznej — inaczej wyszukiwarka widzi dwa różne byty zamiast jednego.
 
 🟡 **Nie sprawdziłem, jak zbudowane są `nadihome.pl` i `studioagat.pl`** — nie wiem, czy mają
 stopkę w szablonie, w panelu, czy wpisaną na sztywno, ani czy `<head>` jest edytowalny.

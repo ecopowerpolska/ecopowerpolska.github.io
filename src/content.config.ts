@@ -26,16 +26,28 @@ const serwisy = defineCollection({
       const dane = JSON.parse(tekst);
       const lista = Array.isArray(dane) ? dane : (dane.serwisy ?? []);
 
+      // 🔴 KAŻDE pole sprowadzone do postaci, ktorej schemat na pewno nie odrzuci.
+      // Powod jest jeden: blad walidacji zatrzymuje build, a to zamraza publikacje
+      // CALEJ strony — bez zadnego komunikatu w panelu (zdarzylo sie 2026-09-07 na polu
+      // `alt`). Panel moze zapisac `null` w wyczyszczonym polu opcjonalnym albo tekst
+      // dluzszy od limitu; jedno i drugie musi przejsc, a pilnowac ma formularz.
+      const naTekst = (v: unknown): string | undefined =>
+        typeof v === 'string' ? v : v == null ? undefined : String(v);
+
       return lista.map((wpis: Record<string, unknown>, i: number) => ({
-        ...wpis,
-        // Identyfikator wpisu — loader file() wymaga `id` albo `slug` w każdym elemencie,
+        // Identyfikator wpisu — loader file() wymaga `id` albo `slug` w kazdym elemencie,
         // a panel takiego pola nie zapisuje. Numer pozycji wystarcza: nic w projekcie
         // nie linkuje do wpisu po identyfikatorze.
         id: String(i),
-        // 🔴 Ścieżka obrazka SPROWADZONA DO JEDNEJ POSTACI. Panel zapisuje ją względnie
-        // i liczba `../` zależy od jego konfiguracji — rozjazd zatrzymywałby build,
-        // czyli publikację CAŁEJ strony (zdarzyło się 2026-09-07). Wszystkie obrazki
-        // kafelków leżą w jednym katalogu, więc sama nazwa pliku wystarcza.
+        nazwa: naTekst(wpis.nazwa) ?? '',
+        adres: naTekst(wpis.adres) ?? '',
+        opis: naTekst(wpis.opis),
+        kategoria: naTekst(wpis.kategoria),
+        alt: naTekst(wpis.alt),
+        ukryty: wpis.ukryty === true || wpis.ukryty === 'true',
+        // 🔴 Sciezka obrazka sprowadzona do jednej postaci: panel zapisuje ja wzglednie,
+        // a liczba `../` zalezy od jego konfiguracji. Wszystkie obrazki kafelkow leza
+        // w jednym katalogu, wiec sama nazwa pliku wystarcza.
         obrazek: wpis.obrazek
           ? KATALOG_OBRAZKOW + String(wpis.obrazek).split('/').pop()
           : undefined,
@@ -44,14 +56,13 @@ const serwisy = defineCollection({
   }),
   schema: ({ image }) =>
     z.object({
-      // nazwa serwisu widoczna na kafelku
+      // 🔴 ZERO WALIDACJI ZABIJAJACEJ BUILD. Limity dlugosci i postac adresu pilnuje
+      // FORMULARZ w public/admin/config.yml — tam blad widzi czlowiek i moze go poprawic.
+      // Tu kazdy blad jest niewidoczny i zamraza cala strone (D10).
       nazwa: z.string(),
-      // adres docelowy — pełny URL z protokołem
-      adres: z.string().url(),
-      // krótki podpis pod nazwą; pusty jest w porządku
-      opis: z.string().max(160).optional(),
-      // kategoria/branża — wolny tekst; grupowanie włącza się od DWÓCH różnych kategorii
-      kategoria: z.string().max(60).optional(),
+      adres: z.string(),
+      opis: z.string().optional(),
+      kategoria: z.string().optional(),
       // obrazek kafelka: plik w src/assets/serwisy/ (ścieżkę normalizuje parser wyżej)
       obrazek: image().optional(),
       // 🔴 Alt NIE JEST wymagany i wymagany być nie może: panel nie umie wymusić pola

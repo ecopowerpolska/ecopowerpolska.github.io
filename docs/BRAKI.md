@@ -119,15 +119,19 @@ wpis → pole „Obrazek kafelka" + „Opis obrazka dla czytnika ekranu". **Żad
 `<Image>` Astro. Materiał ze starych stron zbiera się narzędziami Potwora — `zbierz-zdjecia-www.py`,
 `przemiel-zdjecia.py` (kontrakt warsztatu §5), uruchamia Piotr.
 
-## ④ Logo / znak firmowy — ZAMKNIĘTE 2026-09-07
+## ④ Logo / znak firmowy — ZAMKNIĘTE 2026-09-07 (logo firmowe Piotra)
 
-Piotr wybrał wariant **A „E rejestrowe"** z trzech przedstawionych (docs/DECYZJE-WIZUALNE.md D5):
-litera E z rejestru — zielony pion to linia marginesu akt, trzy grafitowe ramiona to wiersze wpisu.
+Piotr dostarczył gotowe logo i rozstrzygnął: **w pasku strony stoi PEŁNE logo** (kwadrat „EP"
+razem z napisem ECOPOWER POLSKA), a **ikoną zakładki jest SAM KWADRAT** z literami EP.
+Zapis i uzasadnienie: `docs/DECYZJE-WIZUALNE.md` **D11**.
 
-Znak stoi w DWÓCH miejscach i zmienia się w obu naraz:
-- `src/components/PasekMarki.astro` — rysunek w kodzie, kolory z motywu (`var(--akcent)`, `var(--tekst)`);
-- `public/favicon.svg` — ten sam rysunek na grafitowym kafelku, barwy wpisane na sztywno
-  (plik nie zna zmiennych CSS).
+Znak stoi w trzech plikach:
+- `src/assets/logo-ecopower-polska.png` — pełne logo do paska (wydawane przez `<Image>` jako WebP);
+- `public/favicon.png` i `public/favicon-32.png` — kwadrat EP na kaflu w kolorze tła strony;
+  32 px odrysowane osobno, bo cienkie kreski ramki rozmywają się przy zmniejszaniu z 512.
+
+Rysowany w kodzie wariant A „E rejestrowe" i `public/favicon.svg` **zostały usunięte** —
+zastąpiło je logo wyżej. Są w historii gita, gdyby kiedyś wróciły.
 
 ## ⑤ Kolory marki
 
@@ -156,7 +160,7 @@ i zmienić typ w `src/components/DaneStrukturalne.astro` (jedna linia + blok `ad
 
 ## ⑧ Telefon
 
-Puste pole `telefon`. Nie renderuje się. Uzupełnienie: panel → Ustawienia → Dane rejestrowe.
+Puste pole `telefon`. Nie renderuje się. Uzupełnienie: panel → **Dane firmy**.
 
 ## ⑨ Decyzja o botach AI — podjęta domyślnie, do potwierdzenia
 

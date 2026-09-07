@@ -91,6 +91,10 @@ się gdzieś wkleja; w bloku zbiorczym jest.
 
 ## D5 — Znak firmowy: wybór otwarty (2026-09-07)
 
+⛔ **UNIEWAŻNIONA 2026-09-07 — następca: D11.** Piotr dostarczył gotowe logo firmowe i ono
+zastąpiło wariant A. Rysunek w kodzie i `public/favicon.svg` zostały usunięte. Zapis niżej
+zostaje jako ślad, CO rozważano i dlaczego — nie opisuje już stanu strony.
+
 Trzy warianty przygotowane i przedstawione Piotrowi (podgląd renderowany w każdej realnej
 wielkości: duży, 30 px w pasku, 16 px jako favikona na jasnej i ciemnej karcie):
 
@@ -104,13 +108,9 @@ wielkości: duży, 30 px w pasku, 16 px jako favikona na jasnej i ciemnej karcie
 wariant, który przy 16 px nie traci ani jednego elementu, i jedyny niosący inicjał firmy
 zamiast ogólnego obrazka).
 
-Znak żyje w dwóch miejscach i zmienia się w obu naraz:
-- `src/components/PasekMarki.astro` — cztery prostokąty w kodzie, kolory brane z motywu
-  (`var(--akcent)` na pion, `var(--tekst)` na ramiona); rysunek w kodzie zamiast pliku,
-  bo waży mniej niż zapytanie o obrazek i podąża za paletą;
-- `public/favicon.svg` — ten sam rysunek na grafitowym kafelku (bez tła znak ginie na ciemnym
-  pasku kart), z zielenią rozjaśnioną do `#5fbf9d`. Plik nie zna zmiennych CSS — przy zmianie
-  palety trzeba go poprawić ręcznie.
+**Co z tego przeżyło do D11:** wymaganie, żeby znak czytał się przy 16 px, i ustalenie, że
+ikona zakładki potrzebuje TŁA — bez kafla grafitowy znak ginie na ciemnym pasku kart. Oba
+warunki spełnia dzisiejsze logo (kafel w kolorze tła strony, 32 px odrysowane osobno).
 
 ---
 
@@ -178,7 +178,7 @@ pomiarem tej konfiguracji.
 ## D9 — Zdanie zamykające pod kafelkami (2026-09-07)
 
 Pod listą serwisów stoi krótkie domknięcie treści, **edytowalne w panelu**
-(Ustawienia → Teksty strony głównej → „Zdanie pod kafelkami”). Puste pole = sekcja
+(Teksty strony → Strona główna → „Zdanie pod kafelkami”). Puste pole = sekcja
 nie renderuje się wcale.
 
 Tekst świadomie NIE powtarza zdania z nagłówka (D3) — powtórzony napis na jednym ekranie

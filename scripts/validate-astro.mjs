@@ -16,7 +16,8 @@
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
-import { join, relative, extname, sep } from 'node:path';
+import { join, relative, extname, sep, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const ROOT = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const ARGS = process.argv.slice(2);
@@ -37,22 +38,27 @@ const SKIP_DIRS = new Set([
 ]);
 const SRC_EXT = new Set(['.astro', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.vue', '.svelte', '.md', '.mdx']);
 
-/* 🔴 POPRAWKA LOKALNA — 2026-09-04, ecopowerpolska.pl. ZGŁOSZONA DO KANONU W POTWORZE.
- * Jeśli przepisujesz ten plik z kanonu na nowo, SPRAWDŹ, czy poprawka tam weszła —
- * bez niej wraca błąd opisany niżej.
+/* 🔴 POPRAWKA — 2026-09-04 na ecopowerpolska.pl, 2026-09-07 we wzorcu warsztatu WWW,
+ * 2026-09-30 ujednolicona z kanonem Potwora (ścieżki z import.meta.url) — trzy kopie WWW
+ * (`narzedzia/astro-guard/`, `strony/<adres>/scripts/`) są od tego dnia identyczne.
+ * Jeśli przepisujesz ten plik z kanonu na nowo, SPRAWDŹ, czy kanon STOSUJE SELF_FILES
+ * w walk() i isScannable() — sama definicja bez użycia niczego nie wyłącza.
  *
- * Problem: walidator skanuje `<strona>/scripts/*.mjs`, czyli SAMEGO SIEBIE. Wyrażenia
- * regularne reguł AG021 i AG022 pasują do własnych komunikatów tego pliku — nazwy usuniętych
- * API stoją tu jako TEKST opisu, nie jako kod strony. Wzorca nie da się tu zacytować
- * nawet w komentarzu: sam by się złapał (ten akapit powstał za drugim podejściem).
- * Skutek: pełny przebieg (`npm run guard`, hook Stop, krok w Actions) kończył się BŁĘDAMI
- * na każdej stronie z wdrożonym pakietem — niezależnie od tego, co w tej stronie napisano.
- * Fałszywy alarm blokujący, a przy tym uczący ignorowania czerwonego walidatora.
+ * Problem: walidator skanuje `<strona>/scripts/*.mjs`, czyli SAMEGO SIEBIE. Wyrażenie
+ * reguły AG021 pasuje do własnego komunikatu tego pliku — nazwa usuniętego API stoi tu jako
+ * TEKST opisu, nie jako kod strony. Skutek bez poprawki: pełny przebieg (`npm run guard`,
+ * hook Stop, krok w Actions) kończył się BŁĘDAMI na każdej stronie z wdrożonym pakietem.
  *
  * Poprawka: pomijamy DOKŁADNIE dwa pliki pakietu, po pełnej ścieżce — nie po nazwie
  * i nie przez wpisanie `scripts` do SKIP_DIRS (to wyciszyłoby też prawdziwe skrypty projektu).
+ * Ścieżki z import.meta.url (pakiet działa z dowolnego katalogu, np. wzorzec w
+ * `narzedzia/astro-guard/`) ORAZ z ROOT/scripts (gdyby plik był dowiązaniem — Node rozwiązuje
+ * wtedy import.meta.url do celu, a walk() widzi ścieżkę dowiązania).
  * Żadna reguła nie traci mocy nad kodem strony. */
+const SELF_DIR = dirname(fileURLToPath(import.meta.url));
 const SELF_FILES = new Set([
+  join(SELF_DIR, 'validate-astro.mjs'),
+  join(SELF_DIR, 'audit-dist.mjs'),
   join(ROOT, 'scripts', 'validate-astro.mjs'),
   join(ROOT, 'scripts', 'audit-dist.mjs'),
 ]);
@@ -68,19 +74,27 @@ const LINE_RULES = [
     id: 'AG020', sev: 'error', ext: ['.astro', '.mdx'],
     re: /<ViewTransitions\b/,
     msg: 'Komponent <ViewTransitions /> został usunięty w Astro 6.',
-    fix: 'Zamień na <ClientRouter /> z "astro:transitions". Usuń też prop handleForms (nie istnieje).',
+    fix: 'Zamień na <ClientRouter /> z "astro:transitions". Usuń też prop handleForms (przestarzały, bez działania). https://docs.astro.build/en/guides/upgrade-to/v6/#removed-viewtransitions--component',
   },
   {
     id: 'AG021', sev: 'error', ext: ['.astro', '.ts', '.js', '.mjs', '.mdx'],
     re: /Astro\.glob\s*\(/,
     msg: 'Astro.glob() zostało usunięte w Astro 6.',
-    fix: 'Użyj import.meta.glob() albo — dla treści — Content Layer API (getCollection + loader glob()).',
+    fix: 'Użyj import.meta.glob() (nie zwraca Promise) albo — dla treści — Content Layer API (getCollection + loader glob()). https://docs.astro.build/en/guides/upgrade-to/v6/#removed-astroglob',
   },
+  /* AG022 — POPRAWIONA 2026-09-30. Wcześniej: `error` na KAŻDE wystąpienie Astro.site
+   * z komunikatem "usunięte w Astro 6" — nieprawda: Astro.site istnieje w Astro 7
+   * (docs.astro.build/en/reference/api-reference/ — `site`, typ `URL | undefined`;
+   * node_modules/astro/dist/types/public/context.d.ts: `site: URL | undefined`). Przestarzały
+   * jest wyłącznie obiekt Astro WEWNĄTRZ getStaticPaths() (upgrade-to/v6, sekcja
+   * "Deprecated: Astro in getStaticPaths()"; Astro 7.3.1 wypisuje wtedy ostrzeżenie
+   * w dist/runtime/server/astro-global.js). Stąd `warn` i zakres ograniczony do ciała
+   * getStaticPaths(). */
   {
-    id: 'AG022', sev: 'error', ext: ['.astro', '.ts', '.js', '.mjs'],
-    re: /Astro\.site\b/,
-    msg: 'Astro.site zostało usunięte w Astro 6.',
-    fix: 'Użyj import.meta.env.SITE.',
+    id: 'AG022', sev: 'warn', ext: ['.astro', '.ts', '.js', '.mjs'], scope: 'getStaticPaths',
+    re: /Astro\.(site|generator)\b/,
+    msg: 'Astro.site / Astro.generator wewnątrz getStaticPaths() — przestarzałe od Astro 6 (Astro 7 wypisuje ostrzeżenie; usunięcie zapowiedziane w przyszłej wersji głównej). Poza getStaticPaths() Astro.site jest pełnoprawnym API.',
+    fix: 'W getStaticPaths() zamień Astro.site na import.meta.env.SITE, a Astro.generator usuń. https://docs.astro.build/en/guides/upgrade-to/v6/#deprecated-astro-in-getstaticpaths',
   },
   {
     id: 'AG023', sev: 'error', ext: ['.astro', '.mdx'],
@@ -127,8 +141,8 @@ const LINE_RULES = [
   {
     id: 'AG043', sev: 'warn', ext: ['.ts', '.js', '.mjs'], only: /content\.config\.(ts|js|mjs)$/,
     re: /from\s+["']zod["']/,
-    msg: 'Bezpośredni import z "zod" w konfiguracji kolekcji — Astro 6 dostarcza własną, zunifikowaną instancję (Zod 4).',
-    fix: 'Importuj z "astro:content" (z) lub "astro:zod". Podwójny Zod = konflikt wersji przy walidacji schematów.',
+    msg: 'Bezpośredni import z "zod" w konfiguracji kolekcji — Astro 6 używa Zod 4 i udostępnia tę samą instancję jako "astro/zod".',
+    fix: 'import { z } from "astro/zod". NIE z "astro:content" ani "astro:schema" — oba przestarzałe od Astro 6. Podwójny Zod = konflikt wersji przy walidacji schematów. https://docs.astro.build/en/guides/upgrade-to/v6/#deprecated-astroschema-and-z-from-astrocontent',
   },
 ];
 
@@ -156,12 +170,15 @@ function scanFile(file) {
   try { text = readFileSync(file, 'utf8'); } catch { return; }
   const lines = text.split(/\r?\n/);
   const fmEnd = ext === '.astro' ? frontmatterEnd(lines) : -1;
+  let gspLines = null; // wiersze ciał getStaticPaths(), liczone tylko, gdy reguła ich potrzebuje
 
   for (const rule of LINE_RULES) {
     if (!rule.ext.includes(ext)) continue;
     if (rule.only && !rule.only.test(file)) continue;
+    if (rule.scope === 'getStaticPaths' && gspLines === null) gspLines = getStaticPathsLines(text);
     lines.forEach((line, i) => {
       if (rule.scope === 'frontmatter' && i > fmEnd) return;
+      if (rule.scope === 'getStaticPaths' && !gspLines.has(i)) return;
       if (!rule.re.test(line)) return;
       if (isAllowed(lines, i, rule.id)) return;
       add(rule.sev, rule.id, file, i + 1, rule.msg, rule.fix, line.trim().slice(0, 120));
@@ -234,19 +251,31 @@ function checkAstroConfig() {
 
   if (/output\s*:\s*["']hybrid["']/.test(text)) {
     add('error', 'AG001', file, lineOf(text, text.search(/output\s*:\s*["']hybrid["']/)),
-      'output: "hybrid" zostało usunięte w Astro 5. To najczęstsza halucynacja modeli językowych w projektach Astro — Astro dodało dedykowany komunikat błędu właśnie z tego powodu.',
-      'Zostaw output: "static" (domyślne) i oznaczaj pojedyncze trasy przez `export const prerender = false`. output: "server" tylko wtedy, gdy CAŁA witryna ma być dynamiczna.');
+      'output: "hybrid" zostało usunięte w Astro 5 — Astro 7 odrzuca konfigurację własnym komunikatem błędu (schemat konfiguracji: "The output: hybrid option has been removed").',
+      'Zostaw output: "static" (domyślne) i oznaczaj pojedyncze trasy przez `export const prerender = false`. output: "server" tylko wtedy, gdy CAŁA witryna ma być dynamiczna. https://docs.astro.build/en/guides/upgrade-to/v5/#removed-hybrid-rendering-mode');
   }
   if (/@astrojs\/tailwind/.test(text)) {
     add('error', 'AG005', file, lineOf(text, text.indexOf('@astrojs/tailwind')),
       'Integracja @astrojs/tailwind jest przestarzała (dotyczy Tailwind 3).',
       'Usuń ją z integrations. Zainstaluj tailwindcss + @tailwindcss/vite i zarejestruj plugin w vite.plugins. Konfiguracja przechodzi do CSS: @import "tailwindcss" + @theme {}.');
   }
-  const removedFlags = /(rustCompiler|queuedRendering|advancedRouting|experimentalCache|logger)\s*:/;
-  if (/experimental\s*:/.test(text) && removedFlags.test(text)) {
-    add('error', 'AG006', file, lineOf(text, text.search(/experimental\s*:/)),
-      'Flagi experimental usunięte w Astro 7 (rustCompiler, queuedRendering, advancedRouting, cache, logger) — ich zachowania są już standardem.',
-      'Usuń te flagi z bloku experimental. Zostawione powodują błąd konfiguracji.');
+  // AG006 — POPRAWIONA 2026-09-30: flagi szukane WYŁĄCZNIE jako klucze pierwszego poziomu
+  // bloku `experimental: { … }`. Wcześniej wystarczyło `logger:` gdziekolwiek w pliku, a Astro 7
+  // ma `logger` i `cache` jako opcje NAJWYŻSZEGO poziomu (fałszywy błąd), a flaga `cache` była
+  // szukana pod złą nazwą `experimentalCache` (przeoczenie). Astro 7.3.1 ma `experimental`
+  // jako z.strictObject — nieznany klucz = błąd konfiguracji.
+  const removedFlags = /\b(rustCompiler|queuedRendering|advancedRouting|cache|logger)\s*:/;
+  const expAt = text.search(/\bexperimental\s*:\s*\{/);
+  if (expAt !== -1) {
+    const open = text.indexOf('{', expAt);
+    const close = matchBrace(text, open);
+    const flagi = close === -1 ? '' : topLevelText(text.slice(open, close + 1));
+    const trafienie = flagi.match(removedFlags);
+    if (trafienie) {
+      add('error', 'AG006', file, lineOf(text, expAt),
+        `Flaga experimental.${trafienie[1]} — flagi rustCompiler, queuedRendering, advancedRouting, cache i logger usunięte w Astro 7, ich zachowania są już standardem.`,
+        'Usuń te flagi z bloku experimental (cache i logger mają dziś własne opcje najwyższego poziomu). Zostawione powodują błąd konfiguracji. https://docs.astro.build/en/guides/upgrade-to/v7/#experimental-flags');
+    }
   }
   if (!/\bsite\s*:/.test(text)) {
     add('warn', 'AG003', file, 1,
@@ -260,7 +289,7 @@ function checkAstroConfig() {
   }
   if (/@astrojs\/partytown/.test(text)) {
     add('info', 'AG007', file, lineOf(text, text.indexOf('@astrojs/partytown')),
-      'Partytown w projekcie — przenosi third-party do Web Workera, ale jego service worker bywa raportowany przez Lighthouse w sekcji „Uses deprecated APIs”.',
+      'Partytown w projekcie — przenosi third-party do Web Workera, ale jego service worker bywa raportowany przez Lighthouse w sekcji "Uses deprecated APIs".',
       'Zweryfikuj realny zysk pomiarem TBT przed/po. Alternatywa: ładowanie analityki dopiero po zgodzie cookie / pierwszej interakcji.');
   }
 }
@@ -310,20 +339,32 @@ function checkPackageJson() {
 }
 
 function checkContentCollections() {
+  // POPRAWKA 2026-09-30: Astro 6.0 dodało flagę legacy.collectionsBackwardsCompat
+  // (docs.astro.build/en/reference/legacy-flags/), która TYMCZASOWO przywraca
+  // src/content/config.ts i kolekcje bez loadera. Z nią AG031/AG032 są ostrzeżeniem, nie błędem.
+  const flagaLegacy = /\bcollectionsBackwardsCompat\s*:\s*true\b/.test(readAstroConfigText());
   const legacy = ['src/content/config.ts', 'src/content/config.js', 'src/content/config.mjs']
     .map((p) => join(ROOT, p)).filter(existsSync);
   for (const f of legacy) {
+    if (flagaLegacy) {
+      add('warn', 'AG031', f, 1,
+        'Stara lokalizacja konfiguracji kolekcji działa tylko dzięki legacy.collectionsBackwardsCompat — tymczasowej fladze migracji.',
+        'Przenieś plik do src/content.config.ts, dodaj loadery i wyłącz flagę. https://docs.astro.build/en/reference/legacy-flags/');
+      continue;
+    }
     add('error', 'AG031', f, 1,
-      'Legacy content collections zostały całkowicie usunięte w Astro 6.',
-      'Przenieś plik do src/content.config.ts i zdefiniuj kolekcje przez Content Layer API: defineCollection({ loader: glob({ pattern: "**/*.md", base: "./src/data/blog" }), schema: ... }).');
+      'Stare kolekcje treści (src/content/config.*) usunięte w Astro 6 — bez flagi legacy.collectionsBackwardsCompat build pada.',
+      'Przenieś plik do src/content.config.ts i zdefiniuj kolekcje przez Content Layer API: defineCollection({ loader: glob({ pattern: "**/*.md", base: "./src/data/blog" }), schema: ... }). https://docs.astro.build/en/guides/upgrade-to/v6/#removed-legacy-content-collections');
   }
   const modern = ['src/content.config.ts', 'src/content.config.js', 'src/content.config.mjs']
     .map((p) => join(ROOT, p)).find(existsSync);
   if (modern) {
     const text = readFileSync(modern, 'utf8');
     if (/defineCollection\s*\(/.test(text) && !/loader\s*:/.test(text)) {
-      add('error', 'AG032', modern, lineOf(text, text.search(/defineCollection\s*\(/)),
-        'defineCollection() bez `loader` — w Astro 6 kolekcja bez loadera nie istnieje.',
+      add(flagaLegacy ? 'warn' : 'error', 'AG032', modern, lineOf(text, text.search(/defineCollection\s*\(/)),
+        flagaLegacy
+          ? 'defineCollection() bez `loader` działa tylko dzięki legacy.collectionsBackwardsCompat — tymczasowej fladze migracji.'
+          : 'defineCollection() bez `loader` — w Astro 6+ bez flagi legacy.collectionsBackwardsCompat kolekcja bez loadera nie istnieje.',
         'Dodaj loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/data/<kolekcja>" }) albo file()/własny loader dla danych zewnętrznych.');
     }
   }
@@ -350,6 +391,111 @@ function checkProjectHygiene() {
 // ─────────────────────────────────────────────────────────────────────────────
 // NARZĘDZIA
 // ─────────────────────────────────────────────────────────────────────────────
+/** Tekst pierwszego istniejącego astro.config.* ('' gdy brak). */
+function readAstroConfigText() {
+  for (const c of ['astro.config.mjs', 'astro.config.ts', 'astro.config.mts', 'astro.config.js', 'astro.config.cjs']) {
+    const f = join(ROOT, c);
+    if (existsSync(f)) {
+      try { return readFileSync(f, 'utf8'); } catch { return ''; }
+    }
+  }
+  return '';
+}
+
+/* Minimalny skaner JS/TS: pomija literały napisów, szablony z ${…} i komentarze, żeby liczyć
+ * nawiasy tylko w kodzie. Wyrażeń regularnych nie rozpoznaje — w ciele getStaticPaths() i w bloku
+ * experimental praktycznie nie występują; pomyłka daje najwyżej brak ostrzeżenia. */
+function skipNonCode(text, i) {
+  const c = text[i];
+  const n = text[i + 1];
+  if (c === '/' && n === '/') { const e = text.indexOf('\n', i); return e === -1 ? text.length : e; }
+  if (c === '/' && n === '*') { const e = text.indexOf('*/', i + 2); return e === -1 ? text.length : e + 2; }
+  if (c === '"' || c === "'") {
+    for (let j = i + 1; j < text.length; j++) {
+      if (text[j] === '\\') { j++; continue; }
+      if (text[j] === c || text[j] === '\n') return j + 1;
+    }
+    return text.length;
+  }
+  if (c === '`') {
+    for (let j = i + 1; j < text.length; j++) {
+      if (text[j] === '\\') { j++; continue; }
+      if (text[j] === '`') return j + 1;
+      if (text[j] === '$' && text[j + 1] === '{') {
+        const e = matchBrace(text, j + 1);
+        if (e === -1) return text.length;
+        j = e;
+      }
+    }
+    return text.length;
+  }
+  return -1;
+}
+
+/** Indeks nawiasu zamykającego dla otwierającego w `open` ({, ( albo [); -1 gdy brak pary. */
+function matchBrace(text, open) {
+  const pary = { '{': '}', '(': ')', '[': ']' };
+  if (!pary[text[open]]) return -1;
+  const stos = [];
+  for (let i = open; i < text.length; i++) {
+    const s = skipNonCode(text, i);
+    if (s !== -1) { i = s - 1; continue; }
+    const c = text[i];
+    if (pary[c]) stos.push(pary[c]);
+    else if (c === '}' || c === ')' || c === ']') {
+      if (stos.pop() !== c) return -1;
+      if (stos.length === 0) return i;
+    }
+  }
+  return -1;
+}
+
+/** Z bloku `{ … }` zostawia tylko tekst pierwszego poziomu (zagnieżdżone nawiasy i literały wypadają). */
+function topLevelText(block) {
+  let out = '';
+  let depth = 0;
+  for (let i = 0; i < block.length; i++) {
+    const s = skipNonCode(block, i);
+    if (s !== -1) { out += ' '; i = s - 1; continue; }
+    const c = block[i];
+    if (c === '{' || c === '(' || c === '[') { depth++; if (depth === 2) out += ' '; continue; }
+    if (c === '}' || c === ')' || c === ']') { depth--; continue; }
+    if (depth === 1) out += c;
+  }
+  return out;
+}
+
+/** Numery wierszy (od 0) leżących w ciele deklaracji getStaticPaths():
+ *  `function getStaticPaths(…) {…}` albo `getStaticPaths[: Typ] = … => {…}` / `= function (…) {…}`.
+ *  Ciało = pierwszy `{` poprzedzony `)` albo `=>`, bez `;` po drodze (inaczej to nie ta deklaracja). */
+function getStaticPathsLines(text) {
+  const wynik = new Set();
+  const re = /\bgetStaticPaths\b/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const przed = text.slice(Math.max(0, m.index - 20), m.index);
+    const po = text.slice(m.index + m[0].length, m.index + m[0].length + 200);
+    const deklaracja = /function\s*\*?\s*$/.test(przed) ? /^\s*\(/.test(po) : /^\s*(?::[^=;]*)?=(?![=>])/.test(po);
+    if (!deklaracja) continue;
+    let otw = -1;
+    for (let i = m.index + m[0].length; i < Math.min(text.length, m.index + 400); i++) {
+      const s = skipNonCode(text, i);
+      if (s !== -1) { i = s - 1; continue; }
+      if (text[i] === ';') break;
+      if (text[i] !== '{') continue;
+      const wczesniej = text.slice(m.index, i).trimEnd();
+      if (wczesniej.endsWith(')') || wczesniej.endsWith('=>')) { otw = i; break; }
+    }
+    if (otw === -1) continue;
+    const zam = matchBrace(text, otw);
+    if (zam === -1) continue;
+    const od = lineOf(text, otw) - 1;
+    const doW = lineOf(text, zam) - 1;
+    for (let l = od; l <= doW; l++) wynik.add(l);
+  }
+  return wynik;
+}
+
 function walk(dir, acc = []) {
   let entries;
   try { entries = readdirSync(dir); } catch { return acc; }

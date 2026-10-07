@@ -31,6 +31,7 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tytul}</title>
     <meta name="description" content={opis} />
+    <meta name="robots" content="max-image-preview:large" />
     <link rel="canonical" href={kanoniczny} />
 
     <meta property="og:type" content="website" />

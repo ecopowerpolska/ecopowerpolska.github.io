@@ -17,3 +17,20 @@ CLAUDE.local.md
 # zbudować strony. Zrzuty z sesji lądują w katalogu głównym i tam ta reguła działa.
 /*.png
 .playwright-mcp/
+
+# Sekrety — nigdy do repo (D43/D5 Potwora, 2026-10-16); wartości tylko w ~/.sekrety/ na Z440
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*-token*
+*.token
+secrets/
+.wrangler/
+.dev.vars
+.netrc
+.htpasswd
+credentials*.json
+*service-account*.json

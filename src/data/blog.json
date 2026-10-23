@@ -1,6 +1,9 @@
 {
-  "menuSerwisy": "Serwisy",
+  "menuOferta": "Oferta",
+  "menuRealizacje": "Realizacje",
+  "menuFaq": "FAQ",
   "menuBlog": "Blog",
+  "menuKontakt": "Kontakt",
   "etykietaMenu": "Menu główne",
   "etykietaMenuStopki": "Strony witryny",
   "tytulKarty": "Blog — EcoPower Polska",

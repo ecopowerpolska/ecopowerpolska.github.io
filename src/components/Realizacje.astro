@@ -1,0 +1,105 @@
+---
+// Realizacje.astro — sekcja „Realizacje” strony głównej: strony z src/data/serwisy.json (bez ukrytych),
+// w kolejności z pliku (= kolejność przeciągania w panelu, D8). Zero JavaScriptu.
+// Obrazki to zrzuty żywych stron 1440×900 (headless Chrome), więc kafel ma proporcję 16:10.
+import { getCollection } from 'astro:content';
+import Kafelek from './Kafelek.astro';
+import { tekst } from '../lib/tekst';
+
+interface Props {
+  /** Nagłówek H2 sekcji; puste = wartość domyślna. */
+  naglowek?: string | null;
+  /** Zdanie pod nagłówkiem; puste = bez akapitu. */
+  wstep?: string | null;
+  /** Kotwica sekcji (menu „Realizacje”). */
+  kotwica?: string;
+  /** true tylko gdy sekcja stoi nad zgięciem i pierwszy zrzut jest kandydatem na LCP. */
+  pierwszyEager?: boolean;
+}
+
+const { naglowek, wstep, kotwica = 'realizacje', pierwszyEager = false } = Astro.props;
+
+const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
+const idNaglowka = `${kotwica}-naglowek`;
+const wstepTekst = wstep?.trim() ?? '';
+// Pole `zakres` dochodzi do schematu w content.config.ts; odczyt odporny na jego brak.
+const zakresWpisu = (dane: unknown): string | undefined => (dane as { zakres?: string }).zakres;
+---
+
+{
+  realizacje.length > 0 && (
+    <section class="realizacje" id={kotwica} aria-labelledby={idNaglowka}>
+      <h2 id={idNaglowka} class="realizacje__naglowek">
+        {tekst(naglowek, 'Realizacje')}
+      </h2>
+      {wstepTekst && <p class="realizacje__wstep">{wstepTekst}</p>}
+      <ul class="realizacje__siatka">
+        {realizacje.map((wpis, i) => (
+          <li>
+            <Kafelek
+              nazwa={wpis.data.nazwa}
+              adres={wpis.data.adres}
+              opis={wpis.data.opis}
+              zakres={zakresWpisu(wpis.data)}
+              obrazek={wpis.data.obrazek}
+              alt={wpis.data.alt}
+              pierwszy={pierwszyEager && i === 0}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .realizacje {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6) var(--o-16);
+    scroll-margin-top: var(--o-8);
+  }
+
+  .realizacje__naglowek {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-4);
+  }
+
+  .realizacje__wstep {
+    max-width: var(--miara);
+    margin: 0 0 var(--o-8);
+    color: var(--tekst-cichy);
+    line-height: 1.5;
+  }
+
+  /* 3 / 2 / 1 kolumny, kafle równej szerokości. Flex z zawijaniem zamiast grid: niepełny
+     ostatni rząd (7 = 3 + 3 + 1) stoi wyśrodkowany, nie przy lewej krawędzi — ten sam wzorzec
+     „bez sierot” co siatka-rowna na studioagat.pl (słowo Piotra 2026-10-20). */
+  .realizacje__siatka {
+    --kol: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--o-6);
+  }
+
+  .realizacje__siatka > li {
+    flex: 0 0 calc((100% - (var(--kol) - 1) * var(--o-6)) / var(--kol));
+    min-width: 0;
+  }
+
+  @media (min-width: 36rem) {
+    .realizacje__siatka {
+      --kol: 2;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .realizacje__siatka {
+      --kol: 3;
+    }
+  }
+</style>

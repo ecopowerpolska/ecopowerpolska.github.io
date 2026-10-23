@@ -59,7 +59,11 @@ const daneSpolki = [
     <nav class="stopka__menu" aria-label={tekst(blog.etykietaMenuStopki, 'Strony witryny')}>
       <ul>
         <li><a href="/">{tekst(blog.stronaGlowna, 'Strona główna')}</a></li>
+        <li><a href="/#oferta">{tekst(blog.menuOferta, 'Oferta')}</a></li>
+        <li><a href="/#realizacje">{tekst(blog.menuRealizacje, 'Realizacje')}</a></li>
+        <li><a href="/faq/">{tekst(blog.menuFaq, 'FAQ')}</a></li>
         <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
+        <li><a href="/#kontakt">{tekst(blog.menuKontakt, 'Kontakt')}</a></li>
       </ul>
     </nav>
 
@@ -460,6 +464,15 @@ const daneSpolki = [
     margin: var(--o-2) 0 0;
     min-height: 1.6em;
     color: var(--akcent);
+  }
+
+  /* Przy 320 px nierozrywalne wartości rozpychały stronę w bok (WCAG 1.4.10, pomiar 2026-10-23). */
+  @media (max-width: 26rem) {
+    .dana,
+    .pozycja {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
   }
 
   @media (max-width: 34rem) {

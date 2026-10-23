@@ -1,0 +1,139 @@
+---
+// FaqSkrot.astro — 3–4 pytania z src/data/faq.json na stronę główną i odnośnik do /faq/.
+// Wybór: pytania z `naGlownej: true` (panel: Pytania i odpowiedzi), najwyżej 4; żadne nie zaznaczone = pierwsze 4.
+// <details> bez JavaScriptu; cała odpowiedź stoi w HTML (zwinięta), więc robot i czytnik ekranu ją widzą.
+// Bez JSON-LD: dane strukturalne strony głównej niesie DaneStrukturalne.astro, FAQPage jest zablokowany bramką (A10).
+import faqJson from '../data/faq.json';
+import { tekst } from '../lib/tekst';
+
+interface Props {
+  /** Ile pytań pokazać (domyślnie 4). */
+  ile?: number;
+}
+
+const { ile = 4 } = Astro.props;
+
+const faq = faqJson as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (klucz: string, domyslny: string) => tekst(naTekst(faq[klucz]), domyslny);
+
+const wszystkie = (Array.isArray(faq.pytania) ? (faq.pytania as Record<string, unknown>[]) : [])
+  .map((p) => ({
+    pytanie: naTekst(p?.pytanie),
+    akapity: naTekst(p?.odpowiedz).split(/\n\s*\n/).map((a) => a.trim()).filter(Boolean),
+    naGlownej: p?.naGlownej === true || p?.naGlownej === 'true',
+  }))
+  .filter((p) => p.pytanie && p.akapity.length > 0);
+
+const zaznaczone = wszystkie.filter((p) => p.naGlownej);
+const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.max(1, ile));
+---
+
+{pytania.length > 0 && (
+  <section class="faq-skrot" aria-labelledby="faq-skrot-tytul">
+    <h2 id="faq-skrot-tytul" class="faq-skrot__tytul">{napis('skrotNaglowek', 'Najczęstsze pytania')}</h2>
+    <div class="faq-skrot__lista">
+      {pytania.map((p) => (
+        <details class="pytanie">
+          <summary><h3 class="pytanie__tytul">{p.pytanie}</h3></summary>
+          <div class="pytanie__odpowiedz">
+            {p.akapity.map((a) => <p>{a}</p>)}
+          </div>
+        </details>
+      ))}
+    </div>
+    <p class="faq-skrot__wiecej">
+      <a href="/faq/">{napis('skrotLink', 'Wszystkie pytania i odpowiedzi')}</a>
+    </p>
+  </section>
+)}
+
+<style>
+  .faq-skrot {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-12) var(--o-6);
+  }
+
+  .faq-skrot__tytul {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-6);
+  }
+
+  .faq-skrot__lista {
+    max-width: 48rem;
+    border-top: 1px solid var(--linia);
+  }
+
+  .pytanie {
+    border-bottom: 1px solid var(--linia);
+  }
+
+  /* spoczynek: cały wiersz pytania jest celem dotyku ≥ 44 px, znacznik +/− rysowany CSS-em */
+  .pytanie summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--o-4);
+    min-height: 44px;
+    padding: var(--o-3) 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .pytanie summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pytanie summary::after {
+    content: '+';
+    flex: none;
+    font-size: var(--t-l);
+    line-height: 1;
+    color: var(--akcent);
+  }
+
+  .pytanie[open] summary::after {
+    content: '−';
+  }
+
+  /* najechanie */
+  .pytanie summary:hover .pytanie__tytul {
+    color: var(--akcent);
+  }
+
+  /* aktywny */
+  .pytanie summary:active {
+    opacity: 0.7;
+  }
+
+  .pytanie__tytul {
+    font-size: var(--t-m);
+    line-height: 1.35;
+  }
+
+  .pytanie__odpowiedz {
+    padding: 0 0 var(--o-4);
+    max-width: var(--miara);
+  }
+
+  .pytanie__odpowiedz p {
+    margin: 0 0 var(--o-3);
+    color: var(--tekst-cichy);
+  }
+
+  .faq-skrot__wiecej {
+    margin: var(--o-6) 0 0;
+  }
+
+  .faq-skrot__wiecej a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .faq-skrot__wiecej a:hover {
+    color: var(--tekst);
+  }
+</style>

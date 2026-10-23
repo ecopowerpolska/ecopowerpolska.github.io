@@ -3,8 +3,7 @@
 // Własnej strony 500 na witrynie statycznej NIE MA i nie obiecujemy jej (potwor-astro §D).
 //
 // Pasek marki (PasekMarki) wspólny z index.astro — tożsamość ma być widoczna także
-// tu, nie tylko na trasie ze spisem serwisów. Bez licznika serwisów: to informacja
-// właściwa dla strony ze spisem, nie dla strony błędu.
+// tu, nie tylko na stronie głównej.
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
@@ -16,11 +15,11 @@ import { tekst } from '../lib/tekst';
 const tytulKarty = tekst(teksty.tytulKarty, 'Nie ma takiej strony — EcoPower Polska');
 const opisWyszukiwarki = tekst(
   teksty.opisWyszukiwarki,
-  'Pod tym adresem nic nie ma. Wróć na stronę główną z listą serwisów EcoPower Polska.'
+  'Pod tym adresem nic nie ma. Wróć na stronę główną EcoPower Polska: strony i sklepy internetowe dla firm.'
 );
 const naglowek = tekst(teksty.naglowek, 'Nie ma takiej strony');
 const trescStrony = tekst(teksty.tekst, 'Pod tym adresem nic nie ma.');
-const linkPowrotu = tekst(teksty.linkPowrotu, 'Wróć na stronę główną z listą serwisów');
+const linkPowrotu = tekst(teksty.linkPowrotu, 'Wróć na stronę główną');
 ---
 
 <Bazowy tytul={tytulKarty} opis={opisWyszukiwarki}>

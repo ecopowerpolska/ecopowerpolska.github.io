@@ -19,11 +19,15 @@ interface Props {
 
 const { liczbaSerwisow } = Astro.props;
 
-// Menu główne: dwie pozycje (2026-10-23, blog). Bieżąca strona dostaje aria-current, logo prowadzi na stronę główną.
+// Menu główne: pięć pozycji (2026-10-23, firma od stron i sklepów). Oferta, Realizacje i Kontakt to kotwice
+// strony głównej (bez aria-current — to sekcje, nie strony); FAQ i Blog to podstrony. Logo prowadzi na stronę główną.
 const sciezka = Astro.url.pathname;
 const menu = [
-  { adres: '/', napis: tekst(blog.menuSerwisy, 'Serwisy'), biezaca: sciezka === '/' },
+  { adres: '/#oferta', napis: tekst(blog.menuOferta, 'Oferta'), biezaca: false },
+  { adres: '/#realizacje', napis: tekst(blog.menuRealizacje, 'Realizacje'), biezaca: false },
+  { adres: '/faq/', napis: tekst(blog.menuFaq, 'FAQ'), biezaca: sciezka.startsWith('/faq') },
   { adres: '/blog/', napis: tekst(blog.menuBlog, 'Blog'), biezaca: sciezka.startsWith('/blog') },
+  { adres: '/#kontakt', napis: tekst(blog.menuKontakt, 'Kontakt'), biezaca: false },
 ];
 
 // Dopisek licznika z panelu („3 serwisy w sieci").
@@ -136,12 +140,14 @@ function odmiana(n: number): string {
     gap: var(--o-2) var(--o-6);
   }
 
+  /* Pięć pozycji: na wąskim ekranie zawijają się do drugiego wiersza, zamiast rozpychać stronę w bok. */
   .menu ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    gap: var(--o-1) var(--o-4);
+    flex-wrap: wrap;
+    gap: 0 var(--o-4);
   }
 
   /* Cel dotyku 44 px wysokości (WCAG 2.5.8 z zapasem). Kolory: pary z motyw.css (tekst/tło, akcent/tło). */

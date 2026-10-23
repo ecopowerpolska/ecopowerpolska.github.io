@@ -1,0 +1,90 @@
+{
+  "zakresNaglowek": "Czym się zajmujemy",
+  "zakresLead": "Robimy całą drogę od pustej domeny do strony, którą firma sama aktualizuje.",
+  "zakres": [
+    {
+      "nazwa": "Strony firmowe",
+      "opis": "Strona z ofertą, galerią realizacji, blogiem i formularzem kontaktowym. Budujemy ją w Astro jako gotowe pliki, więc otwiera się szybko także na telefonie."
+    },
+    {
+      "nazwa": "Sklepy internetowe",
+      "opis": "Drogę dobieramy do sklepu: WooCommerce albo PrestaShop na hostingu, katalog produktów w Astro z płatnością przez Stripe Checkout albo połączenie obu. Wybór omawiamy przed startem."
+    },
+    {
+      "nazwa": "Panel do edycji treści",
+      "opis": "Teksty, zdjęcia i wpisy zmieniasz sam w panelu pod adresem /admin/. Panel zapisuje zmiany w repozytorium strony (Sveltia) albo działa w PHP na hostingu i wtedy nie potrzebujesz konta na GitHubie."
+    },
+    {
+      "nazwa": "Hosting, domena i poczta",
+      "opis": "Stronę stawiamy na hostingu lh.pl, a wizytówkę bez sprzedaży na GitHub Pages. Przy przepięciu domeny przenosimy rekordy DNS tak, żeby poczta działała dalej."
+    },
+    {
+      "nazwa": "Formularze bez spamu",
+      "opis": "Formularz kontaktowy w PHP wysyła wiadomość na Twój adres. Boty zatrzymuje Cloudflare Turnstile, bez przepisywania liter z obrazka."
+    },
+    {
+      "nazwa": "Widoczność w Google",
+      "opis": "Tytuły, opisy, dane strukturalne i mapa strony, zgłoszenie do Google Search Console i Bing. Prowadzimy też wizytówkę Google (Profil Firmy): usługi, zdjęcia, wpisy."
+    }
+  ],
+  "procesNaglowek": "Jak pracujemy",
+  "proces": [
+    {
+      "nazwa": "Zakres",
+      "opis": "Ustalamy, co strona ma robić: jakie usługi pokazuje, czy przyjmuje zapytania, czy sprzedaje. Z tego wynika wybór hostingu i panelu."
+    },
+    {
+      "nazwa": "Treść i zdjęcia",
+      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Na stronę trafiają prawdziwe zdjęcia realizacji, nie obrazy z generatora."
+    },
+    {
+      "nazwa": "Budowa pod adresem roboczym",
+      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zanim zastąpi obecną."
+    },
+    {
+      "nazwa": "Kontrola przed publikacją",
+      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting."
+    },
+    {
+      "nazwa": "Przepięcie domeny",
+      "opis": "Przełączamy domenę na nową stronę, a stare adresy przekierowujemy na nowe (301), żeby wyniki w Google nie prowadziły w próżnię."
+    },
+    {
+      "nazwa": "Utrzymanie",
+      "opis": "Po publikacji wprowadzamy zmiany, mierzymy szybkość i pilnujemy Search Console. Każda zmiana jest od razu publikowana i sprawdzana na żywej stronie."
+    }
+  ],
+  "dostajeszNaglowek": "Co dostajesz",
+  "dostajesz": [
+    "Osobne repozytorium kodu dla każdej strony: każdą wersję strony da się odtworzyć, a strony klientów nie dzielą kodu ani dostępów.",
+    "Osobną przestrzeń na hostingu z własną wersją PHP: Twoja strona nie stoi w jednym katalogu z innymi.",
+    "Panel do edycji treści z dostępem tylko do Twojej strony.",
+    "Szyfrowane połączenie (HTTPS) na Twojej domenie i przekierowanie wariantu z „www” albo bez.",
+    "Mapę strony zgłoszoną w Google Search Console i przez IndexNow do Bing.",
+    "Pomiar PageSpeed Insights po publikacji; studioagat.pl po przepisaniu na Astro ma 98–100 punktów."
+  ],
+  "technologiaNaglowek": "Dlaczego Astro i taki hosting",
+  "technologia": [
+    {
+      "nazwa": "Astro",
+      "opis": "Strona trafia na serwer jako gotowe pliki HTML. Przy wejściu nie odpytuje bazy danych i nie ładuje zbędnych skryptów, więc pierwszy ekran pojawia się szybko."
+    },
+    {
+      "nazwa": "lh.pl",
+      "opis": "Polski hosting z PHP, pocztą i dostępem SSH. Każda strona ma osobny katalog z separacją, a to, co działa na serwerze (formularze, panel), piszemy w PHP."
+    },
+    {
+      "nazwa": "GitHub Pages",
+      "opis": "Wizytówka bez sprzedaży, rezerwacji i płatności może stać na GitHub Pages bez opłat za hosting. Tak działa ta strona."
+    },
+    {
+      "nazwa": "Cloudflare",
+      "opis": "Strefa DNS domeny i ochrona formularzy (Turnstile). Rekordy poczty przenosimy razem z domeną, więc skrzynki działają bez przerwy."
+    }
+  ],
+  "kontaktNaglowek": "Kontakt",
+  "kontaktTekst": "Napisz, jaki adres ma mieć strona, co ma robić i czy masz już domenę, teksty i zdjęcia. Na tej podstawie zaproponujemy hosting, panel i zakres.",
+  "kontaktMail": "Napisz: kontakt@ecopowerpolska.pl",
+  "kontaktTelefon": "Zadzwoń: 537 318 316",
+  "kontaktSiedziba": "Siedziba spółki"
+}

@@ -1,14 +1,18 @@
 {
-  "tytulKarty": "EcoPower Polska — serwisy spółki",
-  "opisWyszukiwarki": "EcoPower Polska nadzoruje kilka niezależnych serwisów",
-  "zdanieNaglowka": "Spółka nadzoruje grupę niezależnych serwisów",
-  "zdanieKoncowe": "Każdy z serwisów działa samodzielnie, Spółka odpowiada za ich utrzymanie, finansowanie i rozwój",
+  "tytulKarty": "Strony i sklepy internetowe dla firm — EcoPower Polska",
+  "opisWyszukiwarki": "Budujemy strony internetowe i sklepy internetowe dla firm: projekt, panel do edycji treści, hosting, domena i widoczność w Google. Potem je utrzymujemy.",
+  "naglowek": "Budujemy strony i sklepy internetowe dla firm.",
+  "zdanieNaglowka": "Projekt, panel do edycji treści, hosting, domena, poczta i widoczność w Google. Potem stronę utrzymujemy.",
+  "hasloAkcji": "Zapytaj o stronę",
+  "naglowekRealizacji": "Realizacje",
+  "wstepRealizacji": "",
+  "zdanieKoncowe": "Spółka z ograniczoną odpowiedzialnością z siedzibą w Warszawie, wpisana do Rejestru Przedsiębiorców KRS. Pełne dane rejestrowe są w stopce.",
   "napisLicznika": "w sieci",
   "nazwaGrupyBezPrzypisania": "Inne",
   "komunikatPustejListy": "Brak serwisów do pokazania.",
   "nazwaWitryny": "EcoPower Polska",
   "etykietaSekcjiZamykajacej": "O spółce",
   "etykietaSpisuGrup": "Grupy serwisów",
-  "ukrytyNaglowekSerwisow": "Serwisy",
+  "ukrytyNaglowekSerwisow": "Realizacje",
   "linkPomijania": "Przejdź do treści"
 }

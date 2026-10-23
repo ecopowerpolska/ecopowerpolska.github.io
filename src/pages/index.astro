@@ -1,222 +1,68 @@
 ---
-// index.astro — jedyna trasa treściowa. Kafelki pochodzą WYŁĄCZNIE z kolekcji,
-// a napisy z src/data/strona.json, więc dołożenie serwisu albo poprawka zdania
-// jest wpisem w panelu, nie zmianą tego pliku.
-//
-// Kierunek „rejestr sieci" (przebudowa 2026-09-06, zastępuje poprzedni „styl
-// apple.com/pl" — patrz nota w src/styles/motyw.css). Układ lewostronny, jedna
-// szerokość kontenera od nagłówka po stopkę, grupowanie kafelków po grupach
-// z src/data/grupy.json gdy grupy realnie istnieją. Zero JavaScriptu: pasek nie
-// chowa się przy przewijaniu, spis grup to zwykłe kotwice — budżet jsGzipKB: 3
-// z guard.config.json obejmuje wyłącznie skrypt guzików kopiowania w stopce.
+// index.astro — strona główna firmy od stron WWW i sklepów (przebudowa 2026-10-23).
+// Układ: nagłówek firmy → oferta → realizacje → skrót FAQ → kontakt → o spółce.
+// Napisy z src/data/strona.json i src/data/oferta.json (panel), realizacje z kolekcji
+// `serwisy` (src/data/serwisy.json). Wygląd bez zmian: tokeny motyw.css, PasekMarki, Stopka,
+// kierunek „rejestr" (docs/DECYZJE-WIZUALNE.md). Zero JS na tej trasie poza stopką.
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 import Bazowy from '../layouts/Bazowy.astro';
-import Kafelek from '../components/Kafelek.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 import DaneStrukturalne from '../components/DaneStrukturalne.astro';
+import Oferta from '../components/Oferta.astro';
+import Realizacje from '../components/Realizacje.astro';
+import FaqSkrot from '../components/FaqSkrot.astro';
 import { tekst } from '../lib/tekst';
-import firma from '../data/firma.json';
 import stronaJson from '../data/strona.json';
 
-// Panel może pole wyczyścić albo zapisać w nim `null`, a wtedy typ z pliku JSON
-// przestaje odpowiadać rzeczywistości. Każdy napis idzie przez tekst().
+// Panel może pole wyczyścić albo zapisać `null` — każdy napis idzie przez tekst().
 const strona = stronaJson as Record<string, string | null | undefined>;
 
-// 🔴 BEZ SORTOWANIA — kolejność kafelków to kolejność wpisów w src/data/serwisy.json,
-// czyli dokładnie ta, którą Piotr ustawia przeciągając kafelki w panelu (D8).
-const wszystkie = await getCollection('serwisy', ({ data }) => !data.ukryty);
+// Kolejność = kolejność w serwisy.json (przeciąganie w panelu, D8); ukryte nie wchodzą.
+const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
 
-// Pusta lista grup jest stanem normalnym i wyjściowym (`{"grupy": []}`) — brak wpisów
-// nie może wywrócić builda, bo to zamroziłoby publikację całej strony (D10).
-const definicjeGrup = await getCollection('grupy').catch(() => []);
-
-// ── grupowanie po grupach z grupy.json ───────────────────────────────────────
-function kluczGrupy(k?: string): string | null {
-  const t = k?.trim().toLowerCase();
-  return t ? t : null;
-}
-
-function slugify(tekstWejscia: string): string {
-  const zamianaPl: Record<string, string> = {
-    ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z',
-  };
-  return (
-    'grupa-' +
-    tekstWejscia
-      .toLowerCase()
-      .split('')
-      .map((znak) => zamianaPl[znak] ?? znak)
-      .join('')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-+|-+$)/g, '')
-  );
-}
-
-interface Sekcja {
-  etykieta: string;
-  opis?: string;
-  kotwica: string;
-  wpisy: CollectionEntry<'serwisy'>[];
-  naglowekWidoczny: boolean;
-}
-
-// Dwie grupy o tym samym kluczu panel odrzuca, ale gdyby taki plik jednak powstał,
-// powtórzony atrybut id rozbiłby kotwice i powiązanie nagłówka z sekcją.
-const zajeteKotwice = new Set<string>();
-function kotwicaUnikalna(podstawa: string): string {
-  let kandydat = podstawa;
-  let n = 2;
-  while (zajeteKotwice.has(kandydat)) kandydat = `${podstawa}-${n++}`;
-  zajeteKotwice.add(kandydat);
-  return kandydat;
-}
-
-// Sekcje powstają w kolejności z grupy.json (kontrakt §3 reguła 1), jeszcze puste.
-const sekcjeGrup: Sekcja[] = [];
-const wedlugKlucza = new Map<string, Sekcja>();
-for (const g of definicjeGrup) {
-  const klucz = kluczGrupy(g.data.klucz);
-  if (klucz === null) continue; // grupa bez klucza nie ma czym przyciągnąć kafelka
-  const sekcja: Sekcja = {
-    // Nazwa wyczyszczona w panelu: zostaje klucz techniczny — brzydko, ale strona
-    // się buduje i widać, o którą grupę chodzi.
-    etykieta: tekst(g.data.nazwa, g.data.klucz),
-    opis: g.data.opis?.trim() || undefined,
-    kotwica: kotwicaUnikalna(slugify(klucz)),
-    wpisy: [],
-    naglowekWidoczny: true,
-  };
-  sekcjeGrup.push(sekcja);
-  if (!wedlugKlucza.has(klucz)) wedlugKlucza.set(klucz, sekcja);
-}
-
-// Kafelek bez grupy ORAZ kafelek wskazujący klucz, którego w grupy.json nie ma,
-// trafiają w to samo miejsce — sekcję końcową (kontrakt §3 reguła 3).
-const bezGrupy: CollectionEntry<'serwisy'>[] = [];
-for (const s of wszystkie) {
-  const klucz = kluczGrupy(s.data.grupa);
-  const sekcja = klucz ? wedlugKlucza.get(klucz) : undefined;
-  if (sekcja) sekcja.wpisy.push(s);
-  else bezGrupy.push(s);
-}
-
-// Grupa bez ani jednego widocznego kafelka znika razem z kotwicą (§3 reguła 2);
-// `wszystkie` jest już przefiltrowane z ukrytych, więc liczy się tu tylko to,
-// co realnie zobaczy odwiedzający.
-const uzyteGrupy = sekcjeGrup.filter((s) => s.wpisy.length > 0);
-
-// Układ płaski poniżej dwóch realnie użytych grup (§3 reguła 4) — sekcja końcowa
-// grupą nie jest i do progu się nie liczy. Dziś grupy.json jest pusta, więc próg
-// nie jest osiągnięty i strona wygląda dokładnie tak, jak przed tą zmianą.
-const grupowanieAktywne = uzyteGrupy.length >= 2;
-
-let sekcje: Sekcja[];
-if (grupowanieAktywne) {
-  sekcje = [...uzyteGrupy];
-  if (bezGrupy.length > 0) {
-    sekcje.push({
-      etykieta: tekst(strona.nazwaGrupyBezPrzypisania, 'Inne'),
-      kotwica: kotwicaUnikalna('grupa-pozostale'),
-      wpisy: bezGrupy,
-      naglowekWidoczny: true,
-    });
-  }
-} else {
-  // Płaska siatka: jedna sekcja, nagłówek istnieje wyłącznie dla czytnika ekranu
-  // (hierarchia H1→H2 zostaje kompletna), oprawa wizualna nie zyskuje napisu,
-  // którego nikt nie zamawiał. Kolejność kafelków = kolejność z serwisy.json.
-  sekcje = [
-    {
-      etykieta: tekst(strona.ukrytyNaglowekSerwisow, 'Serwisy'),
-      kotwica: 'naglowek-serwisow',
-      wpisy: wszystkie,
-      naglowekWidoczny: false,
-    },
-  ];
-}
-
-// Kolejność faktycznie widoczna na stronie, spłaszczona — zasila numerację ItemList
-// w danych strukturalnych ORAZ wybór kandydata na LCP (pierwszy element = eager+high).
-const kolejnoscWyswietlana = sekcje.flatMap((g) => g.wpisy);
-const idPierwszego = kolejnoscWyswietlana[0]?.id;
-
-const nazwaSpolki = tekst(firma.nazwaKrotka, 'EcoPower Polska');
-const tytul = tekst(strona.tytulKarty, `${nazwaSpolki} — serwisy spółki`);
-
-// Musi brzmieć jak hero niżej — jedno zdanie, czasownik „nadzoruje" (D3).
+// D2: nazwa spółki pada raz na ekran — niesie ją tytuł karty i logo, H1 mówi, co firma robi.
+const tytul = tekst(strona.tytulKarty, 'Strony i sklepy internetowe dla firm — EcoPower Polska');
+// D3: opis meta zbieżny z nagłówkiem i zdaniem pod nim.
 const opis = tekst(
   strona.opisWyszukiwarki,
-  'EcoPower Polska nadzoruje kilka niezależnych serwisów internetowych.',
+  'Budujemy strony internetowe i sklepy internetowe dla firm: projekt, panel do edycji treści, hosting, domena i widoczność w Google.',
+);
+const naglowek = tekst(strona.naglowek, 'Budujemy strony i sklepy internetowe dla firm.');
+const lead = tekst(
+  strona.zdanieNaglowka,
+  'Projekt, panel do edycji treści, hosting, domena, poczta i widoczność w Google. Potem stronę utrzymujemy.',
 );
 ---
 
 <Bazowy tytul={tytul} opis={opis}>
   <DaneStrukturalne
     slot="head"
-    serwisy={kolejnoscWyswietlana.map((s) => ({ nazwa: s.data.nazwa, adres: s.data.adres }))}
+    serwisy={realizacje.map((s) => ({ nazwa: s.data.nazwa, adres: s.data.adres }))}
   />
 
-  <PasekMarki liczbaSerwisow={wszystkie.length} />
+  <PasekMarki />
 
   <main id="tresc">
     <section class="hero">
-      <h1 class="hero__tytul">{nazwaSpolki}</h1>
-      <p class="hero__opis">
-        {tekst(strona.zdanieNaglowka, 'Spółka nadzoruje kilka niezależnych serwisów internetowych.')}
+      <h1 class="hero__tytul">{naglowek}</h1>
+      <p class="hero__opis">{lead}</p>
+      <p class="hero__akcja">
+        <a class="hero__link" href="#kontakt">{tekst(strona.hasloAkcji, 'Zapytaj o stronę')}</a>
       </p>
     </section>
 
-    {
-      grupowanieAktywne && (
-        <nav class="spis" aria-label={tekst(strona.etykietaSpisuGrup, 'Grupy serwisów')}>
-          <ul>
-            {sekcje.map((s) => (
-              <li>
-                <a href={`#${s.kotwica}`}>
-                  {s.etykieta} <span class="spis__liczba">({s.wpisy.length})</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )
-    }
+    <Oferta czesc="oferta" />
 
-    {
-      wszystkie.length === 0 ? (
-        <p class="pusto">{tekst(strona.komunikatPustejListy, 'Brak serwisów do pokazania.')}</p>
-      ) : (
-        sekcje.map((s) => (
-          <section class="grupa" aria-labelledby={s.kotwica}>
-            <h2 id={s.kotwica} class={s.naglowekWidoczny ? 'grupa__naglowek' : 'grupa__naglowek sr-only'}>
-              {s.etykieta}
-            </h2>
-            {s.naglowekWidoczny && s.opis && <p class="grupa__opis">{s.opis}</p>}
-            <ul class="siatka">
-              {s.wpisy.map((wpis) => (
-                <li>
-                  <Kafelek
-                    nazwa={wpis.data.nazwa}
-                    adres={wpis.data.adres}
-                    opis={wpis.data.opis}
-                    obrazek={wpis.data.obrazek}
-                    alt={wpis.data.alt}
-                    pierwszy={wpis.id === idPierwszego}
-                  />
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
-      )
-    }
+    <Realizacje naglowek={strona.naglowekRealizacji} wstep={strona.wstepRealizacji} />
 
-    {/* Zamknięcie treści pod kafelkami. Tekst edytowalny w panelu — Teksty strony;
-        pusty nie renderuje sekcji wcale, więc NIE przechodzi przez tekst(). */}
+    <FaqSkrot />
+
+    <Oferta czesc="kontakt" />
+
+    {/* Zamknięcie: puste pole w panelu = sekcja znika (D9), więc bez tekst(). */}
     {strona.zdanieKoncowe?.trim() && (
-      <section class="zamkniecie" aria-label={tekst(strona.etykietaSekcjiZamykajacej, 'O spółce')}>
+      <section id="o-spolce" class="zamkniecie" aria-label={tekst(strona.etykietaSekcjiZamykajacej, 'O spółce')}>
         <p>{strona.zdanieKoncowe}</p>
       </section>
     )}
@@ -226,9 +72,7 @@ const opis = tekst(
 </Bazowy>
 
 <style>
-  /* ── hero: lewostronny, nie wyśrodkowany — różnica wobec poprzedniej wersji jest
-     zamierzona (nota w motyw.css). Rozmiar H1 płynny (clamp), nie skokowy na jednym
-     breakpoincie, żeby na tabletach nie było „za dużego albo za małego" progu. */
+  /* Hero lewostronny, H1 płynny (clamp) — jak dotąd; dłuższe zdanie dostaje 22ch miary. */
   .hero {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
@@ -236,9 +80,9 @@ const opis = tekst(
   }
 
   .hero__tytul {
-    font-size: clamp(var(--t-xxl), 4vw + 1.6rem, var(--t-display));
+    font-size: clamp(var(--t-xxl), 3.4vw + 1.4rem, var(--t-display));
     letter-spacing: -0.015em;
-    max-width: 24ch;
+    max-width: 22ch;
   }
 
   .hero__opis {
@@ -249,133 +93,36 @@ const opis = tekst(
     line-height: 1.5;
   }
 
-  /* ── spis grup: proste kotwice, nie zakładka wizualnie tożsama z kafelkiem —
-     celowo INNY język wizualny (kreski, nie wypełnienie), żeby nie powtarzać jednego
-     promienia zaokrąglenia na wszystkim (patrz frontend-design: „SaaS-card kit"). */
-  .spis {
-    max-width: var(--szerokosc-tresci);
-    margin: 0 auto;
-    padding: 0 var(--o-6) var(--o-8);
+  .hero__akcja {
+    margin: var(--o-8) 0 0;
   }
 
-  .spis ul {
-    list-style: none;
-    margin: 0;
-    padding: var(--o-4) 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--o-2) var(--o-6);
-    border-top: 1px solid var(--linia);
-    border-bottom: 1px solid var(--linia);
-  }
-
-  .spis a {
-    font-size: var(--t-s);
+  /* Odnośnik z obrysem: pary akcent/tło i akcent/powierzchnia z motyw.css, bez nowego koloru. */
+  .hero__link {
+    /* spoczynek */
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    border: 2px solid var(--akcent);
+    border-radius: var(--promien);
     font-weight: 600;
-    color: var(--tekst);
-  }
-
-  .spis a:hover {
     color: var(--akcent);
-    text-decoration: underline;
+    text-decoration: none;
+    transition: background-color 120ms ease;
   }
 
-  .spis__liczba {
-    font-weight: 400;
-    color: var(--tekst-cichy);
+  /* najechanie */
+  .hero__link:hover {
+    background: var(--powierzchnia);
+    text-decoration: none;
   }
 
-  /* ── sekcje i siatka kafelków ──────────────────────────────────────────────── */
-  .grupa {
-    max-width: var(--szerokosc-tresci);
-    margin: 0 auto;
-    padding: 0 var(--o-6) var(--o-16);
+  /* aktywny (wciśnięty) */
+  .hero__link:active {
+    transform: translateY(1px);
   }
 
-  .grupa__naglowek {
-    font-size: var(--t-xl);
-    margin-bottom: var(--o-6);
-  }
-
-  /* Opcjonalne zdanie pod nagłówkiem grupy. Gdy nagłówek jest tylko dla czytnika
-     ekranu (układ płaski), opisu nie ma czemu towarzyszyć i nie renderuje się. */
-  .grupa__opis {
-    max-width: var(--miara);
-    margin: calc(-1 * var(--o-4)) 0 var(--o-6);
-    color: var(--tekst-cichy);
-    line-height: 1.5;
-  }
-
-  /* Kreska nad nagłówkiem grupy TYLKO od drugiej sekcji w kolejności — selektor
-     sąsiedztwa, nie :first-of-type: `.hero` jest też elementem <section>, więc
-     „pierwszy section wśród rodzeństwa" to hero, nie pierwsza `.grupa`, i pseudoklasa
-     nigdy by nie trafiła. Pierwsza `.grupa` (niezależnie od tego, czy poprzedza ją
-     hero, czy jeszcze spis grup) nie potrzebuje kreski — ma ją już pasek albo
-     spis nad sobą. */
-  .grupa + .grupa .grupa__naglowek {
-    padding-top: var(--o-8);
-    border-top: 1px solid var(--linia);
-  }
-
-  .siatka {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: var(--o-6);
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 36rem) {
-    .siatka {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 60rem) {
-    .siatka {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (min-width: 80rem) {
-    .siatka {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  /* ── LICZBA KOLUMN LICZY SIĘ Z LICZBĄ KAFELKÓW ────────────────────────────────
-     Sama siatka 4-kolumnowa jest zbudowana pod docelowe kilkadziesiąt serwisów,
-     ale DZIŚ serwisy są dwa — i w czterech kolumnach zajmowały pół ekranu,
-     zostawiając drugie pół pustką. Pustka nie czytała się jako świadomy oddech,
-     tylko jako niedokończona strona: dokładnie ten zarzut, który zaczął tę robotę.
-     Poniżej siatka zwęża się, gdy kafelków jest mało, więc te dwa wypełniają wiersz
-     i niosą duże zdjęcie — a przy czwartym wpisie układ sam wraca do pełnych czterech
-     kolumn. Zero JavaScriptu (budżet jsGzipKB zostaje nienaruszony) i zero
-     ręcznej roboty przy dokładaniu serwisu.
-
-     `:has()` jest w tej roli bezpieczne: przeglądarka, która go nie zna, po prostu
-     pomija te reguły i pokazuje pełną siatkę — czyli stan sprzed tej poprawki.
-     Kolejność reguł jest znacząca: specyficzność obu jest równa, więc rozstrzyga
-     źródło — najpierw „mniej niż cztery", potem „mniej niż trzy". */
-  @media (min-width: 60rem) {
-    .siatka:not(:has(> :nth-child(3))) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 80rem) {
-    .siatka:not(:has(> :nth-child(4))) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .siatka:not(:has(> :nth-child(3))) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  /* Zamknięcie treści: kreska u góry i miara akapitu jak w hero — sekcja ma czytać
-     się jak domknięcie dokumentu, nie jak czwarty kafelek. */
   .zamkniecie {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
@@ -387,30 +134,14 @@ const opis = tekst(
     margin: 0;
     padding-top: var(--o-8);
     border-top: 1px solid var(--linia);
-    font-size: var(--t-l);
+    font-size: var(--t-m);
     line-height: 1.5;
     color: var(--tekst-cichy);
   }
 
-  .pusto {
-    max-width: var(--szerokosc-tresci);
-    margin: 0 auto;
-    padding: 0 var(--o-6) var(--o-16);
-    color: var(--tekst-cichy);
-  }
-
-  /* Nagłówek sekcji istnieje dla czytnika ekranu w wariancie płaskim — hierarchia
-     H1→H2 zostaje kompletna, a oprawa wizualna nie zyskuje napisu, którego nikt
-     nie zamawiał. */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+  @media (prefers-reduced-motion: reduce) {
+    .hero__link {
+      transition: none;
+    }
   }
 </style>

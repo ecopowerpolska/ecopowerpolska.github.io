@@ -114,6 +114,7 @@ const serwisy = defineCollection({
         nazwa: naTekst(wpis.nazwa) ?? '',
         adres: naTekst(wpis.adres) ?? '',
         opis: naTekst(wpis.opis),
+        zakres: naTekst(wpis.zakres),
         // 🔴 Grupa: pole `grupa`, a gdy go w ogole nie ma — stare `kategoria`.
         // Powod: przegladarka Piotra moze miec w pamieci podrecznej stara config.yml
         // (GitHub Pages podaje ja z max-age=600) i zapisac wpis w starym ukladzie.
@@ -136,6 +137,8 @@ const serwisy = defineCollection({
       nazwa: z.string(),
       adres: z.string(),
       opis: z.string().optional(),
+      // jedno zdanie „co zrobiliśmy” przy tej stronie (sekcja Realizacje)
+      zakres: z.string().optional(),
       // klucz grupy z src/data/grupy.json albo pusty tekst (kafelek bez przypisania).
       // Klucz nieistniejacy w grupy.json NIE jest bledem — kafelek idzie do sekcji
       // koncowej (kontrakt §3 regula 3).

@@ -10,11 +10,14 @@ interface Props {
   opis?: string;
   obrazek?: ImageMetadata;
   alt?: string;
+  /** Jedno zdanie „co zrobiliśmy” przy tej stronie (pole `zakres` w serwisy.json). Puste = brak akapitu. */
+  zakres?: string;
   /** Kandydat na LCP — dokładnie JEDEN kafelek na stronie dostaje true. */
   pierwszy?: boolean;
 }
 
-const { nazwa, adres, opis, obrazek, alt, pierwszy = false } = Astro.props;
+const { nazwa, adres, opis, obrazek, alt, zakres, pierwszy = false } = Astro.props;
+const zakresTekst = zakres?.trim() ?? '';
 
 // Domena widoczna na kafelku — liczona z `adres`, nie osobne pole w schemacie.
 // Dziś `nazwa` już JEST domeną („nadihome.pl”), więc pokazanie jej drugi raz byłoby
@@ -40,11 +43,11 @@ const inicjaly =
     ? (slowa[0][0] + slowa[1][0]).toUpperCase()
     : nazwa.split('.')[0].slice(0, 2).toUpperCase();
 
-// Linki wychodzące NIE dostają rel="nofollow" — to jest właśnie linkowanie krzyżowe
-// do własnych serwisów spółki, za które ręczymy (potwor-www §K).
+// Link w treści strony (<main>), nie w stopce: bez `nofollow`, tylko `noopener` — reguła 4 skilla
+// linkowanie-zewnetrzne (dofollow = brak nofollow). Pary A↔B i stopki pilnuje raport tego skilla.
 ---
 
-<a class="kafelek" href={adres}>
+<a class="kafelek" href={adres} rel="noopener">
   <span class="kafelek__obraz">
     {
       obrazek ? (
@@ -52,7 +55,7 @@ const inicjaly =
           src={obrazek}
           alt={alt ?? ''}
           width={720}
-          height={480}
+          height={450}
           format="webp"
           densities={[1, 2]}
           loading={pierwszy ? 'eager' : 'lazy'}
@@ -70,6 +73,7 @@ const inicjaly =
   <span class="kafelek__stopka">
     <span class="kafelek__nazwa">{nazwa}</span>
     {opis && <span class="kafelek__opis">{opis}</span>}
+    {zakresTekst && <span class="kafelek__zakres">{zakresTekst}</span>}
     {pokazDomene && <span class="kafelek__domena">{domena}</span>}
   </span>
 </a>
@@ -111,7 +115,8 @@ const inicjaly =
     display: flex;
     align-items: center;
     justify-content: center;
-    aspect-ratio: 3 / 2;
+    /* 16:10 = proporcja zrzutu 1440×900; inne obrazki przycina `cover`. */
+    aspect-ratio: 16 / 10;
     background: var(--powierzchnia-mocna);
   }
 
@@ -119,6 +124,7 @@ const inicjaly =
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
     display: block;
   }
 
@@ -155,6 +161,15 @@ const inicjaly =
   .kafelek__opis {
     font-size: var(--t-s);
     color: var(--tekst-cichy);
+    line-height: 1.5;
+  }
+
+  .kafelek__zakres {
+    margin-top: var(--o-2);
+    padding-top: var(--o-2);
+    border-top: 1px solid var(--linia);
+    font-size: var(--t-s);
+    color: var(--tekst);
     line-height: 1.5;
   }
 

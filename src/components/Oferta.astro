@@ -1,0 +1,327 @@
+---
+// Oferta.astro — sekcje oferty firmy z src/data/oferta.json (2026-10-23).
+// `czesc="oferta"`: czym się zajmujemy, jak pracujemy, co dostajesz, dlaczego Astro i hosting.
+// `czesc="kontakt"`: kontakt mailem i telefonem plus adres siedziby z firma.json (odpis KRS).
+// Kierunek „rejestr" bez zmian: lewostronnie, kreski zamiast kart, kolory tylko z motyw.css.
+// Zero JS. Każdy napis przez tekst(): wyczyszczone pole w panelu wraca do domyślnego.
+import ofertaJson from '../data/oferta.json';
+import firma from '../data/firma.json';
+import { tekst } from '../lib/tekst';
+
+interface Props {
+  czesc: 'oferta' | 'kontakt';
+}
+
+const { czesc } = Astro.props;
+
+interface Pozycja {
+  nazwa?: string | null;
+  opis?: string | null;
+}
+
+const o = ofertaJson as Record<string, unknown>;
+const napis = (klucz: string, domyslny: string) => tekst(o[klucz] as string | null | undefined, domyslny);
+
+// Lista z panelu bywa pusta albo ma wpis bez nazwy — taki wpis po prostu się nie pokazuje.
+const pozycje = (klucz: string): { nazwa: string; opis: string }[] =>
+  (Array.isArray(o[klucz]) ? (o[klucz] as Pozycja[]) : [])
+    .map((p) => ({ nazwa: p?.nazwa?.trim() ?? '', opis: p?.opis?.trim() ?? '' }))
+    .filter((p) => p.nazwa !== '');
+
+const zakres = pozycje('zakres');
+const proces = pozycje('proces');
+const technologia = pozycje('technologia');
+const dostajesz = (Array.isArray(o.dostajesz) ? (o.dostajesz as unknown[]) : [])
+  .map((t) => (typeof t === 'string' ? t.trim() : ''))
+  .filter(Boolean);
+
+const mail = firma.email.toLowerCase();
+const telefonCyfry = firma.telefon.replace(/\D/g, '');
+const telefonTrojki = telefonCyfry.replace(/(\d{3})(?=\d)/g, '$1 ');
+const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filter(Boolean).join(' ')]
+  .filter(Boolean)
+  .join(', ');
+---
+
+{
+  czesc === 'oferta' ? (
+    <>
+      {zakres.length > 0 && (
+        <section id="oferta" class="sekcja" aria-labelledby="oferta-naglowek">
+          <h2 id="oferta-naglowek" class="sekcja__naglowek">{napis('zakresNaglowek', 'Czym się zajmujemy')}</h2>
+          {o.zakresLead && <p class="sekcja__lead">{String(o.zakresLead)}</p>}
+          <ul class="zakres">
+            {zakres.map((p) => (
+              <li>
+                <h3>{p.nazwa}</h3>
+                {p.opis && <p>{p.opis}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {proces.length > 0 && (
+        <section id="jak-pracujemy" class="sekcja" aria-labelledby="proces-naglowek">
+          <h2 id="proces-naglowek" class="sekcja__naglowek">{napis('procesNaglowek', 'Jak pracujemy')}</h2>
+          {/* Lista numerowana, bo to kolejne kroki (numer niesie <ol>, nie ozdoba). */}
+          <ol class="proces">
+            {proces.map((p) => (
+              <li>
+                <h3>{p.nazwa}</h3>
+                {p.opis && <p>{p.opis}</p>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {(dostajesz.length > 0 || technologia.length > 0) && (
+        <div class="sekcja dwie">
+          {dostajesz.length > 0 && (
+            <section aria-labelledby="dostajesz-naglowek">
+              <h2 id="dostajesz-naglowek" class="sekcja__naglowek">{napis('dostajeszNaglowek', 'Co dostajesz')}</h2>
+              <ul class="dostajesz">
+                {dostajesz.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {technologia.length > 0 && (
+            <section aria-labelledby="technologia-naglowek">
+              <h2 id="technologia-naglowek" class="sekcja__naglowek">
+                {napis('technologiaNaglowek', 'Dlaczego Astro i taki hosting')}
+              </h2>
+              <dl class="technologia">
+                {technologia.map((p) => (
+                  <>
+                    <dt translate="no">{p.nazwa}</dt>
+                    <dd>{p.opis}</dd>
+                  </>
+                ))}
+              </dl>
+            </section>
+          )}
+        </div>
+      )}
+    </>
+  ) : (
+    <section id="kontakt" class="sekcja kontakt" aria-labelledby="kontakt-naglowek">
+      <h2 id="kontakt-naglowek" class="sekcja__naglowek">{napis('kontaktNaglowek', 'Kontakt')}</h2>
+      <p class="sekcja__lead">
+        {napis(
+          'kontaktTekst',
+          'Napisz, jaki adres ma mieć strona, co ma robić i czy masz już domenę, teksty i zdjęcia.',
+        )}
+      </p>
+      <ul class="kontakt__drogi">
+        <li>
+          <a class="kontakt__link" href={`mailto:${mail}`}>{napis('kontaktMail', `Napisz: ${mail}`)}</a>
+        </li>
+        {telefonCyfry && (
+          <li>
+            <a class="kontakt__link" href={`tel:+48${telefonCyfry}`}>
+              {napis('kontaktTelefon', `Zadzwoń: ${telefonTrojki}`)}
+            </a>
+          </li>
+        )}
+      </ul>
+      {adres && (
+        <p class="kontakt__adres">
+          {napis('kontaktSiedziba', 'Siedziba spółki')}: {adres}
+        </p>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .sekcja {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-12) var(--o-6);
+    border-top: 1px solid var(--linia);
+  }
+
+  .sekcja__naglowek {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-6);
+  }
+
+  .sekcja__lead {
+    max-width: var(--miara);
+    margin: calc(-1 * var(--o-3)) 0 var(--o-8);
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  h3 {
+    font-size: var(--t-l);
+    margin-bottom: var(--o-2);
+  }
+
+  li p,
+  dd {
+    margin: 0;
+    max-width: var(--miara);
+    color: var(--tekst-cichy);
+    line-height: 1.55;
+  }
+
+  /* Zakres: siatka 1/2/3 kolumny, każda pozycja otwarta kreską u góry — bez kart i cieni. */
+  .zakres,
+  .proces,
+  .dostajesz {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .zakres {
+    display: grid;
+    gap: var(--o-8) var(--o-8);
+    grid-template-columns: 1fr;
+  }
+
+  .zakres li {
+    padding-top: var(--o-4);
+    border-top: 2px solid var(--akcent);
+  }
+
+  @media (min-width: 40rem) {
+    .zakres {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .zakres {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Proces: prawdziwa sekwencja, więc numer z licznika <ol> w marginesie po lewej. */
+  .proces {
+    counter-reset: krok;
+    display: grid;
+    gap: var(--o-6);
+    max-width: 48rem;
+  }
+
+  .proces li {
+    counter-increment: krok;
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    column-gap: var(--o-4);
+  }
+
+  .proces li::before {
+    content: counter(krok);
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    line-height: 1.1;
+    color: var(--akcent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .proces h3 {
+    margin-bottom: var(--o-1);
+  }
+
+  /* Dwie kolumny od szerokiego ekranu: lista „co dostajesz” i krótkie uzasadnienie technologii. */
+  .dwie {
+    display: grid;
+    gap: var(--o-12);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 60rem) {
+    .dwie {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .dostajesz li {
+    position: relative;
+    padding: var(--o-3) 0 var(--o-3) var(--o-6);
+    border-bottom: 1px solid var(--linia);
+    max-width: var(--miara);
+    line-height: 1.5;
+  }
+
+  .dostajesz li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc(var(--o-3) + 0.6em);
+    width: 0.6rem;
+    height: 2px;
+    background: var(--akcent);
+  }
+
+  .technologia {
+    margin: 0;
+  }
+
+  .technologia dt {
+    font-weight: 600;
+    margin-top: var(--o-4);
+  }
+
+  .technologia dt:first-child {
+    margin-top: 0;
+  }
+
+  /* Kontakt: dwa odnośniki z obrysem — para akcent/tło z motyw.css, bez nowego koloru. */
+  .kontakt__drogi {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3) var(--o-4);
+  }
+
+  .kontakt__link {
+    /* spoczynek */
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: var(--o-2) var(--o-4);
+    border: 2px solid var(--akcent);
+    border-radius: var(--promien);
+    font-weight: 600;
+    color: var(--akcent);
+    text-decoration: none;
+    /* Adres e-mail to jedno długie słowo — przy 320 px musi móc się złamać (WCAG 1.4.10). */
+    overflow-wrap: anywhere;
+    transition:
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+
+  /* najechanie */
+  .kontakt__link:hover {
+    background: var(--powierzchnia);
+    text-decoration: none;
+  }
+
+  /* aktywny (wciśnięty) */
+  .kontakt__link:active {
+    transform: translateY(1px);
+  }
+
+  .kontakt__adres {
+    margin: var(--o-6) 0 0;
+    color: var(--tekst-cichy);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kontakt__link {
+      transition: none;
+    }
+  }
+</style>

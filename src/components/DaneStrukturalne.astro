@@ -1,17 +1,25 @@
 ---
-// DaneStrukturalne.astro — JSON-LD dla węzła centralnego.
+// DaneStrukturalne.astro — JSON-LD strony głównej (2026-10-23: firma od stron i sklepów).
 //
-// 🔴 TYP: Organization, NIE LocalBusiness. LocalBusiness wymaga `address`, a adresu
-// siedziby Piotr nie podał (zlecenie: „nie wymyślaj"). Znacznik z wymyślonym adresem
-// przechodzi walidację i kłamie — gorsze niż jego brak. Gdy adres się pojawi,
-// podmiana typu na LocalBusiness to jedna linia (patrz docs/BRAKI.md).
+// 🔴 TYP: LocalBusiness, NIE ProfessionalService. schema.org pisze wprost, że ogólny
+// ProfessionalService „was deprecated due to confusion with Service" (odczyt 2026-10-23),
+// a Google zaleca najbardziej szczegółowy podtyp Organization pasujący do firmy
+// (…/structured-data/organization, „Last updated 2026-09-08"). LocalBusiness wymaga
+// `address` — adres siedziby pochodzi z odpisu aktualnego KRS 0000881612
+// (api-krs.ms.gov.pl, odczyt 2026-10-23): ul. Bora-Komorowskiego 21, 03-982 Warszawa.
+// `streetAddress` = to, co stoi w stopce (bez numeru lokalu, jak dotąd na stronie).
 //
-// 🔴 CZEGO TU NIE MA i być nie ma: `sameAs` ani `subOrganization` na serwisy.
-// sameAs znaczy „to ten sam podmiot pod innym adresem", a subOrganization znaczy
-// „to spółka zależna" — żadnego z tych dwóch stosunków prawnych nie znamy.
-// ItemList mówi tylko tyle, ile jest prawdą: to lista serwisów pokazana na tej stronie.
+// 🔴 `@id` zostaje `/#organizacja` — wpisy bloga wskazują go jako autora i wydawcę.
+// Oferta (hasOfferCatalog) to te same pozycje, które widać w sekcji „Czym się zajmujemy"
+// (src/data/oferta.json) — bez cen, bo cen na stronie nie ma.
+// CZEGO TU NIE MA: `sameAs`/`subOrganization` na realizacje (to nie ten sam podmiot ani
+// spółki zależne), `aggregateRating`/`review` (opinii o sobie nie oznaczamy), `areaServed`
+// i `priceRange` (brak potwierdzonych danych — puste lepsze niż zmyślone).
 
 import firma from '../data/firma.json';
+import strona from '../data/strona.json';
+import oferta from '../data/oferta.json';
+import { tekst } from '../lib/tekst';
 
 interface Props {
   serwisy: { nazwa: string; adres: string }[];
@@ -19,39 +27,76 @@ interface Props {
 
 const { serwisy } = Astro.props;
 
-// Adresy jadą z konfiguracji, więc na podglądzie github.io i na docelowej domenie
-// dane strukturalne są spójne same z siebie — bez ręcznej podmiany.
-const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+// Adresy z konfiguracji (`site`), w kształcie canonical — z ukośnikiem strony głównej.
+const stronaGlowna = new URL('/', import.meta.env.SITE).href;
+const baza = stronaGlowna.replace(/\/$/, '');
+const telefon = firma.telefon.replace(/\D/g, '');
+
+const uslugi = (Array.isArray(oferta.zakres) ? oferta.zakres : [])
+  .map((p) => ({ nazwa: p?.nazwa?.trim() ?? '', opis: p?.opis?.trim() ?? '' }))
+  .filter((p) => p.nazwa !== '');
+
+// Firma stoi w OSOBNYM bloku na najwyższym poziomie, nie w @graph: bramka przed publikacją (F1)
+// sprawdza name i address tylko w obiektach najwyższego poziomu — w @graph by ich nie zobaczyła.
+const firmaLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${baza}/#organizacja`,
+  name: firma.nazwaKrotka,
+  legalName: firma.nazwaPelna,
+  description: tekst(strona.opisWyszukiwarki, 'Budujemy strony internetowe i sklepy internetowe dla firm.'),
+  url: stronaGlowna,
+  // Kwadratowy sygnet 512×512 (Google: logo co najmniej 112×112 px, adres indeksowalny).
+  logo: new URL('/favicon.png', stronaGlowna).href,
+  image: new URL('/favicon.png', stronaGlowna).href,
+  email: firma.email.toLowerCase(),
+  ...(telefon ? { telephone: `+48${telefon}` } : {}),
+  vatID: `PL${firma.nip}`,
+  taxID: firma.nip,
+  identifier: [
+    { '@type': 'PropertyValue', propertyID: 'KRS', value: firma.krs },
+    { '@type': 'PropertyValue', propertyID: 'NIP', value: firma.nip },
+    { '@type': 'PropertyValue', propertyID: 'REGON', value: firma.regon },
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: firma.adresSiedziby,
+    postalCode: firma.kodPocztowy,
+    addressLocality: firma.miejscowosc,
+    addressRegion: firma.wojewodztwo,
+    addressCountry: firma.kraj,
+  },
+  knowsAbout: ['strony internetowe', 'sklepy internetowe', 'Astro', 'pozycjonowanie stron w Google'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: tekst(oferta.zakresNaglowek, 'Czym się zajmujemy'),
+    itemListElement: uslugi.map((u) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: u.nazwa,
+        ...(u.opis ? { description: u.opis } : {}),
+        provider: { '@id': `${baza}/#organizacja` },
+      },
+    })),
+  },
+};
 
 const dane = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'Organization',
-      '@id': `${baza}/#organizacja`,
-      name: firma.nazwaKrotka,
-      legalName: firma.nazwaPelna,
-      url: `${baza}/`,
-      email: firma.email.toLowerCase(),
-      taxID: firma.nip,
-      identifier: [
-        { '@type': 'PropertyValue', propertyID: 'KRS', value: firma.krs },
-        { '@type': 'PropertyValue', propertyID: 'NIP', value: firma.nip },
-        { '@type': 'PropertyValue', propertyID: 'REGON', value: firma.regon },
-      ],
-    },
-    {
       '@type': 'WebSite',
       '@id': `${baza}/#witryna`,
-      url: `${baza}/`,
+      url: stronaGlowna,
       name: firma.nazwaKrotka,
       inLanguage: 'pl-PL',
       publisher: { '@id': `${baza}/#organizacja` },
     },
     {
       '@type': 'ItemList',
-      '@id': `${baza}/#serwisy`,
-      name: `Serwisy — ${firma.nazwaKrotka}`,
+      '@id': `${baza}/#realizacje`,
+      name: `Realizacje — ${firma.nazwaKrotka}`,
       itemListOrder: 'https://schema.org/ItemListOrderAscending',
       numberOfItems: serwisy.length,
       itemListElement: serwisy.map((s, i) => ({
@@ -65,4 +110,5 @@ const dane = {
 };
 ---
 
+<script type="application/ld+json" set:html={JSON.stringify(firmaLd)} />
 <script type="application/ld+json" set:html={JSON.stringify(dane)} />

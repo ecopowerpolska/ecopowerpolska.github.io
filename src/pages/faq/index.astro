@@ -1,0 +1,278 @@
+---
+// /faq/ — pytania klientów o strony i sklepy (dist/faq/index.html). Treść: src/data/faq.json (panel: Pytania i odpowiedzi).
+// Pytanie = nagłówek H2 z kotwicą, odpowiedź widoczna od razu (bez <details>): treść jest dla czytelnika i dla cytowania przez AI.
+// 🔴 Bez FAQPage w JSON-LD: wynik FAQ Google wycofał 2026-05-07, a bramka zatrzymuje publikację blokadą A10
+// (potwor-www §I, precedens pan-stolarz.pl). JSON-LD: WebPage + BreadcrumbList w @graph, jak wpis bloga.
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../../components/PasekMarki.astro';
+import Stopka from '../../components/Stopka.astro';
+import faqJson from '../../data/faq.json';
+import firma from '../../data/firma.json';
+import { tekst } from '../../lib/tekst';
+
+// Panel może zapisać null w wyczyszczonym polu albo usunąć pole — wszystko sprowadzone do tekstu, nic nie zatrzymuje builda.
+const faq = faqJson as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (klucz: string, domyslny: string) => tekst(naTekst(faq[klucz]), domyslny);
+
+// Kotwica: pole z panelu albo nazwa z pytania; zawsze unikalna i bez polskich znaków.
+const PL: Record<string, string> = { ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z' };
+const naKotwice = (t: string) =>
+  t
+    .toLowerCase()
+    .replace(/[ąćęłńóśźż]/g, (z) => PL[z] ?? z)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-+|-+$)/g, '')
+    .slice(0, 60);
+const zajete = new Set<string>();
+const pytania = (Array.isArray(faq.pytania) ? (faq.pytania as Record<string, unknown>[]) : [])
+  .map((p) => ({ pytanie: naTekst(p?.pytanie), odpowiedz: naTekst(p?.odpowiedz), kotwica: naKotwice(naTekst(p?.kotwica)) }))
+  .filter((p) => p.pytanie && p.odpowiedz)
+  .map((p, i) => {
+    let k = p.kotwica || naKotwice(p.pytanie) || `pytanie-${i + 1}`;
+    if (/^[0-9]/.test(k)) k = `p-${k}`;
+    for (let n = 2; zajete.has(k); n++) k = `${p.kotwica || naKotwice(p.pytanie)}-${n}`;
+    zajete.add(k);
+    // Pusty wiersz w odpowiedzi = nowy akapit.
+    return { ...p, kotwica: k, akapity: p.odpowiedz.split(/\n\s*\n/).map((a) => a.trim()).filter(Boolean) };
+  });
+
+const tytul = napis('tytulKarty', 'Pytania o strony i sklepy internetowe — EcoPower Polska');
+const opis = napis(
+  'opisWyszukiwarki',
+  'Odpowiedzi EcoPower Polska na pytania o strony i sklepy internetowe: czas, treść, hosting, domena, poczta i Google.',
+);
+const naglowek = napis('naglowek', 'Pytania o strony i sklepy internetowe');
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/faq/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: napis('stronaGlowna', 'Strona główna'), adres: '/' },
+  { nazwa: naglowek, adres: '/faq/' },
+];
+
+const mail = naTekst(firma.email).toLowerCase();
+const cyfry = naTekst(firma.telefon).replace(/\D/g, '');
+const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : naTekst(firma.telefon);
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: tytul,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="faq">
+    <nav class="okruszki" aria-label={napis('okruszkiEtykieta', 'Ścieżka')}>
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="faq__tytul">{naglowek}</h1>
+    <p class="faq__lead">
+      {napis('lead', 'Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe.')}
+    </p>
+
+    {pytania.length > 0 && (
+      <nav class="spis" aria-labelledby="spis-pytan">
+        <h2 id="spis-pytan" class="sr-only">{napis('spisEtykieta', 'Spis pytań')}</h2>
+        <ol>
+          {pytania.map((p) => (
+            <li><a href={`#${p.kotwica}`}>{p.pytanie}</a></li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <div class="lista">
+      {pytania.map((p) => (
+        <section class="pytanie" aria-labelledby={p.kotwica}>
+          <h2 id={p.kotwica} class="pytanie__tytul">{p.pytanie}</h2>
+          {p.akapity.map((a) => <p>{a}</p>)}
+        </section>
+      ))}
+    </div>
+
+    <section class="kontakt" aria-labelledby="faq-kontakt">
+      <h2 id="faq-kontakt" class="kontakt__tytul">{napis('kontaktNaglowek', 'Nie ma tu Twojego pytania?')}</h2>
+      <p>{napis('kontaktTekst', 'Napisz albo zadzwoń.')}</p>
+      <ul class="kontakt__dane">
+        {mail && <li><a href={`mailto:${mail}`}>{mail}</a></li>}
+        {cyfry && <li><a href={`tel:+48${cyfry.slice(-9)}`}>{telefon}</a></li>}
+      </ul>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .faq {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co nad wpisem bloga (src/pages/blog/[slug].astro). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a,
+  .okruszki [aria-current] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  /* Kolumna 40 rem, ok. 70 znaków w wierszu. */
+  .faq__tytul,
+  .faq__lead,
+  .spis,
+  .lista,
+  .kontakt {
+    max-width: 40rem;
+  }
+
+  .faq__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .faq__lead {
+    margin: var(--o-4) 0 var(--o-8);
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  /* Spis: kreski zamiast wypełnienia, jak spis grup na stronie głównej. */
+  .spis ol {
+    margin: 0 0 var(--o-12);
+    padding: var(--o-3) 0 var(--o-3) var(--o-6);
+    border-top: 1px solid var(--linia);
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .spis a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .spis a:hover {
+    color: var(--tekst);
+  }
+
+  .pytanie + .pytanie {
+    margin-top: var(--o-12);
+  }
+
+  .pytanie__tytul {
+    margin-bottom: var(--o-3);
+    font-size: var(--t-l);
+    line-height: 1.25;
+  }
+
+  .pytanie p {
+    margin: 0 0 var(--o-3);
+  }
+
+  .kontakt {
+    margin-top: var(--o-16);
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .kontakt__tytul {
+    font-size: var(--t-l);
+  }
+
+  .kontakt p {
+    margin: var(--o-2) 0 var(--o-3);
+  }
+
+  .kontakt__dane {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-6);
+  }
+
+  .kontakt__dane a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .kontakt__dane a:hover {
+    color: var(--tekst);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

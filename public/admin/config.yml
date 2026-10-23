@@ -80,8 +80,9 @@ public_folder: "src/assets/serwisy"
 publish_mode: simple
 
 # ── MENU PANELU ───────────────────────────────────────────────────────────────
-# Pięć pozycji, w tej kolejności: Grupy → Serwisy (kafelki) → Wpisy na blogu →
-# Teksty strony → Dane firmy. Kolejność w tym pliku = kolejność w menu panelu.
+# Sześć pozycji, w tej kolejności: Grupy → Realizacje (kafelki) → Wpisy na blogu →
+# Pytania i odpowiedzi → Teksty strony (w tym Oferta) → Dane firmy. Kolejność w tym
+# pliku = kolejność w menu panelu.
 collections:
   # ── ① GRUPY ─────────────────────────────────────────────────────────────────
   # Sekcje, na które dzielą się kafelki. Kafelek wskazuje grupę polem `grupa`
@@ -147,7 +148,7 @@ collections:
   # wpisów kolekcji katalogowej, więc przy pliku na serwis kolejność dałoby się
   # ustawiać tylko wpisywaniem liczb. docs/DECYZJE-WIZUALNE.md D8.
   - name: serwisy
-    label: "Serwisy (kafelki)"
+    label: "Realizacje (kafelki)"
     files:
       - name: lista
         label: "Kafelki na stronie głównej"
@@ -195,6 +196,15 @@ collections:
                 hint: >-
                   Do 160 znaków. Puste pole jest w porządku — kafelek pokaże samą nazwę.
 
+              - name: zakres
+                label: "Co zrobiliśmy (opcjonalnie)"
+                widget: text
+                required: false
+                pattern:
+                  - "^[\\s\\S]{0,260}$"
+                  - "Najwyżej 260 znaków"
+                hint: "Jedno zdanie o wykonanej pracy, np. Astro, panel treści, hosting lh.pl, Turnstile, blog. Puste = bez akapitu."
+
               # 🔴 Zamiast dawnego pola `kategoria` (tekst dowolny, w którym literówka
               # tworzyła nową kategorię) — WYBÓR z listy grup zdefiniowanych w pozycji
               # menu Grupy. Sveltia 0.206.1 obsługuje wskazanie listy wewnątrz pliku
@@ -227,7 +237,7 @@ collections:
                 label: "Obrazek kafelka"
                 widget: image
                 required: false
-                hint: "Proporcje 3:2, szerokość co najmniej 720 px."
+                hint: "Zrzut strony 1440×900 (16:10), szerokość co najmniej 720 px."
 
               - name: alt
                 label: "Opis obrazka dla czytnika ekranu"
@@ -321,12 +331,142 @@ collections:
         required: true
         hint: "Śródtytuły jako Nagłówek 2. Pierwszy akapit odpowiada wprost na pytanie z tytułu."
 
+  # ── ②b PYTANIA I ODPOWIEDZI (FAQ) ───────────────────────────────────────────
+  # Podstrona /faq/ i skrót na stronie głównej (src/components/FaqSkrot.astro), oba
+  # z JEDNEGO pliku src/data/faq.json — lista `list`, bo kolejność ustawia się
+  # przeciąganiem (jak kafelki, D8). Pliku nie czyta loader kolekcji: importują go
+  # src/pages/faq/index.astro i FaqSkrot.astro i każde pole sprowadzają do tekstu,
+  # więc null albo brak pola nie zatrzyma builda (cms-github-pages §B.1).
+  # Pusty wiersz w odpowiedzi = nowy akapit. Puste pole tekstu strony = napis domyślny.
+  - name: faq
+    label: "Pytania i odpowiedzi"
+    files:
+      - name: faq
+        label: "Pytania i odpowiedzi (FAQ)"
+        file: "src/data/faq.json"
+        description: >-
+          Podstrona /faq/ i skrót pytań na stronie głównej. Kolejność na liście =
+          kolejność na stronie; chwyć pytanie za uchwyt po lewej i przeciągnij. Na stronę
+          główną idą pytania z zaznaczonym polem „Pokaż na stronie głównej”, najwyżej
+          cztery; gdy żadne nie jest zaznaczone, idą cztery pierwsze.
+        fields:
+          - name: pytania
+            label: "Pytania"
+            label_singular: "Pytanie"
+            widget: list
+            allow_add: true
+            collapsed: true
+            summary: "{{fields.pytanie}}"
+            fields:
+              - name: pytanie
+                label: "Pytanie"
+                widget: string
+                required: true
+                hint: "Tak, jak zadałby je klient, np. Czy sam zmienię treść na stronie?"
+
+              - name: odpowiedz
+                label: "Odpowiedź"
+                widget: text
+                required: true
+                pattern:
+                  - "^[\\s\\S]{0,1200}$"
+                  - "Odpowiedź może mieć najwyżej 1200 znaków"
+                hint: >-
+                  Pierwsze zdanie odpowiada wprost na pytanie; najlepiej 2–5 zdań. Pusty
+                  wiersz zaczyna nowy akapit. Pytanie bez odpowiedzi nie pokazuje się na stronie.
+
+              - name: kotwica
+                label: "Kotwica w adresie (opcjonalnie)"
+                widget: string
+                required: false
+                pattern:
+                  - "^[a-z0-9-]*$"
+                  - "Tylko małe litery bez polskich znaków, cyfry i myślnik, np. poczta"
+                hint: >-
+                  Końcówka odnośnika do tego pytania: /faq/#poczta. Puste pole = strona
+                  utworzy ją z pytania. Po publikacji NIE zmieniaj — odnośniki z zewnątrz
+                  przestaną trafiać w pytanie.
+
+              - name: naGlownej
+                label: "Pokaż na stronie głównej"
+                widget: boolean
+                default: false
+                required: false
+
+          - name: naglowek
+            label: "Nagłówek podstrony /faq/"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Pytania o strony i sklepy internetowe"
+
+          - name: lead
+            label: "Zdanie pod nagłówkiem"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe."
+
+          - name: tytulKarty
+            label: "Tytuł karty i wyniku w wyszukiwarce"
+            widget: string
+            required: false
+            hint: >-
+              Najlepiej do 60 znaków. Puste pole = wraca napis domyślny: Pytania o strony
+              i sklepy internetowe — EcoPower Polska.
+
+          - name: opisWyszukiwarki
+            label: "Opis dla wyszukiwarek"
+            widget: text
+            required: false
+            hint: "Najlepiej do 160 znaków. Puste pole = wraca napis domyślny."
+
+          - name: kontaktNaglowek
+            label: "Nagłówek ramki kontaktu pod pytaniami"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Nie ma tu Twojego pytania?"
+
+          - name: kontaktTekst
+            label: "Zdanie w ramce kontaktu"
+            widget: string
+            required: false
+            hint: "E-mail i telefon bierze się z Danych firmy. Puste pole = wraca napis domyślny: Napisz albo zadzwoń."
+
+          - name: skrotNaglowek
+            label: "Strona główna: nagłówek skrótu pytań"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Najczęstsze pytania"
+
+          - name: skrotLink
+            label: "Strona główna: odnośnik do wszystkich pytań"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Wszystkie pytania i odpowiedzi"
+
+          - name: stronaGlowna
+            label: "Ścieżka: odnośnik strony głównej"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Strona główna"
+
+          - name: okruszkiEtykieta
+            label: "Nazwa ścieżki (dla czytnika ekranu)"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Ścieżka"
+
+          - name: spisEtykieta
+            label: "Nazwa spisu pytań (dla czytnika ekranu)"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Spis pytań"
+
   # ── ③ TEKSTY STRONY ─────────────────────────────────────────────────────────
   # 🔴 KAŻDE pole niżej przechodzi przez funkcję `tekst()` z src/lib/tekst.ts:
   # puste pole NIE kasuje napisu ze strony, tylko przywraca napis domyślny wpisany
   # w kodzie. Podpowiedź każdego pola podaje ten domyślny napis wprost.
-  # JEDYNY wyjątek: Zdanie pod kafelkami — tam puste pole naprawdę usuwa całą sekcję
-  # i tak jest napisane w jego podpowiedzi.
+  # Wyjątki: Zdanie o spółce na końcu strony i Wstęp pod nagłówkiem realizacji —
+  # tam puste pole naprawdę usuwa sekcję albo akapit i tak jest napisane w podpowiedzi.
   - name: teksty
     label: "Teksty strony"
     files:
@@ -336,8 +476,8 @@ collections:
         file: "src/data/strona.json"
         description: >-
           Napisy strony głównej. Wyczyszczenie pola przywraca napis domyślny — strona
-          nie zostanie bez tytułu ani bez nagłówka. Wyjątkiem jest zdanie pod kafelkami:
-          puste pole usuwa tam całą sekcję.
+          nie zostanie bez tytułu ani bez nagłówka. Wyjątkiem jest zdanie o spółce na
+          końcu strony (puste pole usuwa całą sekcję) i wstęp realizacji (puste = bez akapitu).
         fields:
           - name: tytulKarty
             label: "Tytuł karty przeglądarki i wyniku w wyszukiwarce"
@@ -346,7 +486,7 @@ collections:
             hint: >-
               Napis na karcie przeglądarki i w niebieskiej linii wyniku Google. Najlepiej
               do 60 znaków — dłuższy Google urywa. Puste pole = wraca napis domyślny:
-              EcoPower Polska — serwisy spółki.
+              Strony i sklepy internetowe dla firm — EcoPower Polska.
 
           - name: opisWyszukiwarki
             label: "Opis dla wyszukiwarek"
@@ -355,27 +495,56 @@ collections:
             hint: >-
               Dwie linijki pod tytułem w wyniku Google, a także podpis strony przy
               udostępnianiu w komunikatorach. Najlepiej do 160 znaków. Puste pole =
-              wraca napis domyślny: EcoPower Polska nadzoruje kilka niezależnych
-              serwisów internetowych.
+              wraca napis domyślny: Budujemy strony internetowe i sklepy internetowe
+              dla firm: projekt, panel do edycji treści, hosting, domena i widoczność
+              w Google.
+
+          - name: naglowek
+            label: "Nagłówek strony (H1)"
+            widget: string
+            required: false
+            hint: >-
+              Największy napis na stronie głównej. Puste pole = wraca napis domyślny:
+              Budujemy strony i sklepy internetowe dla firm.
 
           - name: zdanieNaglowka
             label: "Zdanie w nagłówku strony"
             widget: string
             required: false
             hint: >-
-              Pierwsze zdanie, które odwiedzający czyta pod nazwą spółki. Puste pole =
-              wraca napis domyślny: Spółka nadzoruje kilka niezależnych serwisów
-              internetowych.
+              Zdanie pod nagłówkiem strony głównej. Puste pole = wraca napis domyślny:
+              Projekt, panel do edycji treści, hosting, domena, poczta i widoczność
+              w Google. Potem stronę utrzymujemy.
+
+          - name: hasloAkcji
+            label: "Napis odnośnika w nagłówku"
+            widget: string
+            required: false
+            hint: >-
+              Odnośnik pod nagłówkiem, prowadzi do sekcji kontaktu. Puste pole = wraca
+              napis domyślny: Zapytaj o stronę.
+
+          - name: naglowekRealizacji
+            label: "Nagłówek sekcji realizacji"
+            widget: string
+            required: false
+            hint: "Puste pole = wraca napis domyślny: Realizacje"
+
+          - name: wstepRealizacji
+            label: "Wstęp pod nagłówkiem realizacji (opcjonalnie)"
+            widget: text
+            required: false
+            hint: "Jedno zdanie nad kafelkami. Puste pole = bez akapitu, żaden napis domyślny nie wraca."
 
           - name: zdanieKoncowe
-            label: "Zdanie pod kafelkami"
+            label: "Zdanie o spółce na końcu strony"
             widget: text
             required: false
             pattern:
               - "^[\\s\\S]{0,400}$"
               - "Najwyżej 400 znaków"
             hint: >-
-              Zamknięcie strony pod listą serwisów. 🔴 To JEDYNE pole, w którym puste
+              Zamknięcie strony głównej, pod kontaktem. 🔴 W tym polu puste
               znaczy pusto: sekcja w ogóle się wtedy nie pokazuje, żaden napis domyślny
               nie wraca.
 
@@ -448,6 +617,42 @@ collections:
             hint: >-
               Odnośnik widoczny dopiero po naciśnięciu klawisza Tab, przeskakuje do
               treści. Puste pole = wraca napis domyślny: Przejdź do treści.
+
+      # ---- oferta (strona główna) ----
+      # Lustro src/data/oferta.json, czyta go src/components/Oferta.astro i /llms.txt.
+      - name: oferta
+        label: "Oferta (strona główna)"
+        file: "src/data/oferta.json"
+        fields:
+          - { name: zakresNaglowek, label: "Nagłówek: czym się zajmujemy", widget: string, required: false }
+          - { name: zakresLead, label: "Zdanie pod nagłówkiem oferty", widget: text, required: false }
+          - name: zakres
+            label: "Czym się zajmujemy"
+            widget: list
+            fields:
+              - { name: nazwa, label: "Nazwa", widget: string }
+              - { name: opis, label: "Opis", widget: text, required: false }
+          - { name: procesNaglowek, label: "Nagłówek: jak pracujemy", widget: string, required: false }
+          - name: proces
+            label: "Kroki pracy (kolejność = numer)"
+            widget: list
+            fields:
+              - { name: nazwa, label: "Krok", widget: string }
+              - { name: opis, label: "Opis", widget: text, required: false }
+          - { name: dostajeszNaglowek, label: "Nagłówek: co dostajesz", widget: string, required: false }
+          - { name: dostajesz, label: "Co dostajesz", widget: list, field: { name: pozycja, label: "Pozycja", widget: text } }
+          - { name: technologiaNaglowek, label: "Nagłówek: technologia", widget: string, required: false }
+          - name: technologia
+            label: "Dlaczego Astro i taki hosting"
+            widget: list
+            fields:
+              - { name: nazwa, label: "Nazwa", widget: string }
+              - { name: opis, label: "Opis", widget: text, required: false }
+          - { name: kontaktNaglowek, label: "Nagłówek kontaktu", widget: string, required: false }
+          - { name: kontaktTekst, label: "Tekst kontaktu", widget: text, required: false }
+          - { name: kontaktMail, label: "Napis odnośnika e-mail", widget: string, required: false }
+          - { name: kontaktTelefon, label: "Napis odnośnika telefonu", widget: string, required: false }
+          - { name: kontaktSiedziba, label: "Etykieta adresu siedziby", widget: string, required: false }
 
       # ---- stopka ----
       - name: stopka
@@ -539,8 +744,11 @@ collections:
           Napisy listy wpisów /blog/, pozycji menu w górnym pasku i w stopce oraz stron
           wpisów. Wyczyszczenie pola przywraca napis domyślny.
         fields:
-          - { name: menuSerwisy, label: "Menu: pozycja strony głównej", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Serwisy" }
+          - { name: menuOferta, label: "Menu i stopka: pozycja oferty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Oferta" }
+          - { name: menuRealizacje, label: "Menu i stopka: pozycja realizacji", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Realizacje" }
+          - { name: menuFaq, label: "Menu: pozycja pytań i odpowiedzi", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: FAQ" }
           - { name: menuBlog, label: "Menu i stopka: pozycja bloga", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog" }
+          - { name: menuKontakt, label: "Menu i stopka: pozycja kontaktu", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Kontakt" }
           - { name: stronaGlowna, label: "Stopka i ścieżka: odnośnik strony głównej", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strona główna" }
           - { name: tytulKarty, label: "Lista wpisów: tytuł karty i wyniku w wyszukiwarce", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog — EcoPower Polska" }
           - { name: opisWyszukiwarki, label: "Lista wpisów: opis dla wyszukiwarek", widget: text, required: false, hint: "Puste pole = wraca napis domyślny." }
@@ -574,7 +782,7 @@ collections:
             required: false
             hint: >-
               Puste pole = wraca napis domyślny: Pod tym adresem nic nie ma. Wróć na
-              stronę główną z listą serwisów EcoPower Polska.
+              stronę główną EcoPower Polska: strony i sklepy internetowe dla firm.
 
           - name: naglowek
             label: "Nagłówek na stronie błędu"
@@ -596,7 +804,7 @@ collections:
             required: false
             hint: >-
               Odnośnik prowadzący na stronę główną. Puste pole = wraca napis domyślny:
-              Wróć na stronę główną z listą serwisów.
+              Wróć na stronę główną.
 
   # ── ④ DANE FIRMY ────────────────────────────────────────────────────────────
   - name: firma
@@ -633,3 +841,8 @@ collections:
             widget: string
             required: false
             hint: "Puste = nie pokazuje się w stopce. Do uzupełnienia przez Piotra."
+          # Adres pocztowy z odpisu KRS — idzie do danych strukturalnych (LocalBusiness) i /llms.txt.
+          - { name: kodPocztowy, label: "Kod pocztowy", widget: string, required: false }
+          - { name: miejscowosc, label: "Miejscowość", widget: string, required: false }
+          - { name: wojewodztwo, label: "Województwo", widget: string, required: false }
+          - { name: kraj, label: "Kraj (kod, np. PL)", widget: string, required: false }

@@ -4,15 +4,15 @@
   "menuFaq": "FAQ",
   "menuBlog": "Blog",
   "menuKontakt": "Kontakt",
-  "etykietaMenu": "Menu główne",
-  "etykietaMenuStopki": "Strony witryny",
-  "tytulKarty": "Blog — EcoPower Polska",
-  "opisWyszukiwarki": "Wpisy EcoPower Polska o spółce i serwisach, które nadzoruje.",
-  "naglowek": "Blog",
-  "lead": "Wpisy o spółce i serwisach, które nadzoruje.",
+  "stronaGlowna": "Strona główna",
+  "tytulKarty": "Blog o stronach i sklepach internetowych — EcoPower Polska",
+  "opisWyszukiwarki": "Wpisy EcoPower Polska o budowie stron i sklepów internetowych dla firm: wybór drogi, czas budowy, panel treści, hosting i widoczność w Google.",
+  "naglowek": "Blog o stronach i sklepach internetowych",
+  "lead": "Piszemy o tym, jak budujemy strony i sklepy internetowe dla firm: od wyboru drogi, przez panel treści, po publikację i utrzymanie.",
   "pusto": "Nie ma jeszcze wpisów.",
   "opublikowano": "Opublikowano",
   "wszystkie": "Wszystkie wpisy",
-  "okruszkiEtykieta": "Ścieżka",
-  "stronaGlowna": "Strona główna"
+  "etykietaMenu": "Menu główne",
+  "etykietaMenuStopki": "Strony witryny",
+  "okruszkiEtykieta": "Ścieżka"
 }

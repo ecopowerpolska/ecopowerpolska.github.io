@@ -95,6 +95,16 @@
   --szerokosc-tresci: 76rem;
   /* Miara akapitu (nie całej strony) — utrzymuje linię tekstu pod ~75 znaków. */
   --miara: 36rem;
+
+  /* Ruch ujawniania sekcji przy przewijaniu (src/components/Ujawnianie.astro, decyzja Piotra
+     2026-10-23: efekt przewijania w dwóch kierunkach, stylowo i z klasą). Tylko opacity
+     i transform, więc układ stoi (CLS 0). Wyjście = 2/3 wejścia; krzywa miękka, bez odbicia.
+     Przesunięcie 1.25rem = 20 px. Schodek = odstęp między kafelkami wchodzącymi razem. */
+  --ruch-wejscie: 600ms;
+  --ruch-wyjscie: 400ms;
+  --ruch-krzywa: cubic-bezier(0.22, 1, 0.36, 1);
+  --ruch-przesuniecie: 1.25rem;
+  --ruch-schodek: 70ms;
 }
 
 *,

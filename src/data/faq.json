@@ -1,99 +1,99 @@
 {
-  "tytulKarty": "Pytania o strony i sklepy internetowe — EcoPower Polska",
-  "opisWyszukiwarki": "Ile trwa zrobienie strony, czy sam zmienisz treść, co z domeną, pocztą i hostingiem, jaki sklep internetowy wybrać. Odpowiedzi EcoPower Polska.",
+  "pytania": [
+    {
+      "pytanie": "Ile trwa zrobienie strony internetowej?",
+      "odpowiedz": "Termin podajemy po rozmowie o zakresie: liczbie podstron, formularzach, sklepie i przenoszeniu treści ze starej strony. Najdłużej trwa zwykle zebranie materiałów, czyli tekstów, zdjęć i danych firmy. Stronę budujemy w wersji roboczej, a publikujemy dopiero wtedy, gdy przejdzie kontrolę szybkości, dostępności i danych dla wyszukiwarek.",
+      "kotwica": "ile-trwa",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Co muszę przygotować przed rozpoczęciem pracy?",
+      "odpowiedz": "Dane firmy (pełna nazwa, NIP, adres, telefon, e-mail), opis usług własnymi słowami, logo i zdjęcia oraz dostęp do domeny u rejestratora albo w panelu DNS. Teksty możemy napisać na podstawie Twoich informacji. Na stronę wstawiamy wyłącznie prawdziwe fotografie, Twoje albo z banku zdjęć, a nie obrazy wygenerowane przez AI.",
+      "kotwica": "co-przygotowac",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Czy sam zmienię treść na stronie?",
+      "odpowiedz": "Tak. Strona dostaje panel treści pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy. Panel Sveltia zapisuje zmiany w repozytorium strony, a strona przebudowuje się sama w ciągu kilku minut. Jeśli nie chcesz zakładać konta na GitHubie, robimy panel w PHP na hostingu, do którego logujesz się hasłem. Wyczyszczone pole przywraca napis domyślny, więc strona nie zostanie bez nagłówka.",
+      "kotwica": "edycja-tresci",
+      "naGlownej": true
+    },
+    {
+      "pytanie": "Gdzie stoi strona?",
+      "odpowiedz": "Strony z formularzem, sprzedażą albo rezerwacjami stoją na hostingu lh.pl, każda w osobnej przestrzeni z oddzielonym katalogiem i własną wersją PHP. Stronę buduje GitHub Actions, a na hosting trafiają gotowe pliki. Prosta wizytówka bez sprzedaży może stać na GitHub Pages; repozytorium strony jest wtedy publiczne, więc publiczna jest też historia jej zmian.",
+      "kotwica": "hosting",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Mam już domenę i starą stronę. Co z nimi?",
+      "odpowiedz": "Domena zostaje u Twojego rejestratora, a do nowej strony podpinamy ją rekordami DNS. Treści i zdjęcia ze starej strony przenosimy, a stare adresy przekierowujemy na odpowiadające im nowe przekierowaniem 301 po stronie serwera. Dzięki temu działają dawne linki, a Google dostaje jasny sygnał, gdzie jest nowa wersja każdej podstrony. Po przełączeniu zgłaszamy nową mapę strony w Search Console.",
+      "kotwica": "domena-i-stara-strona",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Czy przy przepięciu domeny stracę pocztę?",
+      "odpowiedz": "Nie powinieneś, bo przy przepinaniu domeny najłatwiej zepsuć właśnie pocztę, więc pilnujemy jej osobno. Przed zmianą zapisujemy komplet rekordów strefy jako punkt powrotu i zmieniamy tylko rekordy adresowe strony; rekordy MX, SPF, DKIM, DMARC i nazwy serwerów pocztowych zostają bez zmian. Pracę uznajemy za skończoną dopiero wtedy, gdy list testowy dochodzi w obie strony.",
+      "kotwica": "poczta",
+      "naGlownej": true
+    },
+    {
+      "pytanie": "Czy strona będzie szybka na telefonie?",
+      "odpowiedz": "Tak. Strony budujemy w Astro: do przeglądarki trafia gotowy HTML, bez składania strony z bazy danych przy każdym wejściu i bez zbędnego JavaScriptu. Zdjęcia są przygotowane w kilku rozmiarach, więc telefon pobiera mniejszy plik niż monitor. Wynik sprawdzamy pomiarem PageSpeed Insights po publikacji: kuchnia-na-wymiar-warszawa.pl i garderoba-na-wymiar-warszawa.pl dostały w nim na telefonie od 99 do 100 punktów.",
+      "kotwica": "szybkosc",
+      "naGlownej": true
+    },
+    {
+      "pytanie": "Jaki sklep internetowy możecie zrobić?",
+      "odpowiedz": "Są trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.",
+      "kotwica": "sklep",
+      "naGlownej": true
+    },
+    {
+      "pytanie": "Co z RODO, polityką prywatności i ciasteczkami?",
+      "odpowiedz": "Polityka prywatności opisuje to, co strona robi naprawdę: kto jest administratorem danych, dokąd trafia zgłoszenie z formularza i jakie usługi je przetwarzają, na przykład hosting i Cloudflare. Pasek zgody pokazujemy tylko wtedy, gdy na stronie jest coś, co zgody wymaga, na przykład Google Analytics, które włącza się dopiero po zgodzie. Politykę poprawiamy przy każdej zmianie formularza albo analityki.",
+      "kotwica": "rodo",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Jak chronicie formularz kontaktowy przed spamem?",
+      "odpowiedz": "Formularz obsługuje skrypt PHP na hostingu i sprawdza każde zgłoszenie po stronie serwera: adres strony, z której przyszło, ukryte pole-pułapkę i weryfikację Cloudflare Turnstile. Zgłoszenie bez ważnej weryfikacji serwer odrzuca, zanim cokolwiek trafi do Twojej skrzynki. Klucz tajny Turnstile leży na hostingu, a nie w kodzie strony.",
+      "kotwica": "spam",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Gdzie jest kod mojej strony i co z kopiami zapasowymi?",
+      "odpowiedz": "Każda strona ma własne repozytorium git na GitHubie, osobne dla każdego klienta, z pełną historią zmian. Każda zmiana, także z panelu, jest w niej osobnym wpisem, który da się cofnąć, a całą stronę można odbudować z repozytorium. Hosting lh.pl robi dodatkowo codzienną kopię plików i baz danych, przechowywaną 30 dni. Przy sklepie bazę zamówień kopiujemy także poza hosting.",
+      "kotwica": "kod-i-kopie",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Czy strona może mieć blog?",
+      "odpowiedz": "Tak. Każdy wpis jest osobną podstroną z datą publikacji, a strona ma listę wpisów i kanał RSS. Wpisy dodajesz w panelu albo zlecasz nam: temat dobieramy z danych Search Console i Planera słów kluczowych, tekst piszemy z faktów Twojej firmy, a zdjęcia są prawdziwe. Wpis z datą w przyszłości pojawi się sam przy pierwszej przebudowie strony po tej dacie.",
+      "kotwica": "blog",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Czy zajmiecie się wizytówką firmy w Google?",
+      "odpowiedz": "Tak. Uzupełniamy Profil Firmy w Google: kategorie, usługi, obszar działania, godziny, opis, zdjęcia i wpisy z linkiem do strony, a także odpowiedzi na opinie. Nazwę, adres i telefon prowadzimy w wizytówce i na stronie jednakowo. Weryfikację profilu przechodzi właściciel firmy; Google może poprosić o krótki film z miejsca działalności.",
+      "kotwica": "wizytowka-google",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Czy strona będzie widoczna w Google?",
+      "odpowiedz": "Każdą stronę zgłaszamy w Google Search Console oraz w Bing przez IndexNow, z mapą strony, adresami kanonicznymi, tytułami i opisami pisanymi pod to, czego szukają Twoi klienci, i z danymi firmy w danych strukturalnych. Pozycji w wynikach nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console.",
+      "kotwica": "widocznosc-w-google",
+      "naGlownej": false
+    }
+  ],
   "naglowek": "Pytania o strony i sklepy internetowe",
   "lead": "Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe: czas, treść, hosting, domena, poczta, bezpieczeństwo i widoczność w Google.",
-  "okruszkiEtykieta": "Ścieżka",
-  "stronaGlowna": "Strona główna",
-  "spisEtykieta": "Spis pytań",
+  "tytulKarty": "Pytania o strony i sklepy internetowe — EcoPower Polska",
+  "opisWyszukiwarki": "Ile trwa zrobienie strony, czy sam zmienisz treść, co z domeną, pocztą i hostingiem, jaki sklep internetowy wybrać. Odpowiedzi EcoPower Polska.",
   "kontaktNaglowek": "Nie ma tu Twojego pytania?",
   "kontaktTekst": "Napisz albo zadzwoń. Odpowiemy na pytanie o Twoją stronę lub sklep.",
   "skrotNaglowek": "Najczęstsze pytania",
   "skrotLink": "Wszystkie pytania i odpowiedzi",
-  "pytania": [
-    {
-      "kotwica": "ile-trwa",
-      "pytanie": "Ile trwa zrobienie strony internetowej?",
-      "odpowiedz": "Termin podajemy po rozmowie o zakresie: liczbie podstron, formularzach, sklepie i przenoszeniu treści ze starej strony. Najdłużej trwa zwykle zebranie materiałów, czyli tekstów, zdjęć i danych firmy. Stronę budujemy w wersji roboczej, a publikujemy dopiero wtedy, gdy przejdzie kontrolę szybkości, dostępności i danych dla wyszukiwarek.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "co-przygotowac",
-      "pytanie": "Co muszę przygotować przed rozpoczęciem pracy?",
-      "odpowiedz": "Dane firmy (pełna nazwa, NIP, adres, telefon, e-mail), opis usług własnymi słowami, logo i zdjęcia oraz dostęp do domeny u rejestratora albo w panelu DNS. Teksty możemy napisać na podstawie Twoich informacji. Na stronę wstawiamy wyłącznie prawdziwe fotografie, Twoje albo z banku zdjęć, a nie obrazy wygenerowane przez AI.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "edycja-tresci",
-      "pytanie": "Czy sam zmienię treść na stronie?",
-      "odpowiedz": "Tak. Strona dostaje panel treści pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy. Panel Sveltia zapisuje zmiany w repozytorium strony, a strona przebudowuje się sama w ciągu kilku minut. Jeśli nie chcesz zakładać konta na GitHubie, robimy panel w PHP na hostingu, do którego logujesz się hasłem. Wyczyszczone pole przywraca napis domyślny, więc strona nie zostanie bez nagłówka.",
-      "naGlownej": true
-    },
-    {
-      "kotwica": "hosting",
-      "pytanie": "Gdzie stoi strona?",
-      "odpowiedz": "Strony z formularzem, sprzedażą albo rezerwacjami stoją na hostingu lh.pl, każda w osobnej przestrzeni z oddzielonym katalogiem i własną wersją PHP. Stronę buduje GitHub Actions, a na hosting trafiają gotowe pliki. Prosta wizytówka bez sprzedaży może stać na GitHub Pages; repozytorium strony jest wtedy publiczne, więc publiczna jest też historia jej zmian.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "domena-i-stara-strona",
-      "pytanie": "Mam już domenę i starą stronę. Co z nimi?",
-      "odpowiedz": "Domena zostaje u Twojego rejestratora, a do nowej strony podpinamy ją rekordami DNS. Treści i zdjęcia ze starej strony przenosimy, a stare adresy przekierowujemy na odpowiadające im nowe przekierowaniem 301 po stronie serwera. Dzięki temu działają dawne linki, a Google dostaje jasny sygnał, gdzie jest nowa wersja każdej podstrony. Po przełączeniu zgłaszamy nową mapę strony w Search Console.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "poczta",
-      "pytanie": "Czy przy przepięciu domeny stracę pocztę?",
-      "odpowiedz": "Nie powinieneś, bo przy przepinaniu domeny najłatwiej zepsuć właśnie pocztę, więc pilnujemy jej osobno. Przed zmianą zapisujemy komplet rekordów strefy jako punkt powrotu i zmieniamy tylko rekordy adresowe strony; rekordy MX, SPF, DKIM, DMARC i nazwy serwerów pocztowych zostają bez zmian. Pracę uznajemy za skończoną dopiero wtedy, gdy list testowy dochodzi w obie strony.",
-      "naGlownej": true
-    },
-    {
-      "kotwica": "szybkosc",
-      "pytanie": "Czy strona będzie szybka na telefonie?",
-      "odpowiedz": "Tak. Strony budujemy w Astro: do przeglądarki trafia gotowy HTML, bez składania strony z bazy danych przy każdym wejściu i bez zbędnego JavaScriptu. Zdjęcia są przygotowane w kilku rozmiarach, więc telefon pobiera mniejszy plik niż monitor. Wynik sprawdzamy pomiarem PageSpeed Insights po publikacji: kuchnia-na-wymiar-warszawa.pl i garderoba-na-wymiar-warszawa.pl dostały w nim na telefonie od 99 do 100 punktów.",
-      "naGlownej": true
-    },
-    {
-      "kotwica": "sklep",
-      "pytanie": "Jaki sklep internetowy możecie zrobić?",
-      "odpowiedz": "Są trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.",
-      "naGlownej": true
-    },
-    {
-      "kotwica": "rodo",
-      "pytanie": "Co z RODO, polityką prywatności i ciasteczkami?",
-      "odpowiedz": "Polityka prywatności opisuje to, co strona robi naprawdę: kto jest administratorem danych, dokąd trafia zgłoszenie z formularza i jakie usługi je przetwarzają, na przykład hosting i Cloudflare. Pasek zgody pokazujemy tylko wtedy, gdy na stronie jest coś, co zgody wymaga, na przykład Google Analytics, które włącza się dopiero po zgodzie. Politykę poprawiamy przy każdej zmianie formularza albo analityki.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "spam",
-      "pytanie": "Jak chronicie formularz kontaktowy przed spamem?",
-      "odpowiedz": "Formularz obsługuje skrypt PHP na hostingu i sprawdza każde zgłoszenie po stronie serwera: adres strony, z której przyszło, ukryte pole-pułapkę i weryfikację Cloudflare Turnstile. Zgłoszenie bez ważnej weryfikacji serwer odrzuca, zanim cokolwiek trafi do Twojej skrzynki. Klucz tajny Turnstile leży na hostingu, a nie w kodzie strony.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "kod-i-kopie",
-      "pytanie": "Gdzie jest kod mojej strony i co z kopiami zapasowymi?",
-      "odpowiedz": "Każda strona ma własne repozytorium git na GitHubie, osobne dla każdego klienta, z pełną historią zmian. Każda zmiana, także z panelu, jest w niej osobnym wpisem, który da się cofnąć, a całą stronę można odbudować z repozytorium. Hosting lh.pl robi dodatkowo codzienną kopię plików i baz danych, przechowywaną 30 dni. Przy sklepie bazę zamówień kopiujemy także poza hosting.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "blog",
-      "pytanie": "Czy strona może mieć blog?",
-      "odpowiedz": "Tak. Każdy wpis jest osobną podstroną z datą publikacji, a strona ma listę wpisów i kanał RSS. Wpisy dodajesz w panelu albo zlecasz nam: temat dobieramy z danych Search Console i Planera słów kluczowych, tekst piszemy z faktów Twojej firmy, a zdjęcia są prawdziwe. Wpis z datą w przyszłości pojawi się sam przy pierwszej przebudowie strony po tej dacie.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "wizytowka-google",
-      "pytanie": "Czy zajmiecie się wizytówką firmy w Google?",
-      "odpowiedz": "Tak. Uzupełniamy Profil Firmy w Google: kategorie, usługi, obszar działania, godziny, opis, zdjęcia i wpisy z linkiem do strony, a także odpowiedzi na opinie. Nazwę, adres i telefon prowadzimy w wizytówce i na stronie jednakowo. Weryfikację profilu przechodzi właściciel firmy; Google może poprosić o krótki film z miejsca działalności.",
-      "naGlownej": false
-    },
-    {
-      "kotwica": "widocznosc-w-google",
-      "pytanie": "Czy strona będzie widoczna w Google?",
-      "odpowiedz": "Każdą stronę zgłaszamy w Google Search Console oraz w Bing przez IndexNow, z mapą strony, adresami kanonicznymi, tytułami i opisami pisanymi pod to, czego szukają Twoi klienci, i z danymi firmy w danych strukturalnych. Pozycji w wynikach nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console.",
-      "naGlownej": false
-    }
-  ]
+  "stronaGlowna": "Strona główna",
+  "okruszkiEtykieta": "Ścieżka",
+  "spisEtykieta": "Spis pytań"
 }

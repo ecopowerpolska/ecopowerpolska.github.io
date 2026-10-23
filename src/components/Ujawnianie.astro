@@ -1,0 +1,177 @@
+---
+// Ujawnianie.astro - subtelne ujawnianie sekcji przy przewijaniu w OBU kierunkach
+// i cienka linia postępu przewijania (decyzja Piotra 2026-10-23: stylowo i z klasą).
+// Wstawiany raz w Bazowy.astro. Sekcje oznacza się atrybutem `data-ujawnij` (pusty w HTML).
+//
+// Zasady, których ten plik pilnuje:
+//  - Bez JS wszystko jest WIDOCZNE: stan ukryty nadaje dopiero skrypt (data-ujawnij="dol|gora").
+//  - Co przy wejściu na stronę już jest w oknie (hero, pierwsza karta bloga), nie jest ruszane:
+//    zero mignięcia, LCP bez zmian. Hero nie ma atrybutu wcale.
+//  - Tylko opacity/transform: układ nie drgnie (CLS 0). Opacity 0 nie wyjmuje treści z drzewa
+//    dostępności; fokus z klawiatury przewija element w okno, więc ten się pokazuje.
+//  - prefers-reduced-motion: reduce -> skrypt nic nie robi, a CSS i tak wymusza stan widoczny.
+//  - W dół sekcja wjeżdża od dołu; w górę ten sam ruch z góry. Elementy wchodzące razem
+//    (kafelki) dostają schodek w kolejności kierunku przewijania (porównanie scrollY).
+// Linia postępu: najpierw CSS scroll-driven animation (poza głównym wątkiem), skrypt tylko
+// tam, gdzie przeglądarka jej nie zna.
+---
+
+<div class="postep-przewijania" aria-hidden="true"></div>
+
+<script>
+  const ograniczonyRuch = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!ograniczonyRuch && 'IntersectionObserver' in window) {
+    let ostatnieY = scrollY;
+    let wDol = true;
+    let klatka = 0;
+    const linia = CSS.supports('animation-timeline: scroll()')
+      ? null
+      : document.querySelector<HTMLElement>('.postep-przewijania');
+
+    const rysujLinie = () => {
+      klatka = 0;
+      if (!linia) return;
+      const zakres = document.documentElement.scrollHeight - innerHeight;
+      linia.style.transform = `scaleX(${zakres > 0 ? Math.min(1, scrollY / zakres) : 0})`;
+    };
+
+    addEventListener(
+      'scroll',
+      () => {
+        const y = scrollY;
+        if (y !== ostatnieY) {
+          wDol = y > ostatnieY;
+          ostatnieY = y;
+        }
+        if (linia && !klatka) klatka = requestAnimationFrame(rysujLinie);
+      },
+      { passive: true },
+    );
+    rysujLinie();
+
+    const widziane = new WeakSet<Element>();
+    const obserwator = new IntersectionObserver(
+      (wpisy) => {
+        let schodek = 0;
+        // Przy przewijaniu w górę pierwszy pokazuje się element najbliżej górnej krawędzi.
+        for (const wpis of wDol ? wpisy : [...wpisy].reverse()) {
+          const el = wpis.target as HTMLElement;
+          const r = wpis.boundingClientRect;
+
+          if (!widziane.has(el)) {
+            widziane.add(el);
+            // Ukrywamy tylko to, czego w oknie naprawdę nie widać - nic nie znika na oczach.
+            if (r.top >= innerHeight) el.dataset.ujawnij = 'dol';
+            else if (r.bottom <= 0) el.dataset.ujawnij = 'gora';
+            continue;
+          }
+
+          if (wpis.isIntersecting) {
+            // Po skoku kotwicą element mógł przelecieć nad oknem bez zdarzenia i stać po złej
+            // stronie: ustawiamy właściwą bez przejścia, dopiero potem wejście.
+            const strona = wDol ? 'dol' : 'gora';
+            if (el.dataset.ujawnij !== strona && el.dataset.ujawnij !== 'tak') {
+              el.style.transition = 'none';
+              el.dataset.ujawnij = strona;
+              void el.offsetWidth;
+              el.style.transition = '';
+            }
+            el.style.setProperty('--ujawnij-zwloka', `calc(var(--ruch-schodek) * ${Math.min(schodek++, 5)})`);
+            el.dataset.ujawnij = 'tak';
+          } else {
+            // Strona, którą element wyszedł = strona, z której wróci.
+            el.dataset.ujawnij = r.top > 0 ? 'dol' : 'gora';
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px' },
+    );
+
+    for (const el of document.querySelectorAll('[data-ujawnij]')) obserwator.observe(el);
+  }
+</script>
+
+<style is:global>
+  /* Stan ukryty istnieje tylko wtedy, gdy nadał go skrypt (wartość atrybutu niepusta). */
+  [data-ujawnij='dol'],
+  [data-ujawnij='gora'] {
+    opacity: 0;
+    transition:
+      opacity var(--ruch-wyjscie) var(--ruch-krzywa),
+      transform var(--ruch-wyjscie) var(--ruch-krzywa);
+  }
+
+  [data-ujawnij='dol'] {
+    transform: translate3d(0, var(--ruch-przesuniecie), 0);
+  }
+
+  [data-ujawnij='gora'] {
+    transform: translate3d(0, calc(-1 * var(--ruch-przesuniecie)), 0);
+  }
+
+  [data-ujawnij='tak'] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--ruch-wejscie) var(--ruch-krzywa) var(--ujawnij-zwloka, 0ms),
+      transform var(--ruch-wejscie) var(--ruch-krzywa) var(--ujawnij-zwloka, 0ms);
+  }
+
+  /* Linia postępu: 2 px akcentu nad przyklejonym paskiem (z-index 5), poza układem strony. */
+  .postep-przewijania {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 6;
+    height: 2px;
+    background: var(--akcent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    pointer-events: none;
+  }
+
+  /* Długie nazwy celowo: minifikator składał je w skrót `animation: ... scroll(root)`, a skrót
+     animation nie przyjmuje osi czasu (animation-timeline tylko się w nim zeruje), więc
+     przeglądarka odrzucała całą deklarację. Zmiennej minifikator nie składa. */
+  @supports (animation-timeline: scroll()) {
+    .postep-przewijania {
+      --os-przewijania: scroll(root block);
+      animation-name: postep-przewijania;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--os-przewijania);
+    }
+  }
+
+  @keyframes postep-przewijania {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ujawnij] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .postep-przewijania {
+      display: none;
+    }
+  }
+
+  @media print {
+    [data-ujawnij] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .postep-przewijania {
+      display: none;
+    }
+  }
+</style>

@@ -43,7 +43,7 @@ const daneStrukturalne = {
 
 <Bazowy
   tytul={tekst(teksty.tytulKarty, 'Blog — EcoPower Polska')}
-  opis={tekst(teksty.opisWyszukiwarki, 'Wpisy EcoPower Polska o spółce i serwisach, które nadzoruje.')}
+  opis={tekst(teksty.opisWyszukiwarki, 'Wpisy EcoPower Polska o budowie stron i sklepów internetowych dla firm: wybór drogi, czas budowy, panel treści, hosting i widoczność w Google.')}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
 
@@ -51,13 +51,13 @@ const daneStrukturalne = {
 
   <main id="tresc" class="blog">
     <h1 class="blog__tytul">{naglowek}</h1>
-    <p class="blog__lead">{tekst(teksty.lead, 'Wpisy o spółce i serwisach, które nadzoruje.')}</p>
+    <p class="blog__lead">{tekst(teksty.lead, 'Piszemy o tym, jak budujemy strony i sklepy internetowe dla firm: od wyboru drogi, przez panel treści, po publikację i utrzymanie.')}</p>
 
     {
       wpisy.length > 0 ? (
         <ul class="blog__lista">
           {wpisy.map((w, i) => (
-            <li>
+            <li data-ujawnij>
               <a class="karta" href={w.adres}>
                 {w.obraz && (
                   <Image
@@ -100,7 +100,8 @@ const daneStrukturalne = {
   }
 
   .blog__tytul {
-    font-size: var(--t-xxl);
+    /* Jak .wpis__tytul: przy 320 px słowo „internetowych” w --t-xxl (44 px) miało 307 px i rozpychało stronę do 355 px. */
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
   }
 
   .blog__lead {

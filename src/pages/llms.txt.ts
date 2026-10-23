@@ -68,7 +68,7 @@ export const GET: APIRoute = async () => {
     '',
     `- [Strona główna](${baza}/): oferta, realizacje, kontakt i dane rejestrowe spółki.`,
     `- [Pytania i odpowiedzi](${baza}/faq/): najczęstsze pytania o strony i sklepy.`,
-    `- [Blog](${baza}/blog/): wpisy o spółce i jej pracy.`,
+    `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów internetowych.`,
     '',
   ];
 

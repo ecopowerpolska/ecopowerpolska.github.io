@@ -115,14 +115,14 @@ const daneStrukturalne = {
 
     <div class="lista">
       {pytania.map((p) => (
-        <section class="pytanie" aria-labelledby={p.kotwica}>
+        <section class="pytanie" aria-labelledby={p.kotwica} data-ujawnij>
           <h2 id={p.kotwica} class="pytanie__tytul">{p.pytanie}</h2>
           {p.akapity.map((a) => <p>{a}</p>)}
         </section>
       ))}
     </div>
 
-    <section class="kontakt" aria-labelledby="faq-kontakt">
+    <section class="kontakt" aria-labelledby="faq-kontakt" data-ujawnij>
       <h2 id="faq-kontakt" class="kontakt__tytul">{napis('kontaktNaglowek', 'Nie ma tu Twojego pytania?')}</h2>
       <p>{napis('kontaktTekst', 'Napisz albo zadzwoń.')}</p>
       <ul class="kontakt__dane">

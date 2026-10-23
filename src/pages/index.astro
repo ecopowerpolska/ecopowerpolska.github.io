@@ -62,7 +62,7 @@ const lead = tekst(
 
     {/* Zamknięcie: puste pole w panelu = sekcja znika (D9), więc bez tekst(). */}
     {strona.zdanieKoncowe?.trim() && (
-      <section id="o-spolce" class="zamkniecie" aria-label={tekst(strona.etykietaSekcjiZamykajacej, 'O spółce')}>
+      <section id="o-spolce" class="zamkniecie" data-ujawnij aria-label={tekst(strona.etykietaSekcjiZamykajacej, 'O spółce')}>
         <p>{strona.zdanieKoncowe}</p>
       </section>
     )}

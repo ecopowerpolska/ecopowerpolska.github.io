@@ -47,7 +47,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
   czesc === 'oferta' ? (
     <>
       {zakres.length > 0 && (
-        <section id="oferta" class="sekcja" aria-labelledby="oferta-naglowek">
+        <section id="oferta" class="sekcja" aria-labelledby="oferta-naglowek" data-ujawnij>
           <h2 id="oferta-naglowek" class="sekcja__naglowek">{napis('zakresNaglowek', 'Czym się zajmujemy')}</h2>
           {o.zakresLead && <p class="sekcja__lead">{String(o.zakresLead)}</p>}
           <ul class="zakres">
@@ -62,7 +62,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
       )}
 
       {proces.length > 0 && (
-        <section id="jak-pracujemy" class="sekcja" aria-labelledby="proces-naglowek">
+        <section id="jak-pracujemy" class="sekcja" aria-labelledby="proces-naglowek" data-ujawnij>
           <h2 id="proces-naglowek" class="sekcja__naglowek">{napis('procesNaglowek', 'Jak pracujemy')}</h2>
           {/* Lista numerowana, bo to kolejne kroki (numer niesie <ol>, nie ozdoba). */}
           <ol class="proces">
@@ -77,7 +77,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
       )}
 
       {(dostajesz.length > 0 || technologia.length > 0) && (
-        <div class="sekcja dwie">
+        <div class="sekcja dwie" data-ujawnij>
           {dostajesz.length > 0 && (
             <section aria-labelledby="dostajesz-naglowek">
               <h2 id="dostajesz-naglowek" class="sekcja__naglowek">{napis('dostajeszNaglowek', 'Co dostajesz')}</h2>
@@ -107,7 +107,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
       )}
     </>
   ) : (
-    <section id="kontakt" class="sekcja kontakt" aria-labelledby="kontakt-naglowek">
+    <section id="kontakt" class="sekcja kontakt" aria-labelledby="kontakt-naglowek" data-ujawnij>
       <h2 id="kontakt-naglowek" class="sekcja__naglowek">{napis('kontaktNaglowek', 'Kontakt')}</h2>
       <p class="sekcja__lead">
         {napis(

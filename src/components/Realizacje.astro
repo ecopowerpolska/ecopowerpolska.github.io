@@ -29,13 +29,13 @@ const zakresWpisu = (dane: unknown): string | undefined => (dane as { zakres?: s
 {
   realizacje.length > 0 && (
     <section class="realizacje" id={kotwica} aria-labelledby={idNaglowka}>
-      <h2 id={idNaglowka} class="realizacje__naglowek">
+      <h2 id={idNaglowka} class="realizacje__naglowek" data-ujawnij>
         {tekst(naglowek, 'Realizacje')}
       </h2>
-      {wstepTekst && <p class="realizacje__wstep">{wstepTekst}</p>}
+      {wstepTekst && <p class="realizacje__wstep" data-ujawnij>{wstepTekst}</p>}
       <ul class="realizacje__siatka">
         {realizacje.map((wpis, i) => (
-          <li>
+          <li data-ujawnij>
             <Kafelek
               nazwa={wpis.data.nazwa}
               adres={wpis.data.adres}

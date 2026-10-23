@@ -30,7 +30,7 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
 ---
 
 {pytania.length > 0 && (
-  <section class="faq-skrot" aria-labelledby="faq-skrot-tytul">
+  <section class="faq-skrot" aria-labelledby="faq-skrot-tytul" data-ujawnij>
     <h2 id="faq-skrot-tytul" class="faq-skrot__tytul">{napis('skrotNaglowek', 'Najczęstsze pytania')}</h2>
     <div class="faq-skrot__lista">
       {pytania.map((p) => (

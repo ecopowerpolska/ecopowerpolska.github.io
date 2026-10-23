@@ -4,6 +4,7 @@
 // całą witrynę jako zero-JS. Przy jednej trasie nie ma między czym przechodzić.
 import '../styles/motyw.css';
 import { Font } from 'astro:assets';
+import Ujawnianie from '../components/Ujawnianie.astro';
 import strona from '../data/strona.json';
 import { tekst } from '../lib/tekst';
 
@@ -76,6 +77,7 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
   </head>
   <body>
     <a class="skip" href="#tresc">{linkPomijania}</a>
+    <Ujawnianie />
     <slot />
   </body>
 </html>

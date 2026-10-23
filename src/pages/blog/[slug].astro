@@ -1,0 +1,242 @@
+---
+// Jeden wpis bloga: /blog/<id>/ → dist/blog/<id>/index.html. Adres dostają wyłącznie wpisy z opublikowane() (src/lib/wpisy.ts).
+// Treść Markdown renderuje Astro 7 domyślnym procesorem, bez wtyczek. Wzorzec: pan-stolarz.pl src/pages/blog/[slug].astro,
+// uproszczony do jednej trasy statycznej na GitHub Pages. Okruszki widoczne = BreadcrumbList w JSON-LD, wpis = BlogPosting.
+import type { InferGetStaticPropsType } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../../components/PasekMarki.astro';
+import Stopka from '../../components/Stopka.astro';
+import teksty from '../../data/blog.json';
+import firma from '../../data/firma.json';
+import { tekst } from '../../lib/tekst';
+import { opublikowane, adresWpisu, dataPoPolsku, plikObrazu } from '../../lib/wpisy';
+
+export async function getStaticPaths() {
+  const wpisy = await opublikowane();
+  return wpisy.map((wpis) => ({ params: { slug: wpis.id }, props: { wpis } }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { wpis } = Astro.props as Props;
+const dane = wpis.data;
+const { Content } = await render(wpis);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = `${baza}${adresWpisu(wpis.id)}`;
+const opublikowano = dane.dataPublikacji!.toISOString();
+
+// Brak pliku zdjęcia nie zatrzymuje builda, ale jest widoczny w dzienniku.
+const obraz = plikObrazu(dane.zdjecie);
+if (dane.zdjecie && !obraz) console.warn(`[wpis ${wpis.id}] zdjęcie ${dane.zdjecie} nie ma pliku w src/assets — wpis bez zdjęcia`);
+const obrazAdres = obraz ? new URL(obraz.src, import.meta.env.SITE).href : undefined;
+
+const nazwaBlogu = tekst(teksty.naglowek, 'Blog');
+const okruszki = [
+  { nazwa: tekst(teksty.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: nazwaBlogu, adres: '/blog/' },
+  { nazwa: dane.tytul, adres: adresWpisu(wpis.id) },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      '@id': `${adres}#wpis`,
+      headline: dane.tytul,
+      description: dane.opisSeo || undefined,
+      datePublished: opublikowano,
+      dateModified: opublikowano,
+      inLanguage: 'pl-PL',
+      mainEntityOfPage: adres,
+      image: obrazAdres,
+      author: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      publisher: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      isPartOf: { '@type': 'Blog', '@id': `${baza}/blog/#blog` },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: `${baza}${o.adres}`,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={dane.tytulSeo} opis={dane.opisSeo || dane.tytul} typOg="article" obrazOg={obrazAdres}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="wpis">
+    <nav class="okruszki" aria-label={tekst(teksty.okruszkiEtykieta, 'Ścieżka')}>
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <article>
+      <h1 class="wpis__tytul">{dane.tytul}</h1>
+      <p class="wpis__data">
+        {tekst(teksty.opublikowano, 'Opublikowano')} <time datetime={opublikowano}>{dataPoPolsku(dane.dataPublikacji!)}</time>{' · '}{firma.nazwaKrotka}
+      </p>
+
+      {/* Jedyny obraz z priorytetem (kandydat na LCP); kadr 3:2 z CSS rezerwuje miejsce. */}
+      {obraz && (
+        <Image
+          class="wpis__zdjecie"
+          src={obraz}
+          alt={dane.zdjecieAlt}
+          widths={[480, 720, 1080, 1440]}
+          width={1440}
+          height={960}
+          fit="cover"
+          sizes="(min-width: 42rem) 40rem, calc(100vw - 3rem)"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )}
+
+      <div class="wpis__tresc">
+        <Content />
+      </div>
+    </article>
+
+    <p class="wpis__powrot"><a href="/blog/">{tekst(teksty.wszystkie, 'Wszystkie wpisy')}</a></p>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .wpis {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a,
+  .okruszki [aria-current] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a {
+    color: var(--akcent);
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  /* Kolumna 40 rem, ok. 70 znaków w wierszu. */
+  .wpis__tytul,
+  .wpis__data,
+  .wpis__zdjecie,
+  .wpis__tresc,
+  .wpis__powrot {
+    max-width: 40rem;
+  }
+
+  .wpis__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .wpis__data {
+    margin: var(--o-3) 0 var(--o-8);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .wpis__zdjecie {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--promien);
+    margin-bottom: var(--o-8);
+  }
+
+  /* Proza z Markdownu: znaczniki bez klas, stąd :global wewnątrz kontenera. */
+  .wpis__tresc {
+    overflow-wrap: break-word;
+  }
+
+  .wpis__tresc :global(h2) {
+    margin: var(--o-12) 0 var(--o-3);
+    font-size: var(--t-xl);
+  }
+
+  .wpis__tresc :global(p) {
+    margin: 0 0 var(--o-4);
+  }
+
+  .wpis__tresc :global(:is(ul, ol)) {
+    margin: 0 0 var(--o-4);
+    padding-left: var(--o-6);
+  }
+
+  .wpis__tresc :global(li + li) {
+    margin-top: var(--o-2);
+  }
+
+  .wpis__tresc :global(a) {
+    color: var(--akcent);
+  }
+
+  .wpis__tresc :global(a:hover) {
+    color: var(--tekst);
+  }
+
+  .wpis__powrot {
+    margin: var(--o-12) 0 0;
+    padding-top: var(--o-6);
+    border-top: 1px solid var(--linia);
+  }
+
+  .wpis__powrot a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+    color: var(--akcent);
+  }
+
+  .wpis__powrot a:hover {
+    color: var(--tekst);
+  }
+</style>

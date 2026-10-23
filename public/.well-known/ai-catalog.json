@@ -1,0 +1,18 @@
+{
+  "specVersion": "1.0",
+  "entries": [
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:katalog:ard",
+      "displayName": "EcoPower Polska - katalog zasobów (ard.json)",
+      "type": "application/ai-catalog+json",
+      "url": "https://www.ecopowerpolska.pl/.well-known/ard.json",
+      "description": "Katalog zasobów www.ecopowerpolska.pl: opis spółki i jej serwisów dla modeli językowych (llms.txt) i mapa strony (sitemap.xml).",
+      "representativeQueries": [
+        "EcoPower Polska",
+        "EcoPower Polska sp. z o.o. KRS",
+        "serwisy EcoPower Polska",
+        "EcoPower Polska kontakt"
+      ]
+    }
+  ]
+}

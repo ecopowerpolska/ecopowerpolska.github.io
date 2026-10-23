@@ -80,8 +80,8 @@ public_folder: "src/assets/serwisy"
 publish_mode: simple
 
 # ── MENU PANELU ───────────────────────────────────────────────────────────────
-# Cztery pozycje, w tej kolejności: Grupy → Serwisy (kafelki) → Teksty strony →
-# Dane firmy. Kolejność w tym pliku = kolejność w menu panelu.
+# Pięć pozycji, w tej kolejności: Grupy → Serwisy (kafelki) → Wpisy na blogu →
+# Teksty strony → Dane firmy. Kolejność w tym pliku = kolejność w menu panelu.
 collections:
   # ── ① GRUPY ─────────────────────────────────────────────────────────────────
   # Sekcje, na które dzielą się kafelki. Kafelek wskazuje grupę polem `grupa`
@@ -242,6 +242,84 @@ collections:
                 widget: boolean
                 default: false
                 required: false
+
+  # ── ②a WPISY NA BLOGU ───────────────────────────────────────────────────────
+  # Lustro kolekcji `wpisy` z src/content.config.ts (2026-10-23). JEDEN PLIK NA WPIS
+  # (src/content/wpisy/<adres>.md), bo wpisy nie mają ręcznej kolejności — porządek
+  # daje data publikacji. Nazwa pliku = adres wpisu /blog/<adres>/ — po publikacji
+  # NIE zmieniaj (stary adres da 404).
+  # 🔴 Zdjęcie w schemacie jest TEKSTEM, nie image(): plik-widmo daje wpis bez zdjęcia,
+  # nie zamrożoną stronę (cms-github-pages §B.2). Data bez strefy = czas polski.
+  - name: wpisy
+    label: "Wpisy na blogu"
+    label_singular: "Wpis"
+    folder: "src/content/wpisy"
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: tytul
+    summary: "{{tytul}} — {{dataPublikacji}}"
+    sortable_fields: ["dataPublikacji", "tytul"]
+    media_folder: "../../assets/blog"
+    public_folder: "../../assets/blog"
+    description: >-
+      Każdy wpis to osobna strona pod adresem /blog/… Wpis pojawia się na stronie po
+      zapisaniu, gdy jego data publikacji już minęła i nie jest zaznaczony jako szkic.
+      Wpis z datą w przyszłości wejdzie przy pierwszej przebudowie strony po tej dacie.
+    fields:
+      - name: tytul
+        label: "Tytuł wpisu (nagłówek na stronie)"
+        widget: string
+        required: true
+        hint: "Najlepiej pytanie albo zdanie, na które wpis odpowiada w pierwszym akapicie."
+
+      - name: tytulSeo
+        label: "Tytuł w wyszukiwarce (opcjonalnie)"
+        widget: string
+        required: false
+        hint: "Do 60 znaków. Puste pole = taki sam jak tytuł wpisu."
+
+      - name: opisSeo
+        label: "Opis dla wyszukiwarek i zajawka na liście wpisów"
+        widget: text
+        required: false
+        pattern:
+          - "^[\\s\\S]{0,200}$"
+          - "Opis może mieć najwyżej 200 znaków"
+        hint: "Najlepiej 120–160 znaków. Widać go pod tytułem na liście /blog/ i w wyniku Google."
+
+      - name: dataPublikacji
+        label: "Data publikacji"
+        widget: datetime
+        required: true
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+        hint: "Data widoczna na wpisie. Nie wpisuj daty z przyszłości, chyba że wpis ma wejść później."
+
+      - name: zdjecie
+        label: "Zdjęcie główne (opcjonalnie)"
+        widget: image
+        required: false
+        hint: "Prawdziwe zdjęcie, proporcje 3:2, dłuższy bok co najmniej 1440 px."
+
+      - name: zdjecieAlt
+        label: "Opis zdjęcia dla czytnika ekranu"
+        widget: string
+        required: false
+        hint: "Opisz, co widać na zdjęciu."
+
+      - name: szkic
+        label: "Szkic (zapisany, niewidoczny na stronie)"
+        widget: boolean
+        default: false
+        required: false
+
+      - name: body
+        label: "Treść wpisu"
+        widget: markdown
+        required: true
+        hint: "Śródtytuły jako Nagłówek 2. Pierwszy akapit odpowiada wprost na pytanie z tytułu."
 
   # ── ③ TEKSTY STRONY ─────────────────────────────────────────────────────────
   # 🔴 KAŻDE pole niżej przechodzi przez funkcję `tekst()` z src/lib/tekst.ts:
@@ -452,6 +530,28 @@ collections:
             hint: >-
               Widoczny rzadko — przeglądarka potrafi odmówić dostępu do schowka. Puste
               pole = wraca napis domyślny: Nie udało się skopiować.
+
+      # ---- blog i menu ----
+      - name: blog
+        label: "Blog i menu"
+        file: "src/data/blog.json"
+        description: >-
+          Napisy listy wpisów /blog/, pozycji menu w górnym pasku i w stopce oraz stron
+          wpisów. Wyczyszczenie pola przywraca napis domyślny.
+        fields:
+          - { name: menuSerwisy, label: "Menu: pozycja strony głównej", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Serwisy" }
+          - { name: menuBlog, label: "Menu i stopka: pozycja bloga", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog" }
+          - { name: stronaGlowna, label: "Stopka i ścieżka: odnośnik strony głównej", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strona główna" }
+          - { name: tytulKarty, label: "Lista wpisów: tytuł karty i wyniku w wyszukiwarce", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog — EcoPower Polska" }
+          - { name: opisWyszukiwarki, label: "Lista wpisów: opis dla wyszukiwarek", widget: text, required: false, hint: "Puste pole = wraca napis domyślny." }
+          - { name: naglowek, label: "Lista wpisów: nagłówek", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog" }
+          - { name: lead, label: "Lista wpisów: zdanie pod nagłówkiem", widget: string, required: false, hint: "Puste pole = wraca napis domyślny." }
+          - { name: pusto, label: "Lista wpisów: komunikat, gdy nie ma wpisów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Nie ma jeszcze wpisów." }
+          - { name: opublikowano, label: "Wpis: napis przed datą", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Opublikowano" }
+          - { name: wszystkie, label: "Wpis: odnośnik do listy wpisów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Wszystkie wpisy" }
+          - { name: etykietaMenu, label: "Nazwa menu górnego (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Menu główne" }
+          - { name: etykietaMenuStopki, label: "Nazwa menu w stopce (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strony witryny" }
+          - { name: okruszkiEtykieta, label: "Nazwa ścieżki nad wpisem (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Ścieżka" }
 
       # ---- strona błędu 404 ----
       - name: strona404

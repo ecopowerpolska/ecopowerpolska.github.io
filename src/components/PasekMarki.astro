@@ -7,6 +7,7 @@ import { Image } from 'astro:assets';
 
 import firma from '../data/firma.json';
 import strona from '../data/strona.json';
+import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
 import logo from '../assets/logo-ecopower-polska.png';
 
@@ -17,6 +18,13 @@ interface Props {
 }
 
 const { liczbaSerwisow } = Astro.props;
+
+// Menu główne: dwie pozycje (2026-10-23, blog). Bieżąca strona dostaje aria-current, logo prowadzi na stronę główną.
+const sciezka = Astro.url.pathname;
+const menu = [
+  { adres: '/', napis: tekst(blog.menuSerwisy, 'Serwisy'), biezaca: sciezka === '/' },
+  { adres: '/blog/', napis: tekst(blog.menuBlog, 'Blog'), biezaca: sciezka.startsWith('/blog') },
+];
 
 // Dopisek licznika z panelu („3 serwisy w sieci").
 const napisLicznika = tekst(strona.napisLicznika, 'w sieci');
@@ -42,7 +50,7 @@ function odmiana(n: number): string {
         WebP w potrzebnych szerokościach; źródło 3142 px starcza na każdy ekran.
         `loading="eager"`, bo logo stoi nad foldem — ale BEZ `fetchpriority="high"`:
         ten należy do zdjęcia pierwszego kafelka, kandydata na LCP (CLAUDE.md §4). */}
-    <div class="pasek__marka">
+    <a class="pasek__marka" href="/">
       <Image
         class="znak"
         src={logo}
@@ -51,14 +59,25 @@ function odmiana(n: number): string {
         densities={[1.5, 2]}
         loading="eager"
       />
+    </a>
+    <div class="pasek__prawa">
+      {
+        !!liczbaSerwisow && liczbaSerwisow > 0 && (
+          <p class="pasek__licznik">
+            {liczbaSerwisow} {odmiana(liczbaSerwisow)} {napisLicznika}
+          </p>
+        )
+      }
+      <nav class="menu" aria-label={tekst(blog.etykietaMenu, 'Menu główne')}>
+        <ul>
+          {menu.map((m) => (
+            <li>
+              <a href={m.adres} aria-current={m.biezaca ? 'page' : undefined}>{m.napis}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
-    {
-      !!liczbaSerwisow && liczbaSerwisow > 0 && (
-        <p class="pasek__licznik">
-          {liczbaSerwisow} {odmiana(liczbaSerwisow)} {napisLicznika}
-        </p>
-      )
-    }
   </div>
 </header>
 
@@ -108,6 +127,51 @@ function odmiana(n: number): string {
     .znak {
       height: 26px;
     }
+  }
+
+  .pasek__prawa {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--o-2) var(--o-6);
+  }
+
+  .menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--o-1) var(--o-4);
+  }
+
+  /* Cel dotyku 44 px wysokości (WCAG 2.5.8 z zapasem). Kolory: pary z motyw.css (tekst/tło, akcent/tło). */
+  .menu a {
+    /* spoczynek */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--o-1);
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--tekst);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+
+  /* najechanie */
+  .menu a:hover {
+    color: var(--akcent);
+  }
+
+  /* aktywny (wciśnięty) */
+  .menu a:active {
+    transform: translateY(1px);
+  }
+
+  /* bieżąca strona */
+  .menu a[aria-current='page'] {
+    color: var(--akcent);
+    border-bottom-color: var(--akcent);
   }
 
   .pasek__licznik {

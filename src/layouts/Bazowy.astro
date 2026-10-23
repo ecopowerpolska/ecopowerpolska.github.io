@@ -10,9 +10,13 @@ import { tekst } from '../lib/tekst';
 interface Props {
   tytul: string;
   opis: string;
+  /** `article` dla wpisu bloga, domyślnie `website`. */
+  typOg?: 'website' | 'article';
+  /** Bezwzględny adres obrazu do udostępnień (wpis bloga ze zdjęciem). */
+  obrazOg?: string;
 }
 
-const { tytul, opis } = Astro.props;
+const { tytul, opis, typOg = 'website', obrazOg } = Astro.props;
 
 // Napisy z panelu. `tekst()` oddaje wartość domyślną, gdy pole zostanie wyczyszczone —
 // strona bez linku pomijania albo bez og:site_name to strata, nie decyzja redakcyjna.
@@ -34,12 +38,13 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <meta name="robots" content="max-image-preview:large" />
     <link rel="canonical" href={kanoniczny} />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={typOg} />
     <meta property="og:site_name" content={nazwaWitryny} />
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:title" content={tytul} />
     <meta property="og:description" content={opis} />
     <meta property="og:url" content={kanoniczny} />
+    {obrazOg && <meta property="og:image" content={obrazOg} />}
 
     {/* Jeden kolor, bez wariantu ciemnego (D1). Wartość = --tlo z motyw.css. */}
     <meta name="theme-color" content="#f4f5f1" />
@@ -64,6 +69,8 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     {/* Nazwa pliku to sitemap.xml, nie sitemap-index.xml — hak astro:build:done
         w astro.config.mjs zmienia nazwę po buildzie. */}
     <link rel="sitemap" href="/sitemap.xml" />
+    {/* Kanał wpisów bloga (src/pages/rss.xml.ts) i katalog zasobów dla agentów AI (public/.well-known/). */}
+    <link rel="alternate" type="application/rss+xml" title={`Blog — ${nazwaWitryny}`} href="/rss.xml" />
 
     <slot name="head" />
   </head>

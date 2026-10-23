@@ -1,0 +1,30 @@
+{
+  "specVersion": "1.0",
+  "entries": [
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:strona:llms-txt",
+      "displayName": "EcoPower Polska - opis strony dla modeli językowych (llms.txt)",
+      "type": "text/markdown",
+      "url": "https://www.ecopowerpolska.pl/llms.txt",
+      "description": "EcoPower Polska sp. z o.o.: dane rejestrowe i kontakt, serwisy nadzorowane przez spółkę (Studio Agat, Nadi Home, Pan Wylewka) i wpisy na blogu.",
+      "representativeQueries": [
+        "EcoPower Polska",
+        "EcoPower Polska sp. z o.o. KRS",
+        "serwisy EcoPower Polska",
+        "EcoPower Polska kontakt"
+      ],
+      "tags": ["EcoPower Polska", "spółka", "serwisy", "Studio Agat", "Nadi Home", "Pan Wylewka"]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:strona:sitemap",
+      "displayName": "EcoPower Polska - mapa strony (sitemap.xml)",
+      "type": "application/xml",
+      "url": "https://www.ecopowerpolska.pl/sitemap.xml",
+      "description": "Adresy wszystkich podstron www.ecopowerpolska.pl przeznaczonych do indeksowania.",
+      "representativeQueries": [
+        "podstrony EcoPower Polska",
+        "blog EcoPower Polska"
+      ]
+    }
+  ]
+}

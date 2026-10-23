@@ -11,7 +11,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { defineCollection } from 'astro:content';
-import { file } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /** Katalog obrazków kafelków, licząc od pliku src/data/serwisy.json. */
@@ -156,4 +156,72 @@ const serwisy = defineCollection({
 // index.astro, tak samo jak dane firmy. Kolekcja z loaderem file() rozbiłaby pojedynczy
 // obiekt na osobne wpisy po jednym na klucz.
 
-export const collections = { serwisy, grupy };
+/**
+ * Wpisy bloga: jeden plik Markdown na wpis w src/content/wpisy/, `id` = nazwa pliku = adres /blog/<id>/.
+ * Kontrakt pól jak pan-stolarz.pl i studioagat.pl (tytul, tytulSeo, opisSeo, dataPublikacji, zdjecie, zdjecieAlt, szkic),
+ * bez `widocznyOd` — data publikacji jest jedna. Co jest opublikowane, rozstrzyga WYŁĄCZNIE src/lib/wpisy.ts.
+ * 🔴 Zdjęcie to TEKST, nie `image()`: pole wskazujące plik zabija build, gdy pliku nie ma (cms-github-pages §B.2).
+ * Brak pliku = wpis bez zdjęcia, rozstrzyga plikObrazu() w src/lib/wpisy.ts.
+ */
+const DATA_WPISU = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?\s*(Z|[+-]\d{2}:?\d{2})?)?$/i;
+
+/** Przesunięcie czasu warszawskiego względem UTC w danej chwili, w ms (lato +2 h, zima +1 h). */
+const przesuniecieWarszawy = (ms: number): number => {
+  const c = Object.fromEntries(
+    new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Europe/Warsaw', hourCycle: 'h23',
+      year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric',
+    }).formatToParts(new Date(ms)).map((p) => [p.type, Number(p.value)]),
+  );
+  return Date.UTC(c.year, c.month - 1, c.day, c.hour, c.minute, c.second) - (ms - (ms % 1000));
+};
+
+/**
+ * Data z panelu albo z pliku. Coś, czego nie da się odczytać, daje `null` = wpis nieopublikowany (nie błąd builda).
+ * Tekst bez strefy = czas warszawski (Actions budują w UTC); bez godziny = południe, żeby dzień nie przeskoczył.
+ */
+const dataWpisu = (w: unknown): Date | null => {
+  if (w instanceof Date) return Number.isNaN(w.getTime()) ? null : w;
+  const m = (naTekst(w)?.trim() ?? '').match(DATA_WPISU);
+  if (!m) return null;
+  const [, r, mc, d, g = '12', min = '0', sek = '0', strefa] = m;
+  const scienny = Date.UTC(+r, +mc - 1, +d, +g, +min, +sek);
+  const k = new Date(scienny);
+  if (k.getUTCMonth() !== +mc - 1 || k.getUTCDate() !== +d) return null;
+  if (strefa && strefa.toUpperCase() === 'Z') return k;
+  if (strefa) {
+    const [, znak, hh, mm] = strefa.match(/^([+-])(\d{2}):?(\d{2})$/)!;
+    return new Date(scienny - (znak === '-' ? -1 : 1) * (+hh * 60 + +mm) * 60_000);
+  }
+  return new Date(scienny - przesuniecieWarszawy(scienny - przesuniecieWarszawy(scienny)));
+};
+
+const wpisy = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/wpisy' }),
+  schema: z.preprocess(
+    (w: unknown) => {
+      const d = (w && typeof w === 'object' ? w : {}) as Record<string, unknown>;
+      const tytul = naTekst(d.tytul)?.trim() || 'Wpis bez tytułu';
+      return {
+        tytul,
+        tytulSeo: naTekst(d.tytulSeo)?.trim() || tytul,
+        opisSeo: naTekst(d.opisSeo)?.trim() ?? '',
+        dataPublikacji: dataWpisu(d.dataPublikacji),
+        zdjecie: naTekst(d.zdjecie)?.trim() ?? '',
+        zdjecieAlt: naTekst(d.zdjecieAlt)?.trim() ?? '',
+        szkic: d.szkic === true || d.szkic === 'true',
+      };
+    },
+    z.object({
+      tytul: z.string(),
+      tytulSeo: z.string(),
+      opisSeo: z.string(),
+      dataPublikacji: z.date().nullable(),
+      zdjecie: z.string(),
+      zdjecieAlt: z.string(),
+      szkic: z.boolean(),
+    }),
+  ),
+});
+
+export const collections = { serwisy, grupy, wpisy };

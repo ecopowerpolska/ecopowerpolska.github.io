@@ -18,50 +18,62 @@
 # 🔴 Grupy w robots.txt NIE DZIEDZICZĄ reguł — dlatego `Disallow: /admin/` powtarza się
 #    w każdej grupie. Pominięcie go w grupie oznacza dla niej zgodę na /admin/.
 # Podstawa formalna: RFC 9309.
+# Content-Signal (https://contentsignals.org/) pod KAŻDĄ grupą, bo bot z własną grupą nie czyta grupy `*`
+# (wzór studioagat.pl i nadihome.pl, 2026-10-23). Wartości zgodne z decyzją wyżej: wszystko otwarte.
 
 User-agent: *
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # ── OpenAI ────────────────────────────────────────────────────────────────────
 User-agent: GPTBot
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # ── Anthropic ─────────────────────────────────────────────────────────────────
 User-agent: ClaudeBot
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Claude-User
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Claude-SearchBot
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # ── Perplexity ────────────────────────────────────────────────────────────────
 User-agent: PerplexityBot
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 User-agent: Perplexity-User
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # ── Google (token treningowy; NIE wpływa na obecność w Wyszukiwarce ani na ranking) ──
 User-agent: Google-Extended
 Allow: /
 Disallow: /admin/
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # Nazwa pliku to `sitemap.xml`, nie `sitemap-index.xml` — astro.config.mjs zmienia
 # nazwę indeksu wygenerowanego przez @astrojs/sitemap w haku astro:build:done, bo

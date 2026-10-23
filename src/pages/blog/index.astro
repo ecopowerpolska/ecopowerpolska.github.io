@@ -1,0 +1,190 @@
+---
+// /blog/ — lista wpisów od najnowszego (dist/blog/index.html). Co jest opublikowane, rozstrzyga wyłącznie opublikowane()
+// z src/lib/wpisy.ts. Napisy: src/data/blog.json (panel: Teksty strony → Blog). Zero JavaScriptu: karta to jeden odnośnik.
+import { Image } from 'astro:assets';
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../../components/PasekMarki.astro';
+import Stopka from '../../components/Stopka.astro';
+import teksty from '../../data/blog.json';
+import firma from '../../data/firma.json';
+import { tekst } from '../../lib/tekst';
+import { opublikowane, adresWpisu, dataPoPolsku, plikObrazu } from '../../lib/wpisy';
+
+const wpisy = (await opublikowane()).map((w) => ({
+  id: w.id,
+  tytul: w.data.tytul,
+  adres: adresWpisu(w.id),
+  zajawka: w.data.opisSeo,
+  iso: w.data.dataPublikacji!.toISOString(),
+  data: dataPoPolsku(w.data.dataPublikacji!),
+  obraz: plikObrazu(w.data.zdjecie),
+}));
+
+const naglowek = tekst(teksty.naglowek, 'Blog');
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+
+// JSON-LD: Blog z listą wpisów, wydawca = organizacja ze strony głównej (to samo @id).
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': `${baza}/blog/#blog`,
+  url: `${baza}/blog/`,
+  name: tekst(teksty.tytulKarty, 'Blog — EcoPower Polska'),
+  inLanguage: 'pl-PL',
+  publisher: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+  blogPost: wpisy.map((w) => ({
+    '@type': 'BlogPosting',
+    headline: w.tytul,
+    url: `${baza}${w.adres}`,
+    datePublished: w.iso,
+  })),
+};
+---
+
+<Bazowy
+  tytul={tekst(teksty.tytulKarty, 'Blog — EcoPower Polska')}
+  opis={tekst(teksty.opisWyszukiwarki, 'Wpisy EcoPower Polska o spółce i serwisach, które nadzoruje.')}
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="blog">
+    <h1 class="blog__tytul">{naglowek}</h1>
+    <p class="blog__lead">{tekst(teksty.lead, 'Wpisy o spółce i serwisach, które nadzoruje.')}</p>
+
+    {
+      wpisy.length > 0 ? (
+        <ul class="blog__lista">
+          {wpisy.map((w, i) => (
+            <li>
+              <a class="karta" href={w.adres}>
+                {w.obraz && (
+                  <Image
+                    class="karta__zdjecie"
+                    src={w.obraz}
+                    alt=""
+                    widths={[360, 540, 720, 1080]}
+                    width={1080}
+                    height={720}
+                    fit="cover"
+                    sizes="(min-width: 60rem) 36rem, calc(100vw - 3rem)"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 ? 'high' : undefined}
+                  />
+                )}
+                <div class="karta__tresc">
+                  <h2 class="karta__tytul">{w.tytul}</h2>
+                  <time class="karta__data" datetime={w.iso}>{w.data}</time>
+                  {w.zajawka && <p class="karta__zajawka">{w.zajawka}</p>}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="blog__pusto">{tekst(teksty.pusto, 'Nie ma jeszcze wpisów.')}</p>
+      )
+    }
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .blog {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-16) var(--o-6);
+  }
+
+  .blog__tytul {
+    font-size: var(--t-xxl);
+  }
+
+  .blog__lead {
+    margin: var(--o-4) 0 var(--o-12);
+    max-width: var(--miara);
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .blog__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-6);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 60rem) {
+    .blog__lista {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Karta jak kafelek serwisu: wypełnienie zamiast kreski, promień 6 px (motyw.css). */
+  .karta {
+    /* spoczynek */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    color: var(--tekst);
+    text-decoration: none;
+  }
+
+  /* najechanie: kolor tytułu (para akcent na powierzchni z motyw.css), tło bez zmian */
+  .karta:hover {
+    background: var(--powierzchnia);
+  }
+
+  /* aktywny (wciśnięty) */
+  .karta:active {
+    transform: translateY(1px);
+  }
+
+  .karta:hover .karta__tytul {
+    color: var(--akcent);
+  }
+
+  /* Kadr 3:2 z CSS = miejsce zarezerwowane przed pobraniem (bez przesunięcia układu). */
+  .karta__zdjecie {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .karta__tresc {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    padding: var(--o-6);
+  }
+
+  .karta__tytul {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .karta__data,
+  .karta__zajawka {
+    margin: 0;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .blog__pusto {
+    color: var(--tekst-cichy);
+  }
+</style>

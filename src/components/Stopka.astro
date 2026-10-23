@@ -5,6 +5,7 @@
 // zmianą (docs/DECYZJE-WIZUALNE.md D4, D6).
 import firma from '../data/firma.json';
 import napisyStopki from '../data/stopka.json';
+import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
 
 const mail = firma.email.toLowerCase();
@@ -55,6 +56,13 @@ const daneSpolki = [
   data-guzik={guzikKopiujWszystko}
 >
   <div class="stopka__srodek">
+    <nav class="stopka__menu" aria-label={tekst(blog.etykietaMenuStopki, 'Strony witryny')}>
+      <ul>
+        <li><a href="/">{tekst(blog.stronaGlowna, 'Strona główna')}</a></li>
+        <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
+      </ul>
+    </nav>
+
     <p class="stopka__nazwa">
       <span class="dana"
         >{firma.nazwaPelna}<button
@@ -267,6 +275,28 @@ const daneSpolki = [
     font-size: var(--t-xs);
     line-height: 1.6;
     color: var(--tekst-cichy);
+  }
+
+  .stopka__menu ul {
+    list-style: none;
+    margin: 0 0 var(--o-4);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-6);
+  }
+
+  .stopka__menu a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--akcent);
+  }
+
+  .stopka__menu a:hover {
+    color: var(--tekst);
   }
 
   .stopka__nazwa {

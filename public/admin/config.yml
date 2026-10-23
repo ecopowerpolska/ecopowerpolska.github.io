@@ -756,7 +756,10 @@ collections:
           - { name: lead, label: "Lista wpisów: zdanie pod nagłówkiem", widget: string, required: false, hint: "Puste pole = wraca napis domyślny." }
           - { name: pusto, label: "Lista wpisów: komunikat, gdy nie ma wpisów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Nie ma jeszcze wpisów." }
           - { name: opublikowano, label: "Wpis: napis przed datą", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Opublikowano" }
-          - { name: wszystkie, label: "Wpis: odnośnik do listy wpisów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Wszystkie wpisy" }
+          - { name: wszystkie, label: "Strona główna i wpis: odnośnik do listy wpisów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Wszystkie wpisy" }
+          - { name: naglowekGlowna, label: "Strona główna: nagłówek sekcji z ostatnimi wpisami", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Z bloga" }
+          - { name: udostepnij, label: "Wpis: guzik udostępnienia na Facebooku", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Udostępnij na Facebooku" }
+          - { name: udostepnijNowaKarta, label: "Wpis: dopisek dla czytnika ekranu przy guziku udostępnienia", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: (otwiera się w nowej karcie)" }
           - { name: etykietaMenu, label: "Nazwa menu górnego (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Menu główne" }
           - { name: etykietaMenuStopki, label: "Nazwa menu w stopce (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strony witryny" }
           - { name: okruszkiEtykieta, label: "Nazwa ścieżki nad wpisem (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Ścieżka" }

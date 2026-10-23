@@ -1,6 +1,6 @@
 ---
 // index.astro — strona główna firmy od stron WWW i sklepów (przebudowa 2026-10-23).
-// Układ: nagłówek firmy → oferta → realizacje → skrót FAQ → kontakt → o spółce.
+// Układ: nagłówek firmy → oferta → realizacje → ostatnie wpisy → skrót FAQ → kontakt → o spółce.
 // Napisy z src/data/strona.json i src/data/oferta.json (panel), realizacje z kolekcji
 // `serwisy` (src/data/serwisy.json). Wygląd bez zmian: tokeny motyw.css, PasekMarki, Stopka,
 // kierunek „rejestr" (docs/DECYZJE-WIZUALNE.md). Zero JS na tej trasie poza stopką.
@@ -12,6 +12,7 @@ import DaneStrukturalne from '../components/DaneStrukturalne.astro';
 import Oferta from '../components/Oferta.astro';
 import Realizacje from '../components/Realizacje.astro';
 import FaqSkrot from '../components/FaqSkrot.astro';
+import OstatnieWpisy from '../components/OstatnieWpisy.astro';
 import { tekst } from '../lib/tekst';
 import stronaJson from '../data/strona.json';
 
@@ -55,6 +56,9 @@ const lead = tekst(
     <Oferta czesc="oferta" />
 
     <Realizacje naglowek={strona.naglowekRealizacji} wstep={strona.wstepRealizacji} />
+
+    {/* Wpisy po realizacjach (dowód pracy, potem wiedza), przed FAQ i kontaktem; nad zgięciem ich nie ma, więc zdjęcia lazy. */}
+    <OstatnieWpisy />
 
     <FaqSkrot />
 

@@ -30,6 +30,8 @@ const opublikowano = dane.dataPublikacji!.toISOString();
 // Brak pliku zdjęcia nie zatrzymuje builda, ale jest widoczny w dzienniku.
 const obraz = plikObrazu(dane.zdjecie);
 if (dane.zdjecie && !obraz) console.warn(`[wpis ${wpis.id}] zdjęcie ${dane.zdjecie} nie ma pliku w src/assets — wpis bez zdjęcia`);
+// Udostępnienie na Facebooku: zwykły odnośnik do sharera z kanonicznym adresem wpisu, bez skryptów Meta i bez śledzenia.
+const udostepnijAdres = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(adres)}`;
 const obrazAdres = obraz ? new URL(obraz.src, import.meta.env.SITE).href : undefined;
 
 const nazwaBlogu = tekst(teksty.naglowek, 'Blog');
@@ -110,6 +112,13 @@ const daneStrukturalne = {
       <div class="wpis__tresc">
         <Content />
       </div>
+
+      <p class="wpis__udostepnij">
+        <a class="wpis__facebook" href={udostepnijAdres} target="_blank" rel="noopener noreferrer">
+          {tekst(teksty.udostepnij, 'Udostępnij na Facebooku')}
+          <span class="sr-only"> {tekst(teksty.udostepnijNowaKarta, '(otwiera się w nowej karcie)')}</span>
+        </a>
+      </p>
     </article>
 
     <p class="wpis__powrot"><a href="/blog/">{tekst(teksty.wszystkie, 'Wszystkie wpisy')}</a></p>
@@ -167,6 +176,7 @@ const daneStrukturalne = {
   .wpis__data,
   .wpis__zdjecie,
   .wpis__tresc,
+  .wpis__udostepnij,
   .wpis__powrot {
     max-width: 40rem;
   }
@@ -223,6 +233,53 @@ const daneStrukturalne = {
 
   .wpis__tresc :global(a:hover) {
     color: var(--tekst);
+  }
+
+  /* Odnośnik z obrysem jak „Zapytaj o stronę” na stronie głównej: akcent na tle, cel dotyku 48 px. */
+  .wpis__udostepnij {
+    margin: var(--o-8) 0 0;
+  }
+
+  .wpis__facebook {
+    /* spoczynek */
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    border: 2px solid var(--akcent);
+    border-radius: var(--promien);
+    font-weight: 600;
+    color: var(--akcent);
+    text-decoration: none;
+    transition: background-color 120ms ease;
+  }
+
+  /* najechanie */
+  .wpis__facebook:hover {
+    background: var(--powierzchnia);
+  }
+
+  /* aktywny (wciśnięty) */
+  .wpis__facebook:active {
+    transform: translateY(1px);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wpis__facebook {
+      transition: none;
+    }
   }
 
   .wpis__powrot {

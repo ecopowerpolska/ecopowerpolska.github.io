@@ -1,0 +1,179 @@
+---
+// OstatnieWpisy.astro — sekcja „Z bloga” strony głównej: 3 najnowsze opublikowane wpisy (tytuł, data, lead, zdjęcie).
+// Co jest opublikowane i w jakiej kolejności, rozstrzyga wyłącznie opublikowane() z src/lib/wpisy.ts (jak /blog/).
+// Zero wpisów = komponent nie renderuje nic. Karta to jeden odnośnik, zero JavaScriptu poza ujawnianiem sekcji.
+// Wzorzec: pan-stolarz.pl src/components/OstatnieWpisy.astro, na tokenach tej strony. Napisy: src/data/blog.json.
+import { Image } from 'astro:assets';
+import teksty from '../data/blog.json';
+import { tekst } from '../lib/tekst';
+import { opublikowane, adresWpisu, dataPoPolsku, plikObrazu } from '../lib/wpisy';
+
+interface Props {
+  /** Ile wpisów pokazać (domyślnie 3). */
+  ile?: number;
+}
+
+const { ile = 3 } = Astro.props;
+
+const wpisy = (await opublikowane()).slice(0, Math.max(1, ile)).map((w) => ({
+  id: w.id,
+  tytul: w.data.tytul,
+  adres: adresWpisu(w.id),
+  zajawka: w.data.opisSeo,
+  iso: w.data.dataPublikacji!.toISOString(),
+  data: dataPoPolsku(w.data.dataPublikacji!),
+  obraz: plikObrazu(w.data.zdjecie),
+}));
+---
+
+{
+  wpisy.length > 0 && (
+    <section class="wpisy-glowna" aria-labelledby="wpisy-glowna-tytul" data-ujawnij>
+      <h2 id="wpisy-glowna-tytul" class="wpisy-glowna__tytul">
+        {tekst(teksty.naglowekGlowna, 'Z bloga')}
+      </h2>
+      <ul class="wpisy-glowna__lista">
+        {wpisy.map((w) => (
+          <li>
+            <a class="karta" href={w.adres}>
+              {w.obraz && (
+                <Image
+                  class="karta__zdjecie"
+                  src={w.obraz}
+                  alt=""
+                  widths={[360, 540, 720]}
+                  width={720}
+                  height={480}
+                  fit="cover"
+                  sizes="(min-width: 60rem) 24rem, calc(100vw - 3rem)"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div class="karta__tresc">
+                <h3 class="karta__nazwa">{w.tytul}</h3>
+                <time class="karta__data" datetime={w.iso}>{w.data}</time>
+                {w.zajawka && <p class="karta__zajawka">{w.zajawka}</p>}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="wpisy-glowna__wiecej">
+        <a href="/blog/">{tekst(teksty.wszystkie, 'Wszystkie wpisy')}</a>
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .wpisy-glowna {
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: var(--o-12) var(--o-6);
+  }
+
+  .wpisy-glowna__tytul {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-6);
+  }
+
+  .wpisy-glowna__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-6);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 60rem) {
+    .wpisy-glowna__lista {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Karta jak na liście /blog/: wypełnienie zamiast kreski, promień z motyw.css. */
+  .karta {
+    /* spoczynek */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    color: var(--tekst);
+    text-decoration: none;
+  }
+
+  /* najechanie: kolor tytułu (para akcent na powierzchni z motyw.css) */
+  .karta:hover .karta__nazwa {
+    color: var(--akcent);
+  }
+
+  /* aktywny (wciśnięty) */
+  .karta:active {
+    transform: translateY(1px);
+  }
+
+  /* Kadr 3:2 z CSS = miejsce zarezerwowane przed pobraniem (bez przesunięcia układu). */
+  .karta__zdjecie {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .karta__tresc {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    padding: var(--o-6);
+  }
+
+  .karta__nazwa {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .karta__data,
+  .karta__zajawka {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .karta__data,
+  .karta__zajawka {
+    margin: 0;
+  }
+
+  .karta__zajawka {
+    line-height: 1.5;
+  }
+
+  .wpisy-glowna__wiecej {
+    margin: var(--o-6) 0 0;
+  }
+
+  .wpisy-glowna__wiecej a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .wpisy-glowna__wiecej a:hover {
+    color: var(--tekst);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .karta:active {
+      transform: none;
+    }
+  }
+</style>

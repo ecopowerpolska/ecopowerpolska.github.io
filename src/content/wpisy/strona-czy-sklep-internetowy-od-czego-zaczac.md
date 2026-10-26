@@ -3,8 +3,8 @@ tytul: "Strona czy sklep internetowy — od czego zacząć?"
 tytulSeo: "Strona czy sklep internetowy? — EcoPower Polska"
 opisSeo: "Strona firmowa czy sklep internetowy? Jak ustalamy, co strona ma robić, która z trzech dróg sklepu pasuje do firmy i gdzie stanie strona."
 dataPublikacji: "2026-10-23T09:00:00+02:00"
-zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
-zdjecieAlt: "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie i przycisk sprawdzenia ceny"
+zdjecie: "../../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg"
+zdjecieAlt: "Strona główna kuchnia-na-wymiar-warszawa.pl: nagłówek „Kuchnie na wymiar w Warszawie” obok zdjęcia białej kuchni z drewnianym blatem"
 szkic: false
 ---
 
@@ -26,7 +26,13 @@ Taka strona ma u nas zwykle ofertę, galerię realizacji, blog i formularz konta
 
 Przykład firmy, która pokazuje usługi i zbiera zapytania, to [Pan Stolarz](https://pan-stolarz.pl/): meble na wymiar w Warszawie, z kalkulatorem ceny i formularzem.
 
-Strona firmowa może też pomóc klientowi oszacować koszt, zanim zapyta. Strony Pan Stolarz, Kuchnia na wymiar Warszawa, Szafy na wymiar Warszawa i Garderoba na wymiar Warszawa mają kalkulatory cen, a żadna z nich nie jest sklepem. Klient sprawdza orientacyjną cenę i wysyła zapytanie. Więcej przykładów jest w sekcji [realizacje stron i sklepów](/#realizacje).
+![Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie i przycisk sprawdzenia ceny](../../assets/serwisy/zrzut-pan-stolarz.jpg "Pan Stolarz: strona firmowa bez koszyka, z umówieniem pomiaru i sprawdzeniem ceny na pierwszym ekranie.")
+
+Strona firmowa może też pomóc klientowi oszacować koszt, zanim zapyta. Strony Pan Stolarz, Kuchnia na wymiar Warszawa, Szafy na wymiar Warszawa i Garderoba na wymiar Warszawa mają kalkulatory cen, a żadna z nich nie jest sklepem. Klient sprawdza orientacyjną cenę i wysyła zapytanie.
+
+![Strona główna szafy-na-wymiar-warszawa.pl: nagłówek o szafach na wymiar, zdjęcie sypialni z szafą do sufitu i przycisk ceny szafy](../../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg "Szafy na wymiar Warszawa: przycisk „Policz orientacyjną cenę szafy” prowadzi do kalkulatora, nie do koszyka.")
+
+Więcej przykładów jest w sekcji [realizacje stron i sklepów](/#realizacje).
 
 ## Kiedy potrzebny jest sklep internetowy?
 
@@ -64,3 +70,5 @@ Nie musisz znać odpowiedzi na wszystkie pytania techniczne. Wystarczy kilka inf
 Na stronę wstawiamy wyłącznie prawdziwe fotografie, Twoje albo z banku zdjęć, a nie obrazy wygenerowane przez AI. Teksty możemy napisać na podstawie Twoich informacji.
 
 Z tych odpowiedzi proponujemy hosting, panel i zakres prac. Cały zakres usług opisuje [oferta budowy stron i sklepów](/#oferta). Gdy wiesz już, czego potrzebujesz, [napisz albo zadzwoń do nas](/#kontakt).
+
+A jeśli poza stroną urządzasz też mieszkanie: przy kompleksowym projekcie mieszkania współpracujemy ze [Studio Agat](https://studioagat.pl/projektowanie-wnetrz), a po komplet mebli na wymiar do całego mieszkania zapraszamy na stronę [Pan Stolarz](https://pan-stolarz.pl/meble-na-wymiar).

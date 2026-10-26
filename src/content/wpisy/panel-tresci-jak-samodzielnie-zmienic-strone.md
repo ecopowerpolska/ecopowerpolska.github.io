@@ -37,6 +37,8 @@ Panel Sveltia wymaga konta na GitHubie. Nie każdy chce je zakładać. Wtedy rob
 
 Taki panel ma na przykład strona Studio Agat. Przenieśliśmy ją z WordPressa do Astro, a treść zmienia się w panelu w PHP na hostingu.
 
+![Strona główna studioagat.pl: nagłówek „Projektant wnętrz Warszawa, architekt wnętrz” nad zdjęciem salonu z szarą sofą](../../assets/serwisy/zrzut-studioagat.jpg "Studio Agat: treść tej strony zmienia się w panelu w PHP, logowaniem na hasło, bez konta na GitHubie.")
+
 Oba panele służą temu samemu: Ty zmieniasz treść, a strona zostaje szybka, bo do przeglądarki nadal trafia gotowy HTML. Różnią się sposobem logowania i miejscem, w którym zapisują zmiany.
 
 ## Czy zmiany w panelu spowolnią stronę?
@@ -51,6 +53,8 @@ Blog to część panelu. Każdy wpis jest osobną podstroną z datą publikacji,
 
 Wpis dodajesz w panelu tak samo jak inne treści: wpisujesz tytuł i tekst, dodajesz zdjęcie, ustawiasz datę publikacji i zapisujesz. Strona sama dopisze nowy wpis do listy i do kanału RSS.
 
+![Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie](../../assets/serwisy/zrzut-pan-stolarz.jpg "Pan Stolarz: wpisy z bloga tej strony mogą trafiać od razu na Facebooka firmy.")
+
 Wpis z datą w przyszłości pojawi się sam przy pierwszej przebudowie strony po tej dacie. Możesz więc przygotować kilka wpisów naraz i rozłożyć je w czasie.
 
 Jeśli nie masz czasu pisać, wpisy możesz zlecić nam. Temat dobieramy z danych Search Console i Planera słów kluczowych, tekst piszemy z faktów Twojej firmy, a zdjęcia są prawdziwe.
@@ -60,3 +64,5 @@ Jeśli nie masz czasu pisać, wpisy możesz zlecić nam. Temat dobieramy z danyc
 Wybór zależy od tego, jak chcesz się logować. Jeśli masz konto na GitHubie albo nie przeszkadza Ci jego założenie, Sveltia daje pełną historię zmian i cofanie każdego zapisu. Jeśli wolisz zwykłe hasło, panel w PHP na hostingu zrobi to samo bez GitHuba.
 
 Rodzaj panelu ustalamy na początku, razem z wyborem hostingu. Krótki opis obu jest w sekcji [panel do edycji treści w naszej ofercie](/#oferta), a szczegóły w odpowiedzi na pytanie [czy sam zmienię treść na stronie](/faq/#edycja-tresci). Jeśli chcesz zobaczyć, jak panel wygląda w praktyce, [napisz do nas](/#kontakt).
+
+Jeśli razem ze stroną planujesz kompleksowy projekt mieszkania, współpracujemy w tym zakresie ze [Studio Agat](https://studioagat.pl/projektowanie-wnetrz). Jeśli potrzebujesz kompletu mebli na wymiar do całego mieszkania, zapraszamy na stronę [Pan Stolarz](https://pan-stolarz.pl/meble-na-wymiar).

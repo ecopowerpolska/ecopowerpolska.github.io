@@ -33,6 +33,8 @@ Krótszy opis tych kroków jest w sekcji [jak pracujemy przy budowie strony](/#o
 
 Twoja obecna strona działa przez cały czas budowy i klienci nadal ją widzą. Nową wersję oglądasz pod osobnym adresem roboczym i zgłaszasz do niej uwagi.
 
+![Strona główna nadihome.pl: nagłówek „Remonty mieszkań w Warszawie i wykończenia pod klucz” obok zdjęcia układania płytek](../../assets/serwisy/zrzut-nadihome.jpg "Nadi Home: nowa strona w Astro zastąpiła WordPressa dopiero po odbiorze wersji roboczej.")
+
 Dopiero gotowa i sprawdzona strona zastępuje starą. Przy przepięciu domeny stare adresy przekierowujemy na odpowiadające im nowe przekierowaniem 301 po stronie serwera. Dzięki temu działają dawne linki, a wyniki w Google nie prowadzą w próżnię. Po przełączeniu zgłaszamy nową mapę strony w Search Console.
 
 Osobno pilnujemy poczty, bo przy przepinaniu domeny najłatwiej zepsuć właśnie ją. Rekordy pocztowe zostają bez zmian, a pracę uznajemy za skończoną, gdy list testowy dochodzi w obie strony.
@@ -40,6 +42,8 @@ Osobno pilnujemy poczty, bo przy przepinaniu domeny najłatwiej zepsuć właśni
 ## Co sprawdza kontrola przed publikacją?
 
 Zanim strona trafi na hosting, sprawdza ją automatyczna bramka. Patrzy na tytuły i opisy dla wyszukiwarek, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting.
+
+![Dłonie przykładające czerwoną poziomicę do jasnych płytek podłogowych](../../assets/serwisy/nadihome.jpg "Jak poziomica przy płytkach: kontrolę robimy przed odbiorem, nie po nim.")
 
 Bramka nie zastępuje oka: po publikacji każdą zmianę sprawdzamy jeszcze na żywej stronie. Wynik szybkości sprawdzamy dodatkowo pomiarem PageSpeed Insights po publikacji. Strona [Studio Agat](https://studioagat.pl/) po przepisaniu z WordPressa na Astro ma w nim 98–100 punktów.
 
@@ -62,4 +66,8 @@ Publikacja nie kończy współpracy. W ramach utrzymania wprowadzamy zmiany, mie
 
 Pozycji w wynikach Google nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console. Jeśli firma ma wizytówkę w Google, możemy też prowadzić Profil Firmy: usługi, zdjęcia i wpisy.
 
+![Strona główna garderoba-na-wymiar-warszawa.pl: nagłówek o garderobach na wymiar obok zdjęcia garderoby z oświetlonymi półkami](../../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg "Garderoba na wymiar Warszawa: strona zbudowana od zera, z kalkulatorem ceny, galerią i blogiem.")
+
 Strony, które zbudowaliśmy w ten sposób, znajdziesz w sekcji [nasze realizacje](/#realizacje). Odpowiedzi na inne pytania o czas i zakres są na stronie [pytania o strony i sklepy](/faq/). Jeśli chcesz poznać termin dla swojej strony, [opisz nam, czego potrzebujesz](/#kontakt).
+
+I jeszcze jedno, jeśli oprócz strony urządzasz mieszkanie. Przy kompleksowym projekcie mieszkania współpracujemy ze [Studio Agat](https://studioagat.pl/projektowanie-wnetrz), a jeśli potrzebujesz kompletu mebli na wymiar do całego mieszkania, zapraszamy na stronę [Pan Stolarz](https://pan-stolarz.pl/meble-na-wymiar).

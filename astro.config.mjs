@@ -15,6 +15,7 @@
 
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { satteri } from '@astrojs/markdown-satteri';
 import { fileURLToPath } from 'node:url';
 import { existsSync, renameSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
@@ -57,10 +58,36 @@ function sitemapJakoPlikSitemapXml() {
   };
 }
 
+// Zdjęcie w treści wpisu z podpisem (2026-10-26): akapit z SAMYM obrazkiem Markdown z tytułem,
+// `![alt](../../assets/serwisy/x.jpg "Podpis")`, staje się <figure> z <figcaption>. Obraz zostaje węzłem
+// `image`, więc Astro dalej go optymalizuje (WebP, width/height, loading="lazy"). Astro 7 renderuje Markdown
+// procesorem Sätteri (zależność `astro`); zmianę drzewa zapisuje się przez `ctx.replaceNode` (wzorzec: nadihome.pl).
+const zdjeciaZPodpisem = {
+  name: 'zdjecia-z-podpisem',
+  paragraph(wezel, ctx) {
+    const dzieci = (wezel.children ?? []).filter((d) => !(d.type === 'text' && String(d.value ?? '').trim() === ''));
+    if (dzieci.length !== 1 || dzieci[0].type !== 'image') return;
+    const obraz = dzieci[0];
+    const podpis = typeof obraz.title === 'string' ? obraz.title.trim() : '';
+    if (podpis === '') return;
+    ctx.replaceNode(wezel, {
+      type: 'zdjecieWpisu',
+      data: { hName: 'figure', hProperties: { className: ['wpis-zdjecie'] } },
+      children: [
+        { type: 'image', url: obraz.url, alt: obraz.alt ?? '' },
+        { type: 'podpisZdjecia', data: { hName: 'figcaption' }, children: [{ type: 'text', value: podpis }] },
+      ],
+    });
+  },
+};
+
 export default defineConfig({
   site: 'https://www.ecopowerpolska.pl',
   output: 'static',
   integrations: [sitemap(), sitemapJakoPlikSitemapXml()],
+
+  // Markdown jest tylko we wpisach bloga; wtyczka przy definicji wyżej.
+  markdown: { processor: satteri({ mdastPlugins: [zdjeciaZPodpisem] }) },
 
   // `prefetch` świadomie WYŁĄCZONY (walidator zgłosi to jako AG004 INFO).
   // Powód: guard.config.json deklaruje całą witrynę jako zero-JS, a prefetch

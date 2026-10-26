@@ -66,7 +66,7 @@ const daneStrukturalne = {
                     alt=""
                     widths={[360, 540, 720, 1080]}
                     width={1080}
-                    height={720}
+                    height={675}
                     fit="cover"
                     sizes="(min-width: 60rem) 36rem, calc(100vw - 3rem)"
                     loading={i === 0 ? 'eager' : 'lazy'}
@@ -154,12 +154,13 @@ const daneStrukturalne = {
     color: var(--akcent);
   }
 
-  /* Kadr 3:2 z CSS = miejsce zarezerwowane przed pobraniem (bez przesunięcia układu). */
+  /* Kadr 16:10 = proporcja zrzutów stron (bez obcinania menu); miejsce zarezerwowane przed pobraniem, CLS 0. */
   .karta__zdjecie {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 16 / 10;
+    border-bottom: 1px solid var(--linia);
     object-fit: cover;
   }
 

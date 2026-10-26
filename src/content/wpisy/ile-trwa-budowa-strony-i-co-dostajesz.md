@@ -41,7 +41,7 @@ Osobno pilnujemy poczty, bo przy przepinaniu domeny najłatwiej zepsuć właśni
 
 Zanim strona trafi na hosting, sprawdza ją automatyczna bramka. Patrzy na tytuły i opisy dla wyszukiwarek, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting.
 
-Bramka nie zastępuje oka: po publikacji każdą zmianę sprawdzamy jeszcze na żywej stronie. Wynik szybkości sprawdzamy dodatkowo pomiarem PageSpeed Insights po publikacji. Strona studioagat.pl po przepisaniu z WordPressa na Astro ma w nim 98–100 punktów.
+Bramka nie zastępuje oka: po publikacji każdą zmianę sprawdzamy jeszcze na żywej stronie. Wynik szybkości sprawdzamy dodatkowo pomiarem PageSpeed Insights po publikacji. Strona [Studio Agat](https://studioagat.pl/) po przepisaniu z WordPressa na Astro ma w nim 98–100 punktów.
 
 ## Co dostajesz po publikacji?
 

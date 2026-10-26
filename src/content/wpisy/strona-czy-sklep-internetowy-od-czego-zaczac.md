@@ -24,6 +24,8 @@ Strona firmowa wystarczy, gdy klient najpierw pyta, a dopiero potem kupuje. Tak 
 
 Taka strona ma u nas zwykle ofertę, galerię realizacji, blog i formularz kontaktowy. Budujemy ją w Astro jako gotowe pliki, więc otwiera się szybko także na telefonie. Formularz w PHP wysyła wiadomość na Twój adres, a boty zatrzymuje Cloudflare Turnstile, bez przepisywania liter z obrazka.
 
+Przykład firmy, która pokazuje usługi i zbiera zapytania, to [Pan Stolarz](https://pan-stolarz.pl/): meble na wymiar w Warszawie, z kalkulatorem ceny i formularzem.
+
 Strona firmowa może też pomóc klientowi oszacować koszt, zanim zapyta. Strony Pan Stolarz, Kuchnia na wymiar Warszawa, Szafy na wymiar Warszawa i Garderoba na wymiar Warszawa mają kalkulatory cen, a żadna z nich nie jest sklepem. Klient sprawdza orientacyjną cenę i wysyła zapytanie. Więcej przykładów jest w sekcji [realizacje stron i sklepów](/#realizacje).
 
 ## Kiedy potrzebny jest sklep internetowy?

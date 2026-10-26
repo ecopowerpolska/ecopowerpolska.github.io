@@ -7,6 +7,7 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Bazowy from '../../layouts/Bazowy.astro';
 import PasekMarki from '../../components/PasekMarki.astro';
+import Polecamy from '../../components/Polecamy.astro';
 import Stopka from '../../components/Stopka.astro';
 import teksty from '../../data/blog.json';
 import firma from '../../data/firma.json';
@@ -120,6 +121,8 @@ const daneStrukturalne = {
         </a>
       </p>
     </article>
+
+    <Polecamy />
 
     <p class="wpis__powrot"><a href="/blog/">{tekst(teksty.wszystkie, 'Wszystkie wpisy')}</a></p>
   </main>

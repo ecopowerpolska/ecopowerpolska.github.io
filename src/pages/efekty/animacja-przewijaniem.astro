@@ -565,4 +565,11 @@ const daneStrukturalne = {
       width: min(100%, 60rem, calc((100svh - var(--wys-paska) - 2rem) * 1.5));
     }
   }
+
+  /* Link w akapicie odróżniony nie tylko kolorem (WCAG 1.4.1; Lighthouse link-in-text-block, PSI 2026-10-27: 96 → 100). */
+  .opis p a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
 </style>

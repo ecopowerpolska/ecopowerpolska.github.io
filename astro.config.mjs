@@ -115,6 +115,10 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'Source Serif 4',
       cssVariable: '--font-display',
+      // Zapas szeryfowy (D14, 2026-10-27): Astro liczy metryki zastępczego kroju względem
+      // Times New Roman zamiast Ariala — przy Arialu nagłówek strony głównej łamał się
+      // w innym miejscu do czasu wczytania fontu (CLS 0,015 w pomiarze cls-cdp z Arialem).
+      fallbacks: ['serif'],
       weights: [500, 600],
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],

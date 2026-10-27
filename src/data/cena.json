@@ -1,6 +1,6 @@
 {
-  "tytulKarty": "Cennik stron i sklepów internetowych — EcoPower Polska",
-  "opisWyszukiwarki": "Cennik EcoPower Polska: wykonanie i prowadzenie strony internetowej oraz sklepu (WooCommerce, PrestaShop, Shoper, IdoSell, Astro). Ceny netto.",
+  "tytulKarty": "Cennik stron i sklepów internetowych, Warszawa — EcoPower Polska",
+  "opisWyszukiwarki": "Cennik EcoPower Polska w Warszawie: wykonanie i prowadzenie strony internetowej oraz sklepu (WooCommerce, PrestaShop, Shoper, IdoSell, Astro). Ceny netto.",
   "naglowek": "Cennik stron i sklepów internetowych",
   "lead": "Podajemy ceny orientacyjne netto. Ostateczną wycenę przygotowujemy po rozmowie o zakresie: liczbie podstron, funkcjach, tekstach i zdjęciach.",
   "zastrzezenie": "Ceny netto, do faktury doliczamy 23 % VAT. Cennik aktualny na październik 2026.",
@@ -40,7 +40,7 @@
     },
     {
       "pozycja": "Opieka techniczna i aktualizacje",
-      "opis": "Kopie zapasowe, aktualizacje, monitoring.",
+      "opis": "Kopie zapasowe, aktualizacje, monitoring. Prace poza pakietem: 150 zł za godzinę.",
       "cena": "250 zł",
       "jednostka": "miesięcznie"
     },
@@ -52,7 +52,7 @@
     },
     {
       "pozycja": "Treści: prowadzenie bloga firmowego",
-      "opis": "Regularne wpisy na blogu firmy: piszemy je i publikujemy.",
+      "opis": "Regularne wpisy na blogu firmy: piszemy je i publikujemy. Obejmuje 11 wpisów miesięcznie.",
       "cena": "1 600 zł",
       "jednostka": "miesięcznie"
     }
@@ -83,6 +83,12 @@
       "opis": "Katalog produktów i koszyk na szybkiej stronie Astro, płatność online przez operatora płatności.",
       "cena": "9 750 zł",
       "jednostka": ""
+    },
+    {
+      "pozycja": "Sklep dedykowany albo duży",
+      "opis": "Sklep pisany na zamówienie albo duże wdrożenie (własne funkcje, integracje z magazynem i ERP, tysiące produktów).",
+      "cena": "47 750 zł",
+      "jednostka": ""
     }
   ],
   "sklepProwadzenieNaglowek": "Sklep internetowy: prowadzenie",
@@ -107,6 +113,12 @@
       "jednostka": "miesięcznie"
     },
     {
+      "pozycja": "Opieka dużego sklepu z gwarantowanym czasem reakcji",
+      "opis": "Umowa z gwarantowanym czasem reakcji na awarię (np. 4 h), monitoring całodobowy, aktualizacje i kopie.",
+      "cena": "4 000 zł",
+      "jednostka": "miesięcznie"
+    },
+    {
       "pozycja": "Integracje",
       "opis": "System płatności 1 200 zł, Allegro 2 500 zł, hurtownia (dropshipping) 3 500 zł.",
       "cena": "2 500 zł",
@@ -117,6 +129,12 @@
       "opis": "Za każdą opłaconą transakcję. Przykład: Przelewy24 w Shoper Płatności, pakiet Standard; przez pierwsze 3 miesiące 1% + 0,39 zł, aktywacja 49 zł brutto.",
       "cena": "1,58% + 0,39 zł",
       "jednostka": "od transakcji"
+    },
+    {
+      "pozycja": "Regulamin i polityka prywatności",
+      "opis": "Regulamin sklepu i polityka prywatności z aktualizacją przy zmianie przepisów.",
+      "cena": "399 zł",
+      "jednostka": "rocznie"
     }
   ],
   "ctaNaglowek": "Chcesz poznać cenę swojej strony albo sklepu?",

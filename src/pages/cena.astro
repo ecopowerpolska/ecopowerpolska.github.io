@@ -176,15 +176,32 @@ const daneStrukturalne = {
     margin: 0 0 var(--o-6);
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
     gap: 0 var(--o-2);
     font-size: var(--t-s);
     color: var(--tekst-cichy);
   }
 
+  /* Jedna linia na każdej szerokości (D14): bieżąca strona skraca się wielokropkiem,
+     pełny tytuł stoi tuż niżej w H1. */
   .okruszki li {
     display: inline-flex;
     align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* contain: inline-size — długi tytuł nie poszerza strony (min-content = 0), dostaje resztę wiersza. */
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
   }
 
   .okruszki li + li::before {
@@ -192,8 +209,7 @@ const daneStrukturalne = {
     margin-right: var(--o-2);
   }
 
-  .okruszki a,
-  .okruszki [aria-current] {
+  .okruszki a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
@@ -267,7 +283,9 @@ const daneStrukturalne = {
 
   /* Przewijanie poziome jako zapas (od 40 rem w górę tabela mieści się sama, niżej wiersze są kartami); cień przy krawędzi pokazuje, że tabela idzie dalej
      (tło „local” zasłania cień, gdy dojedziemy do końca). Fokus z klawiatury pozwala przewijać strzałkami. */
+  /* 56 rem: kwota stoi w zasięgu wzroku od nazwy pozycji także na 1440 px (D14). */
   .przewijanie {
+    max-width: 56rem;
     overflow-x: auto;
     background:
       linear-gradient(to right, var(--tlo) 30%, rgb(244 245 241 / 0%)) left / 2rem 100% no-repeat local,

@@ -27,13 +27,15 @@ const guzikKopiujWszystko = tekst(napisyStopki.guzikKopiujWszystko, 'Skopiuj dan
 // („Skopiowano: dane spółki."). Liczona Z NAPISU Z PANELU, nie wpisana w skrypcie:
 // inaczej po zmianie napisu guzika w panelu czytnik ekranu mówiłby dalej stare
 // brzmienie i HTML rozjechałby się z JavaScriptem po cichu (kontrola nadi, K5).
+// Stopka pokazuje skrót „EcoPower Polska Sp. z o.o.” (Piotr 2026-10-27); pełna nazwa zostaje w JSON-LD i llms.txt.
+const nazwaStopki = tekst((firma as Record<string, unknown>).nazwaStopka as string | undefined, firma.nazwaPelna);
 const nazwaZbiorcza = guzikKopiujWszystko.replace(/^skopiuj\s+/i, '');
 const potwierdzenieKopiowania = tekst(napisyStopki.potwierdzenieKopiowania, 'Skopiowano');
 const bladKopiowania = tekst(napisyStopki.bladKopiowania, 'Nie udało się skopiować.');
 
 // Blok kopiowany guzikiem zbiorczym — do wklejenia w umowę albo przelew.
 const daneSpolki = [
-  firma.nazwaPelna,
+  nazwaStopki,
   `${firma.rejestr}, ${etykietaKrs} ${firma.krs}`,
   `${etykietaNip} ${firma.nip}`,
   `${etykietaRegon} ${firma.regon}`,
@@ -70,11 +72,11 @@ const daneSpolki = [
 
     <p class="stopka__nazwa">
       <span class="dana"
-        >{firma.nazwaPelna}<button
+        >{nazwaStopki}<button
           class="kopiuj"
           type="button"
           hidden
-          data-kopiuj={firma.nazwaPelna}
+          data-kopiuj={nazwaStopki}
           aria-label="Skopiuj nazwę spółki"><span class="kopiuj__znak" aria-hidden="true"></span></button
         ></span
       >
@@ -360,11 +362,13 @@ const daneSpolki = [
     appearance: none;
     /* Ujemny prawy margines: guzik jest szerszy od ikony (pole kliknięcia) i bez
        tego pusty pas odsuwał od wartości to, co stoi za nią. */
-    margin: 0 -0.2rem 0 0.1rem;
+    /* 24×24 px = minimum WCAG 2.5.8 (D14). Ujemne marginesy pionowe: większy guzik
+       nie podnosi wysokości wiersza. */
+    margin: -0.25rem -0.35rem -0.25rem 0;
     padding: 0;
-    width: 1.1rem;
-    height: 1.1rem;
-    vertical-align: -0.25em;
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
     display: inline-grid;
     place-items: center;
     background: none;

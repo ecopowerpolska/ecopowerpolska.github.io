@@ -891,7 +891,12 @@ collections:
           - name: nazwaKrotka
             label: "Nazwa skrócona (widoczna na stronie)"
             widget: string
-            hint: "BEZ formy prawnej. Forma prawna stoi w nazwie pelnej w stopce."
+            hint: "BEZ formy prawnej."
+          - name: nazwaStopka
+            label: "Nazwa w stopce"
+            widget: string
+            required: false
+            hint: "Skrót z formą prawną, np. EcoPower Polska Sp. z o.o. Puste pole = nazwa pełna."
           - { name: rejestr, label: "Rejestr", widget: string }
           - { name: krs, label: "KRS", widget: string }
           - { name: nip, label: "NIP", widget: string }

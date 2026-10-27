@@ -190,9 +190,19 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
     border-top: 2px solid var(--akcent);
   }
 
-  @media (min-width: 40rem) {
+  /* Dwie kolumny i nieparzysta liczba pozycji (9 = 2 + 2 + 2 + 2 + 1): trzy ostatnie
+     w jednym rzędzie, bez pozycji samotnej (D14). Siatka 6 ścieżek, pozycja zajmuje 3 albo 2. */
+  @media (min-width: 40rem) and (max-width: 63.99rem) {
     .zakres {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .zakres li {
+      grid-column: span 3;
+    }
+
+    .zakres:has(> li:nth-child(2n + 1):last-child) > li:nth-last-child(-n + 3) {
+      grid-column: span 2;
     }
   }
 

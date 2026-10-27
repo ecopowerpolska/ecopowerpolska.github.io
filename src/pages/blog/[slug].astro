@@ -193,15 +193,39 @@ const daneStrukturalne = {
     margin: 0 0 var(--o-6);
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
     gap: 0 var(--o-2);
     font-size: var(--t-s);
     color: var(--tekst-cichy);
   }
 
+  /* Jedna linia na każdej szerokości (D14): bieżąca strona skraca się wielokropkiem,
+     pełny tytuł stoi tuż niżej w H1. */
   .okruszki li {
     display: inline-flex;
     align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* contain: inline-size — długi tytuł nie poszerza strony (min-content = 0), dostaje resztę wiersza. */
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki li:last-child > a {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
   }
 
   .okruszki li + li::before {

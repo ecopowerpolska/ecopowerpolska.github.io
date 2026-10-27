@@ -1,6 +1,7 @@
 ---
 // /faq/ — pytania klientów o strony i sklepy (dist/faq/index.html). Treść: src/data/faq.json (panel: Pytania i odpowiedzi).
-// Pytanie = nagłówek H2 z kotwicą, odpowiedź widoczna od razu (bez <details>): treść jest dla czytelnika i dla cytowania przez AI.
+// Pytanie = <details name="faq" id="kotwica"> z H2 w <summary> (D14, Piotr 2026-10-27): klik otwiera jedno pytanie i zamyka resztę;
+// odpowiedź zostaje w HTML (zamknięty <details> nie ukrywa tekstu przed robotem ani przed wyszukiwaniem w stronie).
 // 🔴 Bez FAQPage w JSON-LD: wynik FAQ Google wycofał 2026-05-07, a bramka zatrzymuje publikację blokadą A10
 // (potwor-www §I, precedens pan-stolarz.pl). JSON-LD: WebPage + BreadcrumbList w @graph, jak wpis bloga.
 import Bazowy from '../../layouts/Bazowy.astro';
@@ -102,25 +103,35 @@ const daneStrukturalne = {
       {napis('lead', 'Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe.')}
     </p>
 
-    {pytania.length > 0 && (
-      <nav class="spis" aria-labelledby="spis-pytan">
-        <h2 id="spis-pytan" class="sr-only">{napis('spisEtykieta', 'Spis pytań')}</h2>
-        <ol>
-          {pytania.map((p) => (
-            <li><a href={`#${p.kotwica}`}>{p.pytanie}</a></li>
-          ))}
-        </ol>
-      </nav>
-    )}
-
+    {/* Akordeon wyłączny (D14): wspólne name="faq" — otwarcie jednego pytania zamyka pozostałe.
+        Bez data-ujawnij: pytania nie mogą być schowane przez animację wejścia. */}
     <div class="lista">
       {pytania.map((p) => (
-        <section class="pytanie" aria-labelledby={p.kotwica} data-ujawnij>
-          <h2 id={p.kotwica} class="pytanie__tytul">{p.pytanie}</h2>
-          {p.akapity.map((a) => <p>{a}</p>)}
-        </section>
+        <details class="pytanie" name="faq" id={p.kotwica}>
+          <summary class="pytanie__tytul"><h2>{p.pytanie}</h2></summary>
+          <div class="pytanie__odpowiedz">
+            {p.akapity.map((a) => <p>{a}</p>)}
+          </div>
+        </details>
       ))}
     </div>
+
+    {/* Wejście z adresu z #kotwica (z bloga, ze strony głównej) otwiera to jedno pytanie. */}
+    <script is:inline>
+      (() => {
+        const otworz = () => {
+          const id = decodeURIComponent(location.hash.slice(1));
+          const el = id && document.getElementById(id);
+          if (el && el.tagName === 'DETAILS') {
+            el.open = true;
+            el.scrollIntoView();
+          }
+        };
+        addEventListener('hashchange', otworz);
+        if (document.readyState === 'complete') otworz();
+        else addEventListener('load', otworz);
+      })();
+    </script>
 
     <section class="kontakt" aria-labelledby="faq-kontakt" data-ujawnij>
       <h2 id="faq-kontakt" class="kontakt__tytul">{napis('kontaktNaglowek', 'Nie ma tu Twojego pytania?')}</h2>
@@ -149,15 +160,31 @@ const daneStrukturalne = {
     margin: 0 0 var(--o-6);
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
     gap: 0 var(--o-2);
     font-size: var(--t-s);
     color: var(--tekst-cichy);
   }
 
+  /* Jedna linia na każdej szerokości (D14): bieżąca strona skraca się wielokropkiem,
+     pełny tytuł stoi tuż niżej w H1. */
   .okruszki li {
     display: inline-flex;
     align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* contain: inline-size — długi tytuł nie poszerza strony (min-content = 0), dostaje resztę wiersza. */
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .okruszki li + li::before {
@@ -165,72 +192,108 @@ const daneStrukturalne = {
     margin-right: var(--o-2);
   }
 
-  .okruszki a,
-  .okruszki [aria-current] {
+  .okruszki a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+
+  .okruszki [aria-current] {
+    line-height: 44px;
   }
 
   .okruszki a:hover {
     color: var(--tekst);
   }
 
-  /* Kolumna 40 rem, ok. 70 znaków w wierszu. */
+  /* Kolumna 42 rem wyśrodkowana, ta sama co wpis bloga (D14). */
+  .okruszki,
   .faq__tytul,
   .faq__lead,
-  .spis,
   .lista,
   .kontakt {
-    max-width: 40rem;
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+
+  .faq__tytul,
+  .faq__lead {
+    text-align: center;
   }
 
   .faq__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-wrap: balance;
   }
 
   .faq__lead {
-    margin: var(--o-4) 0 var(--o-8);
+    margin-block: var(--o-4) var(--o-8);
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);
   }
 
-  /* Spis: kreski zamiast wypełnienia, jak spis grup na stronie głównej. */
-  .spis ol {
-    margin: 0 0 var(--o-12);
-    padding: var(--o-3) 0 var(--o-3) var(--o-6);
+  /* Akordeon: kreska między pytaniami, plus/minus jak FAQ satelit (details.karta). */
+  .lista {
     border-top: 1px solid var(--linia);
+  }
+
+  /* Wejście z #kotwicy: pytanie nie chowa się pod przyklejonym paskiem. */
+  .pytanie {
     border-bottom: 1px solid var(--linia);
-  }
-
-  .spis a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-weight: 600;
-  }
-
-  .spis a:hover {
-    color: var(--tekst);
-  }
-
-  .pytanie + .pytanie {
-    margin-top: var(--o-12);
+    scroll-margin-top: 7rem;
   }
 
   .pytanie__tytul {
-    margin-bottom: var(--o-3);
+    display: flex;
+    align-items: center;
+    gap: var(--o-3);
+    min-height: 44px;
+    padding: var(--o-4) 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .pytanie__tytul::-webkit-details-marker {
+    display: none;
+  }
+
+  .pytanie__tytul::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.875rem;
+    height: 0.875rem;
+    background:
+      linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat,
+      linear-gradient(var(--akcent), var(--akcent)) center / 2px 100% no-repeat;
+  }
+
+  /* Otwarte: sam minus (bez obrotu — obrócona kreska wyglądała jak „|”). */
+  .pytanie[open] > .pytanie__tytul::before {
+    background: linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat;
+  }
+
+  .pytanie__tytul h2 {
+    margin: 0;
     font-size: var(--t-l);
     line-height: 1.25;
   }
 
-  .pytanie p {
+  .pytanie__tytul:hover h2 {
+    color: var(--akcent);
+  }
+
+  .pytanie__odpowiedz {
+    padding: 0 0 var(--o-4) calc(0.875rem + var(--o-3));
+  }
+
+  .pytanie__odpowiedz p {
     margin: 0 0 var(--o-3);
   }
 
   .kontakt {
     margin-top: var(--o-16);
+    margin-inline: auto;
     padding: var(--o-6);
     background: var(--powierzchnia);
     border-radius: var(--promien);
@@ -262,17 +325,5 @@ const daneStrukturalne = {
 
   .kontakt__dane a:hover {
     color: var(--tekst);
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
   }
 </style>

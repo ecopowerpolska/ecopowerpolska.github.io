@@ -49,7 +49,7 @@ Po uruchomieniu płacisz co roku albo co miesiąc. Żadne z naszych źródeł ni
 - **Opieka techniczna sklepu**: 250–1 500 zł miesięcznie, mediana 740 zł.
 - **Integracje**: 1 200–3 500 zł za sztukę, na przykład z Allegro albo hurtownią.
 
-Platformy abonamentowe mają własne cenniki. Shoper Standard kosztuje 29 zł miesięcznie w pierwszym roku, potem 299 zł. IdoSell w cenniku od 1 sierpnia 2026 roku ma plany Start 119 zł, Business 279 zł, Expert+ 729 zł i Enterprise 2 299 zł miesięcznie. Dolicza też opłatę za każde zamówienie złożone w sklepie: od 0,85 do 1,59 zł, zależnie od planu.
+Platformy abonamentowe mają własne cenniki. Shoper Standard kosztuje 29 zł miesięcznie w pierwszym roku, potem 299 zł. IdoSell w cenniku od 1 sierpnia 2026 roku ma plany Start 119 zł, Business 279 zł, Expert+ 729 zł i Enterprise 2 299 zł miesięcznie. Dolicza też opłatę za każde zamówienie złożone w sklepie: od 0,85 do 1,59 zł, zależnie od planu. Hasło „od 29 zł netto miesięcznie” na stronie IdoSell to plan Start przy umowie na rok: 348 zł za rok, czyli 29 zł miesięcznie, z rabatem 70 % w pierwszym roku; bez umowy rocznej Start kosztuje 119 zł.
 
 Prowizje od płatności online pobiera operator płatności przy każdej transakcji:
 
@@ -98,7 +98,6 @@ Nasze ceny orientacyjne oparliśmy o te dane: dla większości pozycji przyjęli
 - Kosztów prowadzenia osobno dla wizytówki, strony firmowej i strony rozbudowanej. Źródła podają jedne widełki dla wszystkich.
 - Czy kwoty w porównywarce cenauslug.pl są netto czy brutto. Ani przewodnik, ani opis metody tego nie mówią. Metoda mówi, że ceny pochodzą z cenników firm, ogłoszeń i stawek zgłaszanych przez wykonawców.
 - Która stawka PayU jest standardowa, a która promocyjna. Strona oferty podaje obie bez opisu.
-- Dlaczego strona cennika IdoSell podaje „od 29 zł netto miesięcznie”, a cennik w PDF zaczyna się od 119 zł.
 
 ## Z jakich źródeł pochodzą liczby?
 

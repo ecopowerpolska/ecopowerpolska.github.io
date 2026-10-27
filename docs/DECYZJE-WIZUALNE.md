@@ -285,3 +285,22 @@ wydajności (...) na komórkę, na stacjonarny” oraz „30 pomiar uruchomię j
 - **Strona przykładowa `/przyklady/scrollytelling/`** — `noindex, nofollow`, poza menu, stopką, `llms.txt` i sitemapą
   (filtr `sitemap()` w `astro.config.mjs`). Dwie sceny szafy (CSS `animation-timeline` i 120 klatek WebP na canvas) w tokenach
   strony; kolory ilustracji, które nie są tekstem, są stałymi w stylu tej trasy, nie tokenami motywu.
+
+## D14 — FAQ akordeonem, skrót nazwy w stopce, guzik 24 px, okruszki w jednej linii (2026-10-27)
+
+Słowa Piotra 2026-10-27 13:50/13:58 (FAQ: „ma się otwierać to jedno i wyłącznie jedno pytanie”, blok wyśrodkowany, bez
+przewijania w dół; stopki: „EcoPower Polska Sp. z o.o.”; guzik: „jeżeli jest wymagane 24, to zrób 24”).
+- **`/faq/`** — każde pytanie to `<details name="faq" id="<kotwica>">` z H2 w `<summary>`: natywny akordeon wyłączny,
+  bez spisu treści. Kolumna 42 rem wyśrodkowana jak wpis bloga, H1 i lead wyśrodkowane. Adres z `#kotwica` otwiera to
+  jedno pytanie (skrypt inline, `load` + `hashchange`); `scroll-margin-top` trzyma pytanie pod przyklejonym paskiem.
+  Plus/minus jak FAQ satelit, otwarte = sam minus. Bez `data-ujawnij` na pytaniach. Nadal bez FAQPage w JSON-LD (A10).
+- **Stopka** — nazwa i guzik „skopiuj” biorą pole `nazwaStopka` z `firma.json` („EcoPower Polska Sp. z o.o.”, panel:
+  Dane rejestrowe → Nazwa w stopce; puste = nazwa pełna). `legalName` w JSON-LD i `llms.txt` zostają pełne.
+- **Guzik „kopiuj”** — 24×24 px (WCAG 2.5.8), ujemne marginesy pionowe, wiersz nie rośnie; ikona bez zmian.
+- **Okruszki** (`/faq/`, `/cena/`, `/blog/<wpis>/`) — jedna linia na każdej szerokości: ostatnia pozycja dostaje resztę
+  wiersza (`flex: 1 1 0`, `contain: inline-size`) i skraca się wielokropkiem. Przyczyna przerwy: `flex-wrap` + `min-height:
+  44px` na każdej pozycji (zawinięty tytuł stał 44 px niżej). `/przyklady/scrollytelling/` nietknięte.
+- **Bez sierot** — Realizacje i „Czym się zajmujemy” na siatce 6 ścieżek: przy 3 kolumnach i reszcie 1 cztery ostatnie
+  kafle stają parami na środku (3 + 2 + 2), przy 2 kolumnach i reszcie 1 trzy ostatnie w jednym rzędzie.
+- **Cennik** — tabela do 56 rem (kwota w zasięgu wzroku na 1440 px). **Krój zapasowy nagłówków** liczony względem
+  Times New Roman (`fallbacks: ['serif']`), nie Ariala.

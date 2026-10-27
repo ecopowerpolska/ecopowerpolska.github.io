@@ -77,34 +77,55 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
     line-height: 1.5;
   }
 
-  /* 3 / 2 / 1 kolumny, kafle równej szerokości. Flex z zawijaniem zamiast grid: niepełny
-     ostatni rząd (7 = 3 + 3 + 1) stoi wyśrodkowany, nie przy lewej krawędzi — ten sam wzorzec
-     „bez sierot” co siatka-rowna na studioagat.pl (słowo Piotra 2026-10-20). */
+  /* 3 / 2 / 1 kolumny, kafle równej szerokości, bez kafla samotnego w rzędzie (D14).
+     Siatka 6 ścieżek: kafel zajmuje 2 (trzy w rzędzie) albo 3 (dwa w rzędzie).
+     Trzy w rzędzie i reszta 1 (7 = 3 + 3 + 1): cztery ostatnie kafle stają parami
+     na środku (3 + 2 + 2), ten sam rozmiar. Dwa w rzędzie i reszta 1 (7 = 2 + 2 + 2 + 1):
+     trzy ostatnie kafle w jednym rzędzie (2 + 2 + 3). */
   .realizacje__siatka {
-    --kol: 1;
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--o-6);
   }
 
   .realizacje__siatka > li {
-    flex: 0 0 calc((100% - (var(--kol) - 1) * var(--o-6)) / var(--kol));
     min-width: 0;
   }
 
-  @media (min-width: 36rem) {
+  @media (min-width: 36rem) and (max-width: 59.99rem) {
     .realizacje__siatka {
-      --kol: 2;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .realizacje__siatka > li {
+      grid-column: span 3;
+    }
+
+    .realizacje__siatka:has(> li:nth-child(2n + 1):last-child) > li:nth-last-child(-n + 3) {
+      grid-column: span 2;
     }
   }
 
   @media (min-width: 60rem) {
     .realizacje__siatka {
-      --kol: 3;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .realizacje__siatka > li {
+      grid-column: span 2;
+    }
+
+    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(4),
+    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(2) {
+      grid-column: 2 / span 2;
+    }
+
+    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(3),
+    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(1) {
+      grid-column: 4 / span 2;
     }
   }
 </style>

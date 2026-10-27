@@ -1,0 +1,186 @@
+{
+  "tytulKarty": "Ile kosztuje strona i sklep internetowy w Warszawie? Średnie ceny 2026 — EcoPower Polska",
+  "opisWyszukiwarki": "Średnie ceny rynkowe w Warszawie: wykonanie i prowadzenie strony internetowej oraz sklepu (Shoper, WooCommerce, PrestaShop, dedykowany). Widełki i środek netto, 16 źródeł, stan na 27.10.2026.",
+  "naglowek": "Ile kosztuje strona i sklep internetowy w Warszawie",
+  "lead": "Zebraliśmy ceny z cenników warszawskich wykonawców, porównywarek cen i poradników branżowych z lat 2025–2026. Dla każdej półki podajemy widełki i wartość środkową.",
+  "zastrzezenie": "To są średnie ceny rynkowe, a nie cennik EcoPower Polska. Kwoty są w złotych netto: do faktury wystawionej przez firmę na VAT dolicza się 23% VAT. Ceny sprawdziliśmy 27 października 2026 roku.",
+  "dataBadania": "27 października 2026",
+  "kolumnaPozycji": "Półka",
+  "kolumnaWidelek": "Widełki",
+  "kolumnaSrodka": "Środek",
+  "kolumnaZrodel": "Źródła",
+  "stronaWykonanieNaglowek": "Strona internetowa: wykonanie",
+  "stronaWykonanieOpis": "Jednorazowo, zł netto. Bez domeny, hostingu i tekstów, chyba że wykonawca wlicza je w pakiet.",
+  "stronaWykonanie": [
+    {
+      "pozycja": "Wizytówka, strona jednostronicowa",
+      "widelki": "1 490 – 4 500 zł",
+      "srodek": "2 900 zł",
+      "uwagi": "Jedna strona albo 2–3 podstrony, formularz kontaktowy. Najwyżej w zestawieniu porównywarki stoi Warszawa: 3 900 zł.",
+      "zrodla": "1, 2, 3, 4, 5, 7"
+    },
+    {
+      "pozycja": "Strona firmowa",
+      "widelki": "2 499 – 9 000 zł",
+      "srodek": "5 750 zł",
+      "uwagi": "Zwykle 5–10 podstron, panel do edycji treści, formularz, podstawowe SEO. Warszawa w porównywarce: 7 000 zł.",
+      "zrodla": "1, 2, 3, 4, 5, 6, 7, 8, 9"
+    },
+    {
+      "pozycja": "Strona rozbudowana lub premium",
+      "widelki": "3 999 – 25 000 zł",
+      "srodek": "12 000 zł",
+      "uwagi": "Indywidualny projekt graficzny, integracje (CRM, rezerwacje), wiele usług albo portal. Górna granica dla portali sięga 50 000 zł.",
+      "zrodla": "1, 3, 4, 6, 7, 8, 9"
+    }
+  ],
+  "stronaProwadzenieNaglowek": "Strona internetowa: prowadzenie",
+  "stronaProwadzenieOpis": "Koszty stałe po uruchomieniu, zł netto. Źródła nie dzielą tych kosztów na półki: wizytówka mieści się zwykle w dolnej części widełek, strona rozbudowana w górnej.",
+  "stronaProwadzenie": [
+    {
+      "pozycja": "Hosting, domena i certyfikat SSL",
+      "widelki": "105 – 1 000 zł rocznie",
+      "srodek": "430 zł rocznie",
+      "uwagi": "Domena .pl przy odnowieniu ok. 80–150 zł rocznie, certyfikat SSL zwykle bezpłatny (Let's Encrypt).",
+      "zrodla": "4, 7, 9, 10"
+    },
+    {
+      "pozycja": "Opieka techniczna i aktualizacje",
+      "widelki": "99 – 283 zł miesięcznie",
+      "srodek": "250 zł miesięcznie",
+      "uwagi": "Kopie zapasowe, aktualizacje, monitoring. Warszawa w porównywarce: 3 400 zł rocznie, czyli ok. 283 zł miesięcznie. Prace poza pakietem: 100–200 zł za godzinę.",
+      "zrodla": "1, 4, 15"
+    },
+    {
+      "pozycja": "Treści: wpis na blogu",
+      "widelki": "70 – 140 zł za wpis",
+      "srodek": "105 zł za wpis",
+      "uwagi": "Artykuł pisany pod SEO, cena za sztukę.",
+      "zrodla": "1"
+    },
+    {
+      "pozycja": "Treści: prowadzenie bloga firmowego",
+      "widelki": "1 600 zł miesięcznie",
+      "srodek": "1 600 zł miesięcznie",
+      "uwagi": "Jedna stawka z jednego źródła, bez widełek.",
+      "zrodla": "1"
+    }
+  ],
+  "sklepWykonanieNaglowek": "Sklep internetowy: uruchomienie",
+  "sklepWykonanieOpis": "Jednorazowo, zł netto. Bez abonamentu platformy, płatnych modułów, opisów produktów i zdjęć.",
+  "sklepWykonanie": [
+    {
+      "pozycja": "Sklep na platformie abonamentowej (Shoper, IdoSell)",
+      "widelki": "1 800 – 11 000 zł",
+      "srodek": "11 000 zł",
+      "uwagi": "Wdrożenie przez wykonawcę. Średnia z 8 ofert w Polsce to 5 413 zł, a Warszawa jest w zestawieniu najdroższa: 11 000 zł. Samodzielne uruchomienie jest w cenie abonamentu.",
+      "zrodla": "1, 10"
+    },
+    {
+      "pozycja": "Sklep WooCommerce",
+      "widelki": "9 500 zł",
+      "srodek": "9 500 zł",
+      "uwagi": "Jedna wycena z Warszawy w porównywarce, bez widełek. Obejmuje płatności, dostawy, SSL i podstawowe SEO.",
+      "zrodla": "1"
+    },
+    {
+      "pozycja": "Sklep PrestaShop",
+      "widelki": "9 600 – 45 000 zł",
+      "srodek": "25 000 zł",
+      "uwagi": "Od podstawowego wdrożenia do startu z agencją. Sam silnik jest bezpłatny.",
+      "zrodla": "14, 16"
+    },
+    {
+      "pozycja": "Sklep w cennikach agencji, bez wskazania platformy",
+      "widelki": "2 999 – 35 000 zł",
+      "srodek": "9 750 zł",
+      "uwagi": "Ceny, które wykonawcy podają dla sklepu ogólnie. Dwa z pięciu cenników pochodzą od wykonawców z Warszawy.",
+      "zrodla": "2, 3, 6, 8, 9"
+    },
+    {
+      "pozycja": "Sklep dedykowany albo duży",
+      "widelki": "15 000 – 130 000 zł",
+      "srodek": "47 750 zł",
+      "uwagi": "Indywidualny projekt i programowanie, Magento 2, sklep B2B z integracjami.",
+      "zrodla": "1, 10, 14, 16"
+    }
+  ],
+  "sklepProwadzenieNaglowek": "Sklep internetowy: prowadzenie",
+  "sklepProwadzenieOpis": "Koszty stałe po uruchomieniu, zł netto, o ile nie napisano inaczej.",
+  "sklepProwadzenie": [
+    {
+      "pozycja": "Abonament platformy (Shoper, IdoSell)",
+      "widelki": "29 – 729 zł miesięcznie",
+      "srodek": "299 zł miesięcznie",
+      "uwagi": "Środek to cena regularna Shoper Standard po pierwszym roku (3 249 zł rocznie). Pierwszy rok bywa w promocji od 29 zł miesięcznie. Hosting jest w cenie abonamentu.",
+      "zrodla": "10, 11, 13"
+    },
+    {
+      "pozycja": "Hosting sklepu na własnym silniku (WooCommerce, PrestaShop)",
+      "widelki": "30 – 417 zł miesięcznie",
+      "srodek": "160 zł miesięcznie",
+      "uwagi": "Razem z domeną i certyfikatem; większy ruch to droższy serwer.",
+      "zrodla": "10, 16"
+    },
+    {
+      "pozycja": "Opieka techniczna sklepu",
+      "widelki": "250 – 1 500 zł miesięcznie",
+      "srodek": "740 zł miesięcznie",
+      "uwagi": "Aktualizacje z testem ścieżki zakupu, kopie zapasowe, monitoring płatności i zamówień, kilka godzin prac w miesiącu.",
+      "zrodla": "10, 15, 16"
+    },
+    {
+      "pozycja": "Opieka sklepu dedykowanego albo dużego, z gwarantowanym czasem reakcji",
+      "widelki": "1 000 – 12 000 zł miesięcznie",
+      "srodek": "4 000 zł miesięcznie",
+      "uwagi": "Dyżur, krótki czas reakcji na awarię i budżet na rozwój.",
+      "zrodla": "10, 16"
+    },
+    {
+      "pozycja": "Integracje (jednorazowo, za sztukę)",
+      "widelki": "1 200 – 3 500 zł",
+      "srodek": "2 500 zł",
+      "uwagi": "System płatności 1 200 zł, Allegro 2 500 zł, hurtownia (dropshipping) 3 500 zł. Na platformie abonamentowej dodatkowe aplikacje to 0–200 zł miesięcznie.",
+      "zrodla": "1, 10"
+    },
+    {
+      "pozycja": "Prowizje od płatności online",
+      "widelki": "1% – 1,58% + 0,39 zł",
+      "srodek": "1,58% + 0,39 zł",
+      "uwagi": "Za każdą opłaconą transakcję. Shoper Płatności (Przelewy24): 1,58% + 0,39 zł w pakiecie Standard, przez pierwsze 3 miesiące 1% + 0,39 zł, aktywacja 49 zł brutto.",
+      "zrodla": "10, 12"
+    },
+    {
+      "pozycja": "Regulamin i polityka prywatności",
+      "widelki": "399 zł rocznie",
+      "srodek": "399 zł rocznie",
+      "uwagi": "Pakiet prawny z aktualizacjami; jedno źródło.",
+      "zrodla": "10"
+    }
+  ],
+  "metodaNaglowek": "Źródła i metoda",
+  "metoda": "Dla każdej półki zebraliśmy kwoty ze źródeł poniżej. Widełki to najniższa i najwyższa kwota podana przez źródła. Środek to mediana: z każdego źródła bierzemy środek jego przedziału albo jego jedyną kwotę i wybieramy wartość środkową. Gdy źródło ma tylko jedną kwotę, widełki i środek są równe. Trzy wyjątki: przy wdrożeniu sklepu na platformie abonamentowej środkiem jest stawka dla Warszawy, przy abonamencie platformy cena regularna Shoper Standard, a przy prowizjach stawka standardowa po okresie promocji. Porównywarka cenauslug.pl nie podaje, czy kwoty są netto czy brutto; pozostałe cenniki podają netto. Odczyt wszystkich źródeł: 27 października 2026.",
+  "zrodla": [
+    { "nazwa": "cenauslug.pl — wycena stron i sklepów 2026 (wizytówka, strona firmowa, wdrożenie Shoper i WooCommerce, opieka WordPress, treści; ceny według miast)", "adres": "https://cenauslug.pl/przewodnik/tworzenie-stron-i-sklepow-internetowych", "data": "aktualizacja 24.09.2026" },
+    { "nazwa": "Vertes Design, Warszawa — projektowanie stron", "adres": "https://www.vertesdesign.pl/projektowanie-stron-internetowych-warszawa/", "data": "2026" },
+    { "nazwa": "Esitio, Warszawa — cennik stron internetowych", "adres": "https://esitio.pl/cennik-stron-internetowych/", "data": "2026" },
+    { "nazwa": "webwnet.pl — tworzenie stron, Warszawa", "adres": "https://webwnet.pl/tworzenie-stron-internetowych/warszawa", "data": "2026" },
+    { "nazwa": "stronywarszawa.pl — ile kosztuje strona internetowa w 2026", "adres": "https://stronywarszawa.pl/cena-strony-internetowej/", "data": "2026" },
+    { "nazwa": "Best Project — cennik stron internetowych 2026", "adres": "https://www.bestproject.pl/uslugi/cennik-stron-internetowych/", "data": "2026" },
+    { "nazwa": "Orange, poradnik dla firm — ile kosztuje strona internetowa dla firmy", "adres": "https://www.orange.pl/poradnik-dla-firm/?p=12355", "data": "03.12.2025" },
+    { "nazwa": "PixelAgency — ile kosztuje strona internetowa w 2026", "adres": "https://pixelagency.pl/blog/ile-kosztuje-strona-internetowa", "data": "22.05.2026" },
+    { "nazwa": "Webmast Digital — ile kosztuje strona internetowa w 2026", "adres": "https://webmast.pl/blog/ile-kosztuje-strona-internetowa/", "data": "26.08.2026" },
+    { "nazwa": "Shoper — ile kosztuje sklep internetowy, koszty założenia i prowadzenia", "adres": "https://www.shoper.pl/learn/?p=35503", "data": "aktualizacja 25.09.2026" },
+    { "nazwa": "Shoper — cennik pakietów", "adres": "https://www.shoper.pl/cennik", "data": "2026" },
+    { "nazwa": "Shoper Płatności — Przelewy24, prowizje", "adres": "https://www.shoper.pl/systemy-platnosci/przelewy24", "data": "2026" },
+    { "nazwa": "IdoSell — cennik", "adres": "https://www.idosell.com/pl/cennik/", "data": "2026" },
+    { "nazwa": "Soluma — cennik tworzenia sklepów internetowych na 2026 rok", "adres": "https://soluma.pl/cenniki/cennik-tworzenia-sklepow-internetowych", "data": "2026" },
+    { "nazwa": "Informatix — opieka nad sklepem WooCommerce, pakiety i SLA", "adres": "https://informatix.com.pl/blog/opieka-nad-sklepem-woocommerce", "data": "23.10.2026" },
+    { "nazwa": "balcerzak.it — ile kosztuje sklep PrestaShop w 2026 roku", "adres": "https://balcerzak.it/ile-kosztuje-sklep-prestashop-w-2026-roku-realne-widelki-i-tco/", "data": "09.03.2026" }
+  ],
+  "ctaNaglowek": "Chcesz poznać cenę swojej strony albo sklepu?",
+  "ctaTekst": "Napisz, jaki adres ma mieć strona, co ma robić i czy masz już domenę, teksty i zdjęcia. Odpowiemy wyceną dla Twojego zakresu.",
+  "ctaLink": "Przejdź do kontaktu",
+  "stronaGlowna": "Strona główna",
+  "okruszkiEtykieta": "Ścieżka"
+}

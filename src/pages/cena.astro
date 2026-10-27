@@ -1,0 +1,533 @@
+---
+// /cena — średnie ceny warszawskie za stronę www i sklep (rynek, NIE cennik EcoPower; zakładka z 2026-10-27).
+// Treść: src/data/cena.json (panel: Teksty strony → Cena). Każda kwota jest tekstem — panel zapisze dowolny
+// napis, build się nie zatrzyma (docs/CMS-ZASADY-PRACY.md ③). Numery źródeł w wierszu = pozycje listy źródeł.
+// Tabele: prawdziwe <table> z <th scope>, na wąskim ekranie przewijane poziomo w obszarze z fokusem.
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import cenaJson from '../data/cena.json';
+import firma from '../data/firma.json';
+import blog from '../data/blog.json';
+import { tekst } from '../lib/tekst';
+
+const cena = cenaJson as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (klucz: string, domyslny: string) => tekst(naTekst(cena[klucz]), domyslny);
+
+interface Wiersz {
+  pozycja: string;
+  widelki: string;
+  srodek: string;
+  uwagi: string;
+  zrodla: number[];
+}
+
+const zrodla = (Array.isArray(cena.zrodla) ? (cena.zrodla as Record<string, unknown>[]) : [])
+  .map((z) => ({ nazwa: naTekst(z?.nazwa), adres: naTekst(z?.adres), data: naTekst(z?.data) }))
+  .filter((z) => z.nazwa);
+
+// „1, 7, 9” → [1, 7, 9]; numery spoza listy źródeł pomijane, żeby nie było odnośnika w próżnię.
+const numery = (v: unknown): number[] =>
+  (naTekst(v).match(/\d+/g) ?? []).map(Number).filter((n) => n >= 1 && n <= zrodla.length);
+
+const wiersze = (klucz: string): Wiersz[] =>
+  (Array.isArray(cena[klucz]) ? (cena[klucz] as Record<string, unknown>[]) : [])
+    .map((w) => ({
+      pozycja: naTekst(w?.pozycja),
+      widelki: naTekst(w?.widelki),
+      srodek: naTekst(w?.srodek),
+      uwagi: naTekst(w?.uwagi),
+      zrodla: numery(w?.zrodla),
+    }))
+    .filter((w) => w.pozycja);
+
+const brak = 'brak danych';
+const tabele = [
+  { id: 'strona-wykonanie', naglowek: napis('stronaWykonanieNaglowek', 'Strona internetowa: wykonanie'), opis: napis('stronaWykonanieOpis', ''), wiersze: wiersze('stronaWykonanie') },
+  { id: 'strona-prowadzenie', naglowek: napis('stronaProwadzenieNaglowek', 'Strona internetowa: prowadzenie'), opis: napis('stronaProwadzenieOpis', ''), wiersze: wiersze('stronaProwadzenie') },
+  { id: 'sklep-wykonanie', naglowek: napis('sklepWykonanieNaglowek', 'Sklep internetowy: uruchomienie'), opis: napis('sklepWykonanieOpis', ''), wiersze: wiersze('sklepWykonanie') },
+  { id: 'sklep-prowadzenie', naglowek: napis('sklepProwadzenieNaglowek', 'Sklep internetowy: prowadzenie'), opis: napis('sklepProwadzenieOpis', ''), wiersze: wiersze('sklepProwadzenie') },
+].filter((t) => t.wiersze.length > 0);
+
+const kolumny = {
+  pozycja: napis('kolumnaPozycji', 'Półka'),
+  widelki: napis('kolumnaWidelek', 'Widełki'),
+  srodek: napis('kolumnaSrodka', 'Środek'),
+  zrodla: napis('kolumnaZrodel', 'Źródła'),
+};
+
+const tytul = napis('tytulKarty', 'Ile kosztuje strona i sklep internetowy w Warszawie? Średnie ceny — EcoPower Polska');
+const opis = napis('opisWyszukiwarki', 'Średnie ceny rynkowe w Warszawie za wykonanie i prowadzenie strony internetowej i sklepu.');
+const naglowek = napis('naglowek', 'Ile kosztuje strona i sklep internetowy w Warszawie');
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/cena/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: napis('stronaGlowna', 'Strona główna'), adres: '/' },
+  { nazwa: tekst(blog.menuCena, 'Cena'), adres: '/cena/' },
+];
+
+const mail = naTekst(firma.email).toLowerCase();
+const cyfry = naTekst(firma.telefon).replace(/\D/g, '');
+const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : naTekst(firma.telefon);
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: tytul,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="cena">
+    <nav class="okruszki" aria-label={napis('okruszkiEtykieta', 'Ścieżka')}>
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="cena__tytul">{naglowek}</h1>
+    {napis('lead', '') && <p class="cena__lead">{napis('lead', '')}</p>}
+    <p class="cena__zastrzezenie">
+      {napis('zastrzezenie', 'To są średnie ceny rynkowe, a nie cennik EcoPower Polska. Kwoty w złotych netto.')}
+    </p>
+
+    <nav class="spis" aria-labelledby="spis-tabel">
+      <h2 id="spis-tabel" class="sr-only">Spis tabel</h2>
+      <ul>
+        {tabele.map((t) => <li><a href={`#${t.id}`}>{t.naglowek}</a></li>)}
+        <li><a href="#zrodla">{napis('metodaNaglowek', 'Źródła i metoda')}</a></li>
+      </ul>
+    </nav>
+
+    {tabele.map((t) => (
+      <section class="tabela" aria-labelledby={t.id} data-ujawnij>
+        <h2 id={t.id} class="tabela__tytul">{t.naglowek}</h2>
+        {t.opis && <p class="tabela__opis">{t.opis}</p>}
+        <div class="przewijanie" role="region" aria-labelledby={t.id} tabindex="0">
+          <table role="table">
+            <thead role="rowgroup">
+              <tr role="row">
+                <th scope="col" role="columnheader">{kolumny.pozycja}</th>
+                <th scope="col" role="columnheader">{kolumny.widelki}</th>
+                <th scope="col" role="columnheader">{kolumny.srodek}</th>
+                <th scope="col" role="columnheader">{kolumny.zrodla}</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              {t.wiersze.map((w) => (
+                <tr role="row">
+                  <th scope="row" role="rowheader">
+                    <span class="pozycja">{w.pozycja}</span>
+                    {w.uwagi && <span class="uwagi">{w.uwagi}</span>}
+                  </th>
+                  <td class="kwota" role="cell" data-etykieta={kolumny.widelki}>{w.widelki || brak}</td>
+                  <td class="kwota kwota--srodek" role="cell" data-etykieta={kolumny.srodek}>{w.srodek || brak}</td>
+                  <td class="zrodla" role="cell" data-etykieta={kolumny.zrodla}>
+                    <span class="zrodla__numery">
+                      {w.zrodla.length > 0
+                        ? w.zrodla.map((n, i) => (
+                            <>
+                              {i > 0 && ' '}
+                              <a href={`#zrodlo-${n}`} aria-label={`źródło ${n}`}>{n}</a>
+                            </>
+                          ))
+                        : brak}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+
+    <section class="metoda" aria-labelledby="zrodla" data-ujawnij>
+      <h2 id="zrodla" class="tabela__tytul">{napis('metodaNaglowek', 'Źródła i metoda')}</h2>
+      {napis('metoda', '') && <p>{napis('metoda', '')}</p>}
+      <ol class="metoda__lista">
+        {zrodla.map((z, i) => (
+          <li id={`zrodlo-${i + 1}`}>
+            {z.adres ? <a href={z.adres} rel="nofollow noopener">{z.nazwa}</a> : z.nazwa}
+            {z.data && <span class="metoda__data"> ({z.data})</span>}
+          </li>
+        ))}
+      </ol>
+      <p class="metoda__odczyt">Data badania: {napis('dataBadania', '')}</p>
+    </section>
+
+    <section class="kontakt" aria-labelledby="cena-kontakt" data-ujawnij>
+      <h2 id="cena-kontakt" class="kontakt__tytul">{napis('ctaNaglowek', 'Chcesz poznać cenę swojej strony?')}</h2>
+      <p>{napis('ctaTekst', 'Napisz albo zadzwoń.')}</p>
+      <ul class="kontakt__dane">
+        <li><a href="/#kontakt">{napis('ctaLink', 'Przejdź do kontaktu')}</a></li>
+        {mail && <li><a href={`mailto:${mail}`}>{mail}</a></li>}
+        {cyfry && <li><a href={`tel:+48${cyfry.slice(-9)}`}>{telefon}</a></li>}
+      </ul>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .cena {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /faq/ i nad wpisem bloga. */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a,
+  .okruszki [aria-current] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .cena__tytul,
+  .cena__lead,
+  .cena__zastrzezenie,
+  .spis,
+  .tabela__opis,
+  .metoda,
+  .kontakt {
+    max-width: 44rem;
+  }
+
+  .cena__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .cena__lead {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  /* Zastrzeżenie „to nie cennik EcoPower” — wyróżnione wypełnieniem i kreską akcentu, żeby nie zginęło. */
+  .cena__zastrzezenie {
+    margin: var(--o-6) 0 var(--o-8);
+    padding: var(--o-4) var(--o-6);
+    background: var(--powierzchnia);
+    border-left: 4px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    font-weight: 600;
+  }
+
+  .spis ul {
+    margin: 0 0 var(--o-12);
+    padding: var(--o-3) 0 var(--o-3) var(--o-6);
+    border-top: 1px solid var(--linia);
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .spis a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .spis a:hover {
+    color: var(--tekst);
+  }
+
+  .tabela + .tabela,
+  .metoda {
+    margin-top: var(--o-12);
+  }
+
+  .tabela__tytul {
+    font-size: var(--t-xl);
+    line-height: 1.2;
+  }
+
+  .tabela__opis {
+    margin: var(--o-2) 0 var(--o-4);
+    color: var(--tekst-cichy);
+  }
+
+  /* Przewijanie poziome jako zapas (od 40 rem w górę tabela mieści się sama, niżej wiersze są kartami); cień przy krawędzi pokazuje, że tabela idzie dalej
+     (tło „local” zasłania cień, gdy dojedziemy do końca). Fokus z klawiatury pozwala przewijać strzałkami. */
+  .przewijanie {
+    overflow-x: auto;
+    background:
+      linear-gradient(to right, var(--tlo) 30%, rgb(244 245 241 / 0%)) left / 2rem 100% no-repeat local,
+      linear-gradient(to left, var(--tlo) 30%, rgb(244 245 241 / 0%)) right / 2rem 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, rgb(21 32 26 / 18%), transparent) left / 0.75rem 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, rgb(21 32 26 / 18%), transparent) right / 0.75rem 100% no-repeat scroll;
+  }
+
+  /* Stały układ kolumn: cztery tabele jedna pod drugą mają kolumny w tych samych miejscach. */
+  table {
+    width: 100%;
+    min-width: 36rem;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: var(--t-s);
+    line-height: 1.45;
+  }
+
+  thead th {
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--tekst-cichy);
+    padding: var(--o-2) var(--o-3);
+    border-bottom: 2px solid var(--tekst);
+  }
+
+  tbody th,
+  tbody td {
+    padding: var(--o-3);
+    vertical-align: top;
+    text-align: left;
+    border-bottom: 1px solid var(--linia);
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--powierzchnia);
+  }
+
+  thead th:nth-child(1) {
+    width: 44%;
+  }
+
+  thead th:nth-child(2) {
+    width: 22%;
+  }
+
+  thead th:nth-child(3) {
+    width: 18%;
+  }
+
+  tbody th {
+    font-family: var(--font-sans);
+    font-weight: 400;
+  }
+
+  .pozycja {
+    display: block;
+    font-weight: 600;
+    font-size: var(--t-m);
+  }
+
+  .uwagi {
+    display: block;
+    margin-top: var(--o-1);
+    color: var(--tekst-cichy);
+  }
+
+  .kwota {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kwota--srodek {
+    font-weight: 600;
+  }
+
+  /* Numery źródeł jako małe znaczniki 24 × 24 px (WCAG 2.5.8), odnośnik do pozycji listy źródeł.
+     Kontrast: akcent na --powierzchnia-mocna, para z motyw.css. */
+  .zrodla a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+    margin: 0 2px 2px 0;
+    padding: 0 var(--o-1);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    background: var(--powierzchnia-mocna);
+    border-radius: var(--promien-maly);
+  }
+
+  /* Telefon: wiersz = karta. Nagłówek wiersza na górze, pod nim trzy pary etykieta–wartość.
+     Role ARIA w znacznikach trzymają semantykę tabeli, gdy CSS zmienia `display` (Safari ją wtedy gubi). */
+  @media (max-width: 40rem) {
+    table {
+      min-width: 0;
+    }
+
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    table,
+    tbody,
+    tr,
+    tbody th,
+    tbody td {
+      display: block;
+      width: auto;
+    }
+
+    tbody tr {
+      padding: var(--o-3) var(--o-3) var(--o-2);
+      border-bottom: 1px solid var(--linia);
+    }
+
+    tbody th,
+    tbody td {
+      padding: 0;
+      border-bottom: 0;
+    }
+
+    tbody th {
+      margin-bottom: var(--o-2);
+    }
+
+    tbody td {
+      display: flex;
+      gap: var(--o-3);
+      justify-content: space-between;
+      padding: var(--o-1) 0;
+      white-space: normal;
+    }
+
+    .zrodla__numery {
+      text-align: right;
+    }
+
+    tbody td::before {
+      content: attr(data-etykieta);
+      color: var(--tekst-cichy);
+      font-weight: 400;
+    }
+  }
+
+  .metoda p {
+    margin: var(--o-2) 0 var(--o-4);
+  }
+
+  .metoda__lista {
+    margin: 0;
+    padding-left: var(--o-6);
+    font-size: var(--t-s);
+  }
+
+  .metoda__lista li + li {
+    margin-top: var(--o-2);
+  }
+
+  .metoda__lista li:target {
+    background: var(--powierzchnia-mocna);
+  }
+
+  .metoda__data,
+  .metoda__odczyt {
+    color: var(--tekst-cichy);
+  }
+
+  .kontakt {
+    margin-top: var(--o-16);
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .kontakt__tytul {
+    font-size: var(--t-l);
+  }
+
+  .kontakt p {
+    margin: var(--o-2) 0 var(--o-3);
+  }
+
+  .kontakt__dane {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-6);
+  }
+
+  .kontakt__dane a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .kontakt__dane a:hover {
+    color: var(--tekst);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

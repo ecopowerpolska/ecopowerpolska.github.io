@@ -240,3 +240,23 @@ paletę strony byłoby zmianą marki, nie zmianą strony.
 **Odstępstwo walidatora, świadome.** `AG034 [INFO]` zgłasza, że logo ma `loading="eager"`
 bez `fetchpriority="high"`. Tak ma być: `fetchpriority` należy do zdjęcia pierwszego kafelka,
 czyli realnego kandydata na LCP (`CLAUDE.md` §4 — dokładnie jeden obraz na stronę).
+
+---
+
+## D12 — Zakładka „Cena”: średnie ceny rynkowe w Warszawie, nie cennik (2026-10-27)
+
+**Słowa Piotra (skrót):** „Dodaj na stronie EcoPower Polska zakładkę cena (...) średnie ceny warszawskie za wykonanie
+strony www i za wykonanie sklepu. Cena za uruchomienie, cena za prowadzenie, wszystkie średnie półki warszawskie.”
+
+**Co stoi:** podstrona `/cena/` (`src/pages/cena.astro`, treść `src/data/cena.json`, panel: Teksty strony → „Cena”)
+z czterema tabelami — strona: wykonanie i prowadzenie, sklep: uruchomienie i prowadzenie — oraz sekcją „Źródła i metoda”
+(16 źródeł z lat 2025–2026, odczyt 27.10.2026). Pozycja „Cena” w menu górnym i w stopce, między Realizacjami a FAQ.
+
+**Zasady, które zostają:**
+- strona mówi wprost, w wyróżnionej ramce, że to **średnie rynkowe, a nie cennik EcoPower**, kwoty netto + 23% VAT, z datą badania;
+- każda liczba ma numer źródła; widełki = najniższa i najwyższa kwota źródeł, środek = mediana środków źródeł (wyjątki opisane na stronie);
+- kwoty w panelu są TEKSTEM — dowolny wpis buduje się poprawnie (CMS-ZASADY-PRACY ③); numer źródła spoza listy jest pomijany;
+- tabele to prawdziwe `<table>` z `<th scope>`; poniżej 40 rem wiersz staje się kartą (role ARIA trzymają semantykę), bez przewijania w bok;
+- menu ma sześć pozycji; na ekranie ≤ 26 rem mniejszy odstęp między pozycjami i węższy margines paska, żeby menu zostało w jednym wierszu przy 390 px.
+
+**Odświeżenie cen** jest decyzją Piotra — liczby z 27.10.2026 starzeją się; nowa data badania idzie do pola „Data badania cen” i zastrzeżenia.

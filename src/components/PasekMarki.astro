@@ -19,12 +19,13 @@ interface Props {
 
 const { liczbaSerwisow } = Astro.props;
 
-// Menu główne: pięć pozycji (2026-10-23, firma od stron i sklepów). Oferta, Realizacje i Kontakt to kotwice
+// Menu główne: sześć pozycji (2026-10-23, firma od stron i sklepów; „Cena” od 2026-10-27). Oferta, Realizacje i Kontakt to kotwice
 // strony głównej (bez aria-current — to sekcje, nie strony); FAQ i Blog to podstrony. Logo prowadzi na stronę główną.
 const sciezka = Astro.url.pathname;
 const menu = [
   { adres: '/#oferta', napis: tekst(blog.menuOferta, 'Oferta'), biezaca: false },
   { adres: '/#realizacje', napis: tekst(blog.menuRealizacje, 'Realizacje'), biezaca: false },
+  { adres: '/cena/', napis: tekst(blog.menuCena, 'Cena'), biezaca: sciezka.startsWith('/cena') },
   { adres: '/faq/', napis: tekst(blog.menuFaq, 'FAQ'), biezaca: sciezka.startsWith('/faq') },
   { adres: '/blog/', napis: tekst(blog.menuBlog, 'Blog'), biezaca: sciezka.startsWith('/blog') },
   { adres: '/#kontakt', napis: tekst(blog.menuKontakt, 'Kontakt'), biezaca: false },
@@ -131,6 +132,16 @@ function odmiana(n: number): string {
     .znak {
       height: 26px;
     }
+
+    /* Sześć pozycji menu w jednym wierszu na telefonie 390 px (od 2026-10-27, zakładka „Cena”):
+       mniejszy odstęp między pozycjami i węższy margines paska. Cel dotyku dalej 44 px wysokości. */
+    .pasek__srodek {
+      padding-inline: var(--o-4);
+    }
+
+    .pasek .menu ul {
+      gap: 0 var(--o-2);
+    }
   }
 
   .pasek__prawa {
@@ -140,7 +151,7 @@ function odmiana(n: number): string {
     gap: var(--o-2) var(--o-6);
   }
 
-  /* Pięć pozycji: na wąskim ekranie zawijają się do drugiego wiersza, zamiast rozpychać stronę w bok. */
+  /* Sześć pozycji: na wąskim ekranie zawijają się do drugiego wiersza, zamiast rozpychać stronę w bok. */
   .menu ul {
     list-style: none;
     margin: 0;

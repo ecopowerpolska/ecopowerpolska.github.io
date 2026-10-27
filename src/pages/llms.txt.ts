@@ -1,7 +1,7 @@
 // /llms.txt — streszczenie strony dla asystentów AI (wzorzec llmstxt.org), składane z TYCH SAMYCH danych co strony HTML:
 // firma.json, strona.json, oferta.json, kolekcja serwisów = realizacje (bez ukrytych) i opublikowane wpisy.
 // Audyt Lighthouse `llms-txt` (kategoria Agentic Browsing) wymaga pliku Markdown z nagłówkiem H1.
-// Bez daty builda: zmieniałaby się przy każdej przebudowie, choć treść stoi. Bez cen — cen na stronie nie ma.
+// Bez daty builda: zmieniałaby się przy każdej przebudowie, choć treść stoi. Cen EcoPower na stronie nie ma; /cena to średnie rynkowe.
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import firma from '../data/firma.json';
@@ -34,7 +34,7 @@ export const GET: APIRoute = async () => {
     '',
     `> ${tekst(strona.opisWyszukiwarki, 'Budujemy strony internetowe i sklepy internetowe dla firm.').trim()}`,
     '',
-    `${nazwa} to firma, która projektuje, buduje i utrzymuje strony internetowe i sklepy internetowe. Cen na tej stronie nie ma.`,
+    `${nazwa} to firma, która projektuje, buduje i utrzymuje strony internetowe i sklepy internetowe. Cennika EcoPower na tej stronie nie ma; podstrona /cena/ zestawia średnie ceny rynkowe w Warszawie.`,
     '',
     `## ${tekst(oferta.zakresNaglowek, 'Czym się zajmujemy')}`,
     '',
@@ -67,6 +67,7 @@ export const GET: APIRoute = async () => {
     '## Strony tej witryny',
     '',
     `- [Strona główna](${baza}/): oferta, realizacje, kontakt i dane rejestrowe spółki.`,
+    `- [Średnie ceny w Warszawie](${baza}/cena/): ile kosztuje wykonanie i prowadzenie strony internetowej i sklepu, widełki i środek netto ze źródłami (średnie rynkowe, nie cennik EcoPower).`,
     `- [Pytania i odpowiedzi](${baza}/faq/): najczęstsze pytania o strony i sklepy.`,
     `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów internetowych.`,
     '',

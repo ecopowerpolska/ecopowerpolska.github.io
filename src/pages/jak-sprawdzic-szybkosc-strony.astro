@@ -95,7 +95,7 @@ const daneStrukturalne = {
         action="https://pagespeed.web.dev/analysis"
         method="get"
         target="_blank"
-        rel="noopener"
+        {...{ rel: 'noopener' }}
         data-klucz={klucz || undefined}
       >
         <label for="psi-adres">Adres strony</label>
@@ -215,13 +215,14 @@ const daneStrukturalne = {
 <script>
   // Wynik na miejscu z PSI API v5 (D15). Bez klucza w data-klucz nic nie przechwytuje: formularz otwiera raport Google.
   (() => {
-    const f = document.getElementById('psi');
+    const f = document.getElementById('psi') as HTMLFormElement | null;
     if (!f || !window.fetch) return;
-    const $ = (s) => document.getElementById(s);
-    const stan = $('psi-stan'), wynik = $('psi-wynik'), raport = $('psi-raport'), guzik = f.querySelector('button');
+    const $ = (s: string) => document.getElementById(s) as HTMLElement;
+    const stan = $('psi-stan'), wynik = $('psi-wynik'), raport = $('psi-raport'), guzik = f.querySelector('button') as HTMLButtonElement;
+    const adres = f.elements.namedItem('url') as HTMLInputElement;
     const KAT = ['performance', 'accessibility', 'best-practices', 'seo', 'agentic-browsing'];
     const MET = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift', 'speed-index'];
-    const zapytaj = (u, s, k) =>
+    const zapytaj = (u: string, s: string, k: string): Promise<any> =>
       fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' + encodeURIComponent(u) + '&locale=pl&strategy=' + s +
         KAT.map((c) => '&category=' + c).join('') + '&key=' + encodeURIComponent(k)).then((r) =>
         r.json().then((j) => { if (!r.ok) throw r.status; return j.lighthouseResult; }));
@@ -229,21 +230,21 @@ const daneStrukturalne = {
       const k = f.dataset.klucz;
       if (!k) return;
       e.preventDefault();
-      let u = f.url.value.trim();
+      let u = adres.value.trim();
       if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
       try { u = new URL(u).href; } catch { stan.textContent = 'To nie wygląda na adres strony. Wpisz na przykład https://twojafirma.pl.'; return; }
-      raport.querySelector('a').href = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(u);
+      (raport.querySelector('a') as HTMLAnchorElement).href = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(u);
       wynik.hidden = true; raport.hidden = true; guzik.disabled = true;
       stan.textContent = 'Google mierzy stronę, to trwa około minuty.';
       Promise.all(['mobile', 'desktop'].map((s) => zapytaj(u, s, k).then((l) => {
-        wynik.querySelectorAll('[data-s="' + s + '"]').forEach((el) => {
+        wynik.querySelectorAll<HTMLElement>('[data-s="' + s + '"]').forEach((el) => {
           if (el.dataset.k) {
             const c = l.categories[el.dataset.k];
             const w = c && c.score != null ? Math.round(c.score * 100) : null;
-            el.textContent = w == null ? '–' : w;
-            el.className = 'pastylka ' + (w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
+            el.textContent = w == null ? '–' : String(w);
+            el.className = 'pastylka ' + (w != null && w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
           } else {
-            const a = l.audits[el.dataset.m];
+            const a = l.audits[el.dataset.m as string];
             el.textContent = a && a.displayValue ? a.displayValue : '–';
           }
         });

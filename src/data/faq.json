@@ -44,7 +44,7 @@
     },
     {
       "pytanie": "Jaki sklep internetowy możecie zrobić?",
-      "odpowiedz": "Są trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.",
+      "odpowiedz": "Są trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.\n\nCenę swojej strony albo sklepu policzysz sam w kalkulatorze na stronie [Cena](/cena/#kalkulator), a wyliczenie dodasz jednym przyciskiem do [formularza kontaktowego](/kontakt/).",
       "kotwica": "sklep",
       "naGlownej": true
     },

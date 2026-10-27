@@ -84,7 +84,7 @@ const zdjeciaZPodpisem = {
 export default defineConfig({
   site: 'https://www.ecopowerpolska.pl',
   output: 'static',
-  integrations: [sitemap({ filter: (adres) => !adres.includes('/przyklady/') }), sitemapJakoPlikSitemapXml()],
+  integrations: [sitemap({ filter: (adres) => !adres.includes('/przyklady/') && !adres.includes('/dziekujemy/') }), sitemapJakoPlikSitemapXml()],
 
   // Markdown jest tylko we wpisach bloga; wtyczka przy definicji wyżej.
   markdown: { processor: satteri({ mdastPlugins: [zdjeciaZPodpisem] }) },

@@ -1,0 +1,71 @@
+# Wgranie handlera formularza /kontakt/ (formularz/ → <LHPL_CEL_FORMULARZA>) na lh.pl, na żądanie — wzorzec
+# pan-stolarz.pl .github/workflows/wgranie-formularza.yml; rsync bez --delete i bez konfig/ oraz stan/ (pułapka ⑱).
+# 🔴 UŚPIONY: to repozytorium NIE MA sekretów LHPL_* (zakaz sekretów repo bez zdania Piotra z nazwą sekretu i repo,
+#    CLAUDE.md warsztatu §4 pkt 4). Bez nich przepływ kończy się sukcesem z napisem „pominięto” i niczego nie wgrywa.
+#    Dziś handler wgrywa się ręcznie przez SSH (docs/FORMULARZ.md §3). Strona sama stoi na GitHub Pages (build-i-wdrozenie.yml).
+# Cel na koncie serwer263249: public_html/pan-stolarz.pl/formularz/ecopower/ (podkatalog formularz/ pan-stolarz.pl,
+# który jego build-i-wgranie pomija przy --delete). Adres publiczny: https://pan-stolarz.pl/formularz/ecopower/wyslij.php.
+name: wgranie-formularza
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: wgranie-formularza-lh-pl
+  cancel-in-progress: false
+
+env:
+  ADRES_HANDLERA: https://pan-stolarz.pl/formularz/ecopower
+
+jobs:
+  wgranie-formularza:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      KLUCZ_SSH: ${{ secrets.LHPL_SSH_KEY }}
+      HOST: ${{ secrets.LHPL_HOST }}
+      UZYTKOWNIK: ${{ secrets.LHPL_USER }}
+      PORT: ${{ secrets.LHPL_PORT }}
+      CEL: ${{ secrets.LHPL_CEL_FORMULARZA }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Składnia PHP
+        run: php -l formularz/wyslij.php
+
+      - name: Czy są sekrety (bez nich przepływ śpi)
+        id: sekrety
+        run: |
+          if [ -n "$KLUCZ_SSH" ] && [ -n "$HOST" ] && [ -n "$UZYTKOWNIK" ] && [ -n "$PORT" ] && [ -n "$CEL" ]; then
+            echo "sa=tak" >> "$GITHUB_OUTPUT"
+          else
+            echo "sa=nie" >> "$GITHUB_OUTPUT"
+            echo "pominięto: brak sekretów LHPL_* w repozytorium (przepływ uśpiony; wgranie ręczne: docs/FORMULARZ.md §3)"
+          fi
+
+      - name: Klucz SSH i known_hosts
+        if: steps.sekrety.outputs.sa == 'tak'
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$KLUCZ_SSH" > ~/.ssh/klucz && chmod 600 ~/.ssh/klucz
+          ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          [ -s ~/.ssh/known_hosts ] || { echo "ssh-keyscan bez wyniku"; exit 1; }
+
+      - name: Wgranie formularz/ (bez --delete, bez konfig/ i stan/)
+        if: steps.sekrety.outputs.sa == 'tak'
+        run: |
+          rsync -az \
+            --exclude 'konfig/' --exclude 'stan/' --exclude 'README.md' --exclude 'konfig.przyklad' \
+            -e "ssh -i ~/.ssh/klucz -p $PORT" \
+            formularz/ "$UZYTKOWNIK@$HOST:${CEL%/}/"
+          ssh -i ~/.ssh/klucz -p "$PORT" "$UZYTKOWNIK@$HOST" \
+            "set -e; cd '${CEL%/}'; mkdir -p konfig stan; chmod 700 konfig stan; printf 'Require all denied\n' > konfig/.htaccess; printf 'Require all denied\n' > stan/.htaccess; chmod 600 konfig/*.php 2>/dev/null || true; php -l wyslij.php"
+
+      - name: Sprawdzenie odczytem
+        if: steps.sekrety.outputs.sa == 'tak'
+        run: |
+          B="$ADRES_HANDLERA"
+          g=$(curl -s -o /dev/null -w '%{http_code}' "$B/wyslij.php")
+          k=$(curl -s -o /dev/null -w '%{http_code}' "$B/konfig/ecopowerpolska.pl.php")
+          s=$(curl -s -o /dev/null -w '%{http_code}' "$B/stan/")
+          echo "GET wyslij.php → $g (405) · konfig → $k (403) · stan → $s (403)"
+          [ "$g" = "405" ] && [ "$k" = "403" ] && [ "$s" = "403" ]

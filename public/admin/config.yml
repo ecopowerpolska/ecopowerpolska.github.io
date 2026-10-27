@@ -718,6 +718,248 @@ collections:
           - { name: stronaGlowna, label: "Ścieżka: odnośnik strony głównej", widget: string, required: false }
           - { name: okruszkiEtykieta, label: "Nazwa ścieżki (dla czytnika ekranu)", widget: string, required: false }
 
+      # ---- kontakt (/kontakt) ----
+      # Lustro src/data/kontakt.json, czytają go src/pages/kontakt.astro, src/components/Formularz.astro i src/pages/dziekujemy.astro.
+      # Wartości opcji (wartosc) to kontrakt z handlerem formularz/wyslij.php (POTRZEBY, TECHNOLOGIE, PORY) — zmieniaj tylko etykiety.
+      - name: kontakt
+        label: "Kontakt (/kontakt)"
+        file: "src/data/kontakt.json"
+        description: >-
+          Podstrona /kontakt: formularz zapytania z zaznaczaniem zakresu i technologii sklepu oraz strona /dziekujemy po wysłaniu.
+          Puste pole tekstowe = wraca napis domyślny.
+        fields:
+          - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
+          - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
+          - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
+          - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
+          - { name: akcja, label: "Adres handlera formularza", widget: string, required: false, hint: "Zmieniać tylko po przeniesieniu handlera (docs/FORMULARZ.md §2)" }
+          - { name: turnstileSitekey, label: "Klucz witryny Cloudflare Turnstile (jawny)", widget: string, required: false, hint: "Puste = formularz bez Turnstile" }
+          - { name: daneNaglowek, label: "Ramka z telefonem: nagłówek", widget: string, required: false }
+          - { name: daneTekst, label: "Ramka z telefonem: zdanie", widget: text, required: false }
+          - { name: potrzebyLegenda, label: "Pytanie: czego potrzebujesz", widget: string, required: false }
+          - { name: potrzebyPodpowiedz, label: "Podpowiedź pod pytaniem", widget: string, required: false }
+          - name: potrzeby
+            label: "Żetony: czego potrzebujesz"
+            widget: list
+            allow_add: false
+            allow_remove: false
+            allow_reorder: true
+            fields:
+              - { name: wartosc, label: "Wartość (nie zmieniać)", widget: hidden }
+              - { name: etykieta, label: "Napis na żetonie", widget: string }
+          - { name: technologiaLegenda, label: "Pytanie: na czym ma stać sklep", widget: string, required: false }
+          - name: technologie
+            label: "Żetony: technologia sklepu"
+            widget: list
+            allow_add: false
+            allow_remove: false
+            allow_reorder: true
+            fields:
+              - { name: wartosc, label: "Wartość (nie zmieniać)", widget: hidden }
+              - { name: etykieta, label: "Napis na żetonie", widget: string }
+          - { name: stronaLegenda, label: "Pytanie: masz już stronę", widget: string, required: false }
+          - { name: stronaNie, label: "Odpowiedź: nie", widget: string, required: false }
+          - { name: stronaTak, label: "Odpowiedź: tak", widget: string, required: false }
+          - { name: adresEtykieta, label: "Etykieta pola adresu strony", widget: string, required: false }
+          - { name: wycenyNaglowek, label: "Wyliczenia: nagłówek ramki", widget: string, required: false }
+          - { name: wycenyPusto, label: "Wyliczenia: zdanie, gdy brak", widget: text, required: false }
+          - { name: wycenyDodaj, label: "Wyliczenia: link do kolejnego", widget: string, required: false }
+          - { name: wycenyPolicz, label: "Wyliczenia: link do kalkulatora (brak wyliczeń)", widget: string, required: false }
+          - { name: wycenyUsun, label: "Wyliczenia: przycisk usuwania", widget: string, required: false }
+          - { name: wycenyNetto, label: "Wyliczenia: słowo netto", widget: string, required: false }
+          - { name: wycenyBrutto, label: "Wyliczenia: słowo brutto", widget: string, required: false }
+          - { name: wycenyJednorazowo, label: "Wyliczenia: jednorazowo", widget: string, required: false }
+          - { name: wycenyMiesiecznie, label: "Wyliczenia: miesięcznie", widget: string, required: false }
+          - { name: wycenyRocznie, label: "Wyliczenia: rocznie", widget: string, required: false }
+          - { name: imieEtykieta, label: "Etykieta: imię", widget: string, required: false }
+          - { name: emailEtykieta, label: "Etykieta: e-mail", widget: string, required: false }
+          - { name: telefonEtykieta, label: "Etykieta: telefon", widget: string, required: false }
+          - { name: poraLegenda, label: "Pytanie: kiedy dzwonić", widget: string, required: false }
+          - name: pory
+            label: "Żetony: kiedy dzwonić"
+            widget: list
+            allow_add: false
+            allow_remove: false
+            fields:
+              - { name: wartosc, label: "Wartość (nie zmieniać)", widget: hidden }
+              - { name: etykieta, label: "Napis na żetonie", widget: string }
+          - { name: wiadomoscEtykieta, label: "Etykieta: wiadomość", widget: string, required: false }
+          - { name: wiadomoscPodpowiedz, label: "Podpowiedź pod wiadomością", widget: string, required: false }
+          - { name: zgodaEtykieta, label: "Zgoda RODO: napis przy polu", widget: text, required: false }
+          - { name: zgodaInformacja, label: "Zgoda RODO: informacja o danych", widget: text, required: false, hint: "Wstawki {nazwa}, {adres}, {email} wypełnia strona z danych firmy" }
+          - { name: turnstileCzekaj, label: "Komunikat: czekamy na Turnstile", widget: text, required: false }
+          - { name: wyslij, label: "Przycisk wysyłki", widget: string, required: false }
+          - { name: bezJs, label: "Zdanie bez JavaScriptu", widget: text, required: false, hint: "Wstawki {email}, {telefon}" }
+          - name: bledy
+            label: "Komunikaty błędów (po powrocie z serwera)"
+            widget: object
+            fields:
+              - { name: turnstile, label: "Turnstile nie potwierdził", widget: text, required: false }
+              - { name: czas, label: "Za szybko albo za długo", widget: text, required: false }
+              - { name: imie, label: "Brak imienia", widget: text, required: false }
+              - { name: email, label: "Zły e-mail", widget: text, required: false }
+              - { name: telefon, label: "Zły telefon", widget: text, required: false }
+              - { name: adres, label: "Zły adres strony", widget: text, required: false }
+              - { name: wiadomosc, label: "Brak wyboru i wiadomości", widget: text, required: false }
+              - { name: zgoda, label: "Brak zgody", widget: text, required: false }
+              - { name: limit, label: "Limit zapytań w godzinie", widget: text, required: false }
+              - { name: wysylka, label: "Poczta nie wyszła", widget: text, required: false }
+              - { name: inny, label: "Inny błąd", widget: text, required: false }
+          - { name: dziekujemyTytulKarty, label: "/dziekujemy: tytuł karty", widget: string, required: false }
+          - { name: dziekujemyNaglowek, label: "/dziekujemy: nagłówek", widget: string, required: false }
+          - { name: dziekujemyTekst, label: "/dziekujemy: zdanie", widget: text, required: false }
+          - { name: dziekujemyPowrot, label: "/dziekujemy: link na stronę główną", widget: string, required: false }
+          - { name: dziekujemyCennik, label: "/dziekujemy: link do cennika", widget: string, required: false }
+
+      # ---- kalkulator (/cena/#kalkulator) ----
+      # Lustro src/data/kalkulator.json, czyta go src/components/Kalkulator.astro. Same TEKSTY: kwoty kalkulator
+      # bierze z cennika (src/data/cena.json) po polach tabela + szukaj (fragment nazwy pozycji w cenniku).
+      - name: kalkulator
+        label: "Kalkulator ceny (/cena)"
+        file: "src/data/kalkulator.json"
+        description: >-
+          Teksty kalkulatora na /cena/. Kwot tu nie ma: zmieniasz je w „Cennik (/cena)”, kalkulator przeliczy się sam.
+          Gdy zmienisz nazwę pozycji w cenniku tak, że zniknie z niej fragment „szukaj”, pozycja wypadnie z kalkulatora.
+        fields:
+          - { name: naglowek, label: "Nagłówek kalkulatora", widget: string, required: false }
+          - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
+          - { name: bezJs, label: "Zdanie dla przeglądarki bez JavaScriptu", widget: text, required: false }
+          - { name: krok1, label: "Krok 1: nagłówek", widget: string, required: false }
+          - { name: krok1Pomoc, label: "Krok 1: podpowiedź", widget: string, required: false }
+          - { name: krok2, label: "Krok 2: nagłówek", widget: string, required: false }
+          - { name: krok2Pomoc, label: "Krok 2: podpowiedź", widget: string, required: false }
+          - { name: krok3, label: "Krok 3 (sklep): nagłówek", widget: string, required: false }
+          - { name: krok3Pomoc, label: "Krok 3 (sklep): podpowiedź", widget: string, required: false }
+          - { name: podpowiedzEtykieta, label: "Znak „i”: początek opisu dla czytnika ekranu", widget: string, required: false }
+          - { name: nieDotyczy, label: "Napis przy pozycji wyłączonej", widget: string, required: false }
+          - { name: indywidualnie, label: "Zdanie o wycenie indywidualnej", widget: text, required: false }
+          - { name: prowizjeNaglowek, label: "Prowizje: nagłówek", widget: string, required: false }
+          - { name: prowizjeDopisek, label: "Prowizje: dopisek", widget: string, required: false }
+          - { name: policz, label: "Guzik „Policz”", widget: string, required: false }
+          - { name: miniJednorazowo, label: "Pasek sumy na telefonie: słowo „jednorazowo”", widget: string, required: false }
+          - { name: miniMiesiecznie, label: "Pasek sumy na telefonie: skrót „mies.”", widget: string, required: false }
+          - { name: miniLink, label: "Pasek sumy na telefonie: odnośnik do wyniku", widget: string, required: false }
+          - { name: wynikNaglowek, label: "Wynik: nagłówek", widget: string, required: false }
+          - { name: wynikStart, label: "Wynik: zdanie przed wyborem", widget: text, required: false }
+          - { name: jednorazowo, label: "Wynik: etykieta „Jednorazowo”", widget: string, required: false }
+          - { name: miesiecznie, label: "Wynik: etykieta „Co miesiąc”", widget: string, required: false }
+          - { name: rocznie, label: "Wynik: etykieta „Co rok”", widget: string, required: false }
+          - { name: netto, label: "Wynik: słowo „netto”", widget: string, required: false }
+          - { name: brutto, label: "Wynik: dopisek brutto", widget: string, required: false }
+          - { name: pierwszyRok, label: "Wynik: „Razem w pierwszym roku”", widget: string, required: false }
+          - { name: rozbicie, label: "Wynik: rozwijana lista pozycji", widget: string, required: false }
+          - { name: zastrzezenie, label: "Wynik: zastrzeżenie", widget: text, required: false }
+          - { name: dodaj, label: "Guzik „Dodaj do formularza”", widget: string, required: false }
+          - { name: kolejne, label: "Guzik „Dodaj kolejne wyliczenie”", widget: string, required: false }
+          - { name: dodano, label: "Komunikat: dodano", widget: text, required: false }
+          - { name: duplikat, label: "Komunikat: już jest w zapytaniu", widget: string, required: false }
+          - { name: pusto, label: "Komunikat: nic nie wybrano", widget: string, required: false }
+          - { name: limit, label: "Komunikat: limit 5 wyliczeń", widget: text, required: false }
+          - { name: bezPamieci, label: "Komunikat: przeglądarka nie zapamięta", widget: text, required: false }
+          - { name: pasek, label: "Pasek: „W zapytaniu:”", widget: string, required: false }
+          - { name: pasekLink, label: "Pasek: odnośnik do formularza", widget: string, required: false }
+          - { name: pamiecSesji, label: "Zdanie o pamięci sesji", widget: text, required: false }
+          - name: liczebnik
+            label: "Odmiana słowa „wyliczenie”"
+            widget: object
+            required: false
+            fields:
+              - { name: jedna, label: "1", widget: string }
+              - { name: kilka, label: "2–4", widget: string }
+              - { name: wiele, label: "5 i więcej", widget: string }
+          - name: rodzaje
+            label: "Krok 1: co budujemy"
+            widget: list
+            allow_add: false
+            summary: "{{fields.nazwa}}"
+            fields:
+              - { name: id, label: "Identyfikator", widget: hidden }
+              - { name: nazwa, label: "Nazwa w kalkulatorze", widget: string, required: false, hint: "Puste = nazwa z cennika" }
+              - { name: opis, label: "Opis pod znakiem „i”", widget: text, required: false, hint: "Puste = opis z cennika" }
+              - { name: tabela, label: "Tabela cennika", widget: hidden }
+              - { name: szukaj, label: "Fragment nazwy pozycji w cenniku", widget: hidden }
+              - { name: grupa, label: "Grupa", widget: hidden }
+          - name: dodatki
+            label: "Krok 2: dodatki i koszty stałe"
+            widget: list
+            allow_add: false
+            summary: "{{fields.nazwa}}"
+            fields:
+              - { name: id, label: "Identyfikator", widget: hidden }
+              - { name: nazwa, label: "Nazwa w kalkulatorze", widget: string, required: false }
+              - { name: opis, label: "Opis pod znakiem „i”", widget: text, required: false, hint: "Puste = opis z cennika" }
+              - { name: jednostka, label: "Jednostka (np. za godzinę)", widget: string, required: false }
+              - name: formy
+                label: "Odmiana w tytule wyliczenia (1 / 2–4 / 5+)"
+                widget: object
+                required: false
+                fields:
+                  - { name: jedna, label: "1", widget: string }
+                  - { name: kilka, label: "2–4", widget: string }
+                  - { name: wiele, label: "5 i więcej", widget: string }
+              - { name: tabela, label: "Tabela cennika", widget: hidden }
+              - { name: szukaj, label: "Fragment nazwy pozycji w cenniku", widget: hidden }
+              - { name: pole, label: "Pole z kwotą", widget: hidden }
+              - { name: wzorzec, label: "Wzorzec kwoty", widget: hidden }
+              - { name: okres, label: "Okres", widget: hidden }
+              - { name: ilosc, label: "Liczba sztuk", widget: hidden }
+              - { name: maks, label: "Największa liczba", widget: hidden }
+              - { name: dla, label: "Dla grup", widget: hidden }
+          - name: dodatkiSklepu
+            label: "Krok 3: dodatki do sklepu"
+            widget: list
+            allow_add: false
+            summary: "{{fields.nazwa}}"
+            fields:
+              - { name: id, label: "Identyfikator", widget: hidden }
+              - { name: nazwa, label: "Nazwa w kalkulatorze", widget: string, required: false }
+              - { name: dopisek, label: "Dopisek przy cenie", widget: string, required: false }
+              - { name: opis, label: "Opis pod znakiem „i”", widget: text, required: false, hint: "Puste = opis z cennika" }
+              - { name: tabela, label: "Tabela cennika", widget: hidden }
+              - { name: szukaj, label: "Fragment nazwy pozycji w cenniku", widget: hidden }
+              - { name: okres, label: "Okres", widget: hidden }
+              - { name: dla, label: "Dla grup", widget: hidden }
+              - { name: wyklucza, label: "Wyklucza", widget: hidden }
+          - name: prowizje
+            label: "Prowizje (wiersz cennika)"
+            widget: object
+            required: false
+            fields:
+              - { name: tabela, label: "Tabela cennika", widget: hidden }
+              - { name: szukaj, label: "Fragment nazwy pozycji", widget: hidden }
+
+      # ---- efekty (/efekty) ----
+      # Lustro src/data/efekty.json, czytają go src/pages/efekty/index.astro i src/pages/efekty/animacja-przewijaniem.astro.
+      # Karta pokazuje się tylko przy statusie „gotowy”. Slug = adres podstrony /efekty/<slug>/ (podstronę robi programista).
+      - name: efekty
+        label: "Efekty (/efekty)"
+        file: "src/data/efekty.json"
+        description: >-
+          Podstrona /efekty: „Wybierz efekt”, dodatkowa część portfolio. Kolejność w panelu = kolejność kart.
+        fields:
+          - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
+          - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
+          - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
+          - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
+          - { name: wydajnoscZdanie, label: "Zdanie o szybkości i pomiarze PageSpeed", widget: text, required: false }
+          - { name: wybierzNaglowek, label: "Nagłówek nad kartami", widget: string, required: false }
+          - { name: przycisk, label: "Napis przycisku na karcie", widget: string, required: false }
+          - name: efekty
+            label: "Efekty (karty)"
+            widget: list
+            fields:
+              - { name: nazwa, label: "Nazwa efektu (też H1 podstrony)", widget: string }
+              - { name: slug, label: "Adres podstrony (/efekty/…/)", widget: string, hint: "Małe litery, cyfry i myślniki. Zmiana adresu wymaga programisty." }
+              - { name: opisKrotki, label: "Opis na karcie", widget: text, required: false }
+              - { name: opisDlugi, label: "Podstrona: akapit „Co to daje”", widget: text, required: false }
+              - { name: dlaKogo, label: "Podstrona: dla kogo", widget: text, required: false }
+              - { name: kosztWzgledny, label: "Karta: koszt wydajności w jednym zdaniu", widget: text, required: false }
+              - { name: kosztWydajnosci, label: "Podstrona: akapit „Ile kosztuje wydajności”", widget: text, required: false }
+              - { name: status, label: "Status", widget: select, options: ["gotowy", "w przygotowaniu"], default: "gotowy" }
+              - { name: miniatura, label: "Miniatura karty (ścieżka w public/)", widget: string, required: false }
+              - { name: alt, label: "Opis miniatury dla niewidomych", widget: text, required: false }
+
+
       # ---- stopka ----
       - name: stopka
         label: "Stopka"
@@ -810,10 +1052,12 @@ collections:
         fields:
           - { name: menuOferta, label: "Menu i stopka: pozycja oferty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Oferta" }
           - { name: menuRealizacje, label: "Menu i stopka: pozycja realizacji", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Realizacje" }
+          - { name: menuEfekty, label: "Menu i stopka: pozycja efektów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Efekty" }
           - { name: menuCena, label: "Menu i stopka: pozycja cen", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Cena" }
           - { name: menuSzybkosc, label: "Stopka i ścieżka: pozycja testu szybkości strony", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Szybkość" }
           - { name: menuFaq, label: "Menu: pozycja pytań i odpowiedzi", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: FAQ" }
           - { name: menuBlog, label: "Menu i stopka: pozycja bloga", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog" }
+          - { name: menuTest, label: "Menu: pozycja testu szybkości strony", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Test szybkości" }
           - { name: menuKontakt, label: "Menu i stopka: pozycja kontaktu", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Kontakt" }
           - { name: stronaGlowna, label: "Stopka i ścieżka: odnośnik strony głównej", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strona główna" }
           - { name: tytulKarty, label: "Lista wpisów: tytuł karty i wyniku w wyszukiwarce", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog — EcoPower Polska" }
@@ -825,10 +1069,12 @@ collections:
           - { name: wszystkie, label: "Strona główna i wpis: odnośnik do listy wpisów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Wszystkie wpisy" }
           - { name: naglowekGlowna, label: "Strona główna: nagłówek sekcji z ostatnimi wpisami", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Z bloga" }
           - { name: udostepnij, label: "Wpis: guzik udostępnienia na Facebooku", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Udostępnij na Facebooku" }
-          - { name: udostepnijNowaKarta, label: "Wpis: dopisek dla czytnika ekranu przy guziku udostępnienia", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: (otwiera się w nowej karcie)" }
+          - { name: udostepnijNowaKarta, label: "Dopisek dla czytnika ekranu przy linkach w nowej karcie (udostępnianie, strony klientów, PageSpeed)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: (otwiera się w nowej karcie)" }
           - { name: etykietaMenu, label: "Nazwa menu górnego (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Menu główne" }
+          - { name: przyciskMenu, label: "Telefon: napis na przycisku otwierającym menu", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Menu" }
           - { name: etykietaMenuStopki, label: "Nazwa menu w stopce (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strony witryny" }
           - { name: okruszkiEtykieta, label: "Nazwa ścieżki nad wpisem (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Ścieżka" }
+          - { name: linkEfektyRealizacje, label: "Strona główna: przycisk pod Realizacjami do zakładki Efekty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Zobacz efekty, które dodajemy do stron" }
 
       # ---- strona błędu 404 ----
       - name: strona404

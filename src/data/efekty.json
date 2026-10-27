@@ -1,0 +1,23 @@
+{
+  "tytulKarty": "Efekty na stronach internetowych: animacja przewijaniem i inne — EcoPower Polska",
+  "opisWyszukiwarki": "Efekty, które dodajemy do stron internetowych: animacja sterowana przewijaniem i inne. Przy każdym efekcie podajemy, ile waży i jak wypada w Google PageSpeed.",
+  "naglowek": "Efekty na stronach, które robimy",
+  "lead": "Wybierz efekt i zobacz go w działaniu na żywej stronie. To dodatkowa część naszego portfolio: ruch i animacje, które możemy dodać do Twojej strony.",
+  "wydajnoscZdanie": "Celem strony jest szybkość i widoczność w Google, więc żaden efekt nie może jej spowolnić. Przy każdym podajemy, ile waży, i mierzymy go w oficjalnym narzędziu Google PageSpeed Insights.",
+  "wybierzNaglowek": "Wybierz efekt",
+  "przycisk": "Zobacz efekt",
+  "efekty": [
+    {
+      "nazwa": "Animacja sterowana przewijaniem",
+      "slug": "animacja-przewijaniem",
+      "opisKrotki": "Szafa otwiera się, gdy przewijasz w dół, i zamyka, gdy wracasz w górę.",
+      "opisDlugi": "Ruch na stronie idzie za przewijaniem: przewijasz w dół i drzwi szafy się otwierają, przewijasz w górę i zamykają się tą samą drogą. Tak pokazuje się produkt krok po kroku, jak na stronach Apple: mebel, który się otwiera, urządzenie, które się rozkłada, wnętrze, które zapala światło.",
+      "dlaKogo": "Dla firm, które pokazują produkt albo realizację: meble na wymiar, wnętrza, urządzenia, sprzęt.",
+      "kosztWzgledny": "Niski: wersja w samym CSS nie dokłada skryptu, wersja z klatkami dokłada 1,1 kB skryptu.",
+      "kosztWydajnosci": "Na tej stronie skrypt sceny z klatkami waży 1,1 kB (po kompresji), a 120 klatek WebP razem 731 KiB; telefon pobiera co drugą klatkę i dopiero wtedy, gdy scena zbliża się do ekranu. Układ strony nie przesuwa się podczas ładowania (CLS 0), a największym elementem na starcie (LCP) jest tekst nagłówka, nie animacja.",
+      "status": "gotowy",
+      "miniatura": "/efekty/animacja-przewijaniem/plakat.svg",
+      "alt": "Szafa dwudrzwiowa narysowana w SVG: drzwi otwarte, wnętrze oświetlone, dolna szuflada wysunięta"
+    }
+  ]
+}

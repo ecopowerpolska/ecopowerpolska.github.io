@@ -1,0 +1,138 @@
+{
+  "tytulKarty": "Kontakt i wycena strony lub sklepu internetowego — EcoPower Polska",
+  "opisWyszukiwarki": "Zapytaj o stronę albo sklep internetowy: zaznacz, czego potrzebujesz i na czym ma stać sklep, dołącz wyliczenie z kalkulatora. Odpowiadamy z wyceną.",
+  "naglowek": "Kontakt i wycena",
+  "lead": "Zaznacz, czego potrzebujesz, a odpiszemy z wyceną i pytaniami. Jeśli policzyłeś cenę w kalkulatorze, wyliczenie dołączy się samo.",
+  "akcja": "https://pan-stolarz.pl/formularz/ecopower/wyslij.php",
+  "turnstileSitekey": "0x4AAAAAAFocIUKeGUjpJcZ3",
+  "daneNaglowek": "Wolisz zadzwonić albo napisać?",
+  "daneTekst": "Napisz albo zadzwoń, odpowiemy z wyceną.",
+  "potrzebyLegenda": "Czego potrzebujesz?",
+  "potrzebyPodpowiedz": "Zaznacz wszystko, co pasuje.",
+  "potrzeby": [
+    {
+      "wartosc": "wizytowka",
+      "etykieta": "Strona wizytówka"
+    },
+    {
+      "wartosc": "firmowa",
+      "etykieta": "Strona firmowa"
+    },
+    {
+      "wartosc": "rozbudowana",
+      "etykieta": "Strona rozbudowana"
+    },
+    {
+      "wartosc": "sklep-maly",
+      "etykieta": "Sklep mały (do ok. 100 produktów)"
+    },
+    {
+      "wartosc": "sklep-duzy",
+      "etykieta": "Sklep duży"
+    },
+    {
+      "wartosc": "panel",
+      "etykieta": "Panel do edycji treści"
+    },
+    {
+      "wartosc": "blog",
+      "etykieta": "Blog"
+    },
+    {
+      "wartosc": "wizytowka-google",
+      "etykieta": "Wizytówka Google"
+    },
+    {
+      "wartosc": "social",
+      "etykieta": "Facebook i Instagram"
+    },
+    {
+      "wartosc": "opieka",
+      "etykieta": "Opieka techniczna"
+    },
+    {
+      "wartosc": "inne",
+      "etykieta": "Inne"
+    }
+  ],
+  "technologiaLegenda": "Na czym ma stać sklep?",
+  "technologie": [
+    {
+      "wartosc": "woocommerce",
+      "etykieta": "WooCommerce"
+    },
+    {
+      "wartosc": "prestashop",
+      "etykieta": "PrestaShop"
+    },
+    {
+      "wartosc": "abonament",
+      "etykieta": "Platforma abonamentowa (Shoper, IdoSell)"
+    },
+    {
+      "wartosc": "astro",
+      "etykieta": "Sklep na stronie Astro z koszykiem"
+    },
+    {
+      "wartosc": "nie-wiem",
+      "etykieta": "Nie wiem, doradźcie"
+    }
+  ],
+  "stronaLegenda": "Masz już stronę?",
+  "stronaNie": "Nie",
+  "stronaTak": "Tak",
+  "adresEtykieta": "Adres obecnej strony",
+  "wycenyNaglowek": "Twoje wyliczenia z kalkulatora",
+  "wycenyPusto": "Nie masz jeszcze wyliczenia. Możesz policzyć cenę w kalkulatorze i wrócić tutaj.",
+  "wycenyDodaj": "Dodaj kolejne wyliczenie",
+  "wycenyPolicz": "Policz cenę w kalkulatorze",
+  "wycenyUsun": "Usuń",
+  "wycenyNetto": "netto",
+  "wycenyBrutto": "brutto",
+  "wycenyJednorazowo": "jednorazowo",
+  "wycenyMiesiecznie": "miesięcznie",
+  "wycenyRocznie": "rocznie",
+  "imieEtykieta": "Imię",
+  "emailEtykieta": "E-mail",
+  "telefonEtykieta": "Telefon (nieobowiązkowo)",
+  "poraLegenda": "Kiedy najlepiej dzwonić? (nieobowiązkowo)",
+  "pory": [
+    {
+      "wartosc": "rano",
+      "etykieta": "8–12"
+    },
+    {
+      "wartosc": "poludnie",
+      "etykieta": "12–16"
+    },
+    {
+      "wartosc": "wieczor",
+      "etykieta": "16–20"
+    }
+  ],
+  "wiadomoscEtykieta": "Wiadomość",
+  "wiadomoscPodpowiedz": "Nieobowiązkowa, gdy zaznaczyłeś coś wyżej albo dołączyłeś wyliczenie.",
+  "zgodaEtykieta": "Zgadzam się na przetwarzanie moich danych z formularza w celu odpowiedzi na zapytanie.",
+  "zgodaInformacja": "Administratorem danych jest {nazwa}, {adres}. Dane z formularza wykorzystujemy tylko do odpowiedzi na zapytanie i przygotowania oferty (art. 6 ust. 1 lit. b RODO). Masz prawo dostępu do danych, ich poprawienia i usunięcia oraz skargi do Prezesa UODO. Formularz chroni Cloudflare Turnstile, który sprawdza, że wysyła człowiek. Napisz na {email}, jeśli chcesz, żebyśmy usunęli Twoje dane.",
+  "turnstileCzekaj": "Sprawdzamy, że wysyła człowiek. Jeśli pojawi się ramka do zaznaczenia, kliknij ją.",
+  "wyslij": "Wyślij zapytanie",
+  "bezJs": "Formularz potrzebuje włączonego JavaScriptu. Możesz też napisać na {email} albo zadzwonić: {telefon}.",
+  "bledy": {
+    "turnstile": "Nie udało się potwierdzić, że wiadomość wysyła człowiek. Spróbuj jeszcze raz albo zadzwoń.",
+    "czas": "Formularz wysłano zbyt szybko albo strona była otwarta zbyt długo. Wyślij ponownie.",
+    "imie": "Podaj imię.",
+    "email": "Podaj adres e-mail w formacie nazwa@domena.pl.",
+    "telefon": "Numer telefonu wygląda na niepełny: podaj co najmniej 9 cyfr albo zostaw pole puste.",
+    "adres": "Adres strony wygląda na niepoprawny. Wpisz go w formacie www.twojafirma.pl.",
+    "wiadomosc": "Zaznacz, czego potrzebujesz, albo napisz kilka słów.",
+    "zgoda": "Zaznacz zgodę na przetwarzanie danych: bez niej nie możemy odpowiedzieć.",
+    "limit": "W tej godzinie przyszło bardzo dużo zapytań. Spróbuj za chwilę albo zadzwoń.",
+    "wysylka": "Nie udało się wysłać wiadomości. Napisz na adres e-mail albo zadzwoń.",
+    "inny": "Coś poszło nie tak. Spróbuj ponownie albo zadzwoń."
+  },
+  "dziekujemyTytulKarty": "Dziękujemy za zapytanie — EcoPower Polska",
+  "dziekujemyNaglowek": "Dziękujemy, zapytanie dotarło",
+  "dziekujemyTekst": "Odpiszemy na podany adres e-mail. Jeśli sprawa jest pilna, zadzwoń.",
+  "dziekujemyPowrot": "Wróć na stronę główną",
+  "dziekujemyCennik": "Zobacz cennik"
+}

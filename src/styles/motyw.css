@@ -105,6 +105,17 @@
   --ruch-krzywa: cubic-bezier(0.22, 1, 0.36, 1);
   --ruch-przesuniecie: 1.25rem;
   --ruch-schodek: 70ms;
+
+  /* Pasek z menu (PasekMarki.astro, D16 2026-10-27): cel dotyku pozycji w jednym wierszu
+     i w panelu telefonu. Kolory paska bez nowych wartości — pary tekst/tło i akcent/tło wyżej. */
+  --cel-dotyku: 44px;
+  --cel-dotyku-panel: 3rem;
+
+  /* Blok PageSpeed w kafelku Realizacji (Kafelek.astro, D17 2026-10-27): osobna karta o stopień
+     jaśniejsza od karty kafelka (--tlo na --powierzchnia) z cienkim obrysem. Bez nowego koloru:
+     tekst w bloku stoi na #f4f5f1 — pary policzone wyżej (#15201a, #4b5a4f, #166653 na #f4f5f1). */
+  --pomiar-tlo: var(--tlo);
+  --pomiar-obrys: var(--linia);
 }
 
 *,

@@ -1,11 +1,11 @@
-// klatki-scrollytelling.mjs — klatki sceny A strony /przyklady/scrollytelling/ (przepis A działu
+// klatki-scrollytelling.mjs — klatki sceny A strony /efekty/animacja-przewijaniem/ (przepis A działu
 // potwor-ux-ui/odniesienia/scrollytelling-animacja-przewijaniem.md). Grafika własna: szafa narysowana
 // w SVG w tym pliku (bez zdjęć stockowych i bez AI). Każda klatka = ta sama funkcja SVG z innym
 // postępem t (0 = zamknięta, 1 = otwarta, światło włączone, szuflada wysunięta), zrzucona przez
 // headless Chrome (CDP, Page.captureScreenshot format webp) — jeden proces Chrome na całą serię.
 //
 // Użycie (z katalogu strony, Node ≥ 22 — globalny WebSocket):
-//   node scripts/klatki-scrollytelling.mjs [katalog=public/przyklady/scrollytelling] [liczba=96] [jakosc=72] [skala=1.25]
+//   node scripts/klatki-scrollytelling.mjs [katalog=public/efekty/animacja-przewijaniem] [liczba=96] [jakosc=72] [skala=1.25]
 // Rysunek ma 960×640 jednostek; skala 1.25 daje pliki 1200×800 px (ostrzej na ekranach o gęstości > 1).
 // Wynik: <katalog>/klatki/0001.webp … NNNN.webp oraz <katalog>/plakat.svg (stan końcowy = ostatnia klatka).
 import { spawn } from 'node:child_process';
@@ -13,7 +13,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync, readdirSync, statSync } 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const [katalog = 'public/przyklady/scrollytelling', liczbaArg = '96', jakoscArg = '72', skalaArg = '1.25'] = process.argv.slice(2);
+const [katalog = 'public/efekty/animacja-przewijaniem', liczbaArg = '96', jakoscArg = '72', skalaArg = '1.25'] = process.argv.slice(2);
 const SKALA = Number(skalaArg);
 const LICZBA = Number(liczbaArg);
 const JAKOSC = Number(jakoscArg);

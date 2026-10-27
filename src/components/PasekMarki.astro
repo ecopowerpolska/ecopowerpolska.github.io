@@ -19,16 +19,18 @@ interface Props {
 
 const { liczbaSerwisow } = Astro.props;
 
-// Menu główne: sześć pozycji (2026-10-23, firma od stron i sklepów; „Cena” od 2026-10-27). Oferta, Realizacje i Kontakt to kotwice
-// strony głównej (bez aria-current — to sekcje, nie strony); FAQ i Blog to podstrony. Logo prowadzi na stronę główną.
+// Menu główne: osiem pozycji (2026-10-27 runda 4: Efekty, Test szybkości, Kontakt jako podstrona). Oferta i Realizacje to
+// kotwice strony głównej (bez aria-current — to sekcje, nie strony); reszta to podstrony. Logo prowadzi na stronę główną.
 const sciezka = Astro.url.pathname;
 const menu = [
   { adres: '/#oferta', napis: tekst(blog.menuOferta, 'Oferta'), biezaca: false },
   { adres: '/#realizacje', napis: tekst(blog.menuRealizacje, 'Realizacje'), biezaca: false },
+  { adres: '/efekty/', napis: tekst(blog.menuEfekty, 'Efekty'), biezaca: sciezka.startsWith('/efekty') },
   { adres: '/cena/', napis: tekst(blog.menuCena, 'Cena'), biezaca: sciezka.startsWith('/cena') },
   { adres: '/faq/', napis: tekst(blog.menuFaq, 'FAQ'), biezaca: sciezka.startsWith('/faq') },
   { adres: '/blog/', napis: tekst(blog.menuBlog, 'Blog'), biezaca: sciezka.startsWith('/blog') },
-  { adres: '/#kontakt', napis: tekst(blog.menuKontakt, 'Kontakt'), biezaca: false },
+  { adres: '/jak-sprawdzic-szybkosc-strony/', napis: tekst(blog.menuTest, 'Test szybkości'), biezaca: sciezka.startsWith('/jak-sprawdzic-szybkosc-strony') },
+  { adres: '/kontakt/', napis: tekst(blog.menuKontakt, 'Kontakt'), biezaca: sciezka.startsWith('/kontakt') },
 ];
 
 // Dopisek licznika z panelu („3 serwisy w sieci").
@@ -73,7 +75,7 @@ function odmiana(n: number): string {
           </p>
         )
       }
-      <nav class="menu" aria-label={tekst(blog.etykietaMenu, 'Menu główne')}>
+      <nav class="menu" id="menu-glowne" data-otwarte="nie" aria-label={tekst(blog.etykietaMenu, 'Menu główne')}>
         <ul>
           {menu.map((m) => (
             <li>
@@ -82,6 +84,26 @@ function odmiana(n: number): string {
           ))}
         </ul>
       </nav>
+      {/* Bez JS przełącznik znika, a menu staje pod paskiem zawinięte (cel 44 px zostaje). */}
+      <noscript>
+        <style>
+          .pasek__przelacznik { display: none !important; }
+          .menu { display: block !important; }
+          @container pasek (max-width: 52.999rem) {
+            .pasek__srodek { flex-wrap: wrap !important; }
+            .pasek__prawa { flex: 1 1 100% !important; }
+            .menu ul { display: flex !important; flex-wrap: wrap !important; gap: 0 1rem !important; }
+            .menu a { min-height: 44px !important; border-bottom: 0 !important; }
+          }
+        </style>
+      </noscript>
+      <button class="pasek__przelacznik" id="przelacznik-menu" type="button" aria-expanded="false" aria-controls="menu-glowne">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path class="ikona-menu" d="M4 7h16M4 12h16M4 17h16" />
+          <path class="ikona-zamknij" d="M6 6l12 12M18 6L6 18" />
+        </svg>
+        {tekst(blog.przyciskMenu, 'Menu')}
+      </button>
     </div>
   </div>
 </header>
@@ -90,8 +112,12 @@ function odmiana(n: number): string {
   /* Pełna szerokość kontenera, przyklejony, z kreską u dołu. Świadomie BEZ
      frosted-glass/blur z poprzedniej wersji (styl apple.com/pl) — płaska kreska
      pasuje do kierunku „rejestr", blur nie wnosił nic poza cytatem z cudzego
-     interfejsu. */
+     interfejsu.
+     Pasek jest KONTENEREM zapytań (D16, 2026-10-27): próg menu liczy się w rem bieżącego pisma,
+     więc tekst powiększony do 200 % przesuwa próg razem z treścią (wzorzec garderoba Naglowek.astro). */
   .pasek {
+    container: pasek / inline-size;
+    max-width: 100vw;
     position: sticky;
     top: 0;
     z-index: 5;
@@ -99,12 +125,17 @@ function odmiana(n: number): string {
     border-bottom: 1px solid var(--linia);
   }
 
+  /* Otwarte menu nad linią postępu przewijania (Ujawnianie.astro). */
+  .pasek[data-menu='otwarte'] {
+    z-index: 30;
+  }
+
+  /* Jeden wiersz przy każdej szerokości: co się nie mieści, rozstrzyga próg menu niżej. */
   .pasek__srodek {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
     padding: var(--o-3) var(--o-6);
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--o-2) var(--o-6);
@@ -133,46 +164,32 @@ function odmiana(n: number): string {
       height: 26px;
     }
 
-    /* Sześć pozycji menu w jednym wierszu na telefonie 390 px (od 2026-10-27, zakładka „Cena”):
-       mniejszy odstęp między pozycjami i węższy margines paska. Cel dotyku dalej 44 px wysokości. */
     .pasek__srodek {
       padding-inline: var(--o-4);
-    }
-
-    .pasek .menu ul {
-      gap: 0 var(--o-2);
     }
   }
 
   .pasek__prawa {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: var(--o-2) var(--o-6);
   }
 
-  /* Sześć pozycji: na wąskim ekranie zawijają się do drugiego wiersza, zamiast rozpychać stronę w bok. */
   .menu ul {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--o-4);
   }
 
   /* Cel dotyku 44 px wysokości (WCAG 2.5.8 z zapasem). Kolory: pary z motyw.css (tekst/tło, akcent/tło). */
   .menu a {
     /* spoczynek */
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    min-height: 44px;
-    padding: 0 var(--o-1);
-    font-size: var(--t-s);
+    min-height: var(--cel-dotyku);
     font-weight: 600;
     color: var(--tekst);
     text-decoration: none;
-    border-bottom: 2px solid transparent;
   }
 
   /* najechanie */
@@ -188,7 +205,122 @@ function odmiana(n: number): string {
   /* bieżąca strona */
   .menu a[aria-current='page'] {
     color: var(--akcent);
-    border-bottom-color: var(--akcent);
+  }
+
+  /* Przełącznik „Menu”: napis widoczny obok ikony (słowo czytelniejsze od samego znaku ☰).
+     Obrys --tekst-cichy na --tlo 6,67:1 (próg 3:1 elementu nietekstowego z zapasem). */
+  .pasek__przelacznik {
+    /* spoczynek */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--o-2);
+    flex-shrink: 0;
+    min-height: var(--cel-dotyku);
+    padding: 0 var(--o-3);
+    font: inherit;
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  /* najechanie */
+  .pasek__przelacznik:hover {
+    background: var(--powierzchnia);
+  }
+
+  /* aktywny (wciśnięty) */
+  .pasek__przelacznik:active {
+    background: var(--powierzchnia-mocna);
+  }
+
+  .ikona-zamknij {
+    display: none;
+  }
+
+  .pasek__przelacznik[aria-expanded='true'] .ikona-menu {
+    display: none;
+  }
+
+  .pasek__przelacznik[aria-expanded='true'] .ikona-zamknij {
+    display: block;
+  }
+
+  /* ── poniżej progu: menu w panelu pod paskiem, na całą resztę ekranu ──────────────────────
+     Próg 53 rem = treść paska w jednym wierszu, zmierzona CDP 2026-10-27 przy oknie 896 px: marginesy 48 + logo 180
+     + przerwa 24 + osiem pozycji 566 px (przerwy 0,75 rem) = 818 px = 51,1 rem, plus ~2 rem zapasu (w górę).
+     Licznik serwisów (prop liczbaSerwisow) dziś nie jest przekazywany nigdzie — gdy wróci, próg trzeba zmierzyć od nowa.
+     768 px (tablet pionowo) = panel; 1024 px = jeden wiersz. */
+  .menu {
+    display: none;
+  }
+
+  @container pasek (max-width: 52.999rem) {
+    .menu[data-otwarte='tak'] {
+      display: block;
+      position: fixed;
+      top: var(--gora-panelu, 3.5rem);
+      left: 0;
+      right: 0;
+      height: calc(100vh - var(--gora-panelu, 3.5rem));
+      height: calc(100dvh - var(--gora-panelu, 3.5rem));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: var(--o-2) var(--o-6) calc(var(--o-8) + env(safe-area-inset-bottom, 0px));
+      background: var(--tlo);
+      border-top: 1px solid var(--linia);
+    }
+
+    .menu a {
+      min-height: var(--cel-dotyku-panel);
+      font-size: var(--t-m);
+      border-bottom: 1px solid var(--linia);
+    }
+
+    .menu a[aria-current='page'] {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
+  }
+
+  /* ── od progu: osiem pozycji w jednym wierszu, pasek ≤ 80 px ──────────────────────────────── */
+  @container pasek (min-width: 53rem) {
+    .pasek__przelacznik {
+      display: none;
+    }
+
+    .menu {
+      display: block;
+    }
+
+    .menu ul {
+      display: flex;
+      gap: 0 var(--o-3);
+    }
+
+    /* Krótkie pozycje („FAQ”, „Blog”) poszerzone do 44 px celu. */
+    .menu a {
+      justify-content: center;
+      min-width: var(--cel-dotyku);
+      padding: 0 var(--o-1);
+      font-size: var(--t-s);
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+    }
+
+    .menu a[aria-current='page'] {
+      border-bottom-color: var(--akcent);
+    }
+  }
+
+  @container pasek (min-width: 64rem) {
+    .menu ul {
+      gap: 0 var(--o-4);
+    }
   }
 
   .pasek__licznik {
@@ -198,3 +330,54 @@ function odmiana(n: number): string {
     white-space: nowrap;
   }
 </style>
+
+<script>
+  // Menu w panelu poniżej progu (D16): aria-expanded, inert na tle, Esc zamyka i oddaje fokus przełącznikowi.
+  // Wzorzec mechanizmu: garderoba-na-wymiar-warszawa.pl Naglowek.astro. Bez bibliotek.
+  const przelacznik = document.getElementById('przelacznik-menu');
+  const menu = document.getElementById('menu-glowne');
+  const pasek = przelacznik?.closest('header');
+  const korzen = document.documentElement;
+  // Skip-link prowadzi do main, które przy otwartym menu ma inert: wypada z kolejki Tab razem z treścią.
+  const tlo = [document.querySelector('.skip'), document.getElementById('tresc'), document.querySelector('footer')];
+  const otwarte = () => przelacznik?.getAttribute('aria-expanded') === 'true';
+  let y = 0;
+
+  const ustaw = (czy: boolean) => {
+    przelacznik?.setAttribute('aria-expanded', String(czy));
+    menu?.setAttribute('data-otwarte', czy ? 'tak' : 'nie');
+    if (czy) pasek?.setAttribute('data-menu', 'otwarte');
+    else pasek?.removeAttribute('data-menu');
+    tlo.forEach((el) => el?.toggleAttribute('inert', czy));
+    if (czy) {
+      y = scrollY;
+      menu?.style.setProperty('--gora-panelu', `${pasek?.getBoundingClientRect().bottom ?? 56}px`);
+      korzen.style.overflow = 'hidden';
+    } else {
+      korzen.style.removeProperty('overflow');
+      if (Math.abs(scrollY - y) > 1) scrollTo(0, y);
+    }
+  };
+
+  przelacznik?.addEventListener('click', () => {
+    ustaw(!otwarte());
+    if (otwarte()) menu?.querySelector('a')?.focus();
+  });
+
+  // Klik w pozycję (także kotwicę /#oferta na tej samej stronie) zamyka panel.
+  menu?.addEventListener('click', (e) => {
+    if (otwarte() && (e.target as Element).closest('a')) ustaw(false);
+  });
+
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && otwarte()) {
+      ustaw(false);
+      przelacznik?.focus();
+    }
+  });
+
+  // Obrót telefonu albo poszerzenie okna ponad próg: panel znika, więc tło nie może zostać zablokowane.
+  addEventListener('resize', () => {
+    if (otwarte() && przelacznik && getComputedStyle(przelacznik).display === 'none') ustaw(false);
+  }, { passive: true });
+</script>

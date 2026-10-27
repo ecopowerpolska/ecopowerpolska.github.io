@@ -1,0 +1,123 @@
+---
+// /kontakt/ — formularz zapytania z wyborem zakresu i technologii sklepu, karty wycen z kalkulatora /cena/ (runda 4, 2026-10-27).
+// Treść: src/data/kontakt.json (panel: Teksty strony → Kontakt); dane firmy: src/data/firma.json. Obsługa: docs/FORMULARZ.md.
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import Formularz from '../components/Formularz.astro';
+import k from '../data/kontakt.json';
+import firma from '../data/firma.json';
+import blog from '../data/blog.json';
+import { tekst } from '../lib/tekst';
+
+const tytul = tekst(k.tytulKarty, 'Kontakt i wycena — EcoPower Polska');
+const opis = tekst(k.opisWyszukiwarki, 'Zapytaj o stronę albo sklep internetowy.');
+const naglowek = tekst(k.naglowek, 'Kontakt i wycena');
+const mail = firma.email.toLowerCase();
+const cyfry = firma.telefon.replace(/\D/g, '');
+const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : firma.telefon;
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/kontakt/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: tekst(blog.menuKontakt, 'Kontakt'), adres: '/kontakt/' },
+];
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ContactPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+  {/* Połączenie z Cloudflare przed renderem widżetu Turnstile (skrypt i ramka z tego samego hosta). */}
+  {k.turnstileSitekey && <link slot="head" rel="preconnect" href="https://challenges.cloudflare.com" />}
+
+  <PasekMarki />
+
+  <main id="tresc" class="kontakt">
+    <nav class="okruszki" aria-label={tekst(blog.okruszkiEtykieta, 'Ścieżka')}>
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="kontakt__tytul">{naglowek}</h1>
+    {k.lead && <p class="kontakt__lead">{k.lead}</p>}
+
+    <div class="kontakt__uklad">
+      <Formularz />
+      <aside class="dane" aria-labelledby="dane-naglowek">
+        <h2 id="dane-naglowek" class="dane__naglowek">{tekst(k.daneNaglowek, 'Wolisz zadzwonić albo napisać?')}</h2>
+        {k.daneTekst && <p class="dane__tekst">{k.daneTekst}</p>}
+        <ul class="dane__lista">
+          {cyfry && <li><a href={`tel:+48${cyfry.slice(-9)}`}>{telefon}</a></li>}
+          {mail && <li><a href={`mailto:${mail}`}>{mail}</a></li>}
+        </ul>
+        <p class="dane__firma">
+          {tekst(firma.nazwaStopka, firma.nazwaPelna)}<br />
+          {firma.adresSiedziby}, {firma.kodPocztowy} {firma.miejscowosc}
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .kontakt {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14). */
+  .okruszki ol { list-style: none; margin: 0 0 var(--o-6); padding: 0; display: flex; gap: 0 var(--o-2); font-size: var(--t-s); color: var(--tekst-cichy); }
+  .okruszki li { display: inline-flex; align-items: center; flex: 0 0 auto; white-space: nowrap; }
+  .okruszki li:last-child { flex: 1 1 0; min-width: 0; contain: inline-size; }
+  .okruszki [aria-current] { display: block; overflow: hidden; text-overflow: ellipsis; line-height: 44px; }
+  .okruszki li + li::before { content: '›'; margin-right: var(--o-2); }
+  .okruszki a { display: inline-flex; align-items: center; min-height: 44px; }
+  .okruszki a:hover { color: var(--tekst); }
+
+  .kontakt__tytul { max-width: 44rem; font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl)); }
+  .kontakt__lead { max-width: 44rem; margin: var(--o-4) 0 var(--o-8); font-size: var(--t-l); line-height: 1.5; color: var(--tekst-cichy); }
+
+  .kontakt__uklad { display: grid; gap: var(--o-12); }
+  @media (min-width: 64rem) {
+    .kontakt__uklad { grid-template-columns: minmax(0, 1fr) 20rem; align-items: start; }
+    .dane { position: sticky; top: calc(80px + var(--o-6)); }
+  }
+  .dane { padding: var(--o-6); background: var(--powierzchnia); border-radius: var(--promien); }
+  .dane__naglowek { margin: 0 0 var(--o-2); font-size: var(--t-l); line-height: 1.25; }
+  .dane__tekst { margin: 0 0 var(--o-4); color: var(--tekst-cichy); }
+  .dane__lista { list-style: none; margin: 0 0 var(--o-4); padding: 0; }
+  .dane__lista a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: var(--t-m); overflow-wrap: anywhere; }
+  .dane__firma { margin: 0; font-size: var(--t-s); color: var(--tekst-cichy); }
+</style>

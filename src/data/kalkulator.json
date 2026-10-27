@@ -1,0 +1,240 @@
+{
+  "naglowek": "Kalkulator: policz cenę strony albo sklepu",
+  "lead": "Zaznacz, co budujemy i czego potrzebujesz po uruchomieniu. Kwoty biorą się z cennika niżej, liczą się na bieżąco: netto i z 23 % VAT.",
+  "bezJs": "Kalkulator liczy w przeglądarce i potrzebuje włączonego JavaScriptu. Bez niego cenę każdej pozycji widzisz przy jej nazwie, a pełny cennik w tabelach niżej.",
+  "krok1": "1. Co budujemy?",
+  "krok1Pomoc": "Wybierz jedną pozycję. Opis zakresu kryje się pod znakiem „i”.",
+  "krok2": "2. Dodatki i koszty stałe",
+  "krok2Pomoc": "Zaznacz albo wpisz liczbę. Pozycje, które nie pasują do wybranego rodzaju, są wyszarzone.",
+  "krok3": "3. Dodatki do sklepu",
+  "krok3Pomoc": "Dotyczy sklepu: wybierz sklep w kroku 1.",
+  "podpowiedzEtykieta": "Co obejmuje:",
+  "nieDotyczy": "nie dotyczy wybranego rodzaju",
+  "indywidualnie": "Strona w kilku językach, więcej podstron, niż mieści dana półka, albo własne funkcje: to wycena indywidualna po rozmowie, bez kwoty w kalkulatorze.",
+  "prowizjeNaglowek": "Prowizje operatora płatności",
+  "prowizjeDopisek": "pobiera operator od każdej transakcji, nie wliczamy ich do sumy.",
+  "policz": "Policz",
+  "miniJednorazowo": "jednorazowo",
+  "miniMiesiecznie": "mies.",
+  "miniLink": "Wynik",
+  "wynikNaglowek": "Twoje wyliczenie",
+  "wynikStart": "Wybierz w kroku 1, co budujemy, albo zaznacz dodatki. Wynik pojawi się tutaj.",
+  "jednorazowo": "Jednorazowo",
+  "miesiecznie": "Co miesiąc",
+  "rocznie": "Co rok",
+  "netto": "netto",
+  "brutto": "brutto z 23 % VAT",
+  "pierwszyRok": "Razem w pierwszym roku",
+  "rozbicie": "Co weszło do wyliczenia",
+  "zastrzezenie": "Ceny orientacyjne z cennika EcoPower Polska. Ostateczną wycenę przygotowujemy po rozmowie o zakresie.",
+  "dodaj": "Dodaj do formularza",
+  "kolejne": "Dodaj kolejne wyliczenie",
+  "dodano": "Dodano do zapytania. Możesz policzyć kolejny wariant albo przejść do formularza.",
+  "duplikat": "To wyliczenie już jest w zapytaniu.",
+  "pusto": "Najpierw wybierz w kroku 1, co budujemy, albo zaznacz dodatki.",
+  "limit": "W zapytaniu jest już 5 wyliczeń. Usuń któreś w formularzu, żeby dodać nowe.",
+  "bezPamieci": "Przeglądarka nie pozwala zapamiętać wyliczenia (tryb prywatny albo zablokowane dane witryny). Przepisz kwoty do wiadomości w formularzu.",
+  "pasek": "W zapytaniu:",
+  "pasekLink": "Przejdź do formularza",
+  "pamiecSesji": "Wyliczenia pamięta tylko ta karta przeglądarki, do jej zamknięcia; nic nie wychodzi do nas przed wysłaniem formularza.",
+  "liczebnik": {
+    "jedna": "wyliczenie",
+    "kilka": "wyliczenia",
+    "wiele": "wyliczeń"
+  },
+  "rodzaje": [
+    {
+      "id": "wizytowka",
+      "nazwa": "Strona wizytówka",
+      "tabela": "stronaWykonanie",
+      "szukaj": "Wizytówka",
+      "grupa": "strona"
+    },
+    {
+      "id": "firmowa",
+      "nazwa": "Strona firmowa",
+      "tabela": "stronaWykonanie",
+      "szukaj": "Strona firmowa",
+      "grupa": "strona"
+    },
+    {
+      "id": "rozbudowana",
+      "nazwa": "Strona rozbudowana lub premium",
+      "tabela": "stronaWykonanie",
+      "szukaj": "rozbudowana",
+      "grupa": "strona"
+    },
+    {
+      "id": "woocommerce",
+      "nazwa": "Sklep WooCommerce",
+      "tabela": "sklepWykonanie",
+      "szukaj": "WooCommerce",
+      "grupa": "sklep-wlasny"
+    },
+    {
+      "id": "prestashop",
+      "nazwa": "Sklep PrestaShop",
+      "tabela": "sklepWykonanie",
+      "szukaj": "PrestaShop",
+      "grupa": "sklep-wlasny"
+    },
+    {
+      "id": "platforma",
+      "nazwa": "Sklep na platformie abonamentowej (Shoper, IdoSell): wdrożenie",
+      "tabela": "sklepWykonanie",
+      "szukaj": "platformie abonamentowej",
+      "grupa": "sklep-platforma"
+    },
+    {
+      "id": "astro",
+      "nazwa": "Sklep na stronie Astro z koszykiem",
+      "tabela": "sklepWykonanie",
+      "szukaj": "Astro",
+      "grupa": "sklep-astro"
+    },
+    {
+      "id": "duzy",
+      "nazwa": "Sklep dedykowany albo duży",
+      "tabela": "sklepWykonanie",
+      "szukaj": "dedykowany",
+      "grupa": "sklep-wlasny"
+    }
+  ],
+  "dodatki": [
+    {
+      "id": "wpisy",
+      "nazwa": "Wpisy na blogu",
+      "tabela": "stronaProwadzenie",
+      "szukaj": "wpis na blogu",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 200,
+      "formy": {
+        "jedna": "wpis na blogu",
+        "kilka": "wpisy na blogu",
+        "wiele": "wpisów na blogu"
+      }
+    },
+    {
+      "id": "blog",
+      "nazwa": "Prowadzenie bloga firmowego",
+      "tabela": "stronaProwadzenie",
+      "szukaj": "prowadzenie bloga",
+      "okres": "miesiecznie"
+    },
+    {
+      "id": "opieka",
+      "nazwa": "Opieka techniczna i aktualizacje strony",
+      "tabela": "stronaProwadzenie",
+      "szukaj": "Opieka techniczna i aktualizacje",
+      "okres": "miesiecznie",
+      "dla": [
+        "strona",
+        "sklep-astro"
+      ]
+    },
+    {
+      "id": "hosting",
+      "nazwa": "Hosting, domena i certyfikat SSL",
+      "tabela": "stronaProwadzenie",
+      "szukaj": "Hosting, domena",
+      "okres": "rocznie",
+      "dla": [
+        "strona",
+        "sklep-astro"
+      ]
+    },
+    {
+      "id": "regulamin",
+      "nazwa": "Regulamin i polityka prywatności",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Regulamin",
+      "okres": "rocznie"
+    },
+    {
+      "id": "integracje",
+      "nazwa": "Integracje (płatności, Allegro, hurtownia)",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Integracje",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 20,
+      "formy": {
+        "jedna": "integracja",
+        "kilka": "integracje",
+        "wiele": "integracji"
+      }
+    },
+    {
+      "id": "godziny",
+      "nazwa": "Prace dodatkowe",
+      "tabela": "stronaProwadzenie",
+      "szukaj": "Opieka techniczna i aktualizacje",
+      "pole": "opis",
+      "wzorzec": "(\\d[\\d\\s]*)\\s*zł za godzinę",
+      "jednostka": "za godzinę",
+      "opis": "Prace poza pakietem opieki: zmiany na stronie, nowe sekcje, pomoc przy treściach. Rozliczane za godzinę.",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 500,
+      "formy": {
+        "jedna": "godzina prac dodatkowych",
+        "kilka": "godziny prac dodatkowych",
+        "wiele": "godzin prac dodatkowych"
+      }
+    }
+  ],
+  "dodatkiSklepu": [
+    {
+      "id": "abonament",
+      "nazwa": "Abonament platformy (Shoper, IdoSell)",
+      "dopisek": "płatny platformie, nie nam",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Abonament platformy",
+      "okres": "miesiecznie",
+      "dla": [
+        "sklep-platforma"
+      ]
+    },
+    {
+      "id": "hostingSklepu",
+      "nazwa": "Hosting sklepu na własnym silniku",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Hosting sklepu",
+      "okres": "miesiecznie",
+      "dla": [
+        "sklep-wlasny"
+      ]
+    },
+    {
+      "id": "opiekaSklepu",
+      "nazwa": "Opieka techniczna sklepu",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Opieka techniczna sklepu",
+      "okres": "miesiecznie",
+      "dla": [
+        "sklep-wlasny",
+        "sklep-platforma",
+        "sklep-astro"
+      ],
+      "wyklucza": "opiekaDuzego"
+    },
+    {
+      "id": "opiekaDuzego",
+      "nazwa": "Opieka dużego sklepu z gwarantowanym czasem reakcji",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Opieka dużego sklepu",
+      "okres": "miesiecznie",
+      "dla": [
+        "sklep-wlasny",
+        "sklep-platforma",
+        "sklep-astro"
+      ],
+      "wyklucza": "opiekaSklepu"
+    }
+  ],
+  "prowizje": {
+    "tabela": "sklepProwadzenie",
+    "szukaj": "Prowizje operatora"
+  }
+}

@@ -282,9 +282,7 @@ wydajności (...) na komórkę, na stacjonarny” oraz „30 pomiar uruchomię j
   w karcie 340–390 px pięć pełnych polskich nazw nie mieści się w kolumnach. Pod tabelą data pomiaru, zdanie o braku danych
   CrUX i link „Sprawdź sam” do pagespeed.web.dev. Dane: `scripts/psi-realizacje.py` → `src/data/pomiary.json` (poza panelem,
   `docs/POMIARY.md`). Link kafelka jest wewnątrz karty, tabela poza nim (link w linku jest niedozwolony).
-- **Strona przykładowa `/przyklady/scrollytelling/`** — `noindex, nofollow`, poza menu, stopką, `llms.txt` i sitemapą
-  (filtr `sitemap()` w `astro.config.mjs`). Dwie sceny szafy (CSS `animation-timeline` i 120 klatek WebP na canvas) w tokenach
-  strony; kolory ilustracji, które nie są tekstem, są stałymi w stylu tej trasy, nie tokenami motywu.
+- Efekt przewijania (dawniej `/przyklady/scrollytelling/`) stoi od 2026-10-27 pod `/efekty/animacja-przewijaniem/`, w sitemapie i Google. Stary adres przekierowuje tam meta refresh. `/efekty/` to siatka kart »Wybierz efekt«: kolumny stałej szerokości wyśrodkowane, jedna karta na środku.
 
 ## D14 — FAQ akordeonem, skrót nazwy w stopce, guzik 24 px, okruszki w jednej linii (2026-10-27)
 
@@ -305,3 +303,11 @@ przewijania w dół; stopki: „EcoPower Polska Sp. z o.o.”; guzik: „jeżeli
 - **Cennik** — tabela do 56 rem (kwota w zasięgu wzroku na 1440 px). **Krój zapasowy nagłówków** liczony względem
   Times New Roman (`fallbacks: ['serif']`), nie Ariala.
 - **D15 (2026-10-27)** — `/jak-sprawdzic-szybkosc-strony/`: poradnik + formularz GET do oficjalnego raportu pagespeed.web.dev (działa bez JS); wynik na miejscu z PSI API tylko z kluczem przeglądarkowym `PUBLIC_PSI_KLUCZ` (bez klucza Google daje limit 0, 429); w menu NIE (7. pozycja łamie pasek na 390 px na 2 rzędy), link w stopce, FAQ i llms.txt.
+
+## D16–D18 (2026-10-27, runda 4)
+
+**D16 — Menu: 8 pozycji, hamburger na telefonie i tablecie (2026-10-27).** Pozycje: Oferta · Realizacje · Efekty · Cena · FAQ · Blog · Test szybkości · Kontakt. Od 53 rem szerokości paska (zapytanie kontenera, próg przesuwa się z powiększeniem pisma) wszystkie stoją w jednej linii przyklejonego paska 69 px. Poniżej przycisk „Menu” otwiera panel na resztę ekranu z pozycjami po 48 px; treść i stopka dostają `inert`, Esc zamyka i oddaje fokus przełącznikowi; bez JS menu zawija się pod logo. Próg zmierzony CDP: 818 px treści paska.
+
+**D17 — Blok PageSpeed jako osobna karta „oficjalne narzędzie Google” (2026-10-27).** Wyniki pod kafelkiem Realizacji stoją we własnej karcie: cienki obrys, tło o stopień jaśniejsze od kafelka, nagłówek „Oficjalny pomiar Google PageSpeed Insights” z własną ikoną prędkościomierza (nie logo Google), zdanie, że pomiar robi narzędzie Google, i dwa linki: „Sprawdź sam” (nowa karta) oraz „Jak czytać wynik →”. Strony klientów i PageSpeed otwierają się w nowej karcie z dopiskiem dla czytnika ekranu (Piotr 17:45). W wąskiej karcie blok się zwęża (kontener kafelka ≤ 20 rem).
+
+**D18 — Kontakt i kalkulator (2026-10-27).** `/kontakt/` to formularz z żetonami zakresu i technologii sklepu, kartami wycen z kalkulatora (z „Usuń”) i Cloudflare Turnstile; handler PHP na lh.pl (`https://pan-stolarz.pl/formularz/ecopower/wyslij.php`), bo GitHub Pages nie ma PHP. Kalkulator na `/cena/#kalkulator` liczy wyłącznie z kwot cennika (`cena.json`), netto i brutto, a „Dodaj do formularza” przenosi wyliczenie do `/kontakt/` przez pamięć sesji.

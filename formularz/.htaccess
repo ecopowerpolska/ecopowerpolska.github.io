@@ -1,0 +1,6 @@
+# Handler formularza www.ecopowerpolska.pl na koncie lh.pl (public_html/pan-stolarz.pl/formularz/ecopower/).
+# Z sieci odpowiada tylko wyslij.php; konfig/ i stan/ zamykają ich własne .htaccess (bez FilesMatch "wszystko poza", pułapka ⑱).
+Options -Indexes
+<FilesMatch "\.(bak|save|orig|old|swp|tmp|dist|log|ini|md|przyklad|licznik|php~)$">
+  Require all denied
+</FilesMatch>

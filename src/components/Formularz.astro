@@ -1,0 +1,367 @@
+---
+// Formularz zapytania /kontakt/ (runda 4, 2026-10-27). Mechanizm z pan-stolarz.pl i kuchnia-na-wymiar-warszawa.pl:
+// żetony (checkbox w etykiecie, bez JS), pole technologii i adresu pokazuje CSS :has(), karty wycen z sessionStorage
+// (src/lib/wyceny.ts), szkic pól `ep.szkic`, honeypot `dodatkowe`, czas wypełniania `t`, Cloudflare Turnstile render=explicit.
+// Wysyłka zwykłym POST na handler PHP na lh.pl (GitHub Pages nie ma PHP): 303 → /dziekujemy/ albo /kontakt/?blad=<kod>.
+// Teksty: src/data/kontakt.json (panel: Teksty strony → Kontakt). Opis całości: docs/FORMULARZ.md.
+import k from '../data/kontakt.json';
+import firma from '../data/firma.json';
+import { tekst } from '../lib/tekst';
+
+const mail = firma.email.toLowerCase();
+const cyfry = firma.telefon.replace(/\D/g, '');
+const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : firma.telefon;
+const podstaw = (s: string) =>
+  s.replaceAll('{nazwa}', tekst(firma.nazwaStopka, firma.nazwaPelna))
+    .replaceAll('{adres}', `${firma.adresSiedziby}, ${firma.kodPocztowy} ${firma.miejscowosc}`)
+    .replaceAll('{email}', mail)
+    .replaceAll('{telefon}', telefon);
+const akcja = tekst(k.akcja, 'https://pan-stolarz.pl/formularz/ecopower/wyslij.php');
+const sitekey = (k.turnstileSitekey ?? '').trim();
+const b = k.bledy as Record<string, string>;
+---
+
+<form
+  class="formularz"
+  id="formularz"
+  method="post"
+  action={akcja}
+  accept-charset="UTF-8"
+  data-bledy={JSON.stringify(b)}
+  data-usun={tekst(k.wycenyUsun, 'Usuń')}
+  data-netto={tekst(k.wycenyNetto, 'netto')}
+  data-brutto={tekst(k.wycenyBrutto, 'brutto')}
+  data-jednorazowo={tekst(k.wycenyJednorazowo, 'jednorazowo')}
+  data-miesiecznie={tekst(k.wycenyMiesiecznie, 'miesięcznie')}
+  data-rocznie={tekst(k.wycenyRocznie, 'rocznie')}
+  data-dodaj={tekst(k.wycenyDodaj, 'Dodaj kolejne wyliczenie')}
+  data-policz={tekst(k.wycenyPolicz, 'Policz cenę w kalkulatorze')}
+>
+  <p class="formularz__blad" id="formularz-blad" role="alert" tabindex="-1" hidden></p>
+  <noscript><p class="formularz__blad">{podstaw(tekst(k.bezJs, 'Napisz na {email} albo zadzwoń: {telefon}.'))}</p></noscript>
+
+  <fieldset class="grupa">
+    <legend>{tekst(k.potrzebyLegenda, 'Czego potrzebujesz?')}</legend>
+    <p class="podpowiedz">{k.potrzebyPodpowiedz}</p>
+    <div class="zetony">
+      {k.potrzeby.map((p) => (
+        <label class="zeton"><input type="checkbox" name="potrzeby[]" value={p.wartosc} /><span>{p.etykieta}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset class="grupa grupa--technologia">
+    <legend>{tekst(k.technologiaLegenda, 'Na czym ma stać sklep?')}</legend>
+    <div class="zetony">
+      {k.technologie.map((t) => (
+        <label class="zeton"><input type="radio" name="technologia" value={t.wartosc} /><span>{t.etykieta}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset class="grupa">
+    <legend>{tekst(k.stronaLegenda, 'Masz już stronę?')}</legend>
+    <div class="zetony">
+      <label class="zeton"><input type="radio" name="strona" value="nie" /><span>{tekst(k.stronaNie, 'Nie')}</span></label>
+      <label class="zeton"><input type="radio" name="strona" value="tak" /><span>{tekst(k.stronaTak, 'Tak')}</span></label>
+    </div>
+    <div class="pole pole--adres">
+      <label for="pole-adres">{tekst(k.adresEtykieta, 'Adres obecnej strony')}</label>
+      <input id="pole-adres" name="adres" type="text" inputmode="url" autocomplete="url" maxlength="300" placeholder="www.twojafirma.pl" />
+    </div>
+  </fieldset>
+
+  <section class="wyceny" aria-labelledby="wyceny-naglowek">
+    <h2 id="wyceny-naglowek" class="wyceny__naglowek">{tekst(k.wycenyNaglowek, 'Twoje wyliczenia z kalkulatora')}</h2>
+    <p class="podpowiedz" id="wyceny-pusto">{k.wycenyPusto}</p>
+    <ul class="wyceny__lista" id="wyceny-lista" aria-live="polite"></ul>
+    <a class="wyceny__link" id="wyceny-link" href="/cena/#kalkulator">{tekst(k.wycenyPolicz, 'Policz cenę w kalkulatorze')}</a>
+    <input type="hidden" name="wyceny" id="pole-wyceny" value="" />
+  </section>
+
+  <div class="dane">
+    <div class="pole">
+      <label for="pole-imie">{tekst(k.imieEtykieta, 'Imię')}</label>
+      <input id="pole-imie" name="imie" type="text" autocomplete="given-name" required maxlength="100" />
+    </div>
+    <div class="pole">
+      <label for="pole-email">{tekst(k.emailEtykieta, 'E-mail')}</label>
+      <input id="pole-email" name="email" type="email" autocomplete="email" required maxlength="200" />
+    </div>
+    <div class="pole">
+      <label for="pole-telefon">{tekst(k.telefonEtykieta, 'Telefon (nieobowiązkowo)')}</label>
+      <input id="pole-telefon" name="telefon" type="tel" autocomplete="tel" maxlength="30" />
+    </div>
+  </div>
+
+  <fieldset class="grupa">
+    <legend>{k.poraLegenda}</legend>
+    <div class="zetony">
+      {k.pory.map((p) => (
+        <label class="zeton"><input type="radio" name="pora" value={p.wartosc} /><span>{p.etykieta}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <div class="pole">
+    <label for="pole-wiadomosc">{tekst(k.wiadomoscEtykieta, 'Wiadomość')}</label>
+    <p class="podpowiedz" id="podpowiedz-wiadomosc">{k.wiadomoscPodpowiedz}</p>
+    <textarea id="pole-wiadomosc" name="wiadomosc" rows="5" maxlength="4000" aria-describedby="podpowiedz-wiadomosc"></textarea>
+  </div>
+
+  {/* Pułapka na boty: pole poza ekranem, bez etykiety dla czytnika, poza kolejnością Tab. */}
+  <div class="pulapka" aria-hidden="true">
+    <label for="pole-dodatkowe">Zostaw puste</label>
+    <input id="pole-dodatkowe" name="dodatkowe" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name="t" id="pole-t" value="" />
+
+  <div class="zgoda">
+    <label class="zgoda__pole">
+      <input type="checkbox" name="zgoda" value="tak" required />
+      <span>{tekst(k.zgodaEtykieta, 'Zgadzam się na przetwarzanie moich danych z formularza w celu odpowiedzi na zapytanie.')}</span>
+    </label>
+    <p class="zgoda__info">{podstaw(k.zgodaInformacja)}</p>
+  </div>
+
+  {sitekey && (
+    <div class="turnstile">
+      <div id="formularz-turnstile" data-sitekey={sitekey} data-language="pl" data-size="flexible"></div>
+      <p class="podpowiedz" id="turnstile-info" aria-live="polite" hidden>{k.turnstileCzekaj}</p>
+    </div>
+  )}
+
+  <button class="wyslij" type="submit">{tekst(k.wyslij, 'Wyślij zapytanie')}</button>
+</form>
+
+{sitekey && (
+  <Fragment>
+    {/* guard:allow AG030 Turnstile to bramka anty-bot formularza (słowo Piotra 2026-10-27), nie analityka; render=explicit, ramka dopiero przy formularzu */}
+    <script id="turnstile-api" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer is:inline></script>
+  </Fragment>
+)}
+
+<style>
+  .formularz { display: grid; gap: var(--o-6); }
+  .grupa { margin: 0; padding: 0; border: 0; min-width: 0; }
+  legend { padding: 0; margin-bottom: var(--o-2); font-weight: 600; font-size: var(--t-m); }
+  .podpowiedz { margin: 0 0 var(--o-2); font-size: var(--t-s); color: var(--tekst-cichy); }
+  .zetony { display: flex; flex-wrap: wrap; gap: var(--o-2); }
+  .zeton { position: relative; display: inline-flex; }
+  .zeton input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .zeton span {
+    display: inline-flex; align-items: center; min-height: 44px; padding: var(--o-2) var(--o-4);
+    border: 1px solid var(--linia); border-radius: 999px; background: var(--tlo); font-size: var(--t-s); cursor: pointer;
+  }
+  .zeton input:checked + span { background: var(--akcent); border-color: var(--akcent); color: #fff; font-weight: 600; }
+  .zeton input:checked + span::before { content: '✓'; margin-right: var(--o-2); }
+  .zeton input:focus-visible + span { outline: 3px solid var(--akcent); outline-offset: 2px; }
+  .zeton:hover span { border-color: var(--tekst-cichy); }
+
+  /* Technologia sklepu i adres strony pokazują się same (CSS :has, bez JS); przeglądarka bez :has pokazuje je zawsze. */
+  @supports selector(:has(*)) {
+    .formularz:not(:has(input[value^='sklep-']:checked)) .grupa--technologia { display: none; }
+    .grupa:not(:has(input[name='strona'][value='tak']:checked)) .pole--adres { display: none; }
+  }
+  .pole--adres { margin-top: var(--o-4); max-width: 30rem; }
+
+  .pole { display: grid; gap: var(--o-1); }
+  .pole label { font-weight: 600; }
+  .dane { display: grid; gap: var(--o-4); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  input[type='text'], input[type='email'], input[type='tel'], textarea {
+    width: 100%; min-height: 44px; padding: var(--o-2) var(--o-3); font: inherit; color: var(--tekst);
+    background: #fff; border: 1px solid var(--tekst-cichy); border-radius: var(--promien-maly);
+  }
+  textarea { resize: vertical; }
+  input:focus-visible, textarea:focus-visible { outline: 3px solid var(--akcent); outline-offset: 1px; }
+  [aria-invalid='true'] { border-color: #a1260d; border-width: 2px; }
+
+  .wyceny {
+    padding: var(--o-4) var(--o-6); background: var(--powierzchnia); border: 1px solid var(--linia); border-radius: var(--promien);
+  }
+  .wyceny__naglowek { margin: 0 0 var(--o-2); font-size: var(--t-l); }
+  .wyceny__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--o-3); }
+  .wyceny__lista:empty { display: none; }
+  .wyceny__link { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--o-2); font-weight: 600; }
+
+  .zgoda__pole { display: flex; gap: var(--o-3); align-items: flex-start; font-weight: 600; cursor: pointer; }
+  .zgoda__pole input { width: 24px; height: 24px; margin: 0; flex: 0 0 auto; accent-color: var(--akcent); }
+  .zgoda__info { margin: var(--o-2) 0 0 calc(24px + var(--o-3)); font-size: var(--t-xs); line-height: 1.5; color: var(--tekst-cichy); }
+
+  /* Widżet `flexible` ma 65 px: miejsce zarezerwowane, render przy przewinięciu nie przesuwa przycisku (CLS). */
+  #formularz-turnstile { min-height: 65px; max-width: 30rem; }
+
+  .wyslij {
+    justify-self: start; min-height: 48px; padding: var(--o-3) var(--o-8); font: inherit; font-weight: 600;
+    color: #fff; background: var(--akcent); border: 0; border-radius: var(--promien-maly); cursor: pointer;
+  }
+  .wyslij:hover { background: var(--tekst); }
+  .wyslij:focus-visible { outline: 3px solid var(--tekst); outline-offset: 3px; }
+  .wyslij[aria-busy='true'] { opacity: 0.7; cursor: progress; }
+
+  .formularz__blad {
+    margin: 0; padding: var(--o-3) var(--o-4); border-left: 4px solid #a1260d; background: #fbeae6; color: #6e1a09; font-weight: 600;
+    border-radius: var(--promien-maly);
+  }
+  .pulapka { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+
+<style is:global>
+  /* Karta wyceny tworzona skryptem — style globalne, bo elementy nie mają atrybutu zakresu Astro. */
+  .karta-wyceny {
+    display: grid; gap: var(--o-1) var(--o-4); grid-template-columns: 1fr auto; align-items: start;
+    padding: var(--o-3) var(--o-4); background: var(--tlo); border: 1px solid var(--linia); border-radius: var(--promien-maly);
+  }
+  .karta-wyceny__tytul { margin: 0; font-weight: 600; }
+  .karta-wyceny__kwoty, .karta-wyceny__pozycje { margin: 0; grid-column: 1; font-size: var(--t-s); color: var(--tekst-cichy); }
+  .karta-wyceny__kwoty { color: var(--tekst); font-variant-numeric: tabular-nums; }
+  .karta-wyceny__usun {
+    grid-column: 2; grid-row: 1 / span 3; min-height: 44px; min-width: 44px; padding: 0 var(--o-3); font: inherit; font-size: var(--t-s);
+    color: var(--tekst); background: transparent; border: 1px solid var(--tekst-cichy); border-radius: var(--promien-maly); cursor: pointer;
+  }
+  .karta-wyceny__usun:focus-visible { outline: 3px solid var(--akcent); outline-offset: 2px; }
+</style>
+
+<script>
+  import { listaWycen, usunWycene, doWyslania, zapiszSzkic, odczytajSzkic, zl, ZDARZENIE, type Wycena } from '../lib/wyceny';
+
+  const form = document.getElementById('formularz') as HTMLFormElement | null;
+  if (form) {
+    const d = form.dataset;
+    const bledy = JSON.parse(d.bledy || '{}') as Record<string, string>;
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+    const pole = (n: string) => form.elements.namedItem(n) as HTMLInputElement | HTMLTextAreaElement | null;
+    const wiadomosc = $<HTMLTextAreaElement>('pole-wiadomosc');
+    const t = $<HTMLInputElement>('pole-t');
+    if (t) t.value = String(Date.now());
+
+    // ── Karty wycen ──
+    const lista = $<HTMLUListElement>('wyceny-lista');
+    const pusto = $('wyceny-pusto');
+    const link = $<HTMLAnchorElement>('wyceny-link');
+    const kwoty = (w: Wycena) =>
+      ([['jednorazowo', d.jednorazowo], ['miesiecznie', d.miesiecznie], ['rocznie', d.rocznie]] as const)
+        .filter(([k]) => w[k] > 0)
+        .map(([k, nazwa]) => `${zl(w[k])} ${d.netto} ${nazwa} (${zl(w.brutto[k])} ${d.brutto})`)
+        .join(' · ');
+    const el = (tag: string, klasa: string, tresc = '') => {
+      const e = document.createElement(tag);
+      e.className = klasa;
+      e.textContent = tresc;
+      return e;
+    };
+    const wymaganieWiadomosci = () => {
+      const cos = listaWycen().length > 0 || form.querySelector('input[name="potrzeby[]"]:checked');
+      if (wiadomosc) wiadomosc.required = !cos;
+    };
+    const rysuj = () => {
+      if (!lista) return;
+      const w = listaWycen();
+      lista.replaceChildren(
+        ...w.map((x) => {
+          const li = el('li', 'karta-wyceny');
+          const usun = el('button', 'karta-wyceny__usun', d.usun) as HTMLButtonElement;
+          usun.type = 'button';
+          usun.setAttribute('aria-label', `${d.usun}: ${x.tytul}`);
+          usun.addEventListener('click', () => { usunWycene(x.id); link?.focus(); });
+          li.append(
+            el('p', 'karta-wyceny__tytul', x.tytul),
+            el('p', 'karta-wyceny__kwoty', kwoty(x)),
+            el('p', 'karta-wyceny__pozycje', x.pozycje.map((p) => (p.ilosc > 1 ? `${p.nazwa} × ${p.ilosc}` : p.nazwa)).join(', ')),
+            usun,
+          );
+          return li;
+        }),
+      );
+      if (pusto) pusto.hidden = w.length > 0;
+      if (link) link.textContent = (w.length ? d.dodaj : d.policz) ?? '';
+      wymaganieWiadomosci();
+    };
+    rysuj();
+    window.addEventListener(ZDARZENIE, rysuj);
+
+    // ── Szkic pól w pamięci sesji (powrót z kalkulatora, błąd handlera) ──
+    const zaznaczone = (n: string) => Array.from(form.querySelectorAll<HTMLInputElement>(`input[name="${n}"]:checked`)).map((i) => i.value);
+    const szkic = () =>
+      zapiszSzkic({
+        imie: pole('imie')?.value ?? '', email: pole('email')?.value ?? '', telefon: pole('telefon')?.value ?? '',
+        wiadomosc: wiadomosc?.value ?? '', potrzeby: zaznaczone('potrzeby[]'), technologia: zaznaczone('technologia')[0] ?? '',
+        strona: zaznaczone('strona')[0] ?? '', adres: pole('adres')?.value ?? '', pora: zaznaczone('pora')[0] ?? '',
+      });
+    const s = odczytajSzkic();
+    if (s) {
+      for (const n of ['imie', 'email', 'telefon', 'adres'] as const) { const p = pole(n); if (p && s[n]) p.value = s[n]; }
+      if (wiadomosc && s.wiadomosc) wiadomosc.value = s.wiadomosc;
+      form.querySelectorAll<HTMLInputElement>('input[type=checkbox][name="potrzeby[]"], input[type=radio]').forEach((i) => {
+        const v = i.name === 'potrzeby[]' ? s.potrzeby.includes(i.value) : (s as unknown as Record<string, string>)[i.name] === i.value;
+        if (v) i.checked = true;
+      });
+    }
+    form.addEventListener('input', szkic);
+    form.addEventListener('change', () => { szkic(); wymaganieWiadomosci(); });
+    wymaganieWiadomosci();
+
+    // ── Komunikat z handlera: /kontakt/?blad=<kod> ──
+    const kod = new URLSearchParams(location.search).get('blad');
+    const bladEl = $('formularz-blad');
+    if (kod && bladEl) {
+      bladEl.textContent = bledy[kod] ?? bledy.inny ?? '';
+      bladEl.hidden = false;
+      const zle = ({ imie: 'pole-imie', email: 'pole-email', telefon: 'pole-telefon', adres: 'pole-adres', wiadomosc: 'pole-wiadomosc' } as Record<string, string>)[kod];
+      if (zle) { const p = $(zle); p?.setAttribute('aria-invalid', 'true'); p?.setAttribute('aria-describedby', 'formularz-blad'); }
+      bladEl.focus();
+    }
+
+    // ── Turnstile: render jawny i odroczony (wzorzec kuchnia-na-wymiar-warszawa.pl) ──
+    type Ts = { render: (e: HTMLElement, o: Record<string, unknown>) => string | undefined; getResponse: (id: string) => string | undefined };
+    const api = () => (window as unknown as { turnstile?: Ts }).turnstile;
+    const kontener = $('formularz-turnstile');
+    const info = $('turnstile-info');
+    let idTs: string | undefined;
+    let maToken = false;
+    let poTokenie: (() => void) | null = null;
+    let zlecony = false;
+    const renderuj = () => {
+      if (zlecony || !kontener) return;
+      zlecony = true;
+      const start = () => {
+        const ts = api();
+        if (!ts) return;
+        idTs = ts.render(kontener, {
+          sitekey: kontener.dataset.sitekey, language: kontener.dataset.language, size: kontener.dataset.size,
+          callback: () => { maToken = true; if (poTokenie) { const f = poTokenie; poTokenie = null; f(); } },
+          'expired-callback': () => { maToken = false; },
+        });
+      };
+      if (api()) start();
+      else $('turnstile-api')?.addEventListener('load', start, { once: true });
+    };
+    if (kontener) {
+      form.addEventListener('focusin', renderuj, { once: true });
+      if ('IntersectionObserver' in window) {
+        const o = new IntersectionObserver((w) => { if (w.some((x) => x.isIntersecting)) { o.disconnect(); renderuj(); } });
+        o.observe(kontener);
+      } else renderuj();
+    }
+
+    // ── Wysyłka: pole `wyceny`, szkic; bez tokenu Turnstile czekamy na niego i wysyłamy sami ──
+    const przycisk = form.querySelector<HTMLButtonElement>('button[type=submit]');
+    form.addEventListener('submit', (e) => {
+      const pw = $<HTMLInputElement>('pole-wyceny');
+      if (pw) pw.value = doWyslania();
+      szkic();
+      const tokenWPolu = (form.elements.namedItem('cf-turnstile-response') as HTMLInputElement | null)?.value;
+      if (kontener && !maToken && !tokenWPolu && !(idTs && api()?.getResponse(idTs))) {
+        e.preventDefault();
+        if (info) info.hidden = false;
+        przycisk?.setAttribute('aria-busy', 'true');
+        renderuj();
+        poTokenie = () => form.submit();
+        return;
+      }
+      przycisk?.setAttribute('aria-busy', 'true');
+    });
+    // Powrót strzałką z /dziekujemy/ albo z handlera (bfcache): przycisk znów aktywny.
+    window.addEventListener('pageshow', () => przycisk?.removeAttribute('aria-busy'));
+  }
+</script>

@@ -1,0 +1,315 @@
+---
+// /efekty — „Wybierz efekt”: dodatkowa część portfolio (decyzja Piotra 2026-10-27, runda 4). Każdy efekt ma własną
+// podstronę /efekty/<slug>/ i zdanie o koszcie wydajności. Treść: src/data/efekty.json (panel: Teksty strony → Efekty).
+// Pokazują się tylko efekty ze statusem „gotowy”. Zero JS. Siatka bez sierot: kolumny o stałej szerokości wyśrodkowane,
+// więc 1 karta stoi na środku, a 2–3 nie rozciągają się na całą szerokość.
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../../components/PasekMarki.astro';
+import Stopka from '../../components/Stopka.astro';
+import efektyJson from '../../data/efekty.json';
+import firma from '../../data/firma.json';
+import blog from '../../data/blog.json';
+import { tekst } from '../../lib/tekst';
+
+const e = efektyJson as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+const napis = (klucz: string, domyslny: string) => tekst(naTekst(e[klucz]), domyslny);
+const menu = blog as Record<string, unknown>;
+
+const efekty = (Array.isArray(e.efekty) ? (e.efekty as Record<string, unknown>[]) : [])
+  .map((w) => ({
+    nazwa: naTekst(w?.nazwa),
+    slug: naTekst(w?.slug),
+    opisKrotki: naTekst(w?.opisKrotki),
+    kosztWzgledny: naTekst(w?.kosztWzgledny),
+    status: naTekst(w?.status),
+    miniatura: naTekst(w?.miniatura),
+    alt: naTekst(w?.alt),
+  }))
+  .filter((w) => w.nazwa && /^[a-z0-9-]+$/.test(w.slug) && w.status === 'gotowy');
+
+const tytul = napis('tytulKarty', 'Efekty na stronach internetowych: animacja przewijaniem i inne — EcoPower Polska');
+const opis = napis(
+  'opisWyszukiwarki',
+  'Efekty, które dodajemy do stron internetowych. Przy każdym podajemy, ile waży i jak wypada w Google PageSpeed.',
+);
+const naglowek = napis('naglowek', 'Efekty na stronach, które robimy');
+const przycisk = napis('przycisk', 'Zobacz efekt');
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/efekty/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(naTekst(menu.stronaGlowna), 'Strona główna'), adres: '/' },
+  { nazwa: tekst(naTekst(menu.menuEfekty), 'Efekty'), adres: '/efekty/' },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      hasPart: efekty.map((w) => ({
+        '@type': 'WebPage',
+        name: w.nazwa,
+        url: new URL(`/efekty/${w.slug}/`, import.meta.env.SITE).href,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="efekty">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="efekty__tytul">{naglowek}</h1>
+    {napis('lead', '') && <p class="efekty__lead">{napis('lead', '')}</p>}
+    {napis('wydajnoscZdanie', '') && (
+      <p class="efekty__wydajnosc">
+        {napis('wydajnoscZdanie', '')}{' '}
+        <a href="/jak-sprawdzic-szybkosc-strony/">Jak sprawdzić szybkość strony</a>
+      </p>
+    )}
+
+    <section class="wybor" aria-labelledby="wybierz-efekt">
+      <h2 id="wybierz-efekt" class="wybor__naglowek">{napis('wybierzNaglowek', 'Wybierz efekt')}</h2>
+      <ul class="karty">
+        {efekty.map((w, i) => (
+          <li class="karta">
+            <a class="karta__link" href={`/efekty/${w.slug}/`}>
+              {w.miniatura && (
+                <span class="karta__obraz">
+                  <img
+                    src={w.miniatura}
+                    width="960"
+                    height="640"
+                    alt={w.alt}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 ? 'high' : undefined}
+                    decoding="async"
+                  />
+                </span>
+              )}
+              <span class="karta__tresc">
+                <span class="karta__nazwa">{w.nazwa}</span>
+                {w.opisKrotki && <span class="karta__opis">{w.opisKrotki}</span>}
+                {w.kosztWzgledny && <span class="karta__koszt">{w.kosztWzgledny}</span>}
+                <span class="karta__przycisk">{przycisk}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .efekty {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14: jedna linia, bieżąca strona z wielokropkiem). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .efekty__tytul,
+  .efekty__lead,
+  .efekty__wydajnosc {
+    max-width: 44rem;
+  }
+
+  .efekty__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .efekty__lead {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .efekty__wydajnosc {
+    margin: var(--o-4) 0 0;
+    color: var(--tekst-cichy);
+  }
+
+  .wybor {
+    margin-top: var(--o-12);
+  }
+
+  .wybor__naglowek {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-6);
+    text-align: center;
+  }
+
+  /* Kolumny stałej szerokości, wyśrodkowane: przy 1–3 kartach nie ma sierot ani karty na całą szerokość. */
+  .karty {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 24rem));
+    justify-content: center;
+    gap: var(--o-6);
+  }
+
+  /* Karta jak kafelek Realizacji: wypełnienie zamiast obwódki, promień z motywu. */
+  .karta__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    color: var(--tekst);
+    text-decoration: none;
+    transition: background-color 160ms ease;
+  }
+
+  .karta__link:hover {
+    background: var(--powierzchnia-mocna);
+    text-decoration: none;
+  }
+
+  .karta__link:hover .karta__nazwa {
+    color: var(--akcent);
+  }
+
+  .karta__link:active {
+    opacity: 0.85;
+  }
+
+  .karta__obraz {
+    display: block;
+    aspect-ratio: 3 / 2;
+    background: var(--powierzchnia-mocna);
+    border-radius: var(--promien) var(--promien) 0 0;
+    overflow: hidden;
+  }
+
+  .karta__obraz img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .karta__tresc {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    flex: 1;
+    padding: var(--o-4) var(--o-4) var(--o-6);
+  }
+
+  .karta__nazwa {
+    font-family: var(--font-display);
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.25;
+    transition: color 160ms ease;
+  }
+
+  .karta__opis,
+  .karta__koszt {
+    font-size: var(--t-s);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .karta__koszt {
+    padding-top: var(--o-2);
+    border-top: 1px solid var(--linia);
+  }
+
+  /* Wygląd przycisku na elemencie w linku karty (cały kafelek jest jednym celem dotyku). */
+  .karta__przycisk {
+    align-self: flex-start;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--o-4);
+    border-radius: var(--promien-maly);
+    background: var(--akcent);
+    color: var(--tlo);
+    font-weight: 600;
+  }
+</style>

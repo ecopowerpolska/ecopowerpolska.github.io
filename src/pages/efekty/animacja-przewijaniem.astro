@@ -1,0 +1,568 @@
+---
+// /efekty/animacja-przewijaniem/ — efekt z zakładki „Wybierz efekt” (runda 4, 2026-10-27; do tej pory strona
+// przykładowa /przyklady/scrollytelling/ z noindex — stary adres przekierowuje tutaj meta refresh). Indeksowalna,
+// w sitemapie. Dwie sceny sterowane przewijaniem w obie strony. Przepisy:
+// potwor-ux-ui/odniesienia/scrollytelling-animacja-przewijaniem.md.
+//  · Scena B — sam CSS (`animation-timeline` z nazwanym `view-timeline`), zero JS.
+//  · Scena A — klatki WebP na <canvas> (scripts/klatki-scrollytelling.mjs → public/efekty/animacja-przewijaniem/), skrypt niżej.
+// Stan bez wsparcia, bez JS i przy ograniczonym ruchu = stan KOŃCOWY w zwykłym przepływie (szafa otwarta).
+// Teksty „Co to daje” i „Ile kosztuje wydajności”: src/data/efekty.json (wpis o slugu tej strony).
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../../components/PasekMarki.astro';
+import Stopka from '../../components/Stopka.astro';
+import efektyJson from '../../data/efekty.json';
+import firma from '../../data/firma.json';
+import blog from '../../data/blog.json';
+import { tekst } from '../../lib/tekst';
+
+const SLUG = 'animacja-przewijaniem';
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+const listaEfektow = (efektyJson as Record<string, unknown>).efekty;
+const wpis = ((Array.isArray(listaEfektow) ? listaEfektow : []) as Record<string, unknown>[]).find(
+  (w) => naTekst(w?.slug) === SLUG,
+) ?? {};
+const pole = (klucz: string, domyslny: string) => tekst(naTekst(wpis[klucz]), domyslny);
+const menu = blog as Record<string, unknown>;
+
+const naglowek = pole('nazwa', 'Animacja sterowana przewijaniem');
+const tytul = 'Animacja sterowana przewijaniem na stronie, efekt jak u Apple — EcoPower Polska';
+const opis =
+  'Animacja sterowana przewijaniem: szafa otwiera się, gdy przewijasz w dół, i zamyka w górę. Zobacz efekt na żywo, sprawdź, ile waży i jak wypada w Google PageSpeed.';
+const KLATKI = 120;
+const SCIEZKA = `/efekty/${SLUG}/`;
+const adresPsi = `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(new URL(SCIEZKA, import.meta.env.SITE).href)}`;
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(SCIEZKA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(naTekst(menu.stronaGlowna), 'Strona główna'), adres: '/' },
+  { nazwa: tekst(naTekst(menu.menuEfekty), 'Efekty'), adres: '/efekty/' },
+  { nazwa: naglowek, adres: SCIEZKA },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="przyklad">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="przyklad__tytul">{naglowek}</h1>
+    <p class="przyklad__lead">
+      Dwie sceny z szafą, zrobione dwiema technikami. Przewiń w dół — drzwi się otwierają; przewiń w górę — zamykają
+      się tą samą drogą. Tak samo możemy pokazać na Twojej stronie produkt albo realizację.
+    </p>
+
+    <section class="opis" aria-labelledby="co-daje-tytul">
+      <h2 id="co-daje-tytul">Co to daje</h2>
+      {pole('opisDlugi', '') && <p>{pole('opisDlugi', '')}</p>}
+      {pole('dlaKogo', '') && <p>{pole('dlaKogo', '')}</p>}
+    </section>
+
+    <section class="opis" aria-labelledby="scena-b-tytul">
+      <h2 id="scena-b-tytul">Scena 1: sam CSS</h2>
+      <p>
+        Szafa narysowana w HTML i CSS. Obrót drzwi i światło we wnętrzu liczy przeglądarka z pozycji przewijania
+        (<code>animation-timeline</code>) — bez ani jednej linii JavaScriptu. Przeglądarka bez tej funkcji albo
+        z włączonym ograniczeniem ruchu od razu pokazuje szafę otwartą.
+      </p>
+    </section>
+
+    <div class="scena-b">
+      <div class="scena-b__kadr">
+        <div class="szafa" role="img" aria-label="Szafa dwudrzwiowa narysowana w CSS: drzwi otwierają się przy przewijaniu w dół i zamykają przy przewijaniu w górę, wnętrze się rozświetla">
+          <div class="szafa__wnetrze">
+            <span class="szafa__swiatlo"></span>
+            <span class="szafa__drazek"></span>
+            <span class="szafa__ubranie"></span>
+            <span class="szafa__ubranie"></span>
+            <span class="szafa__ubranie"></span>
+            <span class="szafa__ubranie"></span>
+            <span class="szafa__przegroda"></span>
+            <span class="szafa__polka"></span>
+            <span class="szafa__polka"></span>
+            <span class="szafa__polka"></span>
+          </div>
+          <div class="szafa__drzwi szafa__drzwi--lewe"><span class="szafa__uchwyt"></span></div>
+          <div class="szafa__drzwi szafa__drzwi--prawe"><span class="szafa__uchwyt"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="opis" aria-labelledby="scena-a-tytul">
+      <h2 id="scena-a-tytul">Scena 2: klatki na canvas</h2>
+      <p>
+        Technika znana ze stron Apple: {KLATKI} klatek WebP (razem ok. 0,7 MB; telefon pobiera co drugą) wygenerowanych
+        z własnego rysunku SVG. Skrypt rysuje na płótnie klatkę odpowiadającą pozycji przewijania, a pliki dociąga
+        dopiero, gdy scena zbliża się do okna. Bez JavaScriptu i przy ograniczonym ruchu widać obraz końcowy.
+      </p>
+    </section>
+
+    <div class="scena-a" data-scena-a data-sciezka={`${SCIEZKA}klatki/`} data-liczba={KLATKI}>
+      <div class="scena-a__kadr">
+        <div class="scena-a__obraz">
+          <img
+            class="scena-a__plakat"
+            src={`${SCIEZKA}plakat.svg`}
+            width="1200"
+            height="800"
+            alt="Szafa dwudrzwiowa narysowana w SVG: drzwi otwarte, wnętrze oświetlone, dolna szuflada wysunięta"
+            loading="lazy"
+            decoding="async"
+          />
+          <canvas class="scena-a__plotno" width="1200" height="800" aria-hidden="true"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <section class="opis" aria-labelledby="wydajnosc-tytul">
+      <h2 id="wydajnosc-tytul">Ile kosztuje wydajności</h2>
+      {pole('kosztWydajnosci', '') && <p>{pole('kosztWydajnosci', '')}</p>}
+      <p>
+        Nie musisz nam wierzyć na słowo: <a href={adresPsi} rel="noopener">sprawdź tę stronę w PageSpeed</a>, oficjalnym
+        narzędziu Google. Jak to zrobić i jak czytać wynik, opisujemy w poradniku{' '}
+        <a href="/jak-sprawdzic-szybkosc-strony/">Jak sprawdzić szybkość strony</a>.
+      </p>
+    </section>
+
+    <section class="opis" aria-labelledby="pomiar-tytul">
+      <h2 id="pomiar-tytul">Jak to zmierzyć</h2>
+      <ul>
+        <li>
+          <a href={adresPsi} rel="noopener">PageSpeed Insights dla tej strony</a> — telefon i komputer. Największy
+          element (LCP) to tekst na górze strony, nie scena; przesunięcie układu (CLS) ma wynosić 0.
+        </li>
+        <li>Przewiń do końca i z powrotem do góry: obie sceny wracają do stanu początkowego tą samą drogą.</li>
+        <li>Włącz w systemie ograniczenie ruchu: obie sceny stają w stanie końcowym, bez animacji.</li>
+      </ul>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<script>
+  // Scena A: klatka = postęp przewijania (scrub w obie strony). Pliki pobierane dopiero przy zbliżeniu sceny,
+  // dekodowane tylko w oknie ±8 klatek wokół pozycji; na wąskim ekranie i przy saveData co druga klatka.
+  const s = document.querySelector<HTMLElement>('[data-scena-a]');
+  if (s && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'createImageBitmap' in window) {
+    const kadr = s.firstElementChild as HTMLElement;
+    const plotno = s.querySelector('canvas')!;
+    const ctx = plotno.getContext('2d')!;
+    const N = Number(s.dataset.liczba);
+    const lekka = matchMedia('(max-width: 47.99rem)').matches
+      || (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+    const n = lekka ? Math.ceil(N / 2) : N;
+    const plik = (i: number) => `${s.dataset.sciezka}${String(Math.round((i * (N - 1)) / (n - 1)) + 1).padStart(4, '0')}.webp`;
+    const OKNO = 8;
+    const bloby: Blob[] = [];
+    const bitmapy = new Map<number, ImageBitmap>();
+    const wToku = new Set<number>();
+    let poz = 0;
+    let narysowana = -1;
+    let czeka = false;
+
+    const rysuj = () => {
+      const c = Math.round(poz);
+      for (let d = 0; d < n; d++) {
+        for (const i of [c - d, c + d]) {
+          const b = bitmapy.get(i);
+          if (!b) continue;
+          if (i !== narysowana) {
+            ctx.drawImage(b, 0, 0, plotno.width, plotno.height);
+            narysowana = i;
+            s.classList.add('scena-a--zywa');
+          }
+          return;
+        }
+      }
+    };
+    const dekoduj = () => {
+      const c = Math.round(poz);
+      for (const [i, b] of bitmapy) if (Math.abs(i - c) > OKNO + 2) { b.close(); bitmapy.delete(i); }
+      for (let i = Math.max(0, c - OKNO); i <= Math.min(n - 1, c + OKNO); i++) {
+        if (!bloby[i] || bitmapy.has(i) || wToku.has(i)) continue;
+        wToku.add(i);
+        createImageBitmap(bloby[i]).then((b) => {
+          wToku.delete(i);
+          if (Math.abs(i - Math.round(poz)) > OKNO + 2) b.close();
+          else { bitmapy.set(i, b); rysuj(); }
+        }, () => wToku.delete(i));
+      }
+    };
+    const przelicz = () => {
+      czeka = false;
+      const gora = parseFloat(getComputedStyle(kadr).top) || 0;
+      const zakres = Math.max(1, s.offsetHeight - kadr.offsetHeight);
+      poz = Math.min(1, Math.max(0, (gora - s.getBoundingClientRect().top) / zakres)) * (n - 1);
+      dekoduj();
+      rysuj();
+    };
+    const naScroll = () => { if (!czeka) { czeka = true; requestAnimationFrame(przelicz); } };
+
+    let kolejka = 0;
+    let aktywne = 0;
+    const pobierz = () => {
+      while (aktywne < 6 && kolejka < n) {
+        const i = kolejka++;
+        aktywne++;
+        fetch(plik(i)).then((r) => r.blob()).then((b) => { bloby[i] = b; dekoduj(); })
+          .catch(() => undefined).finally(() => { aktywne--; pobierz(); });
+      }
+    };
+    new IntersectionObserver(([w]) => { if (w.isIntersecting && kolejka === 0) pobierz(); }, { rootMargin: '150% 0px' }).observe(s);
+    addEventListener('scroll', naScroll, { passive: true });
+    addEventListener('resize', naScroll);
+    naScroll();
+  }
+</script>
+
+<style>
+  .przyklad {
+    /* wysokość przyklejonego paska marki (69 px przy 390 i 1440 px od menu z panelem, D16) + oddech */
+    --wys-paska: 4.5rem;
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14: jedna linia, bieżąca strona z wielokropkiem). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .przyklad__tytul {
+    font-size: var(--t-xxl);
+    margin-bottom: var(--o-4);
+  }
+
+  .przyklad__lead {
+    max-width: var(--miara);
+    margin: 0 0 var(--o-12);
+    font-size: var(--t-l);
+    line-height: 1.45;
+  }
+
+  .opis {
+    max-width: var(--miara);
+    margin: var(--o-12) 0 var(--o-6);
+  }
+
+  .opis h2 {
+    font-size: var(--t-xl);
+    margin-bottom: var(--o-3);
+  }
+
+  .opis p,
+  .opis li {
+    color: var(--tekst-cichy);
+  }
+
+  .opis ul {
+    padding-left: var(--o-6);
+  }
+
+  .opis li + li {
+    margin-top: var(--o-2);
+  }
+
+  code {
+    font-size: 0.9em;
+  }
+
+  /* ── Scena B: szafa w CSS. Stan domyślny = otwarta, w zwykłym przepływie. ─────────────── */
+  .scena-b__kadr {
+    display: grid;
+    place-items: center;
+    padding: var(--o-8) 0;
+  }
+
+  .szafa {
+    position: relative;
+    width: min(70vw, 26rem, calc((100svh - 8rem) * 0.75));
+    aspect-ratio: 3 / 4;
+    perspective: 60rem;
+    background: var(--powierzchnia-mocna);
+    border: 2px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+    padding: 0.6rem;
+  }
+
+  .szafa__wnetrze {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background: #26332c;
+  }
+
+  /* Światło wnętrza: warstwa jasna nad ciemnym tłem — animowana tylko jej nieprzezroczystość. */
+  .szafa__swiatlo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(#fffbe6, #efeee6 40%);
+  }
+
+  .szafa__drazek {
+    position: absolute;
+    left: 6%;
+    width: 44%;
+    top: 14%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--tekst-cichy);
+  }
+
+  .szafa__ubranie {
+    position: absolute;
+    top: 15%;
+    width: 8%;
+    height: 38%;
+    border-radius: 0.4rem;
+    background: var(--akcent);
+  }
+
+  .szafa__ubranie:nth-child(3) { left: 9%; }
+  .szafa__ubranie:nth-child(4) { left: 19%; height: 32%; background: var(--tekst-cichy); }
+  .szafa__ubranie:nth-child(5) { left: 29%; height: 44%; background: #b08a5e; }
+  .szafa__ubranie:nth-child(6) { left: 39%; height: 30%; background: var(--tekst); }
+
+  .szafa__przegroda {
+    position: absolute;
+    left: 52%;
+    top: 0;
+    bottom: 0;
+    width: 3%;
+    background: #b08a5e;
+  }
+
+  .szafa__polka {
+    position: absolute;
+    left: 55%;
+    right: 0;
+    height: 2.5%;
+    background: #b08a5e;
+  }
+
+  .szafa__polka:nth-child(8) { top: 25%; }
+  .szafa__polka:nth-child(9) { top: 50%; }
+  .szafa__polka:nth-child(10) { top: 75%; }
+
+  .szafa__drzwi {
+    position: absolute;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: calc(50% - 0.6rem);
+    background: #cfd3c5;
+    border: 2px solid var(--tekst-cichy);
+  }
+
+  .szafa__drzwi--lewe {
+    left: 0.6rem;
+    transform-origin: left center;
+    transform: rotateY(-105deg);
+  }
+
+  .szafa__drzwi--prawe {
+    right: 0.6rem;
+    transform-origin: right center;
+    transform: rotateY(105deg);
+  }
+
+  .szafa__uchwyt {
+    position: absolute;
+    top: 42%;
+    width: 6px;
+    height: 16%;
+    border-radius: 3px;
+    background: var(--akcent);
+  }
+
+  .szafa__drzwi--lewe .szafa__uchwyt { right: 12%; }
+  .szafa__drzwi--prawe .szafa__uchwyt { left: 12%; }
+
+  /* Mechanika tylko tam, gdzie przeglądarka zna osie przewijania i ruch jest dopuszczony.
+     Właściwości animacji rozpisane osobno, oś przez zmienną: minifikator składa je w skrót
+     `animation`, który zeruje `animation-timeline` (pułapka z astro-guard, Ujawnianie.astro). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .scena-b {
+        height: 260svh;
+        view-timeline-name: --szafa-b;
+        view-timeline-axis: block;
+      }
+
+      .scena-b__kadr {
+        position: sticky;
+        top: var(--wys-paska);
+        height: calc(100svh - var(--wys-paska));
+        padding: 0;
+      }
+
+      .szafa__drzwi--lewe,
+      .szafa__drzwi--prawe,
+      .szafa__swiatlo {
+        --os-sceny: --szafa-b;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: var(--os-sceny);
+      }
+
+      .szafa__drzwi--lewe {
+        animation-name: drzwi-lewe;
+        animation-range: contain 5% contain 80%;
+      }
+
+      .szafa__drzwi--prawe {
+        animation-name: drzwi-prawe;
+        animation-range: contain 5% contain 80%;
+      }
+
+      .szafa__swiatlo {
+        animation-name: swiatlo;
+        animation-range: contain 45% contain 90%;
+      }
+    }
+  }
+
+  @keyframes drzwi-lewe {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(-105deg); }
+  }
+
+  @keyframes drzwi-prawe {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(105deg); }
+  }
+
+  @keyframes swiatlo {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── Scena A: klatki na canvas. Plakat = stan końcowy (ostatnia klatka) w HTML-u zawsze. ── */
+  .scena-a__kadr {
+    display: grid;
+    align-content: center;
+    padding: var(--o-8) 0;
+  }
+
+  .scena-a__obraz {
+    position: relative;
+    width: min(100%, 60rem);
+    aspect-ratio: 3 / 2;
+    margin: 0 auto;
+  }
+
+  .scena-a__plakat,
+  .scena-a__plotno {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .scena-a__plotno {
+    opacity: 0;
+  }
+
+  .scena-a--zywa .scena-a__plotno {
+    opacity: 1;
+  }
+
+  /* Wysoka scena i przyklejony kadr tylko z działającym skryptem i dopuszczonym ruchem —
+     wysokość jest w CSS od pierwszego malowania, więc skrypt niczego nie przesuwa (CLS 0). */
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .scena-a {
+      height: 300svh;
+    }
+
+    .scena-a__kadr {
+      position: sticky;
+      top: var(--wys-paska);
+      height: calc(100svh - var(--wys-paska));
+      padding: 0;
+    }
+
+    .scena-a__obraz {
+      width: min(100%, 60rem, calc((100svh - var(--wys-paska) - 2rem) * 1.5));
+    }
+  }
+</style>

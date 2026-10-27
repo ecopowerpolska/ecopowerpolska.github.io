@@ -1,10 +1,12 @@
 {
   "menuOferta": "Oferta",
   "menuRealizacje": "Realizacje",
+  "menuEfekty": "Efekty",
   "menuCena": "Cena",
   "menuSzybkosc": "Szybkość",
   "menuFaq": "FAQ",
   "menuBlog": "Blog",
+  "menuTest": "Test szybkości",
   "menuKontakt": "Kontakt",
   "stronaGlowna": "Strona główna",
   "tytulKarty": "Blog o stronach i sklepach internetowych — EcoPower Polska",
@@ -18,6 +20,8 @@
   "udostepnij": "Udostępnij na Facebooku",
   "udostepnijNowaKarta": "(otwiera się w nowej karcie)",
   "etykietaMenu": "Menu główne",
+  "przyciskMenu": "Menu",
   "etykietaMenuStopki": "Strony witryny",
-  "okruszkiEtykieta": "Ścieżka"
+  "okruszkiEtykieta": "Ścieżka",
+  "linkEfektyRealizacje": "Zobacz efekty, które dodajemy do stron"
 }

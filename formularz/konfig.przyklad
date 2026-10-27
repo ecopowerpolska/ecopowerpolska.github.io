@@ -1,0 +1,11 @@
+<?php
+// Wzór pliku konfig/ecopowerpolska.pl.php na koncie lh.pl (chmod 600). Plik z wartościami NIGDY nie trafia do repozytorium.
+// Każdy klucz jest opcjonalny: brak = wartość z DOMYSLNE w wyslij.php.
+return [
+    'turnstile_sekret' => 'KLUCZ_TAJNY_WIDZETU_Z_CLOUDFLARE',
+    // 'do'               => 'kontakt@ecopowerpolska.pl',
+    // 'od'               => 'formularz@pan-stolarz.pl',
+    // 'dozwolone_origin' => ['https://www.ecopowerpolska.pl', 'https://ecopowerpolska.pl'],
+    // 'turnstile_hosty'  => ['www.ecopowerpolska.pl', 'ecopowerpolska.pl'],
+    // 'limit_na_godzine' => 30,
+];

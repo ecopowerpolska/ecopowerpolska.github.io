@@ -1,0 +1,811 @@
+---
+// Kalkulator ceny strony i sklepu na /cena/ (runda 4, 2026-10-27). Kwoty WYŁĄCZNIE z src/data/cena.json, czytane przy
+// buildzie: pozycję wskazuje para tabela + fragment nazwy ("szukaj") z src/data/kalkulator.json, który niesie tylko teksty.
+// Pozycja, której build nie znajdzie albo nie odczyta z niej kwoty, znika z kalkulatora (ostrzeżenie w logu buildu).
+// Bez JS: formularz GET z cenami przy każdej pozycji + zdanie w <noscript>; tabele cennika stoją niżej na stronie.
+// Z JS: liczy na bieżąco, czyta parametry adresu (?co=firmowa&integracje=2), „Dodaj do formularza” zapisuje wycenę
+// w pamięci sesji karty (klucz ep.wyceny) przez src/lib/wyceny.ts (kontrakt §III rundy 4), formularz na /kontakt/ ją pokazuje.
+import cenaJson from '../data/cena.json';
+import kalkJson from '../data/kalkulator.json';
+import { tekst } from '../lib/tekst';
+
+type Okres = 'jednorazowo' | 'miesiecznie' | 'rocznie';
+interface Zrodlo {
+  id: string; nazwa?: string; tabela: string; szukaj: string; pole?: string; wzorzec?: string; opis?: string;
+  jednostka?: string; okres?: string; ilosc?: boolean; maks?: number; dla?: string[]; wyklucza?: string;
+  dopisek?: string; grupa?: string; formy?: { jedna: string; kilka: string; wiele: string };
+}
+interface Pozycja {
+  id: string; nazwa: string; opis: string; cena: number; okres: Okres; jednostka: string; ilosc: boolean;
+  maks: number; dla: string[]; wyklucza: string; dopisek: string; grupa: string; formy: string;
+}
+
+const cena = cenaJson as Record<string, unknown>;
+const k = kalkJson as unknown as Record<string, unknown> & {
+  rodzaje: Zrodlo[]; dodatki: Zrodlo[]; dodatkiSklepu: Zrodlo[]; prowizje: Zrodlo; liczebnik: Record<string, string>;
+};
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const t = (klucz: string, domyslny = '') => tekst(naTekst(k[klucz]), domyslny);
+
+const SLOWO: Record<Okres, string> = { jednorazowo: 'jednorazowo', miesiecznie: 'miesięcznie', rocznie: 'rocznie' };
+
+/** "5 750 zł" → 5750; "0,39 zł" → 0.39; brak kwoty → null. */
+const kwotaZ = (s: string): number | null => {
+  const m = s.match(/(\d[\d\s]*)(?:,(\d{1,2}))?\s*zł/);
+  if (!m) return null;
+  const n = Number(m[1].replace(/\D/g, '')) + (m[2] ? Number(m[2].padEnd(2, '0')) / 100 : 0);
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
+const wiersz = (z: Zrodlo): Record<string, unknown> | undefined => {
+  const lista = Array.isArray(cena[z.tabela]) ? (cena[z.tabela] as Record<string, unknown>[]) : [];
+  const szukaj = naTekst(z.szukaj).toLowerCase();
+  return szukaj ? lista.find((w) => naTekst(w?.pozycja).toLowerCase().includes(szukaj)) : undefined;
+};
+
+const rozwiaz = (z: Zrodlo, domyslnyOkres: Okres = 'jednorazowo'): Pozycja | null => {
+  const w = wiersz(z);
+  if (!w) { console.warn(`[kalkulator] brak w cena.json: ${z.tabela} / "${z.szukaj}" (pozycja ${z.id} pominięta)`); return null; }
+  let zrodloKwoty = naTekst(z.pole === 'opis' ? w.opis : w.cena);
+  if (z.wzorzec) {
+    try { zrodloKwoty = (zrodloKwoty.match(new RegExp(z.wzorzec))?.[1] ?? '') + ' zł'; } catch { zrodloKwoty = ''; }
+  }
+  const kwota = kwotaZ(zrodloKwoty);
+  if (kwota === null) { console.warn(`[kalkulator] brak kwoty w cena.json: ${z.tabela} / "${z.szukaj}" (pozycja ${z.id} pominięta)`); return null; }
+  const okres: Okres = z.okres === 'miesiecznie' || z.okres === 'rocznie' ? z.okres : domyslnyOkres;
+  const ilosc = z.ilosc === true;
+  return {
+    id: z.id,
+    nazwa: naTekst(z.nazwa) || naTekst(w.pozycja),
+    opis: naTekst(z.opis) || naTekst(w.opis),
+    cena: Math.round(kwota),
+    okres,
+    jednostka: naTekst(z.jednostka) || (ilosc ? naTekst(w.jednostka) : '') || SLOWO[okres],
+    ilosc,
+    maks: typeof z.maks === 'number' && z.maks > 0 ? Math.floor(z.maks) : 100,
+    dla: Array.isArray(z.dla) ? z.dla.map(naTekst).filter(Boolean) : [],
+    wyklucza: naTekst(z.wyklucza),
+    dopisek: naTekst(z.dopisek),
+    grupa: naTekst(z.grupa) || 'strona',
+    formy: z.formy ? JSON.stringify(z.formy) : '',
+  };
+};
+
+const rodzaje = (k.rodzaje ?? []).map((z) => rozwiaz(z)).filter((p): p is Pozycja => p !== null);
+const dodatki = (k.dodatki ?? []).map((z) => rozwiaz(z)).filter((p): p is Pozycja => p !== null);
+const dodatkiSklepu = (k.dodatkiSklepu ?? []).map((z) => rozwiaz(z)).filter((p): p is Pozycja => p !== null);
+const wProwizji = k.prowizje ? wiersz(k.prowizje) : undefined;
+const prowizje = wProwizji ? [naTekst(wProwizji.cena), naTekst(wProwizji.jednostka)].filter(Boolean).join(' ') : '';
+
+/** 13222.5 → "13 222,50 zł" (spacja nierozdzielająca, jak w cenniku). Ta sama funkcja stoi w skrypcie niżej. */
+const zl = (x: number): string => {
+  const [c, g] = (Math.round(x * 100) / 100).toFixed(2).split('.');
+  return `${c.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}${g === '00' ? '' : `,${g}`} zł`;
+};
+const cenaNapis = (p: Pozycja) => `${zl(p.cena)} ${p.jednostka}`.trim();
+
+// Stan po wczytaniu bez wyboru = grupa "strona": pozycje tylko dla sklepu są wyłączone już w HTML-u,
+// więc skrypt przy starcie niczego nie przestawia (zero przesunięć układu).
+const START = 'strona';
+const wylaczona = (p: Pozycja) => p.dla.length > 0 && !p.dla.includes(START);
+const sklepWylaczony = dodatkiSklepu.every(wylaczona);
+
+const teksty = {
+  netto: t('netto', 'netto'), brutto: t('brutto', 'brutto z 23 % VAT'), start: t('wynikStart'),
+  jednorazowo: t('jednorazowo', 'Jednorazowo'), miesiecznie: t('miesiecznie', 'Co miesiąc'), rocznie: t('rocznie', 'Co rok'),
+  pierwszyRok: t('pierwszyRok', 'Razem w pierwszym roku'),
+  dodano: t('dodano'), duplikat: t('duplikat'), pusto: t('pusto'), limit: t('limit'), bezPamieci: t('bezPamieci'),
+  liczebnik: k.liczebnik ?? { jedna: 'wyliczenie', kilka: 'wyliczenia', wiele: 'wyliczeń' },
+};
+---
+
+<section class="kalk" id="kalkulator" aria-labelledby="kalk-tytul">
+  <h2 id="kalk-tytul" class="kalk__tytul">{t('naglowek', 'Kalkulator ceny strony i sklepu')}</h2>
+  {t('lead') && <p class="kalk__lead">{t('lead')}</p>}
+  <noscript><p class="kalk__bezjs">{t('bezJs')} <a href="#strona-wykonanie">Cennik</a></p></noscript>
+
+  <div class="kalk__uklad">
+    <form class="kalk__formularz" id="kalk-formularz" method="get" action="/cena/#kalkulator" data-teksty={JSON.stringify(teksty)}>
+      <fieldset class="kalk__krok">
+        <legend class="kalk__legenda">{t('krok1', 'Co budujemy?')}</legend>
+        {t('krok1Pomoc') && <p class="kalk__pomoc">{t('krok1Pomoc')}</p>}
+        <div class="kalk__lista">
+          {rodzaje.map((p) => (
+            <div class="kalk__wiersz">
+              <label class="kalk__wybor">
+                <input type="radio" name="co" value={p.id} data-cena={p.cena} data-okres="jednorazowo" data-grupa={p.grupa} data-nazwa={p.nazwa} />
+                <span class="kalk__tekst"><span class="kalk__nazwa">{p.nazwa}</span><span class="kalk__cena">{zl(p.cena)}</span></span>
+              </label>
+              {p.opis && (
+                <details class="kalk__i">
+                  <summary><span aria-hidden="true">i</span><span class="sr-only">{t('podpowiedzEtykieta', 'Co obejmuje:')} {p.nazwa}</span></summary>
+                  <p>{p.opis}</p>
+                </details>
+              )}
+            </div>
+          ))}
+        </div>
+      </fieldset>
+
+      {[
+        { klucz: 'krok2', pomoc: 'krok2Pomoc', lista: dodatki, sklep: false },
+        { klucz: 'krok3', pomoc: 'krok3Pomoc', lista: dodatkiSklepu, sklep: true },
+      ].filter((g) => g.lista.length > 0).map((g) => (
+        <fieldset class="kalk__krok" data-sklep={g.sklep ? '' : undefined} disabled={g.sklep && sklepWylaczony}>
+          <legend class="kalk__legenda">{t(g.klucz)}</legend>
+          {t(g.pomoc) && <p class="kalk__pomoc">{t(g.pomoc)}</p>}
+          <div class="kalk__lista">
+            {g.lista.map((p) => (
+              <div class="kalk__wiersz" data-nie={wylaczona(p) ? '' : undefined}>
+                <label class={`kalk__wybor${p.ilosc ? ' kalk__wybor--ilosc' : ''}`}>
+                  {!p.ilosc && (
+                    <input type="checkbox" name={p.id} value="1" data-cena={p.cena} data-okres={p.okres} data-nazwa={p.nazwa}
+                      data-dla={p.dla.join(' ') || undefined} data-wyklucza={p.wyklucza || undefined} disabled={wylaczona(p)} />
+                  )}
+                  <span class="kalk__tekst">
+                    <span class="kalk__nazwa">{p.nazwa}</span>
+                    <span class="kalk__cena">{cenaNapis(p)}{p.dopisek && <span class="kalk__dopisek">, {p.dopisek}</span>}</span>
+                    <span class="kalk__nie">{t('nieDotyczy', 'nie dotyczy wybranego rodzaju')}</span>
+                  </span>
+                  {p.ilosc && (
+                    <input type="number" name={p.id} min="0" max={p.maks} step="1" value="0" inputmode="numeric"
+                      data-cena={p.cena} data-okres={p.okres} data-nazwa={p.nazwa} data-formy={p.formy}
+                      data-dla={p.dla.join(' ') || undefined} disabled={wylaczona(p)} />
+                  )}
+                </label>
+                {p.opis && (
+                  <details class="kalk__i">
+                    <summary><span aria-hidden="true">i</span><span class="sr-only">{t('podpowiedzEtykieta', 'Co obejmuje:')} {p.nazwa}</span></summary>
+                    <p>{p.opis}</p>
+                  </details>
+                )}
+              </div>
+            ))}
+          </div>
+          {g.sklep && prowizje && (
+            <p class="kalk__pomoc"><strong>{t('prowizjeNaglowek', 'Prowizje operatora płatności')}: {prowizje}</strong>, {t('prowizjeDopisek')}</p>
+          )}
+        </fieldset>
+      ))}
+
+      {t('indywidualnie') && <p class="kalk__indywidualnie">{t('indywidualnie')}</p>}
+      <p class="kalk__policz"><button type="submit" class="kalk__guzik kalk__guzik--drugi">{t('policz', 'Policz')}</button></p>
+      {/* Telefon i tablet: wynik stoi pod długim formularzem, więc suma jedzie przyklejona do dołu ekranu, dopóki widać formularz.
+          Ukryta w HTML-u (bez JS nic nie liczy); skrypt ją pokazuje. aria-hidden: czytnik dostaje sumy z #kalk-stan. */}
+      <p class="kalk__mini" id="kalk-mini" aria-hidden="true" hidden>
+        <span><strong data-mini="jednorazowo">{zl(0)}</strong> {t('miniJednorazowo', 'jednorazowo')} · <strong data-mini="miesiecznie">{zl(0)}</strong> {t('miniMiesiecznie', 'mies.')} <span class="kalk__mini-netto">{teksty.netto}</span></span>
+        <a href="#kalk-wynik" tabindex="-1">{t('miniLink', 'Wynik')}</a>
+      </p>
+    </form>
+
+    <section class="kalk__wynik" id="kalk-wynik" aria-labelledby="kalk-wynik-tytul">
+      <h3 id="kalk-wynik-tytul" class="kalk__wynik-tytul" tabindex="-1">{t('wynikNaglowek', 'Twoje wyliczenie')}</h3>
+      <p class="kalk__stan" id="kalk-wybor">{t('wynikStart')}</p>
+      <p class="sr-only" id="kalk-stan" role="status" aria-live="polite" aria-atomic="true"></p>
+      <dl class="kalk__sumy">
+        {(['jednorazowo', 'miesiecznie', 'rocznie'] as const).map((o) => (
+          <div>
+            <dt>{teksty[o]}</dt>
+            <dd>
+              <span class="kalk__netto" data-netto={o}>{zl(0)}</span> <span class="kalk__opis-kwoty">{teksty.netto}</span>
+              <span class="kalk__brutto"><span data-brutto={o}>{zl(0)}</span> {teksty.brutto}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p class="kalk__rok">{teksty.pierwszyRok}: <strong id="kalk-rok">{zl(0)}</strong> {teksty.netto} (<span id="kalk-rok-brutto">{zl(0)}</span> brutto)</p>
+      <details class="kalk__rozbicie">
+        <summary>{t('rozbicie', 'Co weszło do wyliczenia')}</summary>
+        <ul id="kalk-lista"></ul>
+      </details>
+      <p class="kalk__pomoc">{t('zastrzezenie')}</p>
+      <div class="kalk__akcje" id="kalk-akcje" hidden>
+        <p class="kalk__guziki">
+          <button type="button" class="kalk__guzik" id="kalk-dodaj">{t('dodaj', 'Dodaj do formularza')}</button>
+          <button type="button" class="kalk__guzik kalk__guzik--drugi" id="kalk-kolejne">{t('kolejne', 'Dodaj kolejne wyliczenie')}</button>
+        </p>
+        <p class="kalk__komunikat" id="kalk-komunikat" role="status" aria-live="polite"></p>
+        <p class="kalk__pasek" id="kalk-pasek" hidden>
+          {t('pasek', 'W zapytaniu:')} <strong id="kalk-pasek-ile"></strong> · <a href="/kontakt/">{t('pasekLink', 'Przejdź do formularza')}</a>
+        </p>
+        <p class="kalk__pomoc">{t('pamiecSesji')}</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<script>
+  import { dodajWycene, listaWycen, czyMoznaDodac, dostepna, brutto, ZDARZENIE, type Pozycja } from '../lib/wyceny';
+
+  type Okres = 'jednorazowo' | 'miesiecznie' | 'rocznie';
+  const OKRESY: Okres[] = ['jednorazowo', 'miesiecznie', 'rocznie'];
+  const SLOWO: Record<Okres, string> = { jednorazowo: 'jednorazowo', miesiecznie: 'miesięcznie', rocznie: 'rocznie' };
+  interface Formy { jedna: string; kilka: string; wiele: string }
+
+  const f = document.getElementById('kalk-formularz') as HTMLFormElement | null;
+  if (f) {
+    const t = JSON.parse(f.dataset.teksty || '{}');
+    const $ = (id: string) => document.getElementById(id)!;
+    const zl = (x: number): string => {
+      const [c, g] = (Math.round(x * 100) / 100).toFixed(2).split('.');
+      return `${c.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}${g === '00' ? '' : `,${g}`} zł`;
+    };
+    const forma = (n: number, fm: Formy): string => {
+      const d = n % 10, s = n % 100;
+      return `${n} ${n === 1 ? fm.jedna : d >= 2 && d <= 4 && (s < 12 || s > 14) ? fm.kilka : fm.wiele}`;
+    };
+    const male = (s: string) => (/^.\p{Lu}/u.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1));
+    const radia = [...f.querySelectorAll<HTMLInputElement>('input[name="co"]')];
+    const dodatki = [...f.querySelectorAll<HTMLInputElement>('input[data-okres]:not([name="co"])')];
+    const sklep = f.querySelector<HTMLFieldSetElement>('fieldset[data-sklep]');
+
+    const ilosc = (el: HTMLInputElement): number =>
+      el.type === 'checkbox' ? (el.checked ? 1 : 0) : Math.max(0, Math.min(Number(el.max) || 0, Math.floor(Number(el.value) || 0)));
+
+    const dostosuj = () => {
+      const g = radia.find((r) => r.checked)?.dataset.grupa || 'strona';
+      for (const el of dodatki) {
+        const ok = !el.dataset.dla || el.dataset.dla.split(' ').includes(g);
+        if (el.disabled !== !ok) el.disabled = !ok;
+        el.closest('.kalk__wiersz')?.toggleAttribute('data-nie', !ok);
+      }
+      if (sklep) sklep.disabled = ![...sklep.querySelectorAll('input')].some((el) => !el.disabled);
+    };
+
+    const policz = () => {
+      const pozycje: Pozycja[] = [];
+      const netto = { jednorazowo: 0, miesiecznie: 0, rocznie: 0 };
+      const tytul: string[] = [];
+      const r = radia.find((x) => x.checked);
+      if (r) {
+        const c = Number(r.dataset.cena);
+        pozycje.push({ nazwa: r.dataset.nazwa || '', ilosc: 1, jednostka: SLOWO.jednorazowo, cena: c });
+        netto.jednorazowo += c;
+        tytul.push(r.dataset.nazwa || '');
+      }
+      for (const el of dodatki) {
+        if (el.disabled || (sklep?.disabled && sklep.contains(el))) continue;
+        const n = ilosc(el);
+        if (!n) continue;
+        const c = Number(el.dataset.cena), o = el.dataset.okres as Okres;
+        netto[o] += n * c;
+        pozycje.push({ nazwa: el.dataset.nazwa || '', ilosc: n, jednostka: SLOWO[o], cena: c });
+        const nazwa = el.dataset.formy ? forma(n, JSON.parse(el.dataset.formy)) : el.dataset.nazwa || '';
+        tytul.push(tytul.length ? male(nazwa) : nazwa);
+      }
+      return { pozycje, netto, tytul: tytul.join(' + ') };
+    };
+
+    let biezaca = policz();
+    const pokaz = () => {
+      biezaca = policz();
+      const { pozycje, netto } = biezaca;
+      const b = brutto(netto);
+      for (const o of OKRESY) {
+        document.querySelector(`[data-netto="${o}"]`)!.textContent = zl(netto[o]);
+        document.querySelector(`[data-brutto="${o}"]`)!.textContent = zl(b[o]);
+        const mini = document.querySelector(`[data-mini="${o}"]`);
+        if (mini) mini.textContent = zl(netto[o]);
+      }
+      const rok = netto.jednorazowo + 12 * netto.miesiecznie + netto.rocznie;
+      $('kalk-rok').textContent = zl(rok);
+      $('kalk-rok-brutto').textContent = zl(Math.round(rok * 123) / 100);
+      // Widoczny opis = co wybrano; komunikat dla czytnika ekranu (niewidoczny) = sumy po każdej zmianie.
+      $('kalk-wybor').textContent = pozycje.length ? biezaca.tytul : t.start;
+      $('kalk-stan').textContent = pozycje.length
+        ? `${t.jednorazowo}: ${zl(netto.jednorazowo)} ${t.netto} (${zl(b.jednorazowo)} brutto). ${t.miesiecznie}: ${zl(netto.miesiecznie)} ${t.netto}. ${t.rocznie}: ${zl(netto.rocznie)} ${t.netto}.`
+        : t.start;
+      const lista = $('kalk-lista');
+      lista.replaceChildren(...pozycje.map((p) => {
+        const li = document.createElement('li');
+        li.textContent = `${p.nazwa}${p.ilosc > 1 ? ` × ${p.ilosc}` : ''}: ${zl(p.ilosc * p.cena)} ${p.jednostka}`;
+        return li;
+      }));
+    };
+
+    const pasek = () => {
+      const n = listaWycen().length;
+      $('kalk-pasek').hidden = n === 0;
+      $('kalk-pasek-ile').textContent = forma(n, t.liczebnik);
+    };
+
+    // Parametry adresu (wysłany formularz GET albo udostępniony link): ?co=firmowa&integracje=2&opieka=1.
+    const q = new URLSearchParams(location.search);
+    if ([...q.keys()].length) {
+      const co = radia.find((r) => r.value === q.get('co'));
+      if (co) co.checked = true;
+      dostosuj();
+      for (const el of dodatki) {
+        const v = q.get(el.name);
+        if (v === null || el.disabled) continue;
+        if (el.type === 'checkbox') el.checked = v === '1';
+        else el.value = String(Math.max(0, Math.min(Number(el.max) || 0, Math.floor(Number(v) || 0))));
+      }
+    }
+    dostosuj();
+    pokaz();
+    $('kalk-akcje').hidden = false;
+    $('kalk-mini').hidden = false;
+    pasek();
+
+    f.addEventListener('change', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el.checked && el.dataset.wyklucza) {
+        const inny = f.querySelector<HTMLInputElement>(`input[name="${el.dataset.wyklucza}"]`);
+        if (inny) inny.checked = false;
+      }
+      dostosuj();
+      pokaz();
+      $('kalk-komunikat').textContent = '';
+    });
+    f.addEventListener('input', (e) => { if ((e.target as HTMLInputElement).type === 'number') pokaz(); });
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const p = new URLSearchParams();
+      for (const [k, v] of new FormData(f)) if (v !== '0' && v !== '') p.append(k, String(v));
+      history.replaceState(null, '', `${location.pathname}${p.size ? `?${p}` : ''}#kalkulator`);
+      pokaz();
+      $('kalk-wynik-tytul').focus();
+    });
+
+    $('kalk-dodaj').addEventListener('click', () => {
+      const kom = $('kalk-komunikat');
+      biezaca = policz();
+      if (!biezaca.pozycje.length) { kom.textContent = t.pusto; return; }
+      if (!dostepna()) { kom.textContent = t.bezPamieci; return; }
+      if (!czyMoznaDodac()) { kom.textContent = t.limit; return; }
+      const przed = listaWycen().length;
+      const po = dodajWycene({ tytul: biezaca.tytul, pozycje: biezaca.pozycje, ...biezaca.netto });
+      kom.textContent = po > przed ? t.dodano : t.duplikat;
+      pasek();
+    });
+
+    $('kalk-kolejne').addEventListener('click', () => {
+      f.reset();
+      dostosuj();
+      pokaz();
+      $('kalk-komunikat').textContent = '';
+      history.replaceState(null, '', `${location.pathname}#kalkulator`);
+      document.getElementById('kalkulator')?.scrollIntoView({ block: 'start' });
+      radia[0]?.focus({ preventScroll: true });
+    });
+
+    addEventListener(ZDARZENIE, pasek);
+    // Powrót strzałką z /kontakt/ (bfcache): lista mogła się zmienić tam.
+    addEventListener('pageshow', (e) => { if (e.persisted) pasek(); });
+  }
+</script>
+
+<style>
+  .kalk {
+    margin: 0 0 var(--o-12);
+    scroll-margin-top: 4.5rem;
+  }
+
+  .kalk__tytul {
+    font-size: var(--t-xl);
+    line-height: 1.2;
+  }
+
+  .kalk__lead,
+  .kalk__bezjs {
+    max-width: 44rem;
+    margin: var(--o-2) 0 var(--o-6);
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__bezjs {
+    color: var(--tekst);
+    font-weight: 600;
+  }
+
+  .kalk__uklad {
+    display: grid;
+    gap: var(--o-8);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .kalk__uklad {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+    }
+
+    /* 4,5 rem = wysokość przyklejonego paska + oddech (ta sama wartość co scroll-padding-top w motyw.css). */
+    .kalk__wynik {
+      position: sticky;
+      top: 4.5rem;
+    }
+  }
+
+  .kalk__formularz {
+    display: grid;
+    gap: var(--o-8);
+    min-width: 0;
+  }
+
+  .kalk__krok {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  /* motyw.css daje :disabled przezroczystość 0,4; wyłączony krok sklepu ma zostać czytelny (kontrast tekstu ≥ 4,5:1),
+     przygaszone są tylko same pola wyboru. */
+  .kalk__krok:disabled {
+    opacity: 1;
+    cursor: auto;
+    pointer-events: auto;
+  }
+
+  .kalk__legenda {
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .kalk__pomoc {
+    margin: var(--o-1) 0 var(--o-3);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__lista {
+    display: grid;
+    gap: var(--o-2);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    align-items: start;
+  }
+
+  /* Karta pozycji: znak „i” stoi w prawym górnym rogu, rozwinięty opis zajmuje całą szerokość karty pod nazwą. */
+  .kalk__wiersz {
+    position: relative;
+    background: var(--tlo);
+    border: 1px solid var(--linia);
+    border-radius: var(--promien);
+  }
+
+  .kalk__wiersz:has(input:checked) {
+    background: var(--powierzchnia);
+    border-color: var(--akcent);
+    box-shadow: inset 0 0 0 1px var(--akcent);
+  }
+
+  .kalk__wybor {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--o-3);
+    align-items: start;
+    min-height: 44px;
+    padding: var(--o-3) 3.25rem var(--o-3) var(--o-4);
+    cursor: pointer;
+  }
+
+  .kalk__wybor--ilosc {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .kalk__wybor input[type='radio'],
+  .kalk__wybor input[type='checkbox'] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0.15rem 0 0;
+    accent-color: var(--akcent);
+  }
+
+  .kalk__wybor input[type='number'] {
+    width: 5.5rem;
+    min-height: 44px;
+    padding: 0 var(--o-2);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+  }
+
+  .kalk__tekst {
+    display: block;
+    min-width: 0;
+  }
+
+  .kalk__nazwa {
+    display: block;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .kalk__cena {
+    display: block;
+    margin-top: var(--o-1);
+    font-size: var(--t-s);
+    font-variant-numeric: tabular-nums;
+    color: var(--tekst);
+  }
+
+  .kalk__dopisek,
+  .kalk__nie {
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__nie {
+    display: none;
+    font-size: var(--t-s);
+  }
+
+  /* Wyłączona pozycja: przekreślona cena i dopisek, tekst nadal w pełnym kontraście (bez opacity na tekście). */
+  .kalk__wiersz[data-nie] .kalk__nie {
+    display: block;
+  }
+
+  .kalk__wiersz[data-nie] .kalk__cena {
+    text-decoration: line-through;
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__wiersz[data-nie] .kalk__wybor {
+    cursor: not-allowed;
+  }
+
+  /* Zaznaczenie zapamiętane w pozycji, która po zmianie rodzaju nie wchodzi do sumy, nie udaje wybranej. */
+  .kalk__wiersz[data-nie]:has(input:checked) {
+    background: var(--tlo);
+    border-color: var(--linia);
+    box-shadow: none;
+  }
+
+  .kalk__i summary {
+    position: absolute;
+    top: var(--o-2);
+    right: var(--o-2);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--akcent);
+    border: 1px solid var(--akcent);
+    border-radius: 50%;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .kalk__i summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .kalk__i summary:hover,
+  .kalk__i[open] summary {
+    background: var(--powierzchnia-mocna);
+  }
+
+  .kalk__i p {
+    margin: 0;
+    padding: 0 var(--o-4) var(--o-3);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__indywidualnie {
+    max-width: 44rem;
+    margin: 0;
+    padding: var(--o-3) var(--o-4);
+    border-left: 4px solid var(--linia);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__policz {
+    margin: 0;
+  }
+
+  .kalk__mini {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 var(--o-2);
+    margin: 0 calc(var(--o-2) * -1);
+    padding: var(--o-1) var(--o-3);
+    font-size: var(--t-s);
+    font-variant-numeric: tabular-nums;
+    background: var(--powierzchnia-mocna);
+    border-top: 2px solid var(--akcent);
+    border-radius: var(--promien-maly) var(--promien-maly) 0 0;
+  }
+
+  .kalk__mini-netto {
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__mini a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  @media (min-width: 64rem) {
+    .kalk__mini {
+      display: none !important;
+    }
+  }
+
+  /* Link „Wynik” z przyklejonej sumy: nagłówek wyniku nie chowa się pod paskiem marki (na telefonie pasek ma dwa wiersze). */
+  .kalk__wynik {
+    scroll-margin-top: var(--o-12);
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-top: 4px solid var(--akcent);
+    border-radius: var(--promien);
+  }
+
+  .kalk__wynik-tytul {
+    font-size: var(--t-l);
+  }
+
+  .kalk__stan {
+    margin: var(--o-2) 0 var(--o-4);
+    font-size: var(--t-s);
+    font-weight: 600;
+  }
+
+  .kalk__sumy {
+    margin: 0;
+    display: grid;
+    gap: var(--o-3);
+  }
+
+  .kalk__sumy div {
+    padding-bottom: var(--o-3);
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .kalk__sumy dt {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__sumy dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kalk__netto {
+    font-family: var(--font-display);
+    font-size: var(--t-l);
+    font-weight: 600;
+  }
+
+  .kalk__opis-kwoty,
+  .kalk__brutto {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .kalk__brutto {
+    display: block;
+  }
+
+  .kalk__rok {
+    margin: var(--o-4) 0 var(--o-2);
+    font-size: var(--t-s);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kalk__rozbicie summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+    color: var(--akcent);
+    cursor: pointer;
+  }
+
+  .kalk__rozbicie ul {
+    margin: 0 0 var(--o-3);
+    padding-left: var(--o-6);
+    font-size: var(--t-s);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kalk__rozbicie ul:empty::before {
+    content: '—';
+  }
+
+  .kalk__guziki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-2);
+    margin: var(--o-4) 0 var(--o-2);
+  }
+
+  .kalk__guzik {
+    min-height: 48px;
+    padding: 0 var(--o-4);
+    font: inherit;
+    font-weight: 600;
+    color: var(--tlo);
+    background: var(--akcent);
+    border: 1px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .kalk__guziki .kalk__guzik {
+    flex: 1 1 100%;
+  }
+
+  .kalk__guzik:hover {
+    background: var(--tekst);
+    border-color: var(--tekst);
+  }
+
+  .kalk__guzik--drugi {
+    color: var(--akcent);
+    background: transparent;
+  }
+
+  .kalk__guzik--drugi:hover {
+    color: var(--akcent);
+    background: var(--powierzchnia-mocna);
+    border-color: var(--akcent);
+  }
+
+  .kalk__guzik:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
+  }
+
+  .kalk__komunikat {
+    margin: 0;
+    font-size: var(--t-s);
+    font-weight: 600;
+  }
+
+  .kalk__komunikat:empty {
+    display: none;
+  }
+
+  .kalk__pasek {
+    margin: var(--o-3) 0 0;
+    padding: var(--o-2) var(--o-3);
+    background: var(--tlo);
+    border-radius: var(--promien-maly);
+  }
+
+  .kalk__pasek a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  .kalk [hidden] {
+    display: none !important;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

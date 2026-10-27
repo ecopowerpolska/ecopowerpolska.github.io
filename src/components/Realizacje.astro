@@ -5,6 +5,7 @@
 import { getCollection } from 'astro:content';
 import Kafelek from './Kafelek.astro';
 import { tekst } from '../lib/tekst';
+import blog from '../data/blog.json';
 // Wyniki PageSpeed Insights pod kafelkami — plik generowany skryptem scripts/psi-realizacje.py
 // (docs/POMIARY.md), nie jest w panelu CMS. Klucz = `adres` z serwisy.json, dosłownie.
 import pomiary from '../data/pomiary.json';
@@ -53,6 +54,12 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
           </li>
         ))}
       </ul>
+      {/* Przycisk drugorzędny do zakładki Efekty (runda 4, 2026-10-27): dodatkowa część portfolio. */}
+      <p class="realizacje__dalej" data-ujawnij>
+        <a class="realizacje__przycisk" href="/efekty/">
+          {tekst(blog.linkEfektyRealizacje, 'Zobacz efekty, które dodajemy do stron')}
+        </a>
+      </p>
     </section>
   )
 }
@@ -93,6 +100,39 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
 
   .realizacje__siatka > li {
     min-width: 0;
+  }
+
+  .realizacje__dalej {
+    margin: var(--o-8) 0 0;
+    text-align: center;
+  }
+
+  /* Przycisk drugorzędny: obrys akcentu, bez wypełnienia (główny przycisk strony to „Zapytaj o stronę”).
+     Pary: #166653 na #f4f5f1 6,27:1 (spoczynek), #15201a na #e8eae2 13,8:1 (najechanie). */
+  .realizacje__przycisk {
+    /* spoczynek */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--cel-dotyku);
+    padding: var(--o-2) var(--o-4);
+    font-weight: 600;
+    color: var(--akcent);
+    border: 1px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    text-decoration: none;
+  }
+
+  /* najechanie */
+  .realizacje__przycisk:hover {
+    color: var(--tekst);
+    background: var(--powierzchnia);
+    text-decoration: none;
+  }
+
+  /* aktywny (wciśnięty) */
+  .realizacje__przycisk:active {
+    background: var(--powierzchnia-mocna);
   }
 
   @media (min-width: 36rem) and (max-width: 59.99rem) {

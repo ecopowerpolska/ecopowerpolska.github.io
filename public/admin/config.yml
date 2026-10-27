@@ -786,8 +786,8 @@ collections:
               - { name: etykieta, label: "Napis na żetonie", widget: string }
           - { name: wiadomoscEtykieta, label: "Etykieta: wiadomość", widget: string, required: false }
           - { name: wiadomoscPodpowiedz, label: "Podpowiedź pod wiadomością", widget: string, required: false }
-          - { name: zgodaEtykieta, label: "Zgoda RODO: napis przy polu", widget: text, required: false }
-          - { name: zgodaInformacja, label: "Zgoda RODO: informacja o danych", widget: text, required: false, hint: "Wstawki {nazwa}, {adres}, {email} wypełnia strona z danych firmy; [tekst](/polityka-prywatnosci/) = odnośnik" }
+          - { name: zgodaEtykieta, label: "Potwierdzenie zapoznania się z polityką: napis przy polu", widget: text, required: false, hint: "[tekst](/polityka-prywatnosci/) = odnośnik. Pole zostaje wymagane w formularzu." }
+          - { name: zgodaInformacja, label: "Potwierdzenie zapoznania się z polityką: informacja o danych", widget: text, required: false, hint: "Wstawki {nazwa}, {adres}, {email} wypełnia strona z danych firmy; [tekst](/polityka-prywatnosci/) = odnośnik" }
           - { name: turnstileCzekaj, label: "Komunikat: czekamy na Turnstile", widget: text, required: false }
           - { name: wyslij, label: "Przycisk wysyłki", widget: string, required: false }
           - { name: bezJs, label: "Zdanie bez JavaScriptu", widget: text, required: false, hint: "Wstawki {email}, {telefon}" }

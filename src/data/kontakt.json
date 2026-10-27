@@ -112,7 +112,7 @@
   ],
   "wiadomoscEtykieta": "Wiadomość",
   "wiadomoscPodpowiedz": "Nieobowiązkowa, gdy zaznaczyłeś coś wyżej albo dołączyłeś wyliczenie.",
-  "zgodaEtykieta": "Zgadzam się na przetwarzanie moich danych z formularza w celu odpowiedzi na zapytanie.",
+  "zgodaEtykieta": "Zapoznałem się z [polityką prywatności](/polityka-prywatnosci/) i wiem, jak EcoPower Polska przetwarza dane z formularza, żeby odpowiedzieć na zapytanie.",
   "zgodaInformacja": "Administratorem danych jest {nazwa}, {adres}. Dane z formularza wykorzystujemy tylko do odpowiedzi na zapytanie i przygotowania oferty (art. 6 ust. 1 lit. b RODO). Masz prawo dostępu do danych, ich poprawienia i usunięcia oraz skargi do Prezesa UODO. Formularz chroni Cloudflare Turnstile, który sprawdza, że wysyła człowiek. Napisz na {email}, jeśli chcesz, żebyśmy usunęli Twoje dane. Szczegóły są w [polityce prywatności](/polityka-prywatnosci/).",
   "turnstileCzekaj": "Sprawdzamy, że wysyła człowiek. Jeśli pojawi się ramka do zaznaczenia, kliknij ją.",
   "wyslij": "Wyślij zapytanie",
@@ -125,7 +125,7 @@
     "telefon": "Numer telefonu wygląda na niepełny: podaj co najmniej 9 cyfr albo zostaw pole puste.",
     "adres": "Adres strony wygląda na niepoprawny. Wpisz go w formacie www.twojafirma.pl.",
     "wiadomosc": "Zaznacz, czego potrzebujesz, albo napisz kilka słów.",
-    "zgoda": "Zaznacz zgodę na przetwarzanie danych: bez niej nie możemy odpowiedzieć.",
+    "zgoda": "Zaznacz, że zapoznałeś się z polityką prywatności: bez tego nie możemy odpowiedzieć.",
     "limit": "W tej godzinie przyszło bardzo dużo zapytań. Spróbuj za chwilę albo zadzwoń.",
     "wysylka": "Nie udało się wysłać wiadomości. Napisz na adres e-mail albo zadzwoń.",
     "inny": "Coś poszło nie tak. Spróbuj ponownie albo zadzwoń."

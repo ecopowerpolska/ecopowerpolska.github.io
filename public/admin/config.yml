@@ -655,78 +655,63 @@ collections:
           - { name: kontaktSiedziba, label: "Etykieta adresu siedziby", widget: string, required: false }
 
       # ---- cena (/cena) ----
-      # Lustro src/data/cena.json, czyta go src/pages/cena.astro. Średnie ceny RYNKOWE w Warszawie, nie cennik EcoPower.
+      # Lustro src/data/cena.json, czyta go src/pages/cena.astro. Cennik orientacyjny EcoPower Polska, ceny netto.
       # Wszystkie kwoty są tekstem — dowolny wpis buduje się poprawnie (docs/CMS-ZASADY-PRACY.md ③).
       - name: cena
-        label: "Cena (średnie ceny w Warszawie)"
+        label: "Cennik (/cena)"
         file: "src/data/cena.json"
         description: >-
-          Podstrona /cena: średnie ceny rynkowe za stronę i sklep. Kolejność wierszy w panelu
-          = kolejność w tabeli. Kolumna Źródła wskazuje numery z listy Źródła na dole formularza.
+          Podstrona /cena: cennik orientacyjny EcoPower Polska za stronę i sklep, ceny netto.
+          Kolejność wierszy w panelu = kolejność w tabeli.
         fields:
           - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
           - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
           - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
           - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
-          - { name: zastrzezenie, label: "Zastrzeżenie (średnie rynkowe, netto, data)", widget: text, required: false }
-          - { name: dataBadania, label: "Data badania cen", widget: string, required: false }
-          - { name: kolumnaPozycji, label: "Tabela: nagłówek kolumny pozycji", widget: string, required: false }
-          - { name: kolumnaWidelek, label: "Tabela: nagłówek kolumny widełek", widget: string, required: false }
-          - { name: kolumnaSrodka, label: "Tabela: nagłówek kolumny środka", widget: string, required: false }
-          - { name: kolumnaZrodel, label: "Tabela: nagłówek kolumny źródeł", widget: string, required: false }
+          - { name: zastrzezenie, label: "Ramka: netto, VAT, aktualność cennika", widget: text, required: false }
+          - { name: kolumnaPozycji, label: "Tabela: nagłówek kolumny półki", widget: string, required: false }
+          - { name: kolumnaCeny, label: "Tabela: nagłówek kolumny ceny", widget: string, required: false }
+          - { name: brakCeny, label: "Napis, gdy cena jest pusta", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: wycena indywidualna" }
           - { name: stronaWykonanieNaglowek, label: "Tabela 1: nagłówek (strona, wykonanie)", widget: string, required: false }
           - { name: stronaWykonanieOpis, label: "Tabela 1: zdanie pod nagłówkiem", widget: text, required: false }
           - name: stronaWykonanie
             label: "Tabela 1: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Pozycja (półka)", widget: string }
-              - { name: widelki, label: "Widełki (np. 1 490 – 4 500 zł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: srodek, label: "Środek (mediana ze źródeł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: uwagi, label: "Uwagi pod nazwą pozycji", widget: text, required: false }
-              - { name: zrodla, label: "Numery źródeł (np. 1, 7, 9)", widget: string, required: false, hint: "Numery z listy Źródła niżej, oddzielone przecinkami." }
+              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
+              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
           - { name: stronaProwadzenieNaglowek, label: "Tabela 2: nagłówek (strona, prowadzenie)", widget: string, required: false }
           - { name: stronaProwadzenieOpis, label: "Tabela 2: zdanie pod nagłówkiem", widget: text, required: false }
           - name: stronaProwadzenie
             label: "Tabela 2: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Pozycja (półka)", widget: string }
-              - { name: widelki, label: "Widełki (np. 1 490 – 4 500 zł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: srodek, label: "Środek (mediana ze źródeł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: uwagi, label: "Uwagi pod nazwą pozycji", widget: text, required: false }
-              - { name: zrodla, label: "Numery źródeł (np. 1, 7, 9)", widget: string, required: false, hint: "Numery z listy Źródła niżej, oddzielone przecinkami." }
+              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
+              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
           - { name: sklepWykonanieNaglowek, label: "Tabela 3: nagłówek (sklep, uruchomienie)", widget: string, required: false }
           - { name: sklepWykonanieOpis, label: "Tabela 3: zdanie pod nagłówkiem", widget: text, required: false }
           - name: sklepWykonanie
             label: "Tabela 3: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Pozycja (półka)", widget: string }
-              - { name: widelki, label: "Widełki (np. 1 490 – 4 500 zł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: srodek, label: "Środek (mediana ze źródeł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: uwagi, label: "Uwagi pod nazwą pozycji", widget: text, required: false }
-              - { name: zrodla, label: "Numery źródeł (np. 1, 7, 9)", widget: string, required: false, hint: "Numery z listy Źródła niżej, oddzielone przecinkami." }
+              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
+              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
           - { name: sklepProwadzenieNaglowek, label: "Tabela 4: nagłówek (sklep, prowadzenie)", widget: string, required: false }
           - { name: sklepProwadzenieOpis, label: "Tabela 4: zdanie pod nagłówkiem", widget: text, required: false }
           - name: sklepProwadzenie
             label: "Tabela 4: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Pozycja (półka)", widget: string }
-              - { name: widelki, label: "Widełki (np. 1 490 – 4 500 zł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: srodek, label: "Środek (mediana ze źródeł)", widget: string, required: false, hint: "Puste pole = na stronie: brak danych" }
-              - { name: uwagi, label: "Uwagi pod nazwą pozycji", widget: text, required: false }
-              - { name: zrodla, label: "Numery źródeł (np. 1, 7, 9)", widget: string, required: false, hint: "Numery z listy Źródła niżej, oddzielone przecinkami." }
-          - { name: metodaNaglowek, label: "Nagłówek sekcji źródeł", widget: string, required: false }
-          - { name: metoda, label: "Opis metody", widget: text, required: false }
-          - name: zrodla
-            label: "Źródła (kolejność = numer)"
-            widget: list
-            fields:
-              - { name: nazwa, label: "Nazwa źródła", widget: string }
-              - { name: adres, label: "Adres strony", widget: string, required: false }
-              - { name: data, label: "Data źródła", widget: string, required: false }
+              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
+              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
           - { name: ctaNaglowek, label: "Ramka kontaktu: nagłówek", widget: string, required: false }
           - { name: ctaTekst, label: "Ramka kontaktu: zdanie", widget: text, required: false }
           - { name: ctaLink, label: "Ramka kontaktu: napis odnośnika do kontaktu", widget: string, required: false }

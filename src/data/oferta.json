@@ -24,7 +24,19 @@
     },
     {
       "nazwa": "Widoczność w Google",
-      "opis": "Tytuły, opisy, dane strukturalne i mapa strony, zgłoszenie do Google Search Console i Bing. Prowadzimy też wizytówkę Google (Profil Firmy): usługi, zdjęcia, wpisy."
+      "opis": "Tytuły, opisy, dane strukturalne i mapa strony, zgłoszenie do Google Search Console i Bing. Prowadzimy też wizytówkę Google (Profil Firmy) i łączymy ją ze stroną: te same dane firmy, odnośnik do mapy, wpisy w profilu prowadzące do ofert na stronie."
+    },
+    {
+      "nazwa": "Pomiar jakości każdej strony",
+      "opis": "Każdą stronę mierzymy w PageSpeed Insights osobno na telefonie i na komputerze: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe, czyli gotowość na asystentów AI. Wyniki naszych realizacji publikujemy w sekcji Realizacje, a każdy może je sprawdzić sam na pagespeed.web.dev."
+    },
+    {
+      "nazwa": "Facebook i Instagram",
+      "opis": "Łączymy stronę z firmowym Facebookiem i Instagramem i możemy prowadzić oba konta. Nowy wpis na blogu może sam trafiać na Facebooka jako post z linkiem, a treść postów zatwierdzasz Ty."
+    },
+    {
+      "nazwa": "Ruch na stronie i raporty",
+      "opis": "Sprawdzamy na bieżąco Search Console, Google Analytics, pozycje wybranych fraz i wyniki PageSpeed. Raport z wnioskami i listą poprawek wysyłamy w rytmie ustalonym z Tobą, na przykład co miesiąc."
     }
   ],
   "procesNaglowek": "Jak pracujemy",

@@ -243,20 +243,45 @@ czyli realnego kandydata na LCP (`CLAUDE.md` §4 — dokładnie jeden obraz na s
 
 ---
 
-## D12 — Zakładka „Cena”: średnie ceny rynkowe w Warszawie, nie cennik (2026-10-27)
+## D12 — Zakładka „Cena”: cennik orientacyjny EcoPower Polska (2026-10-27)
 
 **Słowa Piotra (skrót):** „Dodaj na stronie EcoPower Polska zakładkę cena (...) średnie ceny warszawskie za wykonanie
-strony www i za wykonanie sklepu. Cena za uruchomienie, cena za prowadzenie, wszystkie średnie półki warszawskie.”
+strony www i za wykonanie sklepu.” Po pierwszej wersji (raport rynkowy ze źródłami, rano 2026-10-27) Piotr poprawił:
+„Ty masz przygotować cennik dla mnie, który będę miał ja jako strona EcoPower (...) wywal widełki i zostaw tylko ten środek,
+ale środek ma się nazywać cena. Źródła też wywal.”
 
-**Co stoi:** podstrona `/cena/` (`src/pages/cena.astro`, treść `src/data/cena.json`, panel: Teksty strony → „Cena”)
-z czterema tabelami — strona: wykonanie i prowadzenie, sklep: uruchomienie i prowadzenie — oraz sekcją „Źródła i metoda”
-(16 źródeł z lat 2025–2026, odczyt 27.10.2026). Pozycja „Cena” w menu górnym i w stopce, między Realizacjami a FAQ.
+**Co stoi:** podstrona `/cena/` (`src/pages/cena.astro`, treść `src/data/cena.json`, panel: Teksty strony → „Cennik (/cena)”)
+z H1 „Cennik stron i sklepów internetowych” i czterema tabelami — strona: wykonanie i prowadzenie, sklep: uruchomienie
+i prowadzenie. Kolumny: **Półka** (nazwa i opis) · **Cena** (kwota, pod nią jednostka). Liczby to dawne „środki” z badania
+rynku; zmienił się ich status — z „średniej rynkowej” na „naszą cenę orientacyjną”. Pozycja „Cena” w menu górnym i w stopce,
+między Realizacjami a FAQ.
 
 **Zasady, które zostają:**
-- strona mówi wprost, w wyróżnionej ramce, że to **średnie rynkowe, a nie cennik EcoPower**, kwoty netto + 23% VAT, z datą badania;
-- każda liczba ma numer źródła; widełki = najniższa i najwyższa kwota źródeł, środek = mediana środków źródeł (wyjątki opisane na stronie);
-- kwoty w panelu są TEKSTEM — dowolny wpis buduje się poprawnie (CMS-ZASADY-PRACY ③); numer źródła spoza listy jest pomijany;
+- ramka mówi: ceny netto, do faktury 23 % VAT, cennik aktualny na dany miesiąc; na stronie NIE ma źródeł, widełek, median
+  ani słów o rynku — źródła i metoda są we wpisie na blogu `/blog/ile-kosztuje-strona-i-sklep-internetowy/`;
+- wiersze sklepu tylko dla dróg, które umiemy (WooCommerce, PrestaShop, platforma abonamentowa — wdrożenie, sklep na stronie
+  Astro z koszykiem i płatnością online); bez sklepu dedykowanego, opieki z SLA i pakietu prawnego;
+- kwoty w panelu są TEKSTEM — dowolny wpis buduje się poprawnie (CMS-ZASADY-PRACY ③); puste pole ceny = „wycena indywidualna”;
 - tabele to prawdziwe `<table>` z `<th scope>`; poniżej 40 rem wiersz staje się kartą (role ARIA trzymają semantykę), bez przewijania w bok;
 - menu ma sześć pozycji; na ekranie ≤ 26 rem mniejszy odstęp między pozycjami i węższy margines paska, żeby menu zostało w jednym wierszu przy 390 px.
 
-**Odświeżenie cen** jest decyzją Piotra — liczby z 27.10.2026 starzeją się; nowa data badania idzie do pola „Data badania cen” i zastrzeżenia.
+**Zmiana cen** jest decyzją Piotra — liczby wpisuje w panelu, a miesiąc aktualności w ramce („Zastrzeżenie”).
+
+---
+
+## D13 — Cennik zamiast raportu, PageSpeed pod Realizacjami, strona przykładowa (2026-10-27)
+
+**Słowa Piotra (skrót):** „Na stronie EcoPower w zakładce realizacje pod każdą stroną musimy podać informacje na temat
+wydajności (...) na komórkę, na stacjonarny” oraz „30 pomiar uruchomię ja, ale ty musisz to wykonać na jakiejś stronie przykładowej.”
+
+- **Cennik zamiast raportu.** `/cena/` jest cennikiem EcoPower (D12 w brzmieniu po poprawce); raport rynkowy ze źródłami
+  przeszedł do wpisu na blogu.
+- **Tabele PageSpeed pod kafelkami Realizacji.** Pod każdym kafelkiem tabela semantyczna 5 wierszy (Wydajność · Ułatwienia
+  dostępu · Sprawdzone metody · SEO · Przeglądanie agentowe) × 2 kolumny (Telefon · Komputer); liczby w pastylkach w kolorze
+  akcentu (`#f4f5f1` na `#166653`, 6,27:1), wynik poniżej 90 ma sam obrys. Układ odwrócony wobec „dwóch wierszy po 5”, bo
+  w karcie 340–390 px pięć pełnych polskich nazw nie mieści się w kolumnach. Pod tabelą data pomiaru, zdanie o braku danych
+  CrUX i link „Sprawdź sam” do pagespeed.web.dev. Dane: `scripts/psi-realizacje.py` → `src/data/pomiary.json` (poza panelem,
+  `docs/POMIARY.md`). Link kafelka jest wewnątrz karty, tabela poza nim (link w linku jest niedozwolony).
+- **Strona przykładowa `/przyklady/scrollytelling/`** — `noindex, nofollow`, poza menu, stopką, `llms.txt` i sitemapą
+  (filtr `sitemap()` w `astro.config.mjs`). Dwie sceny szafy (CSS `animation-timeline` i 120 klatek WebP na canvas) w tokenach
+  strony; kolory ilustracji, które nie są tekstem, są stałymi w stylu tej trasy, nie tokenami motywu.

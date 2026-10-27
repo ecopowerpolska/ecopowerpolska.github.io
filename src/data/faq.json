@@ -83,10 +83,58 @@
       "odpowiedz": "Każdą stronę zgłaszamy w Google Search Console oraz w Bing przez IndexNow, z mapą strony, adresami kanonicznymi, tytułami i opisami pisanymi pod to, czego szukają Twoi klienci, i z danymi firmy w danych strukturalnych. Pozycji w wynikach nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console.",
       "kotwica": "widocznosc-w-google",
       "naGlownej": false
+    },
+    {
+      "pytanie": "Co oznaczają cztery wyniki w PageSpeed Insights?",
+      "kotwica": "pagespeed",
+      "naGlownej": false,
+      "odpowiedz": "PageSpeed Insights (pagespeed.web.dev) to bezpłatne narzędzie Google, które uruchamia na stronie test Lighthouse i daje cztery wyniki od 0 do 100. Wydajność mówi, jak szybko strona się pokazuje i reaguje. Ułatwienia dostępu sprawdzają między innymi kontrast, opisy zdjęć i etykiety pól. Sprawdzone metody obejmują HTTPS i błędy w konsoli przeglądarki, a SEO tytuł, opis i to, czy wyszukiwarka może stronę odczytać.\n\nGoogle uznaje 90–100 punktów za wynik dobry, 50–89 za wymagający poprawy, a 0–49 za słaby. Każdą stronę mierzymy osobno na telefonie i na komputerze, bo test na telefonie symuluje wolniejsze urządzenie i sieć. Wyniki naszych realizacji pokazujemy przy każdej z nich, a każdy może je sprawdzić sam na pagespeed.web.dev."
+    },
+    {
+      "pytanie": "Co to jest przeglądanie agentowe i czy strona jest na nie gotowa?",
+      "kotwica": "przegladanie-agentowe",
+      "naGlownej": false,
+      "odpowiedz": "Przeglądanie agentowe to czytanie strony przez asystentów AI, którzy szukają informacji i wykonują zadania w imieniu użytkownika. PageSpeed Insights ma dla niego osobną kategorię z czterema testami: czytelne drzewo dostępności strony, brak przesunięć układu, plik llms.txt i katalog opisujący stronę dla agentów w katalogu .well-known.\n\nNasze strony dostają plik llms.txt z listą podstron, katalog .well-known/ai-catalog.json z ard.json oraz wiersz Content-Signal w robots.txt, który mówi botom AI, do czego wolno użyć treści. Te pliki podają asystentowi AI w jednym miejscu listę podstron i opis strony."
+    },
+    {
+      "pytanie": "Co mierzą First Contentful Paint, Largest Contentful Paint i Speed Index?",
+      "kotwica": "fcp-lcp-si",
+      "naGlownej": false,
+      "odpowiedz": "Te trzy metryki mówią, jak szybko użytkownik coś widzi. First Contentful Paint to czas do pokazania pierwszego tekstu albo obrazu; Google uznaje za dobry wynik do 1,8 s. Largest Contentful Paint, czyli wyrenderowanie największej części treści, to czas do pokazania największego elementu, zwykle zdjęcia albo nagłówka; dobry wynik to do 2,5 s. Speed Index liczy z nagrania ładowania, jak szybko wypełnia się cały ekran; na telefonie dobry wynik to do 3,4 s.\n\nPrzykład z pomiaru jednej z naszych stron: First Contentful Paint 1,0 s, Largest Contentful Paint 1,5 s, Speed Index 2,4 s. Krótszy czas to mniej osób, które zamkną stronę, zanim zobaczą ofertę."
+    },
+    {
+      "pytanie": "Co mierzą Total Blocking Time i Cumulative Layout Shift?",
+      "kotwica": "tbt-cls",
+      "naGlownej": false,
+      "odpowiedz": "Total Blocking Time to suma czasu, w którym długie zadania skryptów (dłuższe niż 50 ms) blokują stronę i nie reaguje ona na dotknięcie ani kliknięcie. Na telefonie dobry wynik to do 200 ms. Cumulative Layout Shift mierzy, jak bardzo elementy przesuwają się podczas ładowania, na przykład gdy tekst ucieka spod palca, bo nad nim wczytało się zdjęcie. Dobry wynik to 0,1 lub mniej.\n\nW pomiarze naszej strony oba wyniki wynoszą zero: Total Blocking Time 0 ms i Cumulative Layout Shift 0. W wyniku wydajności Lighthouse Total Blocking Time waży 30 %, a Cumulative Layout Shift 25 %, razem ponad połowę oceny. Osiągamy je, bo strona nie ładuje zbędnych skryptów, a każde zdjęcie ma z góry zarezerwowane miejsce."
+    },
+    {
+      "pytanie": "Dlaczego PageSpeed pokazuje „Brak danych” przy wrażeniach użytkowników?",
+      "kotwica": "brak-danych",
+      "naGlownej": false,
+      "odpowiedz": "Sekcja „Dowiedz się, jakie są wrażenia użytkowników” pokazuje dane z prawdziwych wizyt użytkowników Chrome (raport CrUX) z ostatnich 28 dni. Google włącza do niego tylko strony z wystarczającą liczbą odwiedzin i nie podaje dokładnego progu. Strona nowa albo rzadko odwiedzana jeszcze takiej próbki nie ma, więc PageSpeed pokazuje „Brak danych”. Według dokumentacji Google brak danych dotyczy stron opublikowanych niedawno albo z małą liczbą próbek od użytkowników.\n\nTo nie jest błąd strony. Dane pojawią się same, gdy strona zbierze ruch. Do tego czasu o szybkości mówi pomiar laboratoryjny niżej na tej samej stronie wyników: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe."
+    },
+    {
+      "pytanie": "Czy poprowadzicie Facebooka i Instagram firmy?",
+      "kotwica": "facebook-instagram",
+      "naGlownej": false,
+      "odpowiedz": "Tak. Możemy połączyć stronę z firmowym Facebookiem i Instagramem oraz prowadzić oba konta: przygotować posty ze zdjęciami realizacji i odpowiadać na komentarze w ustalonym zakresie. Stronę możemy też ustawić tak, żeby nowy wpis na blogu trafiał na Facebooka jako post z linkiem, bez ręcznego przepisywania.\n\nPotrzebujemy roli administratora strony na Facebooku i konta firmowego Instagram połączonego z tą stroną. Treść postów przed publikacją zatwierdzasz Ty, a częstotliwość ustalamy razem."
+    },
+    {
+      "pytanie": "Jak łączycie wizytówkę Google ze stroną?",
+      "kotwica": "wizytowka-i-strona",
+      "naGlownej": false,
+      "odpowiedz": "Profil Firmy w Google i strona mają się wzajemnie potwierdzać. W profilu ustawiamy adres strony, a na stronie te same dane: nazwę, adres i telefon, w stopce, na stronie kontaktu i w danych strukturalnych z odnośnikiem do mapy Google. Wpisy w profilu prowadzą do wpisów na blogu i podstron usług, więc klient z Map trafia od razu na właściwą ofertę.\n\nPotrzebujemy roli menedżera w Twoim profilu. Właścicielem profilu zostajesz Ty."
+    },
+    {
+      "pytanie": "Czy będziecie sprawdzać ruch na stronie i wysyłać raporty?",
+      "kotwica": "monitoring-i-raporty",
+      "naGlownej": false,
+      "odpowiedz": "Tak. Sprawdzamy stronę w Google Search Console (wyświetlenia, kliknięcia, frazy i błędy indeksowania), ruch w Google Analytics, pozycje wybranych fraz w Google oraz wyniki PageSpeed. Z tych danych przygotowujemy raport w rytmie ustalonym z klientem, na przykład co miesiąc, z listą tego, co poprawiamy na stronie.\n\nPotrzebujemy dostępu do Search Console i Google Analytics Twojej strony albo zakładamy je na Twoim koncie. Google Analytics włącza się na stronie dopiero po zgodzie odwiedzającego, więc pokazuje część ruchu; Search Console liczy wejścia z Google bez ciasteczek."
     }
   ],
   "naglowek": "Pytania o strony i sklepy internetowe",
-  "lead": "Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe: czas, treść, hosting, domena, poczta, bezpieczeństwo i widoczność w Google.",
+  "lead": "Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe: czas, treść, hosting, domena, poczta, bezpieczeństwo, widoczność w Google, wyniki PageSpeed i media społecznościowe.",
   "tytulKarty": "Pytania o strony i sklepy internetowe — EcoPower Polska",
   "opisWyszukiwarki": "Ile trwa zrobienie strony, czy sam zmienisz treść, co z domeną, pocztą i hostingiem, jaki sklep internetowy wybrać. Odpowiedzi EcoPower Polska.",
   "kontaktNaglowek": "Nie ma tu Twojego pytania?",

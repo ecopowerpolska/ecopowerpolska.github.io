@@ -5,6 +5,9 @@
 import { getCollection } from 'astro:content';
 import Kafelek from './Kafelek.astro';
 import { tekst } from '../lib/tekst';
+// Wyniki PageSpeed Insights pod kafelkami — plik generowany skryptem scripts/psi-realizacje.py
+// (docs/POMIARY.md), nie jest w panelu CMS. Klucz = `adres` z serwisy.json, dosłownie.
+import pomiary from '../data/pomiary.json';
 
 interface Props {
   /** Nagłówek H2 sekcji; puste = wartość domyślna. */
@@ -24,6 +27,7 @@ const idNaglowka = `${kotwica}-naglowek`;
 const wstepTekst = wstep?.trim() ?? '';
 // Pole `zakres` dochodzi do schematu w content.config.ts; odczyt odporny na jego brak.
 const zakresWpisu = (dane: unknown): string | undefined => (dane as { zakres?: string }).zakres;
+const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<string, unknown>)[adres];
 ---
 
 {
@@ -44,6 +48,7 @@ const zakresWpisu = (dane: unknown): string | undefined => (dane as { zakres?: s
               obrazek={wpis.data.obrazek}
               alt={wpis.data.alt}
               pierwszy={pierwszyEager && i === 0}
+              pomiar={pomiarAdresu(wpis.data.adres)}
             />
           </li>
         ))}

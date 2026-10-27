@@ -37,7 +37,7 @@
       "zakres": "Zbudowaliśmy stronę od zera w Astro na hostingu lh.pl, z kalkulatorem ceny kuchni netto i z VAT, galerią realizacji, FAQ, blogiem i formularzem z załącznikami chronionym Turnstile.",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg",
-      "alt": "Strona główna kuchnia-na-wymiar-warszawa.pl: nagłówek „Kuchnie na wymiar w Warszawie” obok zdjęcia białej kuchni z drewnianym blatem",
+      "alt": "Strona główna kuchnia-na-wymiar-warszawa.pl: biały nagłówek z kreską w kolorze terakoty, tytuł „Kuchnie na wymiar w Warszawie” po lewej, terakotowy guzik „Umów pomiar i wycenę” i zdjęcie białej kuchni z drewnianym blatem po prawej",
       "ukryty": false
     },
     {
@@ -47,7 +47,7 @@
       "zakres": "Zbudowaliśmy stronę od zera w Astro na hostingu lh.pl, z kalkulatorem ceny szafy, galerią, FAQ, blogiem i formularzem chronionym Turnstile.",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg",
-      "alt": "Strona główna szafy-na-wymiar-warszawa.pl: nagłówek „Szafy na wymiar w Warszawie” obok zdjęcia sypialni z szafą do sufitu",
+      "alt": "Strona główna szafy-na-wymiar-warszawa.pl: ciemnogranatowy nagłówek i pas otwarcia z tytułem „Szafy na wymiar w Warszawie”, mosiężny guzik w kształcie pigułki i zdjęcie sypialni z szafą do sufitu",
       "ukryty": false
     },
     {
@@ -57,17 +57,17 @@
       "zakres": "Zbudowaliśmy stronę od zera w Astro na hostingu lh.pl, z kalkulatorem ceny garderoby, galerią, FAQ, blogiem i formularzem chronionym Turnstile.",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg",
-      "alt": "Strona główna garderoba-na-wymiar-warszawa.pl: nagłówek „Garderoby na wymiar w Warszawie” obok zdjęcia garderoby z oświetlonymi półkami",
+      "alt": "Strona główna garderoba-na-wymiar-warszawa.pl: jasne szałwiowe tło, wyśrodkowany tytuł „Garderoby na wymiar w Warszawie”, eukaliptusowe guziki i pod nimi szerokie zdjęcie garderoby z oświetlonymi półkami",
       "ukryty": false
     },
     {
       "nazwa": "Pan Wylewka",
       "adres": "https://panwylewka.pl/",
       "opis": "Wylewki betonowe w Warszawie i okolicach.",
-      "zakres": "",
+      "zakres": "Przepisaliśmy stronę z WordPressa na Astro na hostingu lh.pl, z przekierowaniami starych adresów, panelem treści Sveltia, formularzem chronionym Turnstile i podpiętą wizytówką Google.",
       "grupa": "",
-      "obrazek": "../assets/serwisy/pasted-image-1788774528782.png",
-      "alt": "",
+      "obrazek": "../assets/serwisy/zrzut-panwylewka.jpg",
+      "alt": "Strona główna panwylewka.pl: nagłówek z logo Pan Wylewka i pomarańczowym guzikiem telefonu nad ciemnym zdjęciem z napisem „Wylewki betonowe Warszawa i okolice”",
       "ukryty": false
     },
     {

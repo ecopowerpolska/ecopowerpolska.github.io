@@ -1,8 +1,8 @@
 ---
-// /cena — średnie ceny warszawskie za stronę www i sklep (rynek, NIE cennik EcoPower; zakładka z 2026-10-27).
-// Treść: src/data/cena.json (panel: Teksty strony → Cena). Każda kwota jest tekstem — panel zapisze dowolny
-// napis, build się nie zatrzyma (docs/CMS-ZASADY-PRACY.md ③). Numery źródeł w wierszu = pozycje listy źródeł.
-// Tabele: prawdziwe <table> z <th scope>, na wąskim ekranie przewijane poziomo w obszarze z fokusem.
+// /cena — cennik orientacyjny EcoPower Polska (netto): wykonanie i prowadzenie strony www i sklepu (od 2026-10-27).
+// Treść: src/data/cena.json (panel: Teksty strony → Cennik). Każda kwota jest tekstem — panel zapisze dowolny
+// napis, build się nie zatrzyma (docs/CMS-ZASADY-PRACY.md ③). Puste pole ceny = napis `brakCeny`.
+// Tabele: prawdziwe <table> z <th scope>; poniżej 40 rem wiersz jest kartą.
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
@@ -17,32 +17,22 @@ const napis = (klucz: string, domyslny: string) => tekst(naTekst(cena[klucz]), d
 
 interface Wiersz {
   pozycja: string;
-  widelki: string;
-  srodek: string;
-  uwagi: string;
-  zrodla: number[];
+  opis: string;
+  cena: string;
+  jednostka: string;
 }
-
-const zrodla = (Array.isArray(cena.zrodla) ? (cena.zrodla as Record<string, unknown>[]) : [])
-  .map((z) => ({ nazwa: naTekst(z?.nazwa), adres: naTekst(z?.adres), data: naTekst(z?.data) }))
-  .filter((z) => z.nazwa);
-
-// „1, 7, 9” → [1, 7, 9]; numery spoza listy źródeł pomijane, żeby nie było odnośnika w próżnię.
-const numery = (v: unknown): number[] =>
-  (naTekst(v).match(/\d+/g) ?? []).map(Number).filter((n) => n >= 1 && n <= zrodla.length);
 
 const wiersze = (klucz: string): Wiersz[] =>
   (Array.isArray(cena[klucz]) ? (cena[klucz] as Record<string, unknown>[]) : [])
     .map((w) => ({
       pozycja: naTekst(w?.pozycja),
-      widelki: naTekst(w?.widelki),
-      srodek: naTekst(w?.srodek),
-      uwagi: naTekst(w?.uwagi),
-      zrodla: numery(w?.zrodla),
+      opis: naTekst(w?.opis),
+      cena: naTekst(w?.cena),
+      jednostka: naTekst(w?.jednostka),
     }))
     .filter((w) => w.pozycja);
 
-const brak = 'brak danych';
+const brak = napis('brakCeny', 'wycena indywidualna');
 const tabele = [
   { id: 'strona-wykonanie', naglowek: napis('stronaWykonanieNaglowek', 'Strona internetowa: wykonanie'), opis: napis('stronaWykonanieOpis', ''), wiersze: wiersze('stronaWykonanie') },
   { id: 'strona-prowadzenie', naglowek: napis('stronaProwadzenieNaglowek', 'Strona internetowa: prowadzenie'), opis: napis('stronaProwadzenieOpis', ''), wiersze: wiersze('stronaProwadzenie') },
@@ -52,14 +42,12 @@ const tabele = [
 
 const kolumny = {
   pozycja: napis('kolumnaPozycji', 'Półka'),
-  widelki: napis('kolumnaWidelek', 'Widełki'),
-  srodek: napis('kolumnaSrodka', 'Środek'),
-  zrodla: napis('kolumnaZrodel', 'Źródła'),
+  cena: napis('kolumnaCeny', 'Cena'),
 };
 
-const tytul = napis('tytulKarty', 'Ile kosztuje strona i sklep internetowy w Warszawie? Średnie ceny — EcoPower Polska');
-const opis = napis('opisWyszukiwarki', 'Średnie ceny rynkowe w Warszawie za wykonanie i prowadzenie strony internetowej i sklepu.');
-const naglowek = napis('naglowek', 'Ile kosztuje strona i sklep internetowy w Warszawie');
+const tytul = napis('tytulKarty', 'Cennik stron i sklepów internetowych — EcoPower Polska');
+const opis = napis('opisWyszukiwarki', 'Cennik EcoPower Polska: wykonanie i prowadzenie strony internetowej oraz sklepu. Ceny netto.');
+const naglowek = napis('naglowek', 'Cennik stron i sklepów internetowych');
 
 const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
 const adres = new URL('/cena/', import.meta.env.SITE).href;
@@ -79,7 +67,7 @@ const daneStrukturalne = {
       '@type': 'WebPage',
       '@id': `${adres}#strona`,
       url: adres,
-      name: tytul,
+      name: naglowek,
       description: opis,
       inLanguage: 'pl-PL',
       isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
@@ -117,14 +105,13 @@ const daneStrukturalne = {
     <h1 class="cena__tytul">{naglowek}</h1>
     {napis('lead', '') && <p class="cena__lead">{napis('lead', '')}</p>}
     <p class="cena__zastrzezenie">
-      {napis('zastrzezenie', 'To są średnie ceny rynkowe, a nie cennik EcoPower Polska. Kwoty w złotych netto.')}
+      {napis('zastrzezenie', 'Ceny netto, do faktury doliczamy 23 % VAT.')}
     </p>
 
     <nav class="spis" aria-labelledby="spis-tabel">
       <h2 id="spis-tabel" class="sr-only">Spis tabel</h2>
       <ul>
         {tabele.map((t) => <li><a href={`#${t.id}`}>{t.naglowek}</a></li>)}
-        <li><a href="#zrodla">{napis('metodaNaglowek', 'Źródła i metoda')}</a></li>
       </ul>
     </nav>
 
@@ -137,9 +124,7 @@ const daneStrukturalne = {
             <thead role="rowgroup">
               <tr role="row">
                 <th scope="col" role="columnheader">{kolumny.pozycja}</th>
-                <th scope="col" role="columnheader">{kolumny.widelki}</th>
-                <th scope="col" role="columnheader">{kolumny.srodek}</th>
-                <th scope="col" role="columnheader">{kolumny.zrodla}</th>
+                <th scope="col" role="columnheader">{kolumny.cena}</th>
               </tr>
             </thead>
             <tbody role="rowgroup">
@@ -147,20 +132,12 @@ const daneStrukturalne = {
                 <tr role="row">
                   <th scope="row" role="rowheader">
                     <span class="pozycja">{w.pozycja}</span>
-                    {w.uwagi && <span class="uwagi">{w.uwagi}</span>}
+                    {w.opis && <span class="uwagi">{w.opis}</span>}
                   </th>
-                  <td class="kwota" role="cell" data-etykieta={kolumny.widelki}>{w.widelki || brak}</td>
-                  <td class="kwota kwota--srodek" role="cell" data-etykieta={kolumny.srodek}>{w.srodek || brak}</td>
-                  <td class="zrodla" role="cell" data-etykieta={kolumny.zrodla}>
-                    <span class="zrodla__numery">
-                      {w.zrodla.length > 0
-                        ? w.zrodla.map((n, i) => (
-                            <>
-                              {i > 0 && ' '}
-                              <a href={`#zrodlo-${n}`} aria-label={`źródło ${n}`}>{n}</a>
-                            </>
-                          ))
-                        : brak}
+                  <td class="kwota" role="cell" data-etykieta={kolumny.cena}>
+                    <span class="kwota__wartosc">
+                      <span class="kwota__liczba">{w.cena || brak}</span>
+                      {w.cena && w.jednostka && <span class="kwota__jednostka">{w.jednostka}</span>}
                     </span>
                   </td>
                 </tr>
@@ -170,20 +147,6 @@ const daneStrukturalne = {
         </div>
       </section>
     ))}
-
-    <section class="metoda" aria-labelledby="zrodla" data-ujawnij>
-      <h2 id="zrodla" class="tabela__tytul">{napis('metodaNaglowek', 'Źródła i metoda')}</h2>
-      {napis('metoda', '') && <p>{napis('metoda', '')}</p>}
-      <ol class="metoda__lista">
-        {zrodla.map((z, i) => (
-          <li id={`zrodlo-${i + 1}`}>
-            {z.adres ? <a href={z.adres} rel="nofollow noopener">{z.nazwa}</a> : z.nazwa}
-            {z.data && <span class="metoda__data"> ({z.data})</span>}
-          </li>
-        ))}
-      </ol>
-      <p class="metoda__odczyt">Data badania: {napis('dataBadania', '')}</p>
-    </section>
 
     <section class="kontakt" aria-labelledby="cena-kontakt" data-ujawnij>
       <h2 id="cena-kontakt" class="kontakt__tytul">{napis('ctaNaglowek', 'Chcesz poznać cenę swojej strony?')}</h2>
@@ -245,7 +208,6 @@ const daneStrukturalne = {
   .cena__zastrzezenie,
   .spis,
   .tabela__opis,
-  .metoda,
   .kontakt {
     max-width: 44rem;
   }
@@ -261,7 +223,7 @@ const daneStrukturalne = {
     color: var(--tekst-cichy);
   }
 
-  /* Zastrzeżenie „to nie cennik EcoPower” — wyróżnione wypełnieniem i kreską akcentu, żeby nie zginęło. */
+  /* Ramka „ceny netto + VAT, aktualność cennika” — wypełnienie i kreska akcentu, żeby nie zginęła. */
   .cena__zastrzezenie {
     margin: var(--o-6) 0 var(--o-8);
     padding: var(--o-4) var(--o-6);
@@ -289,8 +251,7 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  .tabela + .tabela,
-  .metoda {
+  .tabela + .tabela {
     margin-top: var(--o-12);
   }
 
@@ -318,7 +279,7 @@ const daneStrukturalne = {
   /* Stały układ kolumn: cztery tabele jedna pod drugą mają kolumny w tych samych miejscach. */
   table {
     width: 100%;
-    min-width: 36rem;
+    min-width: 30rem;
     table-layout: fixed;
     border-collapse: collapse;
     font-size: var(--t-s);
@@ -350,15 +311,7 @@ const daneStrukturalne = {
   }
 
   thead th:nth-child(1) {
-    width: 44%;
-  }
-
-  thead th:nth-child(2) {
-    width: 22%;
-  }
-
-  thead th:nth-child(3) {
-    width: 18%;
+    width: 68%;
   }
 
   tbody th {
@@ -382,27 +335,22 @@ const daneStrukturalne = {
     font-variant-numeric: tabular-nums;
   }
 
-  .kwota--srodek {
-    font-weight: 600;
+  .kwota__wartosc {
+    display: block;
   }
 
-  /* Numery źródeł jako małe znaczniki 24 × 24 px (WCAG 2.5.8), odnośnik do pozycji listy źródeł.
-     Kontrast: akcent na --powierzchnia-mocna, para z motyw.css. */
-  .zrodla a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    min-height: 24px;
-    margin: 0 2px 2px 0;
-    padding: 0 var(--o-1);
-    font-size: var(--t-xs);
+  .kwota__liczba {
+    display: block;
     font-weight: 600;
-    background: var(--powierzchnia-mocna);
-    border-radius: var(--promien-maly);
+    font-size: var(--t-m);
   }
 
-  /* Telefon: wiersz = karta. Nagłówek wiersza na górze, pod nim trzy pary etykieta–wartość.
+  .kwota__jednostka {
+    display: block;
+    color: var(--tekst-cichy);
+  }
+
+  /* Telefon: wiersz = karta. Nagłówek wiersza na górze, pod nim para etykieta–cena.
      Role ARIA w znacznikach trzymają semantykę tabeli, gdy CSS zmienia `display` (Safari ją wtedy gubi). */
   @media (max-width: 40rem) {
     table {
@@ -450,7 +398,7 @@ const daneStrukturalne = {
       white-space: normal;
     }
 
-    .zrodla__numery {
+    .kwota__wartosc {
       text-align: right;
     }
 
@@ -459,29 +407,6 @@ const daneStrukturalne = {
       color: var(--tekst-cichy);
       font-weight: 400;
     }
-  }
-
-  .metoda p {
-    margin: var(--o-2) 0 var(--o-4);
-  }
-
-  .metoda__lista {
-    margin: 0;
-    padding-left: var(--o-6);
-    font-size: var(--t-s);
-  }
-
-  .metoda__lista li + li {
-    margin-top: var(--o-2);
-  }
-
-  .metoda__lista li:target {
-    background: var(--powierzchnia-mocna);
-  }
-
-  .metoda__data,
-  .metoda__odczyt {
-    color: var(--tekst-cichy);
   }
 
   .kontakt {

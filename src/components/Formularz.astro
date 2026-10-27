@@ -7,6 +7,7 @@
 import k from '../data/kontakt.json';
 import firma from '../data/firma.json';
 import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
 
 const mail = firma.email.toLowerCase();
 const cyfry = firma.telefon.replace(/\D/g, '');
@@ -121,7 +122,7 @@ const b = k.bledy as Record<string, string>;
       <input type="checkbox" name="zgoda" value="tak" required />
       <span>{tekst(k.zgodaEtykieta, 'Zgadzam się na przetwarzanie moich danych z formularza w celu odpowiedzi na zapytanie.')}</span>
     </label>
-    <p class="zgoda__info">{podstaw(k.zgodaInformacja)}</p>
+    <p class="zgoda__info">{kawalki(podstaw(k.zgodaInformacja)).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
   </div>
 
   {sitekey && (
@@ -187,6 +188,8 @@ const b = k.bledy as Record<string, string>;
   .zgoda__pole { display: flex; gap: var(--o-3); align-items: flex-start; font-weight: 600; cursor: pointer; }
   .zgoda__pole input { width: 24px; height: 24px; margin: 0; flex: 0 0 auto; accent-color: var(--akcent); }
   .zgoda__info { margin: var(--o-2) 0 0 calc(24px + var(--o-3)); font-size: var(--t-xs); line-height: 1.5; color: var(--tekst-cichy); }
+  /* Odnośnik do polityki prywatności w zdaniu: podkreślony (PSI link-in-text-block, D20). */
+  .zgoda__info a { font-weight: 600; text-decoration: underline; text-underline-offset: 0.15em; }
 
   /* Widżet `flexible` ma 65 px: miejsce zarezerwowane, render przy przewinięciu nie przesuwa przycisku (CLS). */
   #formularz-turnstile { min-height: 65px; max-width: 30rem; }

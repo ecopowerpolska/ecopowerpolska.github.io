@@ -113,7 +113,7 @@
   "wiadomoscEtykieta": "Wiadomość",
   "wiadomoscPodpowiedz": "Nieobowiązkowa, gdy zaznaczyłeś coś wyżej albo dołączyłeś wyliczenie.",
   "zgodaEtykieta": "Zgadzam się na przetwarzanie moich danych z formularza w celu odpowiedzi na zapytanie.",
-  "zgodaInformacja": "Administratorem danych jest {nazwa}, {adres}. Dane z formularza wykorzystujemy tylko do odpowiedzi na zapytanie i przygotowania oferty (art. 6 ust. 1 lit. b RODO). Masz prawo dostępu do danych, ich poprawienia i usunięcia oraz skargi do Prezesa UODO. Formularz chroni Cloudflare Turnstile, który sprawdza, że wysyła człowiek. Napisz na {email}, jeśli chcesz, żebyśmy usunęli Twoje dane.",
+  "zgodaInformacja": "Administratorem danych jest {nazwa}, {adres}. Dane z formularza wykorzystujemy tylko do odpowiedzi na zapytanie i przygotowania oferty (art. 6 ust. 1 lit. b RODO). Masz prawo dostępu do danych, ich poprawienia i usunięcia oraz skargi do Prezesa UODO. Formularz chroni Cloudflare Turnstile, który sprawdza, że wysyła człowiek. Napisz na {email}, jeśli chcesz, żebyśmy usunęli Twoje dane. Szczegóły są w [polityce prywatności](/polityka-prywatnosci/).",
   "turnstileCzekaj": "Sprawdzamy, że wysyła człowiek. Jeśli pojawi się ramka do zaznaczenia, kliknij ją.",
   "wyslij": "Wyślij zapytanie",
   "bezJs": "Formularz potrzebuje włączonego JavaScriptu. Możesz też napisać na {email} albo zadzwonić: {telefon}.",

@@ -1,0 +1,193 @@
+{
+  "tytulKarty": "Polityka prywatności — EcoPower Polska",
+  "opisWyszukiwarki": "Kto przetwarza dane z formularza strony ecopowerpolska.pl, w jakim celu i jak długo, komu je przekazujemy i jakie masz prawa.",
+  "naglowek": "Polityka prywatności",
+  "okruszek": "Polityka prywatności",
+  "lead": "Ta polityka opisuje, jakie dane zbiera strona www.ecopowerpolska.pl, po co je zbiera i jak długo je przechowujemy. Strona nie zapisuje ciasteczek i nie ma statystyk odwiedzin ani reklam.",
+  "sekcje": [
+    {
+      "id": "administrator",
+      "naglowek": "Administrator danych",
+      "akapity": [
+        "Administratorem danych osobowych zbieranych przez tę stronę jest:"
+      ],
+      "lista": [
+        "{nazwa}",
+        "{adres}",
+        "NIP: {nip}",
+        "KRS: {krs}",
+        "REGON: {regon}",
+        "e-mail: {email}",
+        "telefon: {telefon}"
+      ]
+    },
+    {
+      "id": "inspektor",
+      "naglowek": "Inspektor ochrony danych",
+      "akapity": [
+        "Administrator nie wyznaczył inspektora ochrony danych. W sprawach danych osobowych napisz na adres {email}."
+      ]
+    },
+    {
+      "id": "zakres",
+      "naglowek": "Czego dotyczy ta polityka",
+      "akapity": [
+        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/) i testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/).",
+        "Strona nie prowadzi sprzedaży, nie zakłada kont, nie wysyła newslettera i nie pokazuje reklam."
+      ]
+    },
+    {
+      "id": "formularz",
+      "naglowek": "Dane z formularza kontaktowego",
+      "akapity": [
+        "Formularz zbiera imię, adres e-mail i treść wiadomości. Numer telefonu, porę, o której wolisz rozmowę, i adres obecnej strony podajesz, jeśli chcesz.",
+        "Możesz też zaznaczyć, czego potrzebujesz, i wybrać platformę sklepu.",
+        "Jeśli dodasz wyliczenia z kalkulatora, formularz wyśle też wybrane w nich pozycje i wyliczone kwoty.",
+        "Formularz nie przyjmuje załączników.",
+        "Strona stoi na GitHub Pages, gdzie nie działają skrypty serwera. Wiadomość wysyła więc skrypt na naszym koncie w LH.pl, pod adresem pan-stolarz.pl/formularz/ecopower/. Ta domena należy do tego samego administratora. Wiadomość trafia na skrzynkę {email}. Nie korzystamy z zewnętrznych usług formularzy.",
+        "Dane służą nam do tego, żeby odpowiedzieć na zapytanie i przygotować wycenę.",
+        "Razem z wiadomością zapisujemy adres IP, z którego ją wysłano, oraz datę i godzinę wysłania. Pomaga to rozpoznać nadużycia. Te informacje usuwamy razem z wiadomością.",
+        "Gdy wysłanie wiadomości się nie uda, serwer zapisuje w dzienniku datę i adres e-mail, żebyśmy mogli odpisać. Ten wpis usuwamy po obsłudze zapytania.",
+        "Formularz ma ukryte pole-pułapkę, sprawdza czas wypełnienia i korzysta z ochrony Cloudflare Turnstile, żeby odsiać automaty. Turnstile opisujemy niżej. Nie używamy reCAPTCHA.",
+        "Zaznaczenie pola pod formularzem potwierdza, że znasz te zasady. Podstawą przetwarzania danych z formularza nie jest zgoda, tylko przepisy wymienione w części o celach i podstawach."
+      ]
+    },
+    {
+      "id": "ochrona-formularza",
+      "naglowek": "Ochrona formularza przed automatami: Cloudflare Turnstile",
+      "akapity": [
+        "Formularz chroni usługa Cloudflare Turnstile. Sprawdza ona, czy formularz wypełnia człowiek, a nie program rozsyłający spam. Zwykle odbywa się to bez żadnego zadania do wykonania.",
+        "Skrypt Turnstile ładuje się z serwerów Cloudflare (challenges.cloudflare.com) tylko na podstronie Kontakt, gdy formularz pojawi się na ekranie albo gdy klikniesz w jego pole. Do sprawdzenia Cloudflare przetwarza adres IP oraz techniczne informacje o przeglądarce i połączeniu.",
+        "Przy wysłaniu formularza nasz serwer przekazuje do Cloudflare jednorazowy token wydany przez widget oraz adres IP nadawcy, a Cloudflare odpowiada, czy sprawdzenie się powiodło. W tym zapytaniu nie przekazujemy imienia, adresu e-mail, numeru telefonu ani treści wiadomości.",
+        "Dostawcą usługi jest Cloudflare, Inc. z siedzibą w Stanach Zjednoczonych, działający na nasze zlecenie jako podmiot przetwarzający. Podstawą prawną jest art. 6 ust. 1 lit. f RODO, czyli prawnie uzasadniony interes w ochronie formularza i skrzynki przed spamem i nadużyciami.",
+        "Widget działa w osobnej ramce z domeny challenges.cloudflare.com. To, co zapisuje w tej ramce, należy do Cloudflare i nie jest ciasteczkiem strony ecopowerpolska.pl.",
+        "Jeżeli sprawdzenie się nie powiedzie albo nie chcesz korzystać z formularza, napisz bezpośrednio na adres {email} albo zadzwoń: {telefon}."
+      ]
+    },
+    {
+      "id": "podstawa",
+      "naglowek": "Cel i podstawa prawna",
+      "lista": [
+        "odpowiedź na zapytanie i przygotowanie wyceny, czyli działania na Twoje żądanie przed zawarciem umowy: art. 6 ust. 1 lit. b RODO",
+        "zawarcie i wykonanie umowy, jeśli zamówisz stronę, sklep albo opiekę nad stroną: art. 6 ust. 1 lit. b RODO",
+        "prowadzenie korespondencji, ochrona formularza przed nadużyciami, bezpieczeństwo serwera oraz ustalenie i dochodzenie roszczeń: art. 6 ust. 1 lit. f RODO, czyli prawnie uzasadniony interes administratora",
+        "przechowywanie dokumentów rozliczeniowych wymaganych przepisami podatkowymi: art. 6 ust. 1 lit. c RODO"
+      ]
+    },
+    {
+      "id": "ciasteczka",
+      "naglowek": "Ciasteczka i pamięć przeglądarki",
+      "akapity": [
+        "Strona nie zapisuje ciasteczek i nie ma statystyk odwiedzin, dlatego nie pokazuje paska zgody.",
+        "Kalkulator w cenniku i formularz korzystają z pamięci sesji przeglądarki (sessionStorage), nie z ciasteczek. Wpis ep.wyceny pamięta do pięciu wyliczeń, które dodajesz do zapytania. Wpis ep.szkic pamięta pola wpisane w formularz, gdy przechodzisz do kalkulatora i wracasz.",
+        "Te dane zostają w Twojej przeglądarce i znikają po zamknięciu karty albo po wysłaniu zapytania. Do nas trafiają dopiero po kliknięciu „Wyślij zapytanie”."
+      ]
+    },
+    {
+      "id": "test-szybkosci",
+      "naglowek": "Test szybkości strony: Google PageSpeed Insights",
+      "akapity": [
+        "Na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/) możesz wpisać adres dowolnej strony. Po kliknięciu przycisku Twoja przeglądarka otwiera w nowej karcie raport Google PageSpeed Insights dla tego adresu.",
+        "Pomiar wykonuje Google. Wpisany adres strony i Twój adres IP trafiają wtedy do Google na jego zasadach. My tego adresu nie otrzymujemy i nie zapisujemy.",
+        "Bez wpisania adresu i kliknięcia przycisku do Google nic nie trafia."
+      ]
+    },
+    {
+      "id": "zasoby-zewnetrzne",
+      "naglowek": "Czcionki i zasoby zewnętrzne",
+      "akapity": [
+        "Czcionki, zdjęcia i skrypty strony ładują się z jej serwera. Jedynym wyjątkiem jest skrypt Turnstile na podstronie Kontakt, opisany wyżej.",
+        "Odnośnik „Udostępnij na Facebooku” pod wpisami bloga to zwykły link. Facebook dostaje dane dopiero wtedy, gdy go klikniesz. Strona nie ładuje skryptów Facebooka.",
+        "Strona nie osadza map, filmów ani przycisków serwisów społecznościowych."
+      ]
+    },
+    {
+      "id": "hosting",
+      "naglowek": "Hosting i logi serwera",
+      "akapity": [
+        "Strona działa na GitHub Pages, usłudze GitHub, Inc. z siedzibą w Stanach Zjednoczonych. GitHub zapisuje adres IP odwiedzających stronę w celach bezpieczeństwa.",
+        "Skrypt formularza i skrzynka pocztowa działają na serwerach LH.pl Sp. z o.o. Ta firma przetwarza dane na zlecenie administratora, jako podmiot przetwarzający. Serwer zapisuje standardowe logi połączeń: adres IP, datę i godzinę, adres pobranego pliku oraz informacje o przeglądarce i błędach.",
+        "Logi służą bezpieczeństwu i utrzymaniu serwera. Podstawą jest art. 6 ust. 1 lit. f RODO. Okres przechowywania logów wynika z zasad dostawców hostingu."
+      ]
+    },
+    {
+      "id": "odbiorcy",
+      "naglowek": "Komu przekazujemy dane",
+      "akapity": [
+        "Danych nie sprzedajemy i nie przekazujemy w celach marketingowych. Trafiają wyłącznie do odbiorców wymienionych niżej."
+      ],
+      "lista": [
+        "GitHub, Inc.: hosting strony (adres IP i informacje techniczne o przeglądarce)",
+        "LH.pl Sp. z o.o.: skrypt formularza i poczta, na którą trafiają wiadomości z formularza",
+        "Cloudflare, Inc.: ochrona formularza kontaktowego usługą Turnstile (adres IP i informacje techniczne o przeglądarce)",
+        "osoby upoważnione przez administratora, które obsługują zapytania",
+        "biuro rachunkowe i doradca prawny administratora, gdy dojdzie do umowy, w zakresie potrzebnym do rozliczenia i obrony przed roszczeniami",
+        "organy publiczne, gdy wymaga tego przepis prawa"
+      ],
+      "akapityPo": [
+        "Poza Europejski Obszar Gospodarczy dane trafiają do GitHub, Inc. w USA przy odwiedzinach strony i do Cloudflare, Inc. w USA przy sprawdzeniu Turnstile. Przekazywanie danych do Cloudflare odbywa się na podstawie standardowych klauzul umownych zatwierdzonych przez Komisję Europejską, które są częścią umowy powierzenia przetwarzania danych Cloudflare.",
+        "Google nie jest naszym odbiorcą danych. Dane trafiają do Google tylko wtedy, gdy sam uruchomisz test szybkości strony."
+      ]
+    },
+    {
+      "id": "okresy",
+      "naglowek": "Jak długo przechowujemy dane",
+      "lista": [
+        "wiadomości z formularza: przez czas obsługi zapytania, a jeśli nie dojdzie do umowy, do 12 miesięcy od ostatniego kontaktu",
+        "wpis w dzienniku nieudanych wysyłek formularza: do obsługi zapytania",
+        "dane osób, które zamówiły usługę: przez czas wykonania umowy, okres przedawnienia roszczeń i okres wymagany przepisami podatkowymi",
+        "logi serwera: przez okres wynikający z zasad dostawców hostingu",
+        "pamięć sesji przeglądarki: wyliczenia i dane z formularza do zamknięcia karty albo wysłania zapytania"
+      ]
+    },
+    {
+      "id": "prawa",
+      "naglowek": "Twoje prawa",
+      "akapity": [
+        "W związku z przetwarzaniem danych masz prawo do:"
+      ],
+      "lista": [
+        "dostępu do danych i otrzymania ich kopii",
+        "sprostowania danych nieprawidłowych lub niepełnych",
+        "usunięcia danych, gdy nie są już potrzebne do celu, w którym je zebraliśmy",
+        "ograniczenia przetwarzania",
+        "sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie administratora",
+        "przeniesienia danych przetwarzanych w związku z umową",
+        "wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa"
+      ]
+    },
+    {
+      "id": "jak-skorzystac-z-praw",
+      "naglowek": "Jak skorzystać ze swoich praw",
+      "akapity": [
+        "Napisz na adres {email} i opisz, czego dotyczy żądanie. Jeśli nie będziemy mogli Cię rozpoznać, poprosimy o dodatkowe informacje.",
+        "Odpowiadamy bez zbędnej zwłoki, najpóźniej w ciągu miesiąca od otrzymania żądania. W sprawach złożonych termin może się wydłużyć, o czym Cię poinformujemy."
+      ],
+      "przycisk": "Napisz w sprawie swoich danych"
+    },
+    {
+      "id": "dobrowolnosc",
+      "naglowek": "Czy musisz podać dane",
+      "akapity": [
+        "Podanie danych jest dobrowolne. Imię i adres e-mail są potrzebne, żebyśmy mogli odpowiedzieć. Bez nich formularz się nie wyśle.",
+        "Treść wiadomości jest potrzebna, chyba że zaznaczysz, czego potrzebujesz, albo dołączysz wyliczenie z kalkulatora.",
+        "Numer telefonu podajesz według uznania, na przykład gdy wolisz rozmowę."
+      ]
+    },
+    {
+      "id": "profilowanie",
+      "naglowek": "Decyzje automatyczne",
+      "akapity": [
+        "Nie podejmujemy decyzji w sposób zautomatyzowany i nie profilujemy osób, które do nas piszą."
+      ]
+    },
+    {
+      "id": "zmiany",
+      "naglowek": "Zmiany polityki",
+      "akapity": [
+        "Politykę zmieniamy, gdy zmienia się działanie strony albo przepisy. Aktualna wersja jest zawsze pod tym adresem.",
+        "Ta wersja obowiązuje od 27 października 2026."
+      ]
+    }
+  ]
+}

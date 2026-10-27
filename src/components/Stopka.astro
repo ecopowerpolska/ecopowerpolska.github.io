@@ -22,6 +22,8 @@ const etykietaEmail = tekst(napisyStopki.etykietaEmail, 'E-mail:');
 const etykietaAdres = tekst(napisyStopki.etykietaAdres, 'Adres:');
 const etykietaTelefon = tekst(napisyStopki.etykietaTelefon, 'Telefon:');
 const guzikKopiujWszystko = tekst(napisyStopki.guzikKopiujWszystko, 'Skopiuj dane spółki');
+// Odnośnik do /polityka-prywatnosci/ w menu stopki (runda 6, D20).
+const linkPolityki = tekst(napisyStopki.linkPolityki, 'Polityka prywatności');
 
 // Nazwa rzeczy kopiowanej guzikiem zbiorczym, do komunikatu dla czytnika ekranu
 // („Skopiowano: dane spółki."). Liczona Z NAPISU Z PANELU, nie wpisana w skrypcie:
@@ -77,6 +79,7 @@ const daneSpolki = [
         <li><a href="/faq/">{tekst(blog.menuFaq, 'FAQ')}</a></li>
         <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
         <li><a href="/kontakt/">{tekst(blog.menuKontakt, 'Kontakt')}</a></li>
+        <li><a href="/polityka-prywatnosci/">{linkPolityki}</a></li>
       </ul>
     </nav>
 

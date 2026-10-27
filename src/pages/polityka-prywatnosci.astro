@@ -1,0 +1,252 @@
+---
+// /polityka-prywatnosci — polityka prywatności (runda 6, 2026-10-27, D20). Wzór: pan-stolarz.pl (ta sama spółka),
+// fakty tej witryny: GitHub Pages, handler formularza na lh.pl, Turnstile, sessionStorage ep.wyceny/ep.szkic, test PSI.
+// Treść: src/data/polityka.json (panel: „Polityka prywatności”). W tekście: [kotwica](/trasa/) = link,
+// {nazwa} {adres} {nip} {krs} {regon} {email} {telefon} = dane z firma.json. 0 kB JS.
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import firma from '../data/firma.json';
+import blog from '../data/blog.json';
+import dane from '../data/polityka.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+
+const TRASA = '/polityka-prywatnosci/';
+const d = dane as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+const lista = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+const teksty = (v: unknown): string[] => lista(v).map(naTekst).filter(Boolean);
+
+const mail = firma.email.toLowerCase();
+const cyfry = firma.telefon.replace(/\D/g, '');
+const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : firma.telefon;
+const podstaw = (s: string) =>
+  s
+    .replaceAll('{nazwa}', tekst(firma.nazwaStopka, firma.nazwaPelna))
+    .replaceAll('{adres}', `${firma.adresSiedziby}, ${firma.kodPocztowy} ${firma.miejscowosc}`)
+    .replaceAll('{nip}', firma.nip)
+    .replaceAll('{krs}', firma.krs)
+    .replaceAll('{regon}', firma.regon)
+    .replaceAll('{email}', mail)
+    .replaceAll('{telefon}', telefon);
+const czesci = (t: string) => kawalki(podstaw(t));
+
+const naglowek = tekst(naTekst(d.naglowek), 'Polityka prywatności');
+const tytul = tekst(naTekst(d.tytulKarty), 'Polityka prywatności — EcoPower Polska');
+const opis = tekst(
+  naTekst(d.opisWyszukiwarki),
+  'Kto przetwarza dane z formularza strony ecopowerpolska.pl, w jakim celu i jak długo, komu je przekazujemy i jakie masz prawa.',
+);
+const lead = naTekst(d.lead);
+const sekcje = (lista(d.sekcje) as Record<string, unknown>[])
+  .map((s) => ({
+    id: naTekst(s?.id),
+    naglowek: naTekst(s?.naglowek),
+    akapity: teksty(s?.akapity),
+    lista: teksty(s?.lista),
+    akapityPo: teksty(s?.akapityPo),
+    przycisk: naTekst(s?.przycisk),
+  }))
+  .filter((s) => s.naglowek);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(TRASA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: tekst(naTekst(d.okruszek), naglowek), adres: TRASA },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="polityka">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="polityka__tytul">{naglowek}</h1>
+    {lead && <p class="polityka__lead">{podstaw(lead)}</p>}
+
+    <div class="tresc">
+      {sekcje.map((s) => (
+        <section id={s.id || undefined} aria-labelledby={s.id ? `${s.id}-tytul` : undefined}>
+          <h2 id={s.id ? `${s.id}-tytul` : undefined}>{s.naglowek}</h2>
+          {s.akapity.map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
+          {s.lista.length > 0 && (
+            <ul>
+              {s.lista.map((p) => <li>{czesci(p).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</li>)}
+            </ul>
+          )}
+          {s.akapityPo.map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
+          {s.przycisk && (
+            <p class="polityka__przycisk">
+              <a href={`mailto:${mail}`}>{s.przycisk}</a>
+            </p>
+          )}
+        </section>
+      ))}
+    </div>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .polityka {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/, /faq/ i /jak-sprawdzic-szybkosc-strony/ (jedna linia, D14). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .polityka__tytul,
+  .polityka__lead,
+  .tresc {
+    max-width: 44rem;
+  }
+
+  .polityka__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .polityka__lead {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .tresc h2 {
+    font-size: var(--t-xl);
+    line-height: 1.2;
+    margin: var(--o-12) 0 var(--o-3);
+  }
+
+  /* Kotwica #sekcja nie chowa nagłówka pod przyklejonym paskiem. */
+  .tresc section {
+    scroll-margin-top: 6rem;
+  }
+
+  .tresc p {
+    margin: 0 0 var(--o-4);
+    line-height: 1.6;
+  }
+
+  .tresc ul {
+    margin: 0 0 var(--o-4);
+    padding-left: 1.25rem;
+    line-height: 1.6;
+  }
+
+  .tresc li + li {
+    margin-top: var(--o-1);
+  }
+
+  /* Link w zdaniu różni się nie tylko kolorem (PSI link-in-text-block, runda 5). */
+  .tresc a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .polityka__przycisk a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    color: var(--tlo);
+    background: var(--akcent);
+    border-radius: var(--promien-maly);
+    text-decoration: none;
+  }
+
+  .polityka__przycisk a:hover {
+    background: var(--tekst);
+  }
+
+  .polityka__przycisk a:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
+  }
+</style>

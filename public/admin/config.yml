@@ -787,7 +787,7 @@ collections:
           - { name: wiadomoscEtykieta, label: "Etykieta: wiadomość", widget: string, required: false }
           - { name: wiadomoscPodpowiedz, label: "Podpowiedź pod wiadomością", widget: string, required: false }
           - { name: zgodaEtykieta, label: "Zgoda RODO: napis przy polu", widget: text, required: false }
-          - { name: zgodaInformacja, label: "Zgoda RODO: informacja o danych", widget: text, required: false, hint: "Wstawki {nazwa}, {adres}, {email} wypełnia strona z danych firmy" }
+          - { name: zgodaInformacja, label: "Zgoda RODO: informacja o danych", widget: text, required: false, hint: "Wstawki {nazwa}, {adres}, {email} wypełnia strona z danych firmy; [tekst](/polityka-prywatnosci/) = odnośnik" }
           - { name: turnstileCzekaj, label: "Komunikat: czekamy na Turnstile", widget: text, required: false }
           - { name: wyslij, label: "Przycisk wysyłki", widget: string, required: false }
           - { name: bezJs, label: "Zdanie bez JavaScriptu", widget: text, required: false, hint: "Wstawki {email}, {telefon}" }
@@ -1043,6 +1043,14 @@ collections:
               Widoczny rzadko — przeglądarka potrafi odmówić dostępu do schowka. Puste
               pole = wraca napis domyślny: Nie udało się skopiować.
 
+          - name: linkPolityki
+            label: "Napis odnośnika do polityki prywatności"
+            widget: string
+            required: false
+            hint: >-
+              Odnośnik w menu stopki prowadzi do /polityka-prywatnosci/. Puste pole = wraca
+              napis domyślny: Polityka prywatności.
+
       # ---- blog i menu ----
       - name: blog
         label: "Blog i menu"
@@ -1224,6 +1232,38 @@ collections:
         label: "Prowadzenie strony (/prowadzenie-strony-internetowej/)"
         file: "src/data/uslugi/prowadzenie-strony-internetowej.json"
         fields: *pola_uslugi
+
+  # Kolekcja „Polityka prywatności” (runda 6, 2026-10-27, D20): treść /polityka-prywatnosci/.
+  - name: polityka
+    label: "Polityka prywatności"
+    files:
+      - name: polityka
+        label: "Polityka prywatności (/polityka-prywatnosci/)"
+        file: "src/data/polityka.json"
+        description: >-
+          Opis tego, co strona naprawdę robi z danymi. Zmieniaj przy każdej zmianie formularza,
+          hostingu albo usług zewnętrznych i dopisz datę w sekcji Zmiany polityki. W tekście:
+          [tekst](/trasa/) = odnośnik; {nazwa}, {adres}, {nip}, {krs}, {regon}, {email}, {telefon}
+          wypełnia strona z Danych firmy.
+        fields:
+          - { name: tytulKarty, label: "Tytuł karty (do 60 znaków)", widget: string }
+          - { name: opisWyszukiwarki, label: "Opis w Google (do 155 znaków)", widget: text }
+          - { name: naglowek, label: "Nagłówek H1", widget: string }
+          - { name: okruszek, label: "Nazwa w okruszkach", widget: string }
+          - { name: lead, label: "Wstęp pod nagłówkiem", widget: text, required: false }
+          - name: sekcje
+            label: "Sekcje"
+            label_singular: "Sekcja"
+            widget: list
+            collapsed: true
+            summary: "{{fields.naglowek}}"
+            fields:
+              - { name: id, label: "Kotwica (bez polskich znaków)", widget: string }
+              - { name: naglowek, label: "Nagłówek H2", widget: string }
+              - { name: akapity, label: "Akapity", widget: list, required: false, field: { name: akapit, label: "Akapit", widget: text } }
+              - { name: lista, label: "Lista punktów", widget: list, required: false, field: { name: punkt, label: "Punkt", widget: text } }
+              - { name: akapityPo, label: "Akapity pod listą", widget: list, required: false, field: { name: akapit, label: "Akapit", widget: text } }
+              - { name: przycisk, label: "Przycisk e-mail (opcjonalnie)", widget: string, required: false, hint: "Napis przycisku otwierającego list na adres z Danych firmy. Puste = bez przycisku." }
 
   # ── ④ DANE FIRMY ────────────────────────────────────────────────────────────
   - name: firma

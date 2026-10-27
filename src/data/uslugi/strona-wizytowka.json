@@ -43,7 +43,7 @@
         "Dane firmy: pełna nazwa, adres, NIP, telefon i e-mail, te same na stronie, w stopce i w danych strukturalnych dla Google.",
         "Formularz kontaktowy w PHP z ochroną Cloudflare Turnstile, bez przepisywania liter z obrazka.",
         "Odnośnik do Map Google zamiast osadzonej mapy, więc strona nie ładuje skryptów Map Google przy każdym wejściu.",
-        "Politykę prywatności, która opisuje to, co strona naprawdę robi z danymi z formularza.",
+        "[Politykę prywatności](/polityka-prywatnosci/), która opisuje to, co strona naprawdę robi z danymi z formularza.",
         "Tytuł i opis dla wyszukiwarki, mapę strony i zgłoszenie w Google Search Console."
       ]
     },

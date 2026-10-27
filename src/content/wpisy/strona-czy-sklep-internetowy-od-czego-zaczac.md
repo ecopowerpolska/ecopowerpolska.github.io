@@ -1,6 +1,6 @@
 ---
 tytul: "Strona czy sklep internetowy — od czego zacząć?"
-tytulSeo: "Strona czy sklep internetowy? — EcoPower Polska"
+tytulSeo: "Strona czy sklep internetowy — od czego zacząć?"
 opisSeo: "Strona firmowa czy sklep internetowy? Jak ustalamy, co strona ma robić, która z trzech dróg sklepu pasuje do firmy i gdzie stanie strona."
 dataPublikacji: "2026-10-23T09:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg"
@@ -32,7 +32,7 @@ Strona firmowa może też pomóc klientowi oszacować koszt, zanim zapyta. Stron
 
 ![Strona główna szafy-na-wymiar-warszawa.pl: nagłówek o szafach na wymiar, zdjęcie sypialni z szafą do sufitu i przycisk ceny szafy](../../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg "Szafy na wymiar Warszawa: przycisk „Policz orientacyjną cenę szafy” prowadzi do kalkulatora, nie do koszyka.")
 
-Więcej przykładów jest w sekcji [realizacje stron i sklepów](/#realizacje).
+Więcej przykładów jest w sekcji [realizacje stron i sklepów](/#realizacje). Jeśli wystarczy Ci jedna strona z ofertą i kontaktem, zobacz, co zawiera [strona wizytówka dla małej firmy](/strona-wizytowka/).
 
 ## Kiedy potrzebny jest sklep internetowy?
 
@@ -48,7 +48,7 @@ Mamy trzy drogi i wybieramy jedną po rozmowie. Każda pasuje do innej skali spr
 2. **Katalog w Astro z płatnością przez Stripe Checkout** — gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu.
 3. **Katalog w Astro z własnym koszykiem w PHP** — gdy chcesz polskiego operatora płatności z BLIK-iem.
 
-Pierwsza droga daje pełny panel sklepu, ale wymaga obsługi. Druga pasuje do krótkiej oferty bez panelu sklepu. Trzecia łączy szybki katalog w Astro z płatnością BLIK-iem przez polskiego operatora. Przy każdym sklepie bazę zamówień kopiujemy także poza hosting. Szczegóły są w odpowiedzi na pytanie [jaki sklep internetowy możemy zrobić](/faq/#sklep).
+Pierwsza droga daje pełny panel sklepu, ale wymaga obsługi. Druga pasuje do krótkiej oferty bez panelu sklepu. Trzecia łączy szybki katalog w Astro z płatnością BLIK-iem przez polskiego operatora. Przy każdym sklepie bazę zamówień kopiujemy także poza hosting. Szczegóły są w odpowiedzi na pytanie [jaki sklep internetowy możemy zrobić](/faq/#sklep), a porównanie dróg, także platformy abonamentowej, na stronie [tworzenie sklepów internetowych](/sklepy-internetowe-warszawa/).
 
 ## Gdzie stanie strona albo sklep?
 

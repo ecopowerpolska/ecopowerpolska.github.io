@@ -1,0 +1,175 @@
+{
+  "tytulKarty": "Tworzenie stron internetowych Warszawa — EcoPower Polska",
+  "opisWyszukiwarki": "Tworzymy strony internetowe dla firm z Warszawy: projekt, treść, panel do edycji i hosting. Strony w Astro z wynikiem 97–100 w PageSpeed.",
+  "naglowek": "Tworzenie stron internetowych dla firm w Warszawie",
+  "okruszek": "Strony internetowe",
+  "lead": "Budujemy strony internetowe dla firm z Warszawy: od ustalenia zakresu i tekstów po panel do edycji, hosting i zgłoszenie w Google. Strony stawiamy w Astro jako gotowe pliki, więc otwierają się szybko także na telefonie. Nasze realizacje mają w PageSpeed Insights na telefonie od 97 do 100 punktów wydajności.",
+  "uslugaNazwa": "Tworzenie stron internetowych dla firm w Warszawie",
+  "uslugaTyp": "Tworzenie stron internetowych",
+  "uslugaOpis": "Projekt, treść, panel do edycji, hosting i widoczność w Google. Strony budowane w Astro, mierzone w PageSpeed Insights po publikacji.",
+  "cenaOdPozycja": "Wizytówka, strona jednostronicowa",
+  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajesz": [
+    "Stronę zaprojektowaną pod Twoje usługi: oferta, realizacje, dane firmy i formularz tam, gdzie klient ich szuka.",
+    "Teksty napisane z Twoich informacji i prawdziwe zdjęcia realizacji, bez obrazów z generatora.",
+    "Panel do edycji treści pod adresem /admin/: teksty, zdjęcia, wpisy i dane firmy zmieniasz sam.",
+    "Formularz kontaktowy w PHP chroniony przez Cloudflare Turnstile, z wiadomościami na Twój adres.",
+    "Hosting w osobnej przestrzeni na lh.pl albo bezpłatne GitHub Pages dla wizytówki bez sprzedaży.",
+    "Domenę podpiętą bez utraty poczty i przekierowania 301 ze starej strony.",
+    "Zgłoszenie w Google Search Console i w Bing, mapę strony i dane firmy w danych strukturalnych.",
+    "Własne repozytorium kodu z historią każdej zmiany i pomiar PageSpeed Insights po publikacji."
+  ],
+  "sekcje": [
+    {
+      "id": "jaka-strona",
+      "naglowek": "Jaką stronę internetową zrobimy dla Twojej firmy",
+      "akapity": [
+        "Zaczynamy od pytania, co strona ma robić: pokazać usługi, zebrać zapytania czy sprzedawać. Od odpowiedzi zależy wielkość strony, hosting i rodzaj panelu. Najczęściej robimy jedną z trzech stron."
+      ],
+      "lista": [
+        "Wizytówka: jedna strona albo dwie, trzy podstrony z ofertą, danymi firmy i formularzem. Wystarczy firmie, która zaczyna albo ma jedną usługę. Opisujemy ją osobno: [strona wizytówka dla małej firmy](/strona-wizytowka/).",
+        "Strona firmowa: zwykle od 5 do 10 podstron, czyli oferta, galeria realizacji, blog, pytania i formularz, do tego panel do edycji treści. Tak zbudowaliśmy strony Nadi Home i Studio Agat.",
+        "Strona rozbudowana: indywidualny projekt graficzny, integracje, na przykład z systemem rezerwacji, wiele usług albo kalkulatory cen. Strona Pan Stolarz ma trzy kalkulatory: kuchni, szaf i garderób."
+      ],
+      "akapityPo": [
+        "Jeśli strona ma przyjmować zamówienia i płatności, potrzebujesz sklepu. Tę drogę opisujemy na stronie o tym, jak robimy [tworzenie sklepów internetowych](/sklepy-internetowe-warszawa/)."
+      ]
+    },
+    {
+      "id": "ile-trwa",
+      "naglowek": "Ile trwa zrobienie strony internetowej",
+      "akapity": [
+        "Termin podajemy po rozmowie o zakresie, bo zależy od liczby podstron, formularzy, sklepu i przenoszenia treści ze starej strony. Inaczej liczy się wizytówkę z jednym formularzem, a inaczej stronę z kalkulatorem i blogiem.",
+        "Najdłużej trwa zwykle zebranie materiałów: opisu usług, zdjęć, logo i danych firmy. Im szybciej je dostaniemy, tym szybciej strona będzie gotowa. Teksty możemy napisać sami na podstawie Twoich informacji.",
+        "Nowa strona powstaje obok starej, pod adresem roboczym. Obecna strona działa przez cały czas budowy i klienci nadal ją widzą. Etapy i to, co zostaje u Ciebie po publikacji, opisujemy we wpisie [ile trwa budowa strony i co dostajesz](/blog/ile-trwa-budowa-strony-i-co-dostajesz/)."
+      ]
+    },
+    {
+      "id": "astro",
+      "naglowek": "Dlaczego budujemy strony w Astro i co to daje w Google",
+      "akapity": [
+        "Astro składa stronę raz, w chwili publikacji. Do przeglądarki trafiają gotowe pliki HTML, a nie strona składana z bazy danych przy każdym wejściu. Serwer nie ma nic do liczenia, więc odpowiada od razu.",
+        "Na stronie nie ma zbędnego JavaScriptu. Zdjęcia przygotowujemy w kilku rozmiarach, więc telefon pobiera mniejszy plik niż monitor. Każde zdjęcie ma z góry zarezerwowane miejsce, dlatego tekst nie ucieka spod palca w czasie ładowania.",
+        "Google ocenia wygodę strony wskaźnikami Core Web Vitals: czasem pokazania największego elementu, reakcją na dotyk i przesunięciami układu. Gotowy HTML pomaga we wszystkich trzech, a robot wyszukiwarki dostaje pełną treść bez czekania na skrypty.",
+        "Każdą stronę mierzymy po publikacji w PageSpeed Insights, osobno na telefonie i na komputerze. Ten sam test zrobisz w minutę: [sprawdź szybkość swojej strony](/jak-sprawdzic-szybkosc-strony/).",
+        "Przenosimy też strony z WordPressa na Astro. Tak było z Nadi Home, Studio Agat i Pan Wylewka. Stare adresy przekierowaliśmy na nowe przekierowaniem 301, więc dawne linki i wyniki w Google prowadzą na właściwe podstrony."
+      ]
+    },
+    {
+      "id": "panel",
+      "naglowek": "Panel do edycji treści: zmienisz tekst i zdjęcia sam",
+      "akapity": [
+        "Strona dostaje panel pod adresem /admin/. Zmieniasz w nim teksty, zdjęcia, wpisy na blogu i dane firmy, bez pisania kodu i bez dzwonienia do nas.",
+        "Mamy dwa rodzaje panelu. Panel Sveltia zapisuje zmiany w repozytorium strony, a strona przebudowuje się sama w ciągu kilku minut; tak działa ta strona i strona Nadi Home. Panel w PHP stoi na hostingu i logujesz się do niego hasłem, bez konta na GitHubie; taki panel ma Studio Agat.",
+        "Wyczyszczone pole przywraca napis domyślny, więc strona nie zostanie bez nagłówka. Każda zmiana z panelu jest w repozytorium osobnym wpisem, który da się cofnąć. Jak wygląda praca w panelu, pokazujemy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/)."
+      ]
+    },
+    {
+      "id": "hosting",
+      "naglowek": "Hosting, domena i poczta bez przerwy w działaniu",
+      "akapity": [
+        "Strona z formularzem, sprzedażą albo rezerwacjami stoi na hostingu lh.pl. Każda dostaje osobną przestrzeń z oddzielonym katalogiem i własną wersją PHP, więc nie dzieli miejsca z innymi stronami. Stronę buduje GitHub Actions, a na hosting trafiają gotowe pliki.",
+        "Wizytówka bez sprzedaży, rezerwacji i płatności może stać na GitHub Pages bez opłat za hosting. Tak działa ta strona.",
+        "Domena zostaje u Twojego rejestratora. Przed przepięciem zapisujemy komplet rekordów DNS jako punkt powrotu i zmieniamy tylko rekordy adresowe strony. Rekordy poczty zostają bez zmian, a pracę kończymy dopiero wtedy, gdy list testowy dochodzi w obie strony.",
+        "Hosting lh.pl robi codzienną kopię plików i baz danych, przechowywaną 30 dni. Kod strony leży dodatkowo w osobnym repozytorium z pełną historią zmian, więc całą stronę da się odbudować."
+      ]
+    },
+    {
+      "id": "widocznosc",
+      "naglowek": "Widoczność w Google od pierwszego dnia",
+      "akapity": [
+        "Stronę publikujemy z tytułami i opisami pisanymi pod to, czego szukają Twoi klienci, z mapą strony, adresami kanonicznymi i danymi firmy w danych strukturalnych. Po publikacji zgłaszamy ją w Google Search Console oraz w Bing przez IndexNow.",
+        "Jeśli firma ma wizytówkę w Google, ustawiamy w niej adres strony, a na stronie te same dane: nazwę, adres i telefon. Wpisy w profilu mogą prowadzić prosto do podstron usług.",
+        "Strony dostają też plik llms.txt i katalog dla asystentów AI. Dzięki temu w kategorii przeglądania agentowego PageSpeed Insights nasze realizacje przechodzą 4 z 4 testów.",
+        "Pozycji w wynikach Google nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console. Tym zajmujemy się w ramach [prowadzenia strony po publikacji](/prowadzenie-strony-internetowej/)."
+      ]
+    }
+  ],
+  "przykladyNaglowek": "Realizacje z wynikami PageSpeed",
+  "przykladyLead": "Wszystkie nasze realizacje to strony firm z Warszawy. Wyniki pochodzą z pomiaru PageSpeed Insights i każdy może je powtórzyć sam na pagespeed.web.dev.",
+  "przyklady": [
+    {
+      "adres": "https://studioagat.pl/",
+      "zdanie": "Projektowanie wnętrz z Gocławia. Przenieśliśmy stronę z WordPressa do Astro, dodaliśmy kalkulator wyceny kuchni i panel treści w PHP."
+    },
+    {
+      "adres": "https://nadihome.pl/",
+      "zdanie": "Remonty mieszkań pod klucz. WordPressa zastąpiła strona w Astro z panelem Sveltia, cennikiem robocizny, galerią i blogiem."
+    },
+    {
+      "adres": "https://pan-stolarz.pl/",
+      "zdanie": "Meble na wymiar. Strona zbudowana od zera, z kalkulatorami cen kuchni, szaf i garderób oraz formularzem chronionym Turnstile."
+    }
+  ],
+  "procesNaglowek": "Jak wygląda tworzenie strony internetowej krok po kroku",
+  "procesLead": "Każda strona przechodzi przez te same sześć etapów, od pierwszej rozmowy do opieki po publikacji.",
+  "proces": [
+    {
+      "nazwa": "Zakres",
+      "opis": "Ustalamy, co strona ma robić: jakie usługi pokazuje, czy przyjmuje zapytania, czy sprzedaje. Z tego wynika wybór hostingu i panelu. Na tym etapie podajemy wycenę i termin."
+    },
+    {
+      "nazwa": "Treść i zdjęcia",
+      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Brakujące teksty piszemy z Twoich informacji. Na stronę trafiają prawdziwe zdjęcia realizacji, Twoje albo z banku zdjęć."
+    },
+    {
+      "nazwa": "Budowa pod adresem roboczym",
+      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zgłaszasz uwagi i dopiero gotowa wersja zastępuje obecną."
+    },
+    {
+      "nazwa": "Kontrola przed publikacją",
+      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting."
+    },
+    {
+      "nazwa": "Przepięcie domeny",
+      "opis": "Przełączamy domenę na nową stronę, stare adresy przekierowujemy na nowe, a pocztę sprawdzamy listem testowym w obie strony."
+    },
+    {
+      "nazwa": "Utrzymanie",
+      "opis": "Po publikacji mierzymy szybkość, pilnujemy Search Console i wprowadzamy zmiany. Każda zmiana jest od razu publikowana i sprawdzana na żywej stronie."
+    }
+  ],
+  "wideo": "",
+  "wideoNaglowek": "Film: jak tworzymy stronę internetową",
+  "pytaniaNaglowek": "Pytania o tworzenie stron internetowych",
+  "pytania": [
+    {
+      "pytanie": "Od czego zacząć projektowanie strony internetowej?",
+      "odpowiedz": "Od odpowiedzi, co strona ma robić: pokazać usługi, zbierać zapytania czy sprzedawać. Na pierwszą rozmowę wystarczy adres, jaki ma mieć strona, i informacja, czy masz już domenę, teksty, logo i zdjęcia. Resztę ustalamy razem."
+    },
+    {
+      "pytanie": "Ile kosztuje strona internetowa dla firmy?",
+      "odpowiedz": "To zależy od liczby podstron, formularzy, panelu i tego, czy piszemy teksty. Orientacyjne kwoty netto podajemy w cenniku, a zakres swojej strony policzysz w kalkulatorze i dołączysz do zapytania."
+    },
+    {
+      "pytanie": "Czy mogę zmieniać treść sam?",
+      "odpowiedz": "Tak. Strona dostaje panel pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy i dane firmy. Jeśli wolisz nie zakładać konta na GitHubie, robimy panel w PHP z logowaniem hasłem."
+    },
+    {
+      "pytanie": "Gdzie będzie stała strona?",
+      "odpowiedz": "Strona z formularzem, sprzedażą albo rezerwacjami stoi na hostingu lh.pl, w osobnej przestrzeni. Wizytówka bez sprzedaży może stać bezpłatnie na GitHub Pages. Domena zostaje u Twojego rejestratora."
+    },
+    {
+      "pytanie": "Czy przeniesiecie moją stronę z WordPressa?",
+      "odpowiedz": "Tak. Przenosimy treści i zdjęcia na szybką stronę w Astro, a stare adresy przekierowujemy na nowe. Tak przenieśliśmy strony Nadi Home, Studio Agat i Pan Wylewka. Opieki nad stroną w WordPressie nie prowadzimy."
+    },
+    {
+      "pytanie": "Czy przyjedziecie na spotkanie?",
+      "odpowiedz": "Tak, na terenie Warszawy możemy spotkać się u Ciebie w firmie. Biuro mamy na Gocławiu, przy ulicy Bora Komorowskiego 21. Wiele spraw da się też załatwić mailem i przez telefon."
+    }
+  ],
+  "cenaNaglowek": "Ile kosztuje strona internetowa dla firmy w Warszawie",
+  "cenaTekst": [
+    "Strona firmowa kosztuje u nas od {od: Strona firmowa} netto, wizytówka od {od: Wizytówka, strona jednostronicowa} netto. Kwoty za hosting, domenę i prowadzenie strony są w [cenniku stron internetowych](/cena/), a zakres swojej strony policzysz w kalkulatorze i wyślesz razem z zapytaniem.",
+    "Pracujemy z firmami z całej Warszawy; biuro jest na Gocławiu."
+  ],
+  "przyciskKalkulator": "Policz cenę strony w kalkulatorze",
+  "przyciskKontakt": "Zapytaj o wycenę strony",
+  "zobaczTezNaglowek": "Zobacz też",
+  "zobaczTez": [
+    { "adres": "/sklepy-internetowe-warszawa/", "tekst": "Tworzenie sklepów internetowych" },
+    { "adres": "/strona-wizytowka/", "tekst": "Strona wizytówka dla firmy" },
+    { "adres": "/prowadzenie-strony-internetowej/", "tekst": "Prowadzenie strony po publikacji" },
+    { "adres": "/faq/", "tekst": "Pytania o strony i sklepy internetowe" }
+  ]
+}

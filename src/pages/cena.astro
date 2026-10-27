@@ -35,6 +35,16 @@ const wiersze = (klucz: string): Wiersz[] =>
     .filter((w) => w.pozycja);
 
 const brak = napis('brakCeny', 'wycena indywidualna');
+
+// Linki do stron usług pod nagłówkami tabel (plan SEO §3 D, runda 5).
+const linkiTabel: Record<string, { tekst: string; adres: string }[]> = {
+  'strona-wykonanie': [
+    { tekst: 'co zawiera strona firmowa', adres: '/strony-internetowe-warszawa/' },
+    { tekst: 'co zawiera strona wizytówka', adres: '/strona-wizytowka/' },
+  ],
+  'strona-prowadzenie': [{ tekst: 'co obejmuje prowadzenie strony', adres: '/prowadzenie-strony-internetowej/' }],
+  'sklep-wykonanie': [{ tekst: 'jak budujemy sklep internetowy', adres: '/sklepy-internetowe-warszawa/' }],
+};
 const tabele = [
   { id: 'strona-wykonanie', naglowek: napis('stronaWykonanieNaglowek', 'Strona internetowa: wykonanie'), opis: napis('stronaWykonanieOpis', ''), wiersze: wiersze('stronaWykonanie') },
   { id: 'strona-prowadzenie', naglowek: napis('stronaProwadzenieNaglowek', 'Strona internetowa: prowadzenie'), opis: napis('stronaProwadzenieOpis', ''), wiersze: wiersze('stronaProwadzenie') },
@@ -124,6 +134,13 @@ const daneStrukturalne = {
       <section class="tabela" aria-labelledby={t.id} data-ujawnij>
         <h2 id={t.id} class="tabela__tytul">{t.naglowek}</h2>
         {t.opis && <p class="tabela__opis">{t.opis}</p>}
+        {linkiTabel[t.id] && (
+          <p class="tabela__linki">
+            Zobacz, {linkiTabel[t.id].map((l, i) => (
+              <>{i > 0 && ' i '}<a href={l.adres}>{l.tekst}</a></>
+            ))}.
+          </p>
+        )}
         <div class="przewijanie" role="region" aria-labelledby={t.id} tabindex="0">
           <table role="table">
             <thead role="rowgroup">
@@ -284,6 +301,16 @@ const daneStrukturalne = {
   .tabela__opis {
     margin: var(--o-2) 0 var(--o-4);
     color: var(--tekst-cichy);
+  }
+
+  .tabela__linki {
+    margin: var(--o-2) 0 var(--o-4);
+    max-width: 44rem;
+  }
+
+  .tabela__linki a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 
   /* Przewijanie poziome jako zapas (od 40 rem w górę tabela mieści się sama, niżej wiersze są kartami); cień przy krawędzi pokazuje, że tabela idzie dalej

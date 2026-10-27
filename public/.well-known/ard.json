@@ -2,28 +2,263 @@
   "specVersion": "1.0",
   "entries": [
     {
-      "identifier": "urn:air:ecopowerpolska.pl:strona:llms-txt",
-      "displayName": "EcoPower Polska - opis strony dla modeli językowych (llms.txt)",
-      "type": "text/markdown",
-      "url": "https://www.ecopowerpolska.pl/llms.txt",
-      "description": "EcoPower Polska sp. z o.o.: dane rejestrowe i kontakt, serwisy nadzorowane przez spółkę (Studio Agat, Nadi Home, Pan Wylewka) i wpisy na blogu.",
+      "identifier": "urn:air:ecopowerpolska.pl:firma:ecopower-polska",
+      "displayName": "EcoPower Polska - firma od stron i sklepów internetowych",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://www.ecopowerpolska.pl/#organizacja",
+        "name": "EcoPower Polska",
+        "legalName": "ECOPOWER POLSKA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ",
+        "url": "https://www.ecopowerpolska.pl/",
+        "email": "kontakt@ecopowerpolska.pl",
+        "telephone": "+48537318316",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Bora Komorowskiego 21",
+          "postalCode": "03-982",
+          "addressLocality": "Warszawa",
+          "addressCountry": "PL"
+        },
+        "identifier": "KRS 0000881612, NIP 7011019372, REGON 38814324000000"
+      },
+      "description": "Warszawska firma z Gocławia, która buduje szybkie strony i sklepy internetowe dla firm i potem je prowadzi. Realizacje mają 97-100 punktów PageSpeed na telefonie.",
       "representativeQueries": [
-        "EcoPower Polska",
-        "EcoPower Polska sp. z o.o. KRS",
-        "serwisy EcoPower Polska",
-        "EcoPower Polska kontakt"
+        "firma tworząca strony internetowe Warszawa",
+        "EcoPower Polska kontakt",
+        "kto zrobi szybką stronę internetową dla mojej firmy"
       ],
-      "tags": ["EcoPower Polska", "spółka", "serwisy", "Studio Agat", "Nadi Home", "Pan Wylewka"]
+      "tags": [
+        "strony internetowe",
+        "sklepy internetowe",
+        "Warszawa",
+        "Astro"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:usluga:strony-internetowe",
+      "displayName": "Tworzenie stron internetowych dla firm w Warszawie",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Tworzenie stron internetowych dla firm w Warszawie",
+        "url": "https://www.ecopowerpolska.pl/strony-internetowe-warszawa/",
+        "provider": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        },
+        "areaServed": "Warszawa"
+      },
+      "description": "Strona firmowa z ofertą, realizacjami, blogiem i formularzem, zbudowana w Astro: projekt, treść, panel do edycji, hosting i widoczność w Google.",
+      "representativeQueries": [
+        "tworzenie stron internetowych Warszawa",
+        "strona internetowa dla firmy",
+        "ile trwa zrobienie strony internetowej"
+      ],
+      "tags": [
+        "strona firmowa",
+        "Astro",
+        "panel treści"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:usluga:sklepy-internetowe",
+      "displayName": "Tworzenie sklepów internetowych dla firm",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Tworzenie sklepów internetowych dla firm w Warszawie",
+        "url": "https://www.ecopowerpolska.pl/sklepy-internetowe-warszawa/",
+        "provider": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        },
+        "areaServed": "Warszawa"
+      },
+      "description": "Sklep na WooCommerce, PrestaShop, platformie abonamentowej albo lekki sklep w Astro z płatnością online. Dobieramy drogę do towaru i budżetu.",
+      "representativeQueries": [
+        "tworzenie sklepów internetowych Warszawa",
+        "jaką platformę sklepu internetowego wybrać",
+        "WooCommerce czy PrestaShop"
+      ],
+      "tags": [
+        "sklep internetowy",
+        "WooCommerce",
+        "PrestaShop",
+        "Shoper"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:usluga:strona-wizytowka",
+      "displayName": "Strona wizytówka dla małej firmy",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Strona wizytówka dla firmy",
+        "url": "https://www.ecopowerpolska.pl/strona-wizytowka/",
+        "provider": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        }
+      },
+      "description": "Jedna strona albo kilka podstron: kim jesteś, co robisz i jak się skontaktować. Wizytówka bez sprzedaży może stać na GitHub Pages bez opłat za hosting.",
+      "representativeQueries": [
+        "strona wizytówka dla firmy",
+        "ile kosztuje strona wizytówka"
+      ],
+      "tags": [
+        "strona wizytówka",
+        "mała firma"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:usluga:prowadzenie-strony",
+      "displayName": "Prowadzenie strony internetowej i opieka",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Prowadzenie strony internetowej i opieka po publikacji",
+        "url": "https://www.ecopowerpolska.pl/prowadzenie-strony-internetowej/",
+        "provider": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        }
+      },
+      "description": "Zmiany treści, pomiar PageSpeed, Search Console, wizytówka Google, Facebook i Instagram oraz raport w ustalonym rytmie.",
+      "representativeQueries": [
+        "opieka nad stroną internetową",
+        "prowadzenie strony internetowej cena"
+      ],
+      "tags": [
+        "opieka nad stroną",
+        "Search Console",
+        "wizytówka Google"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:strona:cennik",
+      "displayName": "Cennik stron i sklepów internetowych EcoPower Polska",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Cennik stron i sklepów internetowych",
+        "url": "https://www.ecopowerpolska.pl/cena/",
+        "about": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        }
+      },
+      "description": "Ceny netto wykonania i prowadzenia strony internetowej oraz sklepu, z kalkulatorem, który liczy wycenę netto i brutto.",
+      "representativeQueries": [
+        "ile kosztuje strona internetowa dla firmy",
+        "cennik stron internetowych Warszawa",
+        "ile kosztuje sklep internetowy"
+      ],
+      "tags": [
+        "cennik",
+        "kalkulator"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:wpis:strona-wizytowka-przyklady",
+      "displayName": "Strona wizytówka: przykłady i co musi zawierać",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Strona wizytówka: przykłady i co musi zawierać",
+        "url": "https://www.ecopowerpolska.pl/blog/strona-wizytowka-przyklady/",
+        "publisher": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        },
+        "inLanguage": "pl-PL"
+      },
+      "description": "Co musi mieć strona wizytówka firmy: oferta, kontakt, formularz, prawdziwe zdjęcia i dane dla Google. Przykłady z naszych stron i kiedy to za mało.",
+      "representativeQueries": [
+        "strona wizytówka przykład",
+        "jak powinna wyglądać strona wizytówka",
+        "co musi zawierać strona wizytówka"
+      ],
+      "tags": [
+        "strona wizytówka",
+        "blog"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:wpis:woocommerce-prestashop-czy-shoper",
+      "displayName": "WooCommerce, PrestaShop czy Shoper: jaki sklep wybrać",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "WooCommerce, PrestaShop czy Shoper: jaki sklep wybrać",
+        "url": "https://www.ecopowerpolska.pl/blog/woocommerce-prestashop-czy-shoper/",
+        "publisher": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        },
+        "inLanguage": "pl-PL"
+      },
+      "description": "WooCommerce, PrestaShop, Shoper i IdoSell albo szybki sklep w Astro: dla kogo jest każda droga, kto obsługuje serwer i za co płacisz co miesiąc.",
+      "representativeQueries": [
+        "jaka platforma sklepu internetowego",
+        "WooCommerce czy PrestaShop",
+        "ile kosztuje sklep WooCommerce"
+      ],
+      "tags": [
+        "sklep internetowy",
+        "WooCommerce",
+        "PrestaShop",
+        "Shoper",
+        "blog"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:wpis:core-web-vitals-po-polsku",
+      "displayName": "Core Web Vitals po polsku: LCP, INP i CLS na przykładach",
+      "type": "application/ld+json",
+      "data": {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Core Web Vitals po polsku: LCP, INP i CLS na przykładach",
+        "url": "https://www.ecopowerpolska.pl/blog/core-web-vitals-po-polsku/",
+        "publisher": {
+          "@id": "https://www.ecopowerpolska.pl/#organizacja"
+        },
+        "inLanguage": "pl-PL"
+      },
+      "description": "Co mierzą LCP, INP i CLS, jakie wyniki Google uznaje za dobre i jak wyglądają na siedmiu naszych stronach w pomiarze PageSpeed z października 2026.",
+      "representativeQueries": [
+        "core web vitals co to",
+        "co to jest LCP INP CLS",
+        "szybkość ładowania strony google"
+      ],
+      "tags": [
+        "Core Web Vitals",
+        "PageSpeed",
+        "blog"
+      ]
     },
     {
       "identifier": "urn:air:ecopowerpolska.pl:strona:sitemap",
-      "displayName": "EcoPower Polska - mapa strony (sitemap.xml)",
+      "displayName": "EcoPower Polska - mapa strony",
       "type": "application/xml",
       "url": "https://www.ecopowerpolska.pl/sitemap.xml",
       "description": "Adresy wszystkich podstron www.ecopowerpolska.pl przeznaczonych do indeksowania.",
       "representativeQueries": [
         "podstrony EcoPower Polska",
-        "blog EcoPower Polska"
+        "lista stron www.ecopowerpolska.pl"
+      ]
+    },
+    {
+      "identifier": "urn:air:ecopowerpolska.pl:strona:blog-rss",
+      "displayName": "EcoPower Polska - blog (RSS)",
+      "type": "application/rss+xml",
+      "url": "https://www.ecopowerpolska.pl/rss.xml",
+      "description": "Wpisy o budowie stron i sklepów internetowych: ceny, czas budowy, panel treści, wybór platformy sklepu.",
+      "representativeQueries": [
+        "blog o stronach internetowych",
+        "ile kosztuje strona internetowa w 2026"
       ]
     }
   ]

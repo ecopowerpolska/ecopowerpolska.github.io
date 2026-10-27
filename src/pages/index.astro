@@ -23,11 +23,11 @@ const strona = stronaJson as Record<string, string | null | undefined>;
 const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
 
 // D2: nazwa spółki pada raz na ekran — niesie ją tytuł karty i logo, H1 mówi, co firma robi.
-const tytul = tekst(strona.tytulKarty, 'Strony i sklepy internetowe dla firm — EcoPower Polska');
+const tytul = tekst(strona.tytulKarty, 'EcoPower Polska — strony i sklepy internetowe dla firm');
 // D3: opis meta zbieżny z nagłówkiem i zdaniem pod nim.
 const opis = tekst(
   strona.opisWyszukiwarki,
-  'Budujemy strony internetowe i sklepy internetowe dla firm: projekt, panel do edycji treści, hosting, domena i widoczność w Google.',
+  'Budujemy szybkie strony i sklepy internetowe dla firm: projekt, panel do edycji, hosting i widoczność w Google. Wyniki PageSpeed każdej realizacji.',
 );
 const naglowek = tekst(strona.naglowek, 'Budujemy strony i sklepy internetowe dla firm.');
 const lead = tekst(

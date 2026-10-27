@@ -123,6 +123,12 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
     color: var(--tekst-cichy);
   }
 
+  /* Linki w odpowiedziach podkreślone (Lighthouse link-in-text-block, runda 5). */
+  .pytanie__odpowiedz a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
   .faq-skrot__wiecej {
     margin: var(--o-6) 0 0;
   }

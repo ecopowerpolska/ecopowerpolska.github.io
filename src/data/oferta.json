@@ -4,39 +4,48 @@
   "zakres": [
     {
       "nazwa": "Strony firmowe",
-      "opis": "Strona z ofertą, galerią realizacji, blogiem i formularzem kontaktowym. Budujemy ją w Astro jako gotowe pliki, więc otwiera się szybko także na telefonie."
+      "opis": "Strona z ofertą, galerią realizacji, blogiem i formularzem kontaktowym. Budujemy ją w Astro jako gotowe pliki, więc otwiera się szybko także na telefonie.",
+      "link": "/strony-internetowe-warszawa/"
     },
     {
       "nazwa": "Sklepy internetowe",
-      "opis": "Drogę dobieramy do sklepu: WooCommerce albo PrestaShop na hostingu, katalog produktów w Astro z płatnością przez Stripe Checkout albo połączenie obu. Wybór omawiamy przed startem."
+      "opis": "Drogę dobieramy do sklepu: WooCommerce albo PrestaShop na hostingu, katalog produktów w Astro z płatnością przez Stripe Checkout albo połączenie obu. Wybór omawiamy przed startem.",
+      "link": "/sklepy-internetowe-warszawa/"
     },
     {
       "nazwa": "Panel do edycji treści",
-      "opis": "Teksty, zdjęcia i wpisy zmieniasz sam w panelu pod adresem /admin/. Panel zapisuje zmiany w repozytorium strony (Sveltia) albo działa w PHP na hostingu i wtedy nie potrzebujesz konta na GitHubie."
+      "opis": "Teksty, zdjęcia i wpisy zmieniasz sam w panelu pod adresem /admin/. Panel zapisuje zmiany w repozytorium strony (Sveltia) albo działa w PHP na hostingu i wtedy nie potrzebujesz konta na GitHubie.",
+      "link": "/strony-internetowe-warszawa/"
     },
     {
       "nazwa": "Hosting, domena i poczta",
-      "opis": "Stronę stawiamy na hostingu lh.pl, a wizytówkę bez sprzedaży na GitHub Pages. Przy przepięciu domeny przenosimy rekordy DNS tak, żeby poczta działała dalej."
+      "opis": "Stronę stawiamy na hostingu lh.pl, a wizytówkę bez sprzedaży na GitHub Pages. Przy przepięciu domeny przenosimy rekordy DNS tak, żeby poczta działała dalej.",
+      "link": "/strony-internetowe-warszawa/"
     },
     {
       "nazwa": "Formularze bez spamu",
-      "opis": "Formularz kontaktowy w PHP wysyła wiadomość na Twój adres. Boty zatrzymuje Cloudflare Turnstile, bez przepisywania liter z obrazka."
+      "opis": "Formularz kontaktowy w PHP wysyła wiadomość na Twój adres. Boty zatrzymuje Cloudflare Turnstile, bez przepisywania liter z obrazka.",
+      "link": "/strony-internetowe-warszawa/"
     },
     {
       "nazwa": "Widoczność w Google",
-      "opis": "Tytuły, opisy, dane strukturalne i mapa strony, zgłoszenie do Google Search Console i Bing. Prowadzimy też wizytówkę Google (Profil Firmy) i łączymy ją ze stroną: te same dane firmy, odnośnik do mapy, wpisy w profilu prowadzące do ofert na stronie."
+      "opis": "Tytuły, opisy, dane strukturalne i mapa strony, zgłoszenie do Google Search Console i Bing. Prowadzimy też wizytówkę Google (Profil Firmy) i łączymy ją ze stroną: te same dane firmy, odnośnik do mapy, wpisy w profilu prowadzące do ofert na stronie.",
+      "link": "/prowadzenie-strony-internetowej/"
     },
     {
       "nazwa": "Pomiar jakości każdej strony",
-      "opis": "Każdą stronę mierzymy w PageSpeed Insights osobno na telefonie i na komputerze: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe, czyli gotowość na asystentów AI. Wyniki naszych realizacji publikujemy w sekcji Realizacje, a każdy może je sprawdzić sam na pagespeed.web.dev."
+      "opis": "Każdą stronę mierzymy w PageSpeed Insights osobno na telefonie i na komputerze: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe, czyli gotowość na asystentów AI. Wyniki naszych realizacji publikujemy w sekcji Realizacje, a każdy może je sprawdzić sam na pagespeed.web.dev.",
+      "link": "/prowadzenie-strony-internetowej/"
     },
     {
       "nazwa": "Facebook i Instagram",
-      "opis": "Łączymy stronę z firmowym Facebookiem i Instagramem i możemy prowadzić oba konta. Nowy wpis na blogu może sam trafiać na Facebooka jako post z linkiem, a treść postów zatwierdzasz Ty."
+      "opis": "Łączymy stronę z firmowym Facebookiem i Instagramem i możemy prowadzić oba konta. Nowy wpis na blogu może sam trafiać na Facebooka jako post z linkiem, a treść postów zatwierdzasz Ty.",
+      "link": "/prowadzenie-strony-internetowej/"
     },
     {
       "nazwa": "Ruch na stronie i raporty",
-      "opis": "Sprawdzamy na bieżąco Search Console, Google Analytics, pozycje wybranych fraz i wyniki PageSpeed. Raport z wnioskami i listą poprawek wysyłamy w rytmie ustalonym z Tobą, na przykład co miesiąc."
+      "opis": "Sprawdzamy na bieżąco Search Console, Google Analytics, pozycje wybranych fraz i wyniki PageSpeed. Raport z wnioskami i listą poprawek wysyłamy w rytmie ustalonym z Tobą, na przykład co miesiąc.",
+      "link": "/prowadzenie-strony-internetowej/"
     }
   ],
   "procesNaglowek": "Jak pracujemy",

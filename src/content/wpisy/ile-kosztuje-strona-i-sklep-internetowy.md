@@ -1,7 +1,7 @@
 ---
-tytul: "Ile kosztuje strona i sklep internetowy w Warszawie w 2026 roku i skąd biorą się te ceny"
-tytulSeo: "Ile kosztuje strona i sklep w Warszawie w 2026? — EcoPower Polska"
-opisSeo: "Ceny wykonania i prowadzenia strony oraz sklepu w Warszawie z 18 źródeł z lat 2025–2026: widełki, mediany, metoda i powody, dla których ceny tak się różnią."
+tytul: "Ile kosztuje strona i sklep internetowy w 2026 roku i skąd biorą się te ceny"
+tytulSeo: "Ile kosztuje strona internetowa i sklep w 2026? Ceny"
+opisSeo: "Ile kosztuje strona internetowa i sklep w 2026 roku: widełki i mediany z 18 źródeł, co jest w cenie i ile płaci się co miesiąc."
 dataPublikacji: "2026-10-27T12:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna garderoba-na-wymiar-warszawa.pl: nagłówek „Garderoby na wymiar w Warszawie, od pomiaru do montażu” i zdjęcie garderoby z półkami"
@@ -91,7 +91,7 @@ Cena wykonania obejmuje zwykle projekt, budowę i uruchomienie strony. Domena, h
 
 ## Jak ma się do tego nasz cennik?
 
-Nasze ceny orientacyjne oparliśmy o te dane: dla większości pozycji przyjęliśmy medianę z tego zestawienia. Znajdziesz je w zakładce [cennik stron i sklepów internetowych](/cena/). Ostateczną cenę podajemy po rozmowie o zakresie, bo ta sama nazwa usługi u dwóch klientów oznacza inną ilość pracy. Co wchodzi w naszą pracę, opisuje [oferta budowy stron i sklepów](/#oferta).
+Nasze ceny orientacyjne oparliśmy o te dane: dla większości pozycji przyjęliśmy medianę z tego zestawienia. Znajdziesz je w zakładce [cennik stron i sklepów internetowych](/cena/). Ostateczną cenę podajemy po rozmowie o zakresie, bo ta sama nazwa usługi u dwóch klientów oznacza inną ilość pracy. Co wchodzi w naszą pracę, opisuje [oferta budowy stron i sklepów](/#oferta), a cały proces od zakresu do pomiaru po publikacji pokazuje strona [tworzenie stron internetowych dla firm](/strony-internetowe-warszawa/).
 
 ## Czego nie udało się ustalić?
 

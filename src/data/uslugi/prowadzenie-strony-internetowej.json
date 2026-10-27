@@ -1,0 +1,202 @@
+{
+  "tytulKarty": "Prowadzenie strony internetowej i opieka — EcoPower Polska",
+  "opisWyszukiwarki": "Prowadzimy strony i sklepy firm: zmiany treści, pomiar PageSpeed, Search Console, wizytówka Google, Facebook i raport w ustalonym rytmie.",
+  "naglowek": "Prowadzenie strony internetowej i opieka po publikacji",
+  "okruszek": "Prowadzenie strony",
+  "lead": "Strona po publikacji potrzebuje kogoś, kto wprowadza zmiany, pilnuje szybkości i patrzy w dane z Google. Prowadzimy strony i sklepy firm: hosting, kopie, zmiany treści, wpisy na blogu, Search Console, wizytówkę Google i Facebooka. Strony, które prowadzimy, mają w PageSpeed Insights 97–100 punktów na telefonie i 100 na komputerze (pomiar z 27 października 2026).",
+  "uslugaNazwa": "Prowadzenie strony internetowej i opieka po publikacji",
+  "uslugaTyp": "Prowadzenie strony internetowej",
+  "uslugaOpis": "Hosting, kopie zapasowe, aktualizacje, zmiany treści, wpisy na blogu, pomiar PageSpeed Insights, Google Search Console, wizytówka Google, Facebook i Instagram oraz raport w ustalonym rytmie.",
+  "cenaOdPozycja": "Opieka techniczna i aktualizacje",
+  "cenaJednostkaKod": "MON",
+  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajesz": [
+    "Hosting, odnowienie domeny i certyfikat SSL pod jedną opieką.",
+    "Kopie zapasowe: pełną historię zmian w repozytorium strony i codzienną kopię hostingu lh.pl przechowywaną 30 dni.",
+    "Aktualizacje i monitoring strony.",
+    "Zmiany treści i nowe podstrony, publikowane od razu i sprawdzane na żywej stronie.",
+    "Pomiar PageSpeed Insights na telefonie i na komputerze w pięciu kategoriach, z przeglądaniem agentowym.",
+    "Google Search Console: wyświetlenia, kliknięcia, frazy i błędy indeksowania.",
+    "Wizytówkę Google, Facebooka i Instagram, jeśli chcesz je mieć w opiece.",
+    "Raport z wnioskami i listą poprawek w rytmie ustalonym z Tobą, na przykład co miesiąc."
+  ],
+  "sekcje": [
+    {
+      "id": "co-obejmuje",
+      "naglowek": "Co obejmuje prowadzenie strony",
+      "akapity": [
+        "Prowadzenie strony to stała opieka po publikacji. Zakres ustalamy z Tobą i składamy go z kilku części. Każdą możesz wziąć osobno:"
+      ],
+      "lista": [
+        "Hosting, domena i certyfikat SSL: strona działa pod Twoim adresem, z szyfrowanym połączeniem, a domena odnawia się na czas.",
+        "Opieka techniczna: kopie zapasowe, aktualizacje i monitoring.",
+        "Zmiany treści: nowe zdjęcia, ceny, godziny otwarcia, opisy usług i nowe podstrony.",
+        "Blog: pojedyncze wpisy albo regularne prowadzenie bloga z doborem tematów pod wyszukiwarkę.",
+        "Widoczność: Search Console, Bing, pozycje wybranych fraz i Profil Firmy w Google.",
+        "Facebook i Instagram: połączenie ze stroną i prowadzenie obu kont.",
+        "Raport: co się zmieniło, co poprawiliśmy i co proponujemy dalej."
+      ]
+    },
+    {
+      "id": "zmiany-tresci",
+      "naglowek": "Zmiany treści i nowe podstrony",
+      "akapity": [
+        "Drobne zmiany możesz robić sam. Strona ma panel treści pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy. Jak działa panel, opisaliśmy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/).",
+        "Gdy nie masz na to czasu albo zmiana jest większa, robimy ją my: nowa podstrona usługi, nowa sekcja, cennik, galeria albo formularz. Każdą zmianę publikujemy w tym samym przebiegu, w którym ją wprowadzamy, i sprawdzamy na żywej stronie.",
+        "Przed każdą publikacją stronę sprawdza automatyczna bramka: tytuły, opisy, mapa strony, dostępność i waga plików. Zmiana, która psuje któryś z tych punktów, nie trafia na stronę. Każda zmiana jest osobnym wpisem w historii repozytorium, więc da się ją cofnąć.",
+        "Wpisy na blogu piszemy z faktów Twojej firmy. Temat dobieramy z danych Search Console i Planera słów kluczowych Google, a zdjęcia są prawdziwe: Twoje albo z banku zdjęć."
+      ],
+      "lista": []
+    },
+    {
+      "id": "szybkosc-i-search-console",
+      "naglowek": "Szybkość i Search Console pod stałą kontrolą",
+      "akapity": [
+        "Szybkość strony mierzymy w PageSpeed Insights, narzędziu Google, osobno na telefonie i na komputerze. Patrzymy na pięć kategorii: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe, czyli gotowość strony na asystentów AI.",
+        "Wynik spada zwykle po zmianach: za duże zdjęcie, nowy skrypt, osadzony film. Dlatego mierzymy po każdej większej zmianie i w stałym rytmie. Ten sam test zrobisz sam, bez zakładania konta: [darmowy test szybkości](/jak-sprawdzic-szybkosc-strony/).",
+        "W Google Search Console sprawdzamy wyświetlenia, kliknięcia, frazy, po których ludzie trafiają na stronę, i błędy indeksowania. Nowe podstrony zgłaszamy w mapie strony, a do Bing przez IndexNow. Pozycji w wynikach nie obiecujemy. Sprawdzamy je pomiarem wybranych fraz i poprawiamy stronę na podstawie danych.",
+        "Co znaczą LCP, INP i CLS, wyjaśniamy we wpisie [Core Web Vitals po polsku](/blog/core-web-vitals-po-polsku/)."
+      ],
+      "lista": []
+    },
+    {
+      "id": "wizytowka-google-facebook-instagram",
+      "naglowek": "Wizytówka Google, Facebook i Instagram",
+      "akapity": [
+        "Profil Firmy w Google prowadzimy razem ze stroną. Uzupełniamy kategorie, usługi, obszar działania, godziny, opis i zdjęcia, dodajemy wpisy z linkiem do strony i odpowiadamy na opinie. Nazwę, adres i telefon trzymamy jednakowo w profilu, na stronie i w danych strukturalnych. Potrzebujemy roli menedżera w Twoim profilu. Właścicielem zostajesz Ty.",
+        "Facebooka i Instagram łączymy ze stroną i możemy prowadzić oba konta: posty ze zdjęciami realizacji i odpowiedzi na komentarze w ustalonym zakresie. Nowy wpis na blogu może sam trafiać na Facebooka jako post z linkiem. Treść postów zatwierdzasz Ty, a częstotliwość ustalamy razem.",
+        "Jeśli nie masz jeszcze strony, a myślisz tylko o obecności w Google, zacznij od małej strony: [strona wizytówka dla firmy](/strona-wizytowka/) i Profil Firmy w Google działają najlepiej razem."
+      ],
+      "lista": []
+    },
+    {
+      "id": "raport",
+      "naglowek": "Raport: co sprawdzamy i jak często",
+      "akapity": [
+        "Rytm raportu ustalamy z Tobą, na przykład co miesiąc. W raporcie są dane i wnioski, a nie same wykresy:"
+      ],
+      "lista": [
+        "Search Console: wyświetlenia, kliknięcia, najważniejsze frazy i błędy indeksowania.",
+        "Google Analytics: ruch na stronie. Analytics włącza się dopiero po zgodzie odwiedzającego, więc pokazuje część ruchu; Search Console liczy wejścia z Google bez ciasteczek.",
+        "Pozycje wybranych fraz w Google.",
+        "Wyniki PageSpeed Insights na telefonie i na komputerze.",
+        "Lista tego, co poprawiliśmy od poprzedniego raportu, i tego, co proponujemy dalej."
+      ]
+    },
+    {
+      "id": "ile-kosztuje",
+      "naglowek": "Ile kosztuje opieka nad stroną internetową",
+      "akapity": [
+        "Opieka techniczna i aktualizacje strony kosztują u nas {od: Opieka techniczna i aktualizacje} netto. W tej kwocie są kopie zapasowe, aktualizacje i monitoring; prace poza pakietem rozliczamy godzinowo według cennika.",
+        "Hosting, domena i certyfikat SSL to {od: Hosting, domena i certyfikat SSL} netto. Pojedynczy wpis na blogu kosztuje {od: Treści: wpis na blogu}, a prowadzenie bloga firmowego, czyli 4 wpisy w miesiącu, {od: Treści: prowadzenie bloga firmowego} netto.",
+        "Opieka nad sklepem jest osobną pozycją, od {od: Opieka techniczna sklepu} netto, bo obejmuje test ścieżki zakupu po aktualizacjach i pilnowanie płatności i zamówień. Wszystkie pozycje i kwoty: [ceny prowadzenia strony i sklepu](/cena/#strona-prowadzenie)."
+      ],
+      "lista": []
+    },
+    {
+      "id": "audyt",
+      "naglowek": "Audyt strony przed przejęciem opieki",
+      "akapity": [
+        "Zanim przejmiemy stronę, którą zrobił ktoś inny, sprawdzamy ją. Chodzi o to, żeby obie strony wiedziały, w jakim stanie jest strona w dniu przejęcia i co trzeba naprawić najpierw.",
+        "Jeśli strona jest wolna albo trudna w utrzymaniu, proponujemy przeniesienie jej na szybką stronę w Astro. Tak przenieśliśmy z WordPressa studioagat.pl, nadihome.pl i panwylewka.pl: treść i zdjęcia przeszły na nową stronę, a stare adresy przekierowaliśmy na nowe, żeby wyniki w Google nie prowadziły w próżnię."
+      ],
+      "lista": [
+        "Wynik PageSpeed Insights na telefonie i na komputerze.",
+        "Search Console: czy strona jest w Google, ile podstron jest zaindeksowanych i jakie są błędy.",
+        "Domena i rekordy DNS: kto ma dostęp, kiedy domena wygasa i czy poczta ma poprawne rekordy. Komplet rekordów zapisujemy jako punkt powrotu.",
+        "Kopie zapasowe: gdzie są i czy da się z nich odtworzyć stronę.",
+        "Formularz: czy wiadomości dochodzą i czy formularz jest chroniony przed spamem.",
+        "Tytuły, opisy, mapa strony i dane firmy w danych strukturalnych."
+      ]
+    }
+  ],
+  "przykladyNaglowek": "Strony, które prowadzimy",
+  "przykladyLead": "Te strony zbudowaliśmy i prowadzimy dalej: wprowadzamy zmiany, mierzymy je i pilnujemy Search Console. Wynik to pomiar PageSpeed Insights z 27 października 2026.",
+  "przyklady": [
+    {
+      "adres": "https://studioagat.pl/",
+      "zdanie": "Projekty wnętrz i meble na wymiar. Po przeniesieniu z WordPressa prowadzimy stronę i Profil Firmy w Google, z wpisami w profilu co tydzień."
+    },
+    {
+      "adres": "https://nadihome.pl/",
+      "zdanie": "Remonty mieszkań w Warszawie. Panel treści Sveltia, galeria realizacji, blog i poprawki SEO z danych Search Console."
+    },
+    {
+      "adres": "https://pan-stolarz.pl/",
+      "zdanie": "Meble na wymiar w Warszawie. Nowe wpisy na blogu trafiają same na Facebooka jako post z linkiem."
+    }
+  ],
+  "procesNaglowek": "Jak pracujemy",
+  "proces": [
+    {
+      "nazwa": "Przegląd i dostępy",
+      "opis": "Sprawdzamy stronę jak przy audycie i zbieramy dostępy: domena, hosting, Search Console, Google Analytics, Profil Firmy w Google, Facebook."
+    },
+    {
+      "nazwa": "Zakres i rytm",
+      "opis": "Ustalamy, co wchodzi w opiekę, jak często wysyłamy raport i kto zatwierdza posty i wpisy."
+    },
+    {
+      "nazwa": "Zmiany na bieżąco",
+      "opis": "Zmianę wprowadzamy, przepuszczamy przez bramkę kontroli, publikujemy i sprawdzamy na żywej stronie w jednym przebiegu."
+    },
+    {
+      "nazwa": "Pomiar",
+      "opis": "Mierzymy szybkość w PageSpeed Insights i patrzymy w Search Console po każdej większej zmianie i w stałym rytmie."
+    },
+    {
+      "nazwa": "Raport i lista poprawek",
+      "opis": "Wysyłamy raport z wnioskami i proponujemy następne kroki. Ty decydujesz, co robimy dalej."
+    }
+  ],
+  "wideo": "",
+  "wideoNaglowek": "Prowadzenie strony na filmie",
+  "pytaniaNaglowek": "Pytania o prowadzenie strony",
+  "pytania": [
+    {
+      "pytanie": "Czy muszę mieć opiekę, żeby strona działała?",
+      "odpowiedz": "Nie. Strona zbudowana w Astro to gotowe pliki i działa bez codziennej obsługi. Opłacony musi być hosting i domena. Opieka jest po to, żeby strona była aktualna, szybka i widoczna w Google, a ktoś reagował, gdy coś przestanie działać."
+    },
+    {
+      "pytanie": "Jak szybko wprowadzacie zmiany?",
+      "odpowiedz": "Zmianę publikujemy w tym samym przebiegu, w którym ją wprowadzamy, i od razu sprawdzamy na żywej stronie. Gwarantowany czas reakcji na awarię, na przykład 4 godziny, jest w osobnej umowie dla dużych sklepów."
+    },
+    {
+      "pytanie": "Czy prowadzicie też sklepy internetowe?",
+      "odpowiedz": "Tak. Opieka nad sklepem obejmuje aktualizacje z testem ścieżki zakupu, kopie zapasowe oraz monitoring płatności i zamówień. Bazę zamówień kopiujemy także poza hosting. Więcej o budowie sklepów: [tworzenie sklepów internetowych](/sklepy-internetowe-warszawa/)."
+    },
+    {
+      "pytanie": "Jakie dostępy są potrzebne?",
+      "odpowiedz": "Dostęp do domeny u rejestratora albo w panelu DNS, do Search Console i Google Analytics Twojej strony, rola menedżera w Profilu Firmy w Google oraz rola administratora strony na Facebooku z połączonym kontem firmowym Instagram. Jeśli czegoś nie masz, zakładamy to na Twoim koncie."
+    },
+    {
+      "pytanie": "Kto jest właścicielem wizytówki Google i kont w Google?",
+      "odpowiedz": "Ty. W Profilu Firmy w Google dostajemy rolę menedżera, a Search Console i Google Analytics zakładamy na Twoim koncie albo dostajemy do nich dostęp."
+    }
+  ],
+  "cenaNaglowek": "Ile to kosztuje",
+  "cenaTekst": [
+    "Opieka techniczna strony kosztuje od {od: Opieka techniczna i aktualizacje} netto, a pozostałe części opieki wybierasz osobno. Policz swój zakres w kalkulatorze i dołącz wyliczenie do formularza kontaktowego."
+  ],
+  "przyciskKalkulator": "Policz cenę w kalkulatorze",
+  "przyciskKontakt": "Zapytaj o opiekę nad stroną",
+  "zobaczTezNaglowek": "Zobacz też",
+  "zobaczTez": [
+    {
+      "adres": "/strony-internetowe-warszawa/",
+      "tekst": "Tworzenie stron internetowych w Warszawie"
+    },
+    {
+      "adres": "/sklepy-internetowe-warszawa/",
+      "tekst": "Tworzenie sklepów internetowych"
+    },
+    {
+      "adres": "/strona-wizytowka/",
+      "tekst": "Strona wizytówka dla firmy"
+    },
+    {
+      "adres": "/faq/",
+      "tekst": "Pytania o strony i sklepy internetowe"
+    }
+  ]
+}

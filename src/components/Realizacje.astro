@@ -54,6 +54,10 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
           </li>
         ))}
       </ul>
+      <p class="realizacje__pomiar" data-ujawnij>
+        Wyniki pod zrzutami to pomiary PageSpeed Insights.{' '}
+        <a href="/jak-sprawdzic-szybkosc-strony/">Sprawdź szybkość swojej strony tak samo</a>.
+      </p>
       {/* Przycisk drugorzędny do zakładki Efekty (runda 4, 2026-10-27): dodatkowa część portfolio. */}
       <p class="realizacje__dalej" data-ujawnij>
         <a class="realizacje__przycisk" href="/efekty/">
@@ -100,6 +104,17 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
 
   .realizacje__siatka > li {
     min-width: 0;
+  }
+
+  .realizacje__pomiar {
+    margin: var(--o-6) auto 0;
+    max-width: 44rem;
+    text-align: center;
+  }
+
+  .realizacje__pomiar a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 
   .realizacje__dalej {

@@ -1,0 +1,178 @@
+{
+  "tytulKarty": "Strona wizytówka dla firmy: zakres i cena — EcoPower Polska",
+  "opisWyszukiwarki": "Strona wizytówka dla małej firmy: jedna strona albo kilka podstron, formularz, mapa i wizytówka Google. Co zawiera, ile kosztuje i kiedy wystarczy.",
+  "naglowek": "Strona wizytówka dla firmy",
+  "okruszek": "Strona wizytówka",
+  "lead": "Strona wizytówka to mała strona firmy: kim jesteś, co robisz, gdzie Cię znaleźć i jak się skontaktować. Budujemy ją w Astro jako gotowe pliki, więc otwiera się szybko także na telefonie. Ta strona też jest wizytówką: w PageSpeed Insights ma 98–99 punktów na telefonie i 100 na komputerze (pomiar z 27 października 2026).",
+  "uslugaNazwa": "Strona wizytówka dla firmy",
+  "uslugaTyp": "Strona wizytówka",
+  "uslugaOpis": "Jedna strona albo 2–3 podstrony z opisem usług, danymi firmy, formularzem kontaktowym i odnośnikiem do mapy. Strona w Astro, bez sprzedaży może stać na GitHub Pages bez opłat za hosting.",
+  "cenaOdPozycja": "Wizytówka, strona jednostronicowa",
+  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajesz": [
+    "Jedną stronę albo 2–3 podstrony: usługi, informacje o firmie i kontakt.",
+    "Formularz kontaktowy, który wysyła wiadomość na Twój adres e-mail. Boty zatrzymuje Cloudflare Turnstile.",
+    "Adres firmy z odnośnikiem do Map Google i numer telefonu, który na telefonie dzwoni po dotknięciu.",
+    "Szyfrowane połączenie (HTTPS) na Twojej domenie.",
+    "Tytuł, opis i dane firmy w danych strukturalnych, mapę strony zgłoszoną w Google Search Console i przez IndexNow do Bing.",
+    "Pomiar PageSpeed Insights po publikacji, osobno na telefonie i na komputerze.",
+    "Osobne repozytorium kodu z pełną historią zmian: każdą wersję strony da się odtworzyć.",
+    "Plik llms.txt i opis strony dla asystentów AI, które czytają strony w imieniu użytkowników."
+  ],
+  "sekcje": [
+    {
+      "id": "czym-jest",
+      "naglowek": "Czym jest strona wizytówka",
+      "akapity": [
+        "Strona wizytówka to najmniejsza strona internetowa firmy. Ma jedną stronę albo dwie, trzy podstrony i odpowiada na cztery pytania klienta: kim jesteś, co robisz, gdzie działasz i jak się z Tobą skontaktować.",
+        "Wizytówka niczego nie sprzedaje i nie przyjmuje rezerwacji. Jej zadanie jest prostsze: klient, który zobaczył Twoją nazwę w Google, na mapie albo na samochodzie firmowym, ma w kilka sekund sprawdzić, że firma istnieje, czym się zajmuje i pod jakim numerem odbiera telefon.",
+        "Dlatego w wizytówce liczy się szybkość i porządek, a nie liczba efektów. Telefon w zasięgu jednego dotknięcia, adres z odnośnikiem do mapy, krótki opis usług i formularz. Resztę dopowiada rozmowa. Gotowe przykłady opisaliśmy we wpisie [przykłady stron wizytówek](/blog/strona-wizytowka-przyklady/)."
+      ],
+      "lista": []
+    },
+    {
+      "id": "co-zawiera",
+      "naglowek": "Co zawiera nasza strona wizytówka",
+      "akapity": [
+        "Zakres ustalamy po rozmowie, ale każda wizytówka, którą robimy, ma te same podstawy:"
+      ],
+      "lista": [
+        "Nagłówek z nazwą firmy i jednym zdaniem o tym, co robisz i gdzie.",
+        "Opis usług napisany zwykłym językiem. Tekst możemy przygotować na podstawie Twoich informacji.",
+        "Zdjęcia: Twoje albo z banku zdjęć. Obrazów wygenerowanych przez AI na strony nie wstawiamy.",
+        "Dane firmy: pełna nazwa, adres, NIP, telefon i e-mail, te same na stronie, w stopce i w danych strukturalnych dla Google.",
+        "Formularz kontaktowy w PHP z ochroną Cloudflare Turnstile, bez przepisywania liter z obrazka.",
+        "Odnośnik do Map Google zamiast osadzonej mapy, więc strona nie ładuje skryptów Map Google przy każdym wejściu.",
+        "Politykę prywatności, która opisuje to, co strona naprawdę robi z danymi z formularza.",
+        "Tytuł i opis dla wyszukiwarki, mapę strony i zgłoszenie w Google Search Console."
+      ]
+    },
+    {
+      "id": "wizytowka-czy-strona-firmowa",
+      "naglowek": "Kiedy wystarczy wizytówka, a kiedy potrzebna jest strona firmowa",
+      "akapity": [
+        "Wizytówka wystarczy, gdy masz jedną albo dwie usługi, klienci trafiają do Ciebie głównie z polecenia lub z mapy, a strona ma przede wszystkim potwierdzić, że firma istnieje i jak się z nią skontaktować. Tak jest często u fachowców, w małych biurach i w firmach, które dopiero startują.",
+        "Stronę firmową wybierz, gdy chcesz, żeby każda usługa miała własną podstronę i własne miejsce w wynikach Google, gdy pokazujesz galerię realizacji albo chcesz prowadzić blog. Strona firmowa ma zwykle 5–10 podstron i panel do edycji treści. Więcej o niej piszemy na stronie [strona firmowa z kilkoma usługami](/strony-internetowe-warszawa/).",
+        "Jeśli strona ma sprzedawać, przyjmować rezerwacje albo płatności, wizytówka nie wystarczy. Porównanie dróg opisaliśmy we wpisie [strona czy sklep internetowy — od czego zacząć](/blog/strona-czy-sklep-internetowy-od-czego-zaczac/).",
+        "Wizytówka nie zamyka drogi. Zbudowana w Astro rozrasta się o kolejne podstrony bez przenoszenia na inny system, więc możesz zacząć od małej strony i dołożyć usługi, gdy firma urośnie."
+      ],
+      "lista": []
+    },
+    {
+      "id": "ile-kosztuje",
+      "naglowek": "Ile kosztuje strona wizytówka",
+      "akapity": [
+        "Strona wizytówka kosztuje u nas od {od: Wizytówka, strona jednostronicowa} netto. To cena za jedną stronę albo 2–3 podstrony z formularzem kontaktowym.",
+        "Domenę, hosting i teksty liczymy osobno. Wizytówka bez sprzedaży może stać na GitHub Pages bez opłat za hosting (opis niżej), więc stałym kosztem zostaje wtedy przede wszystkim domena u rejestratora. Pełną listę cen, także prowadzenia strony po publikacji, znajdziesz w cenniku: [cena strony wizytówki](/cena/).",
+        "Ostateczną kwotę podajemy po rozmowie o zakresie. Wpływa na nią liczba podstron, to, czy teksty piszemy my, i czy przenosimy treść ze starej strony."
+      ],
+      "lista": []
+    },
+    {
+      "id": "github-pages",
+      "naglowek": "Wizytówka bez opłat za hosting na GitHub Pages",
+      "akapity": [
+        "Strona, która niczego nie sprzedaje, nie przyjmuje rezerwacji ani płatności, może stać na GitHub Pages. To usługa GitHuba, która publikuje gotowe pliki strony bez opłat za hosting. Tak działa ta strona: www.ecopowerpolska.pl stoi na GitHub Pages.",
+        "Warunek jest jeden i mówimy o nim przed startem: na bezpłatnym planie GitHub Pages publikuje tylko z repozytorium publicznego. Publiczna jest wtedy historia zmian i kod strony, a nie dane z formularza. Te trafiają prosto na Twój adres e-mail.",
+        "GitHub Pages nie uruchamia PHP, więc formularz kontaktowy potrzebuje małego skryptu na zwykłym hostingu. Tak działa formularz na naszej stronie kontaktowej: skrypt PHP stoi na hostingu lh.pl i sprawdza każde zgłoszenie przed wysłaniem.",
+        "Gdy strona zacznie sprzedawać albo przyjmować rezerwacje, przenosimy ją na hosting lh.pl. Kod zostaje ten sam, zmienia się tylko miejsce publikacji."
+      ],
+      "lista": []
+    },
+    {
+      "id": "wizytowka-google",
+      "naglowek": "Strona wizytówka a wizytówka Google",
+      "akapity": [
+        "To dwie różne rzeczy o podobnej nazwie. Strona wizytówka to Twoja strona pod Twoim adresem. Wizytówka Google, czyli Profil Firmy w Google, to wpis w Mapach i w wynikach wyszukiwania: nazwa, adres, godziny, zdjęcia i opinie.",
+        "Najlepiej działają razem. W profilu ustawiamy adres strony, a na stronie te same dane: nazwę, adres i telefon, w stopce, w kontakcie i w danych strukturalnych. Klient z Map trafia wtedy od razu na właściwą stronę, a Google widzi, że dane w obu miejscach się zgadzają.",
+        "Profil Firmy uzupełniamy w ramach [prowadzenia strony po publikacji](/prowadzenie-strony-internetowej/): kategorie, usługi, obszar działania, zdjęcia i wpisy z linkiem do strony. Weryfikację profilu przechodzi właściciel firmy, a właścicielem profilu zostajesz Ty."
+      ],
+      "lista": []
+    }
+  ],
+  "przykladyNaglowek": "Przykłady stron wizytówek z wynikami PageSpeed",
+  "przykladyLead": "Pierwszym przykładem jest strona, którą właśnie czytasz: 98–99 punktów wydajności na telefonie i 100 na komputerze. Niżej trzy małe strony jednej usługi, które zrobiliśmy dla firm z Warszawy tą samą metodą. Mają więcej podstron niż wizytówka, ale pokazują, jak szybka jest taka strona. Wyniki to pomiar PageSpeed Insights, a każdy może je sprawdzić sam: [sprawdź szybkość swojej strony](/jak-sprawdzic-szybkosc-strony/).",
+  "przyklady": [
+    {
+      "adres": "https://garderoba-na-wymiar-warszawa.pl/",
+      "zdanie": "Garderoby na wymiar w Warszawie. Jedna usługa, kalkulator ceny, galeria i formularz chroniony Turnstile."
+    },
+    {
+      "adres": "https://szafy-na-wymiar-warszawa.pl/",
+      "zdanie": "Szafy wnękowe i przesuwne w Warszawie. Strona od zera w Astro na hostingu lh.pl, z kalkulatorem ceny szafy."
+    },
+    {
+      "adres": "https://kuchnia-na-wymiar-warszawa.pl/",
+      "zdanie": "Kuchnie na wymiar w Warszawie. Kalkulator ceny netto i z VAT, galeria realizacji i formularz z załącznikami."
+    }
+  ],
+  "procesNaglowek": "Jak pracujemy",
+  "proces": [
+    {
+      "nazwa": "Zakres",
+      "opis": "Ustalamy, co ma być na stronie: usługi, obszar działania, dane do kontaktu. Z tego wynika, czy wystarczy GitHub Pages, czy strona stanie na hostingu lh.pl."
+    },
+    {
+      "nazwa": "Treść i zdjęcia",
+      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Tekst możemy napisać na podstawie rozmowy."
+    },
+    {
+      "nazwa": "Budowa pod adresem roboczym",
+      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zanim zastąpi obecną."
+    },
+    {
+      "nazwa": "Kontrola przed publikacją",
+      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie do publikacji."
+    },
+    {
+      "nazwa": "Publikacja i zgłoszenie w Google",
+      "opis": "Podpinamy domenę tak, żeby poczta działała dalej, zgłaszamy mapę strony w Search Console i mierzymy stronę w PageSpeed Insights."
+    }
+  ],
+  "wideo": "",
+  "wideoNaglowek": "Strona wizytówka na filmie",
+  "pytaniaNaglowek": "Pytania o stronę wizytówkę",
+  "pytania": [
+    {
+      "pytanie": "Ile trwa zrobienie strony wizytówki?",
+      "odpowiedz": "Termin podajemy po rozmowie o zakresie. Najdłużej trwa zwykle zebranie materiałów: tekstów, zdjęć i danych firmy. Stronę publikujemy dopiero wtedy, gdy przejdzie kontrolę szybkości, dostępności i danych dla wyszukiwarek."
+    },
+    {
+      "pytanie": "Czy sam zmienię treść wizytówki?",
+      "odpowiedz": "Tak, jeśli strona dostanie panel treści pod adresem /admin/. Tak edytujemy tę stronę: panel Sveltia zapisuje zmiany w repozytorium, a strona przebudowuje się sama w ciągu kilku minut. Jak to wygląda, opisaliśmy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/)."
+    },
+    {
+      "pytanie": "Co z domeną i pocztą, które już mam?",
+      "odpowiedz": "Domena zostaje u Twojego rejestratora, a do nowej strony podpinamy ją rekordami DNS. Przed zmianą zapisujemy komplet rekordów jako punkt powrotu i zmieniamy tylko rekordy adresowe strony. Rekordy poczty zostają bez zmian, a pracę kończymy, gdy list testowy dochodzi w obie strony."
+    },
+    {
+      "pytanie": "Czy wizytówka będzie widoczna w Google?",
+      "odpowiedz": "Zgłaszamy ją w Google Search Console i w Bing przez IndexNow, z mapą strony, tytułem, opisem i danymi firmy w danych strukturalnych. Pozycji w wynikach nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console."
+    }
+  ],
+  "cenaNaglowek": "Ile to kosztuje",
+  "cenaTekst": [
+    "Strona wizytówka kosztuje od {od: Wizytówka, strona jednostronicowa} netto. Cenę swojego zakresu policzysz w kalkulatorze, a wyliczenie dołączysz jednym przyciskiem do formularza kontaktowego."
+  ],
+  "przyciskKalkulator": "Policz cenę w kalkulatorze",
+  "przyciskKontakt": "Zapytaj o wycenę wizytówki",
+  "zobaczTezNaglowek": "Zobacz też",
+  "zobaczTez": [
+    {
+      "adres": "/strony-internetowe-warszawa/",
+      "tekst": "Tworzenie stron internetowych w Warszawie"
+    },
+    {
+      "adres": "/sklepy-internetowe-warszawa/",
+      "tekst": "Tworzenie sklepów internetowych"
+    },
+    {
+      "adres": "/prowadzenie-strony-internetowej/",
+      "tekst": "Prowadzenie strony po publikacji"
+    },
+    {
+      "adres": "/faq/",
+      "tekst": "Pytania o strony i sklepy internetowe"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "pytania": [
     {
       "pytanie": "Ile trwa zrobienie strony internetowej?",
-      "odpowiedz": "Termin podajemy po rozmowie o zakresie: liczbie podstron, formularzach, sklepie i przenoszeniu treści ze starej strony. Najdłużej trwa zwykle zebranie materiałów, czyli tekstów, zdjęć i danych firmy. Stronę budujemy w wersji roboczej, a publikujemy dopiero wtedy, gdy przejdzie kontrolę szybkości, dostępności i danych dla wyszukiwarek.",
+      "odpowiedz": "Termin podajemy po rozmowie o zakresie: liczbie podstron, formularzach, sklepie i przenoszeniu treści ze starej strony. Najdłużej trwa zwykle zebranie materiałów, czyli tekstów, zdjęć i danych firmy. Stronę budujemy w wersji roboczej, a publikujemy dopiero wtedy, gdy przejdzie kontrolę szybkości, dostępności i danych dla wyszukiwarek.\n\nKolejne etapy, od ustalenia zakresu do pomiaru po publikacji, opisujemy na stronie [jak wygląda tworzenie strony krok po kroku](/strony-internetowe-warszawa/).",
       "kotwica": "ile-trwa",
       "naGlownej": false
     },
@@ -44,7 +44,7 @@
     },
     {
       "pytanie": "Jaki sklep internetowy możecie zrobić?",
-      "odpowiedz": "Są trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.\n\nCenę swojej strony albo sklepu policzysz sam w kalkulatorze na stronie [Cena](/cena/#kalkulator), a wyliczenie dodasz jednym przyciskiem do [formularza kontaktowego](/kontakt/).",
+      "odpowiedz": "Najczęściej proponujemy trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.\n\nJest też czwarta droga: platforma abonamentowa, na przykład Shoper albo IdoSell. Plusy i ograniczenia każdej z nich porównujemy na stronie [cztery drogi do sklepu internetowego](/sklepy-internetowe-warszawa/).\n\nCenę swojej strony albo sklepu policzysz sam w kalkulatorze na stronie [Cena](/cena/#kalkulator), a wyliczenie dodasz jednym przyciskiem do [formularza kontaktowego](/kontakt/).",
       "kotwica": "sklep",
       "naGlownej": true
     },
@@ -74,7 +74,7 @@
     },
     {
       "pytanie": "Czy zajmiecie się wizytówką firmy w Google?",
-      "odpowiedz": "Tak. Uzupełniamy Profil Firmy w Google: kategorie, usługi, obszar działania, godziny, opis, zdjęcia i wpisy z linkiem do strony, a także odpowiedzi na opinie. Nazwę, adres i telefon prowadzimy w wizytówce i na stronie jednakowo. Weryfikację profilu przechodzi właściciel firmy; Google może poprosić o krótki film z miejsca działalności.",
+      "odpowiedz": "Tak. Uzupełniamy Profil Firmy w Google: kategorie, usługi, obszar działania, godziny, opis, zdjęcia i wpisy z linkiem do strony, a także odpowiedzi na opinie. Nazwę, adres i telefon prowadzimy w wizytówce i na stronie jednakowo. Weryfikację profilu przechodzi właściciel firmy; Google może poprosić o krótki film z miejsca działalności.\n\nProfil prowadzimy razem ze stroną. Szczegóły: [wizytówka Google w opiece nad stroną](/prowadzenie-strony-internetowej/).",
       "kotwica": "wizytowka-google",
       "naGlownej": false
     },

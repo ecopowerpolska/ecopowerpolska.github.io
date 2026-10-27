@@ -13,9 +13,9 @@ import { tekst } from '../lib/tekst';
 
 const klucz = (import.meta.env.PUBLIC_PSI_KLUCZ ?? '').trim();
 const naglowek = 'Jak sprawdzić szybkość strony internetowej';
-const tytul = 'Jak sprawdzić szybkość strony internetowej? Darmowy test PageSpeed — EcoPower Polska';
+const tytul = 'Szybkość strony: darmowy test PageSpeed — EcoPower Polska';
 const opis =
-  'Sprawdź szybkość swojej strony w Google PageSpeed Insights: darmowy test, oficjalny wynik Google na telefonie i komputerze. Wyjaśniamy, jak czytać wynik.';
+  'Sprawdź szybkość strony internetowej w Google PageSpeed Insights: darmowy test na telefonie i komputerze. Wyjaśniamy wynik i co z nim zrobić.';
 
 const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
 const adres = new URL('/jak-sprawdzic-szybkosc-strony/', import.meta.env.SITE).href;
@@ -184,7 +184,8 @@ const daneStrukturalne = {
       <p>
         Google bierze pod uwagę wrażenia użytkownika, w tym szybkość, gdy ustala kolejność wyników. Ważniejsi są jednak
         klienci. Strona, która ładuje się kilka sekund, traci część odwiedzających, zanim cokolwiek zobaczą. Szybka
-        strona to więcej telefonów i zapytań z tej samej liczby wejść.
+        strona to więcej telefonów i zapytań z tej samej liczby wejść. Dlatego robimy
+        <a href="/strony-internetowe-warszawa/">strony budowane pod wynik 97–100 w PageSpeed</a>.
       </p>
 
       <h2>Co znaczy „Brak danych”</h2>
@@ -534,7 +535,10 @@ const daneStrukturalne = {
     line-height: 1.6;
   }
 
+  /* Link w zdaniu różni się nie tylko kolorem (PSI link-in-text-block, runda 5). */
   .tresc a {
     font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 </style>

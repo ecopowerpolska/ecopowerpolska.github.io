@@ -1,6 +1,6 @@
 ---
 tytul: "Panel treści: jak sam zmienisz tekst i zdjęcia na stronie"
-tytulSeo: "Panel treści strony bez programisty — EcoPower Polska"
+tytulSeo: "Panel treści: jak sam zmienisz tekst i zdjęcia na stronie"
 opisSeo: "Jak działa panel treści pod adresem /admin/: co w nim zmienisz, czym różni się panel Sveltia od panelu w PHP i jak cofnąć zmianę."
 dataPublikacji: "2026-10-23T15:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-nadihome.jpg"
@@ -63,6 +63,6 @@ Jeśli nie masz czasu pisać, wpisy możesz zlecić nam. Temat dobieramy z danyc
 
 Wybór zależy od tego, jak chcesz się logować. Jeśli masz konto na GitHubie albo nie przeszkadza Ci jego założenie, Sveltia daje pełną historię zmian i cofanie każdego zapisu. Jeśli wolisz zwykłe hasło, panel w PHP na hostingu zrobi to samo bez GitHuba.
 
-Rodzaj panelu ustalamy na początku, razem z wyborem hostingu. Krótki opis obu jest w sekcji [panel do edycji treści w naszej ofercie](/#oferta), a szczegóły w odpowiedzi na pytanie [czy sam zmienię treść na stronie](/faq/#edycja-tresci). Jeśli chcesz zobaczyć, jak panel wygląda w praktyce, [napisz do nas](/#kontakt).
+Rodzaj panelu ustalamy na początku, razem z wyborem hostingu. Krótki opis obu jest w sekcji [panel do edycji treści w naszej ofercie](/#oferta), a szczegóły w odpowiedzi na pytanie [czy sam zmienię treść na stronie](/faq/#edycja-tresci). Jeśli chcesz zobaczyć, jak panel wygląda w praktyce, [napisz do nas](/#kontakt). Gdy wolisz nie robić zmian sam, wprowadzimy je za Ciebie: opisujemy to przy [zmianach treści w ramach opieki](/prowadzenie-strony-internetowej/).
 
 Jeśli razem ze stroną planujesz kompleksowy projekt mieszkania, współpracujemy w tym zakresie ze [Studio Agat](https://studioagat.pl/projektowanie-wnetrz). Jeśli potrzebujesz kompletu mebli na wymiar do całego mieszkania, zapraszamy na stronę [Pan Stolarz](https://pan-stolarz.pl/meble-na-wymiar).

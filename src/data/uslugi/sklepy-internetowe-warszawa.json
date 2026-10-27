@@ -1,0 +1,215 @@
+{
+  "tytulKarty": "Tworzenie sklepów internetowych Warszawa — EcoPower Polska",
+  "opisWyszukiwarki": "Budujemy sklepy internetowe dla firm z Warszawy: WooCommerce, PrestaShop, platforma abonamentowa albo szybki sklep w Astro z płatnością online.",
+  "naglowek": "Tworzenie sklepów internetowych dla firm w Warszawie",
+  "okruszek": "Sklepy internetowe",
+  "lead": "Budujemy sklepy internetowe dla firm z Warszawy na jednej z czterech dróg: WooCommerce, PrestaShop, platforma abonamentowa albo szybki sklep w Astro z płatnością online. Drogę dobieramy do liczby produktów i do tego, kto obsługuje zamówienia. Strony, które zbudowaliśmy, mają w PageSpeed Insights na telefonie od 97 do 100 punktów wydajności.",
+  "uslugaNazwa": "Tworzenie sklepów internetowych dla firm w Warszawie",
+  "uslugaTyp": "Tworzenie sklepów internetowych",
+  "uslugaOpis": "Sklep na WooCommerce, PrestaShop, platformie abonamentowej albo w Astro z płatnością online: katalog, koszyk, płatności, dostawy, regulamin i pomiar szybkości.",
+  "cenaOdPozycja": "Sklep WooCommerce",
+  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajesz": [
+    "Dobór drogi sklepu do liczby produktów, wariantów i sposobu obsługi zamówień, zanim zaczniemy pracę.",
+    "Katalog produktów z kategoriami, zdjęciami i opisami.",
+    "Koszyk i kasę z płatnością online: BLIK, szybki przelew i karta przez operatora płatności.",
+    "Dostawy skonfigurowane z przewoźnikiem, na przykład InPost.",
+    "Dane firmy, regulamin i politykę prywatności na stronie, bez których operator płatności nie uruchomi konta.",
+    "Testowe zamówienie przed startem: od koszyka przez płatność do potwierdzenia.",
+    "Kopię bazy zamówień także poza hostingiem.",
+    "Zgłoszenie sklepu w Google Search Console i pomiar PageSpeed Insights po publikacji."
+  ],
+  "sekcje": [
+    {
+      "id": "ktory-sklep",
+      "naglowek": "Który sklep internetowy pasuje do Twojej firmy",
+      "akapity": [
+        "Najpierw pytamy, ile masz produktów i kto będzie obsługiwał zamówienia. Od tych dwóch odpowiedzi zależy wybór drogi. Każda pasuje do innej skali sprzedaży i każda ma swoje koszty po starcie."
+      ],
+      "tabela": {
+        "podpis": "Cztery drogi do sklepu internetowego: dla kogo, mocne strony i ograniczenia",
+        "kolumny": [
+          "Droga",
+          "Dla kogo",
+          "Mocne strony",
+          "Ograniczenia"
+        ],
+        "wiersze": [
+          [
+            "WooCommerce",
+            "Firma, która sama prowadzi sklep: dodaje produkty, obsługuje zamówienia i magazyn",
+            "Pełny panel sklepu, gotowe polskie wtyczki płatności i dostaw",
+            "Regularne aktualizacje WordPressa i wtyczek, kopie bazy"
+          ],
+          [
+            "PrestaShop",
+            "Duży katalog, wiele wariantów produktu, rozbudowany magazyn",
+            "Silnik zbudowany do sprzedaży, bezpłatny, z modułami płatności i dostaw",
+            "Droższe wdrożenie, więcej konfiguracji"
+          ],
+          [
+            "Shoper, IdoSell",
+            "Firma, która nie chce utrzymywać silnika albo już ma sklep na platformie",
+            "Serwer, kasa i aktualizacje po stronie platformy, jej pomoc techniczna",
+            "Abonament co miesiąc, sklep poza naszym hostingiem, dane tylko eksportem"
+          ],
+          [
+            "Astro z płatnością online",
+            "Krótka oferta: kilkanaście albo kilkadziesiąt produktów",
+            "Najszybsza strona, brak silnika do aktualizowania",
+            "Bez pełnego panelu sklepu; zamówienia w panelu operatora płatności"
+          ]
+        ]
+      },
+      "akapityPo": [
+        "Kwoty wdrożenia każdej drogi są w tabeli [ceny uruchomienia sklepu](/cena/#sklep-wykonanie). Jeśli nie wiesz jeszcze, czy potrzebujesz sklepu, czy wystarczy strona firmowa, przeczytaj wpis [strona czy sklep — od czego zacząć](/blog/strona-czy-sklep-internetowy-od-czego-zaczac/).",
+        "Plusy i minusy trzech najpopularniejszych platform porównujemy we wpisie [WooCommerce, PrestaShop czy Shoper](/blog/woocommerce-prestashop-czy-shoper/)."
+      ]
+    },
+    {
+      "id": "woocommerce",
+      "naglowek": "Sklep na WooCommerce",
+      "akapity": [
+        "Sklep na WooCommerce wdrażamy od {od: Sklep WooCommerce} netto, razem z płatnościami, dostawami, certyfikatem SSL i podstawowym SEO. WooCommerce to wtyczka sklepu do WordPressa i najczęściej spotykany silnik sklepów w Polsce.",
+        "Sklep stoi na hostingu lh.pl, w osobnej przestrzeni z własną bazą danych. Produkty dodajesz, a zamówienia i magazyn obsługujesz w panelu WordPressa. Do płatności i dostaw są gotowe polskie wtyczki. Każdą sprawdzamy z koszykiem i kasą konkretnego sklepu, zanim ją wybierzemy.",
+        "Ta droga pasuje firmie, która chce mieć sprzedaż w jednym panelu i prowadzi ją sama. Trzeba za to pamiętać o aktualizacjach silnika i wtyczek oraz o kopiach bazy. Aktualizację robimy z testem ścieżki zakupu, żeby po niej dało się dalej złożyć zamówienie."
+      ]
+    },
+    {
+      "id": "prestashop",
+      "naglowek": "Sklep na PrestaShop",
+      "akapity": [
+        "Sklep na PrestaShop wdrażamy od {od: Sklep PrestaShop} netto. Sam silnik jest bezpłatny; płacisz za wdrożenie, hosting i ewentualne płatne moduły.",
+        "PrestaShop to silnik zbudowany wyłącznie do sprzedaży. Dobrze znosi duży katalog, wiele wariantów jednego produktu i rozbudowany magazyn. Stoi na hostingu lh.pl, z bazą danych w Twojej przestrzeni, tak jak WooCommerce.",
+        "Wdrożenie jest droższe niż na WooCommerce, bo więcej rzeczy konfiguruje się osobno: szablon, moduły płatności i dostaw, podatki i warianty. Ta droga ma sens, gdy sprzedajesz setki albo tysiące produktów."
+      ]
+    },
+    {
+      "id": "platforma",
+      "naglowek": "Sklep na platformie abonamentowej (Shoper, IdoSell)",
+      "akapity": [
+        "Wdrożenie i konfiguracja sklepu na platformie abonamentowej kosztuje u nas od {od: Sklep na platformie abonamentowej (Shoper, IdoSell) — wdrożenie i konfiguracja} netto. Do tego co miesiąc płacisz abonament platformy, a od każdej opłaconej transakcji prowizję operatora płatności.",
+        "Serwer, koszyk, kasę, bramki płatności i aktualizacje prowadzi dostawca platformy. Ty masz jego panel i jego pomoc techniczną. Nasza praca to wygląd sklepu i konfiguracja w granicach, na które platforma pozwala.",
+        "Minusy też są. Sklep stoi poza naszym hostingiem i repozytorium, zależy od cennika jednego dostawcy, a dane wychodzą z platformy tylko eksportem. Dlatego tę drogę wybieramy głównie wtedy, gdy masz już sklep na platformie albo nie chcesz utrzymywać silnika i kopii bazy."
+      ]
+    },
+    {
+      "id": "astro",
+      "naglowek": "Sklep w Astro z płatnością online",
+      "akapity": [
+        "Sklep na szybkiej stronie Astro z koszykiem i płatnością online kosztuje od {od: Sklep na stronie Astro z koszykiem i płatnością online (Stripe, Przelewy24)} netto. Produkty są częścią strony, tak jak oferta na każdej naszej realizacji, a płatność przyjmuje operator: Stripe albo Przelewy24.",
+        "Ta droga pasuje do krótkiej oferty: kilkunastu albo kilkudziesięciu produktów bez rozbudowanego magazynu. Strona nie ma silnika do aktualizowania, więc jest najszybsza i najtańsza w utrzymaniu. Zamówienie potwierdza serwer po powiadomieniu od operatora płatności, a nie sama strona powrotu, na którą klient nie musi trafić.",
+        "Nie ma za to pełnego panelu sklepu. Zamówienia i zwroty widzisz w panelu operatora płatności."
+      ]
+    },
+    {
+      "id": "platnosci-dostawy",
+      "naglowek": "Płatności, dostawy i regulamin sklepu",
+      "akapity": [
+        "Płatność przyjmuje operator płatności. Klient płaci BLIK-iem, szybkim przelewem albo kartą, a pieniądze trafiają na Twoje konto u operatora. Operatora dobieramy do drogi sklepu: w WooCommerce i PrestaShop przez wtyczkę, w sklepie Astro przez Stripe albo Przelewy24. Prowizję od transakcji pobiera operator, nie my.",
+        "Dostawy konfigurujemy z przewoźnikiem, na przykład z InPostem: kurier albo paczkomat. Wtyczkę dostawy sprawdzamy z koszykiem i kasą Twojego sklepu, zanim obiecamy wybór paczkomatu w zamówieniu.",
+        "Operatorzy płatności wymagają, żeby sklep pokazywał adres firmy, NIP, numer rejestrowy, regulamin, zasady zwrotów i politykę prywatności. Bez tego konto płatności nie przejdzie aktywacji. Regulamin i politykę prywatności przygotowujemy jako osobną pozycję cennika, z aktualizacją przy zmianie przepisów. Nie zastępują one porady prawnika, a ich treść zatwierdzasz Ty."
+      ]
+    },
+    {
+      "id": "szybkosc",
+      "naglowek": "Szybkość sklepu a sprzedaż",
+      "akapity": [
+        "Każda sekunda czekania na stronę produktu to okazja, żeby klient wrócił do wyników wyszukiwania. Dlatego sklep mierzymy tak samo jak każdą naszą stronę: w PageSpeed Insights, osobno na telefonie i na komputerze.",
+        "Google ocenia wygodę stron wskaźnikami Core Web Vitals: czasem pokazania największego elementu, reakcją na dotknięcie i przesunięciami układu. W sklepie psują je najczęściej ciężkie zdjęcia produktów, nadmiar wtyczek i skrypty ładowane przed zgodą użytkownika.",
+        "Zdjęcia produktów przygotowujemy w kilku rozmiarach, analitykę włączamy dopiero po zgodzie, a wtyczki ograniczamy do potrzebnych. Obecny sklep sprawdzisz sam w minutę: [darmowy test szybkości strony](/jak-sprawdzic-szybkosc-strony/)."
+      ]
+    }
+  ],
+  "przykladyNaglowek": "Przykład: koszyk wycen na naszych stronach",
+  "przykladyLead": "Sklepu z płatnością online w naszych realizacjach jeszcze nie ma i nie udajemy, że jest. Pokazujemy mechanizmy, które zbudowaliśmy i które sklep wykorzystuje: koszyk i kalkulator ceny. Ta strona też ma koszyk wycen: [kalkulator na stronie Cena](/cena/#kalkulator) dodaje wyliczenia do formularza kontaktowego.",
+  "przyklady": [
+    {
+      "adres": "https://pan-stolarz.pl/",
+      "zdanie": "Koszyk wycen: klient liczy cenę kuchni, szafy albo garderoby, dodaje wynik do zapytania i liczy kolejny mebel. Wszystkie wyliczenia przychodzą razem w jednym formularzu, bez zakładania konta."
+    },
+    {
+      "adres": "https://kuchnia-na-wymiar-warszawa.pl/",
+      "zdanie": "Kalkulator ceny kuchni pokazuje kwotę netto i z VAT, a formularz przyjmuje załączniki, na przykład rzut mieszkania."
+    }
+  ],
+  "procesNaglowek": "Jak budujemy sklep internetowy krok po kroku",
+  "procesLead": "Sklep przechodzi przez te same etapy co strona, a do tego przez test zamówienia przed startem.",
+  "proces": [
+    {
+      "nazwa": "Zakres i wybór drogi",
+      "opis": "Ustalamy liczbę produktów, warianty, sposób obsługi zamówień i operatora płatności. Z tego wynika droga sklepu, wycena i termin."
+    },
+    {
+      "nazwa": "Katalog produktów",
+      "opis": "Zakładamy kategorie i produkty ze zdjęciami i opisami. Opisy i zdjęcia dostajemy od Ciebie; na stronę trafiają prawdziwe zdjęcia produktów."
+    },
+    {
+      "nazwa": "Płatności i dostawy",
+      "opis": "Podłączamy operatora płatności i przewoźnika, ustawiamy koszty dostawy i maile z potwierdzeniem zamówienia."
+    },
+    {
+      "nazwa": "Regulamin i dane firmy",
+      "opis": "Na stronie pojawiają się dane firmy, regulamin, zasady zwrotów i polityka prywatności, których wymaga operator płatności."
+    },
+    {
+      "nazwa": "Test zamówienia",
+      "opis": "Składamy zamówienie testowe: koszyk, płatność w trybie testowym, potwierdzenie i zapis zamówienia. Sklep z błędem nie startuje."
+    },
+    {
+      "nazwa": "Start i opieka",
+      "opis": "Publikujemy sklep, zgłaszamy go w Search Console i mierzymy szybkość. Po starcie pilnujemy aktualizacji, kopii i płatności."
+    }
+  ],
+  "wideo": "",
+  "wideoNaglowek": "Film: jak budujemy sklep internetowy",
+  "pytaniaNaglowek": "Pytania o sklep internetowy",
+  "pytania": [
+    {
+      "pytanie": "Czy opłaca się zakładać sklep internetowy?",
+      "odpowiedz": "Opłaca się, gdy klient może kupić bez rozmowy z Tobą: wybrać produkt, zapłacić i czekać na dostawę. Jeśli klient najpierw pyta, a dopiero potem kupuje, często wystarczy strona firmowa z formularzem albo kalkulatorem ceny. Pomagamy to ocenić przed wyceną."
+    },
+    {
+      "pytanie": "Jak założyć swój własny sklep internetowy?",
+      "odpowiedz": "Zacznij od listy produktów, sposobu obsługi zamówień i wyboru operatora płatności. Potem wybierz drogę: silnik na hostingu, platformę abonamentową albo sklep w Astro. Katalog, płatności, dostawy i regulamin konfigurujemy razem."
+    },
+    {
+      "pytanie": "Ile kosztuje Shoper po roku?",
+      "odpowiedz": "Abonament platformy po pierwszym roku podajemy w cenniku, w tabeli kosztów prowadzenia sklepu. Do abonamentu dochodzą prowizje operatora płatności od każdej transakcji. Pierwszy rok bywa tańszy w promocji platformy."
+    },
+    {
+      "pytanie": "Czy przeniesiecie sklep z innej platformy?",
+      "odpowiedz": "Tak, wycenę podajemy po rozmowie. Zależy od liczby produktów, wariantów, klientów i zamówień do przeniesienia oraz od tego, co da się wyeksportować ze starej platformy. Stare adresy produktów przekierowujemy na nowe, żeby nie stracić wyników w Google."
+    },
+    {
+      "pytanie": "Kto dodaje produkty i obsługuje zamówienia?",
+      "odpowiedz": "W sklepie na WooCommerce, PrestaShop albo platformie abonamentowej robisz to Ty w panelu sklepu. Na starcie zakładamy katalog i pokazujemy, jak z panelu korzystać. W sklepie w Astro zamówienia widzisz w panelu operatora płatności."
+    }
+  ],
+  "cenaNaglowek": "Ile kosztuje sklep internetowy i co płacisz co miesiąc",
+  "cenaTekst": [
+    "Wdrożenie sklepu kosztuje u nas od {od: Sklep WooCommerce} netto na WooCommerce i od {od: Sklep na stronie Astro z koszykiem i płatnością online (Stripe, Przelewy24)} netto w Astro. Co miesiąc dochodzą hosting albo abonament platformy, prowizje operatora płatności i opieka, jeśli jej chcesz. Wszystkie te kwoty są w [cenniku sklepów](/cena/#sklep-prowadzenie).",
+    "Skąd biorą się ceny sklepów na rynku, piszemy we wpisie [ile kosztuje strona i sklep internetowy](/blog/ile-kosztuje-strona-i-sklep-internetowy/). Po starcie możemy przejąć [opiekę nad sklepem po starcie](/prowadzenie-strony-internetowej/). Pracujemy z firmami z całej Warszawy; biuro jest na Gocławiu."
+  ],
+  "przyciskKalkulator": "Policz cenę sklepu w kalkulatorze",
+  "przyciskKontakt": "Zapytaj o wycenę sklepu",
+  "zobaczTezNaglowek": "Zobacz też",
+  "zobaczTez": [
+    {
+      "adres": "/strony-internetowe-warszawa/",
+      "tekst": "Tworzenie stron internetowych"
+    },
+    {
+      "adres": "/strona-wizytowka/",
+      "tekst": "Strona wizytówka dla firmy"
+    },
+    {
+      "adres": "/prowadzenie-strony-internetowej/",
+      "tekst": "Prowadzenie strony i sklepu"
+    },
+    {
+      "adres": "/faq/",
+      "tekst": "Pytania o strony i sklepy internetowe"
+    }
+  ]
+}

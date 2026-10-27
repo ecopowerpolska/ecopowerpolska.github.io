@@ -1,7 +1,7 @@
 ---
 tytul: "Jak wygląda strona firmy meblowej i studia wnętrz: dwie realizacje krok po kroku"
-tytulSeo: "Strona dla firmy meblowej i studia wnętrz, EcoPower Polska"
-opisSeo: "Dwie strony z naszych realizacji: Pan Stolarz od zera i Studio Agat przeniesione z WordPressa. Co mają, jak powstały i czego potrzebuje firma od mebli lub wnętrz."
+tytulSeo: "Strona firmy meblowej i studia wnętrz: dwie realizacje"
+opisSeo: "Dwie nasze realizacje: Pan Stolarz od zera i Studio Agat przeniesione z WordPressa. Co mają, jak powstały i czego potrzebuje firma od mebli lub wnętrz."
 dataPublikacji: "2026-10-26T21:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie i przycisk sprawdzenia ceny"
@@ -53,6 +53,6 @@ Obie strony stoją na hostingu lh.pl, każda w osobnej przestrzeni z własną we
 
 Wystarczy, że napiszesz, czym zajmuje się firma, jaki adres ma mieć strona i czy masz już domenę, teksty i zdjęcia. Jeśli masz starą stronę, napisz, gdzie stoi, bo od tego zależy plan przeniesienia. Na tej podstawie proponujemy zakres, hosting i panel.
 
-Cały zakres prac opisuje [oferta budowy stron i sklepów](/#oferta), a inne zbudowane przez nas strony są w sekcji [nasze realizacje](/#realizacje). Odpowiedzi na typowe pytania o czas i zakres znajdziesz na stronie [pytania o strony i sklepy](/faq/). Gdy wiesz już, czego potrzebujesz, [napisz albo zadzwoń do nas](/#kontakt).
+Jak tak samo budujemy strony dla innych branż, pokazujemy na stronie [strony internetowe dla firm z Warszawy](/strony-internetowe-warszawa/). Cały zakres prac opisuje [oferta budowy stron i sklepów](/#oferta), a inne zbudowane przez nas strony są w sekcji [nasze realizacje](/#realizacje). Odpowiedzi na typowe pytania o czas i zakres znajdziesz na stronie [pytania o strony i sklepy](/faq/). Gdy wiesz już, czego potrzebujesz, [napisz albo zadzwoń do nas](/#kontakt).
 
 Obie firmy z tego wpisu możesz poznać także jako klient. Jeśli planujesz kompleksowy projekt mieszkania, współpracujemy w tym zakresie ze [Studio Agat](https://studioagat.pl/projektowanie-wnetrz). Jeśli potrzebujesz kompletu mebli na wymiar do całego mieszkania, zapraszamy na stronę [Pan Stolarz](https://pan-stolarz.pl/meble-na-wymiar).

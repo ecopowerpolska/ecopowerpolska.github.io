@@ -1,0 +1,399 @@
+---
+// /prowadzenie-strony-internetowej/ — strona usługi (A4 planu SEO 2026-10-27, runda 5). Szkielet wspólny dla 4 stron usług:
+// <ZLEC>/szkielet-uslugi.md (W1). Treść: src/data/uslugi/prowadzenie-strony-internetowej.json (panel: kolekcja „Usługi”).
+// Zero JavaScriptu. Kwoty tylko z src/data/cena.json: w tekście znacznik {od: Pozycja} → cena (+ jednostka) z cennika.
+// Linki w tekście: [kotwica](/trasa/) (src/lib/odnosniki.ts). Bez FAQPage (bramka A10).
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import daneJson from '../data/uslugi/prowadzenie-strony-internetowej.json';
+import cenaJson from '../data/cena.json';
+import pomiaryJson from '../data/pomiary.json';
+import blog from '../data/blog.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+
+const TRASA = '/prowadzenie-strony-internetowej/';
+
+const d = daneJson as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (klucz: string, domyslny: string) => tekst(naTekst(d[klucz]), domyslny);
+const lista = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+const teksty = (v: unknown): string[] => lista(v).map(naTekst).filter(Boolean);
+
+// Cennik: pozycja → { cena, jednostka } ze wszystkich tabel cena.json.
+const cennik = new Map<string, { cena: string; jednostka: string }>();
+for (const wartosc of Object.values(cenaJson as Record<string, unknown>)) {
+  for (const w of lista(wartosc) as Record<string, unknown>[]) {
+    const pozycja = naTekst(w?.pozycja);
+    if (pozycja) cennik.set(pozycja, { cena: naTekst(w?.cena), jednostka: naTekst(w?.jednostka) });
+  }
+}
+const brakCeny = tekst(naTekst((cenaJson as Record<string, unknown>).brakCeny), 'wycena indywidualna');
+// {od: Pozycja} → „2 900 zł” albo „250 zł miesięcznie”; nieznana pozycja → napis brakCeny (bramka A5: znacznik nie wychodzi).
+const zKwotami = (t: string): string =>
+  t.replace(/\{od:\s*([^}]+)\}/g, (_, nazwa: string) => {
+    const w = cennik.get(nazwa.trim());
+    if (!w || !w.cena) return brakCeny;
+    return w.jednostka ? `${w.cena} ${w.jednostka}` : w.cena;
+  });
+const czesci = (t: string) => kawalki(zKwotami(t));
+
+const tytul = napis('tytulKarty', 'Prowadzenie strony internetowej — EcoPower Polska');
+const opis = napis('opisWyszukiwarki', 'Prowadzenie strony internetowej i opieka po publikacji.');
+const naglowek = napis('naglowek', 'Prowadzenie strony internetowej');
+const lead = zKwotami(naTekst(d.lead));
+
+const coDostajesz = teksty(d.coDostajesz);
+const sekcje = (lista(d.sekcje) as Record<string, unknown>[])
+  .map((s, i) => ({
+    id: naTekst(s?.id) || `sekcja-${i + 1}`,
+    naglowek: naTekst(s?.naglowek),
+    akapity: teksty(s?.akapity),
+    lista: teksty(s?.lista),
+  }))
+  .filter((s) => s.naglowek);
+
+// Przykłady: nazwa, zrzut i alt z kolekcji „serwisy”, wynik z pomiary.json — po adresie, dosłownie.
+const serwisy = await getCollection('serwisy');
+const pomiary = (pomiaryJson as { pomiary: Record<string, any> }).pomiary;
+const przyklady = (lista(d.przyklady) as Record<string, unknown>[])
+  .map((p) => {
+    const adres = naTekst(p?.adres);
+    const wpis = serwisy.find((s) => s.data.adres === adres)?.data;
+    const pomiar = pomiary[adres];
+    let domena = adres;
+    try {
+      domena = new URL(adres).hostname.replace(/^www\./, '');
+    } catch {
+      /* zostaje adres */
+    }
+    return {
+      adres,
+      domena,
+      nazwa: wpis?.nazwa || domena,
+      zdanie: zKwotami(naTekst(p?.zdanie)),
+      obrazek: wpis?.obrazek,
+      alt: wpis?.alt ?? '',
+      telefon: pomiar?.mobile?.wydajnosc as number | undefined,
+      komputer: pomiar?.desktop?.wydajnosc as number | undefined,
+      data: naTekst(pomiar?.data),
+    };
+  })
+  .filter((p) => p.adres);
+const dataPolska = (iso: string) => (/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso.split('-').reverse().join('.') : iso);
+
+const proces = (lista(d.proces) as Record<string, unknown>[])
+  .map((k) => ({ nazwa: naTekst(k?.nazwa), opis: naTekst(k?.opis) }))
+  .filter((k) => k.nazwa);
+const wideo = naTekst(d.wideo);
+const pytania = (lista(d.pytania) as Record<string, unknown>[])
+  .map((p) => ({ pytanie: naTekst(p?.pytanie), odpowiedz: naTekst(p?.odpowiedz) }))
+  .filter((p) => p.pytanie && p.odpowiedz);
+const zobaczTez = (lista(d.zobaczTez) as Record<string, unknown>[])
+  .map((z) => ({ adres: naTekst(z?.adres), tekst: naTekst(z?.tekst) }))
+  .filter((z) => z.adres.startsWith('/') && z.tekst);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(TRASA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: napis('okruszek', naglowek), adres: TRASA },
+];
+const cenaOd = cennik.get(naTekst(d.cenaOdPozycja))?.cena ?? '';
+const minPrice = cenaOd.replace(/[^\d]/g, '');
+// Cena okresowa (np. opieka miesięczna): kod jednostki UN/CEFACT z JSON (MON = miesiąc, ANN = rok); puste = cena jednorazowa.
+const jednostkaKod = naTekst(d.cenaJednostkaKod);
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      '@id': `${adres}#usluga`,
+      name: napis('uslugaNazwa', naglowek),
+      serviceType: napis('uslugaTyp', naglowek),
+      description: napis('uslugaOpis', opis),
+      url: adres,
+      provider: { '@id': `${baza}/#organizacja` },
+      areaServed: [
+        { '@type': 'City', name: 'Warszawa' },
+        { '@type': 'Country', name: 'Polska' },
+      ],
+      ...(minPrice
+        ? {
+            offers: {
+              '@type': 'Offer',
+              url: new URL('/cena/', import.meta.env.SITE).href,
+              priceCurrency: 'PLN',
+              priceSpecification: {
+                '@type': jednostkaKod ? 'UnitPriceSpecification' : 'PriceSpecification',
+                ...(jednostkaKod ? { unitCode: jednostkaKod } : {}),
+                minPrice,
+                priceCurrency: 'PLN',
+                valueAddedTaxIncluded: false,
+              },
+            },
+          }
+        : {}),
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@id': `${baza}/#witryna` },
+      about: { '@id': `${adres}#usluga` },
+      mainEntity: { '@id': `${adres}#usluga` },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="usluga">
+    <nav class="okruszki" aria-label={tekst(blog.okruszkiEtykieta, 'Ścieżka')}>
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="usluga__tytul">{naglowek}</h1>
+    {lead && <p class="usluga__lead">{lead}</p>}
+
+    {coDostajesz.length > 0 && (
+      <section class="usluga__dostajesz" aria-labelledby="co-dostajesz">
+        <h2 id="co-dostajesz">{napis('coDostajeszNaglowek', 'Co dostajesz')}</h2>
+        <ul class="usluga__lista">
+          {coDostajesz.map((p) => <li>{czesci(p).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</li>)}
+        </ul>
+      </section>
+    )}
+
+    {sekcje.map((s) => (
+      <section class="usluga__sekcja" id={s.id} aria-labelledby={`${s.id}-h`}>
+        <h2 id={`${s.id}-h`}>{s.naglowek}</h2>
+        {s.akapity.map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
+        {s.lista.length > 0 && (
+          <ul class="usluga__punkty">
+            {s.lista.map((p) => <li>{czesci(p).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</li>)}
+          </ul>
+        )}
+      </section>
+    ))}
+
+    {przyklady.length > 0 && (
+      <section class="usluga__przyklady" id="przyklady" aria-labelledby="przyklady-h">
+        <h2 id="przyklady-h">{napis('przykladyNaglowek', 'Przykłady')}</h2>
+        {naTekst(d.przykladyLead) && (
+          <p>{czesci(naTekst(d.przykladyLead)).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+        )}
+        <ul class="usluga__siatka">
+          {przyklady.map((p) => (
+            <li class="usluga__karta">
+              {p.obrazek && (
+                <Image
+                  src={p.obrazek}
+                  alt={p.alt}
+                  widths={[400, 640, 960]}
+                  sizes="(min-width: 64rem) 22rem, (min-width: 40rem) 45vw, 92vw"
+                  loading="lazy"
+                  decoding="async"
+                  class="usluga__zrzut"
+                />
+              )}
+              <h3>{p.nazwa}</h3>
+              {p.zdanie && <p>{p.zdanie}</p>}
+              {p.telefon != null && p.komputer != null && (
+                <p class="usluga__wynik">
+                  PageSpeed: telefon {p.telefon} · komputer {p.komputer}
+                  {p.data && <> ({dataPolska(p.data)})</>}
+                </p>
+              )}
+              <a class="usluga__wyjscie" href={p.adres} target="_blank" rel="noopener">
+                {p.domena}<span class="sr-only"> (otwiera się w nowej karcie)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {proces.length > 0 && (
+      <section class="usluga__proces" aria-labelledby="proces-h">
+        <h2 id="proces-h">{napis('procesNaglowek', 'Jak pracujemy')}</h2>
+        <ol class="usluga__kroki">
+          {proces.map((k) => (
+            <li>
+              <h3>{k.nazwa}</h3>
+              <p>{czesci(k.opis).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    {wideo && (
+      <section class="usluga__wideo" aria-labelledby="wideo-h">
+        <h2 id="wideo-h">{napis('wideoNaglowek', 'Film')}</h2>
+        <p><a href={wideo} target="_blank" rel="noopener">Obejrzyj film w serwisie YouTube<span class="sr-only"> (otwiera się w nowej karcie)</span></a></p>
+      </section>
+    )}
+
+    {pytania.length > 0 && (
+      <section class="usluga__pytania" aria-labelledby="pytania-h">
+        <h2 id="pytania-h">{napis('pytaniaNaglowek', 'Pytania')}</h2>
+        {pytania.map((p) => (
+          <details class="usluga__pytanie" name="usluga">
+            <summary><h3>{p.pytanie}</h3></summary>
+            <div class="usluga__odpowiedz">
+              {p.odpowiedz
+                .split(/\n\s*\n/)
+                .map((a) => a.trim())
+                .filter(Boolean)
+                .map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
+            </div>
+          </details>
+        ))}
+      </section>
+    )}
+
+    <section class="usluga__cena" aria-labelledby="cena-h">
+      <h2 id="cena-h">{napis('cenaNaglowek', 'Ile to kosztuje')}</h2>
+      {(Array.isArray(d.cenaTekst) ? d.cenaTekst : [d.cenaTekst]).map(naTekst).filter(Boolean).map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
+      <div class="usluga__przyciski">
+        <a class="usluga__przycisk" href="/cena/#kalkulator">{napis('przyciskKalkulator', 'Policz cenę w kalkulatorze')}</a>
+        <a class="usluga__przycisk usluga__przycisk--drugi" href="/kontakt/">{napis('przyciskKontakt', 'Zapytaj o wycenę')}</a>
+      </div>
+    </section>
+
+    {zobaczTez.length > 0 && (
+      <nav class="usluga__zobacz" aria-labelledby="zobacz-h">
+        <h2 id="zobacz-h">{napis('zobaczTezNaglowek', 'Zobacz też')}</h2>
+        <ul>
+          {zobaczTez.map((z) => <li><a href={z.adres}>{z.tekst}</a></li>)}
+        </ul>
+      </nav>
+    )}
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .usluga {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+  /* Okruszki: ten sam wygląd co na /cena/ i /kontakt/ (D14). */
+  .okruszki ol { list-style: none; margin: 0 0 var(--o-6); padding: 0; display: flex; gap: 0 var(--o-2); font-size: var(--t-s); color: var(--tekst-cichy); }
+  .okruszki li { display: inline-flex; align-items: center; flex: 0 0 auto; white-space: nowrap; }
+  .okruszki li:last-child { flex: 1 1 0; min-width: 0; contain: inline-size; }
+  .okruszki [aria-current] { display: block; overflow: hidden; text-overflow: ellipsis; line-height: 44px; }
+  .okruszki li + li::before { content: '›'; margin-right: var(--o-2); }
+  .okruszki a { display: inline-flex; align-items: center; min-height: 44px; }
+  .okruszki a:hover { color: var(--tekst); }
+
+  .usluga__tytul { max-width: 44rem; font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl)); }
+  .usluga__lead { max-width: 44rem; margin: var(--o-4) 0 var(--o-8); font-size: var(--t-l); line-height: 1.5; color: var(--tekst-cichy); }
+
+  .usluga h2 { margin: 0 0 var(--o-4); font-size: var(--t-xl); line-height: 1.2; max-width: 46rem; }
+  .usluga h3 { margin: 0 0 var(--o-2); font-size: var(--t-l); line-height: 1.25; }
+  .usluga p { max-width: 46rem; margin: 0 0 var(--o-4); }
+  /* Linki w tekście podkreślone (Lighthouse link-in-text-block). */
+  .usluga p a, .usluga li a { text-decoration: underline; text-underline-offset: 3px; }
+
+  .usluga__dostajesz,
+  .usluga__sekcja,
+  .usluga__przyklady,
+  .usluga__proces,
+  .usluga__wideo,
+  .usluga__pytania,
+  .usluga__cena,
+  .usluga__zobacz { margin-top: var(--o-12); scroll-margin-top: 7rem; }
+
+  /* Szerokość kolumny jak A1/A2 (46 rem, D19): integrator 2026-10-27. */
+  .usluga__dostajesz { max-width: 46rem; padding: var(--o-6); background: var(--powierzchnia); border-radius: var(--promien); }
+  .usluga__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--o-3); }
+  .usluga__lista li { position: relative; padding-left: 1.75rem; }
+  .usluga__lista li::before { content: '✓'; position: absolute; left: 0; color: var(--akcent); font-weight: 700; }
+
+  .usluga__punkty { max-width: 46rem; margin: 0 0 var(--o-4); padding-left: 1.25rem; }
+  .usluga__punkty li { margin-bottom: var(--o-2); }
+
+  .usluga__siatka { list-style: none; margin: var(--o-6) 0 0; padding: 0; display: grid; gap: var(--o-8) var(--o-6); grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  .usluga__karta { display: flex; flex-direction: column; padding: var(--o-4); background: var(--powierzchnia); border-radius: var(--promien); }
+  .usluga__zrzut { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--promien-maly); margin-bottom: var(--o-4); }
+  .usluga__karta p { margin-bottom: var(--o-3); }
+  .usluga__wynik { font-size: var(--t-s); font-weight: 600; }
+  .usluga__wyjscie { display: inline-flex; align-items: center; min-height: 44px; margin-top: auto; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+  .usluga__kroki { margin: 0; padding: 0; list-style: none; counter-reset: krok; display: grid; gap: var(--o-6); }
+  .usluga__kroki li { counter-increment: krok; position: relative; padding-left: 2.75rem; }
+  .usluga__kroki li::before {
+    content: counter(krok);
+    position: absolute; left: 0; top: 0;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--akcent); color: var(--tlo); font-weight: 700;
+  }
+  .usluga__kroki p { margin: 0; }
+
+  .usluga__pytania { border-bottom: 1px solid var(--linia); }
+  .usluga__pytanie { border-top: 1px solid var(--linia); max-width: 46rem; }
+  .usluga__pytanie summary { display: flex; align-items: center; gap: var(--o-3); min-height: 44px; padding: var(--o-4) 0; cursor: pointer; list-style: none; }
+  .usluga__pytanie summary::-webkit-details-marker { display: none; }
+  .usluga__pytanie summary::before {
+    content: ''; flex: 0 0 auto; width: 0.875rem; height: 0.875rem;
+    background:
+      linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat,
+      linear-gradient(var(--akcent), var(--akcent)) center / 2px 100% no-repeat;
+  }
+  .usluga__pytanie[open] > summary::before { background: linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat; }
+  .usluga__pytanie summary h3 { margin: 0; }
+  .usluga__pytanie summary:hover h3 { color: var(--akcent); }
+  .usluga__odpowiedz { padding: 0 0 var(--o-4) calc(0.875rem + var(--o-3)); }
+
+  .usluga__cena { max-width: 46rem; padding: var(--o-6); background: var(--powierzchnia); border-radius: var(--promien); }
+  .usluga__przyciski { display: flex; flex-wrap: wrap; gap: var(--o-4); }
+  .usluga__przycisk {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: var(--o-2) var(--o-6);
+    background: var(--akcent); color: var(--tlo); border: 2px solid var(--akcent);
+    border-radius: var(--promien); font-weight: 600; text-decoration: none;
+  }
+  .usluga__przycisk:hover { text-decoration: underline; }
+  .usluga__przycisk--drugi { background: transparent; color: var(--akcent); }
+
+  .usluga__zobacz { max-width: 46rem; }
+  .usluga__zobacz ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--o-2) var(--o-6); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
+  .usluga__zobacz a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+</style>

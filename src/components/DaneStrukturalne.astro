@@ -12,9 +12,13 @@
 // 🔴 `@id` zostaje `/#organizacja` — wpisy bloga wskazują go jako autora i wydawcę.
 // Oferta (hasOfferCatalog) to te same pozycje, które widać w sekcji „Czym się zajmujemy"
 // (src/data/oferta.json) — bez cen, bo cen na stronie nie ma.
-// CZEGO TU NIE MA: `sameAs`/`subOrganization` na realizacje (to nie ten sam podmiot ani
-// spółki zależne), `aggregateRating`/`review` (opinii o sobie nie oznaczamy), `areaServed`
-// i `priceRange` (brak potwierdzonych danych — puste lepsze niż zmyślone).
+// 2026-10-27 runda 5 (plan analizy/seo-ecopowerpolska-2026-10-27.md §4.2): typ ["Organization", "LocalBusiness"]
+// (bramka F1 przyjmuje tablicę typów), `sameAs` TYLKO z profilami, które istnieją (GitHub, curl 200 27.10;
+// FB/IG EcoPower nie istnieją, wizytówki Google brak), `areaServed` Warszawa + Polska, katalog usług
+// `@id …/#oferta` w @graph: 4 oferty wskazują `Service` stron usług (`<trasa>#usluga`, definiowane na tych
+// stronach z `provider` = `@id` organizacji), pozostałe pozycje sekcji „Czym się zajmujemy” jako `Service` bez adresu.
+// CZEGO TU NIE MA: `subOrganization` na realizacje (to nie spółki zależne), `aggregateRating`/`review`
+// (opinii o sobie nie oznaczamy), `priceRange` (forma do decyzji) i `geo` (współrzędne niezmierzone).
 
 import firma from '../data/firma.json';
 import strona from '../data/strona.json';
@@ -36,15 +40,32 @@ const uslugi = (Array.isArray(oferta.zakres) ? oferta.zakres : [])
   .map((p) => ({ nazwa: p?.nazwa?.trim() ?? '', opis: p?.opis?.trim() ?? '' }))
   .filter((p) => p.nazwa !== '');
 
+const idOrganizacji = `${baza}/#organizacja`;
+const idOferty = `${baza}/#oferta`;
+
+// Strony usług (runda 5). `@id` usługi = adres trasy + `#usluga` — to samo stoi w `Service` na stronie usługi.
+const STRONY_USLUG = [
+  { trasa: '/strony-internetowe-warszawa/', nazwa: 'Tworzenie stron internetowych dla firm w Warszawie' },
+  { trasa: '/sklepy-internetowe-warszawa/', nazwa: 'Tworzenie sklepów internetowych dla firm w Warszawie' },
+  { trasa: '/strona-wizytowka/', nazwa: 'Strona wizytówka dla firmy' },
+  { trasa: '/prowadzenie-strony-internetowej/', nazwa: 'Prowadzenie strony internetowej i opieka po publikacji' },
+];
+// Pozycje oferty, które w całości SĄ stroną usługi (nie powtarzamy ich jako osobnej usługi bez adresu).
+const POZYCJE_ZE_STRONA = new Set(['strony firmowe', 'sklepy internetowe']);
+
 // Firma stoi w OSOBNYM bloku na najwyższym poziomie, nie w @graph: bramka przed publikacją (F1)
 // sprawdza name i address tylko w obiektach najwyższego poziomu — w @graph by ich nie zobaczyła.
 const firmaLd = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': `${baza}/#organizacja`,
+  '@type': ['Organization', 'LocalBusiness'],
+  '@id': idOrganizacji,
   name: firma.nazwaKrotka,
   legalName: firma.nazwaPelna,
-  description: tekst(strona.opisWyszukiwarki, 'Budujemy strony internetowe i sklepy internetowe dla firm.'),
+  alternateName: tekst((firma as Record<string, unknown>).nazwaStopka as string | undefined, 'EcoPower Polska Sp. z o.o.'),
+  description: tekst(
+    strona.opisWyszukiwarki,
+    'Budujemy szybkie strony i sklepy internetowe dla firm: projekt, panel do edycji treści, hosting, domena i widoczność w Google. Potem je prowadzimy.',
+  ),
   url: stronaGlowna,
   // Kwadratowy sygnet 512×512 (Google: logo co najmniej 112×112 px, adres indeksowalny).
   logo: new URL('/favicon.png', stronaGlowna).href,
@@ -66,20 +87,50 @@ const firmaLd = {
     addressRegion: firma.wojewodztwo,
     addressCountry: firma.kraj,
   },
-  knowsAbout: ['strony internetowe', 'sklepy internetowe', 'Astro', 'pozycjonowanie stron w Google'],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: tekst(oferta.zakresNaglowek, 'Czym się zajmujemy'),
-    itemListElement: uslugi.map((u) => ({
+  areaServed: [
+    { '@type': 'City', name: 'Warszawa' },
+    { '@type': 'Country', name: 'Polska' },
+  ],
+  knowsAbout: [
+    'strony internetowe',
+    'sklepy internetowe',
+    'Astro',
+    'WooCommerce',
+    'PrestaShop',
+    'PageSpeed Insights',
+    'pozycjonowanie stron w Google',
+  ],
+  sameAs: ['https://github.com/ecopowerpolska'],
+  hasOfferCatalog: { '@id': idOferty },
+};
+
+const katalogLd = {
+  '@type': 'OfferCatalog',
+  '@id': idOferty,
+  name: 'Strony i sklepy internetowe EcoPower Polska',
+  itemListElement: [
+    ...STRONY_USLUG.map((u) => ({
       '@type': 'Offer',
       itemOffered: {
         '@type': 'Service',
+        '@id': `${baza}${u.trasa}#usluga`,
         name: u.nazwa,
-        ...(u.opis ? { description: u.opis } : {}),
-        provider: { '@id': `${baza}/#organizacja` },
+        url: `${baza}${u.trasa}`,
+        provider: { '@id': idOrganizacji },
       },
     })),
-  },
+    ...uslugi
+      .filter((u) => !POZYCJE_ZE_STRONA.has(u.nazwa.toLowerCase()))
+      .map((u) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: u.nazwa,
+          ...(u.opis ? { description: u.opis } : {}),
+          provider: { '@id': idOrganizacji },
+        },
+      })),
+  ],
 };
 
 const dane = {
@@ -91,8 +142,9 @@ const dane = {
       url: stronaGlowna,
       name: firma.nazwaKrotka,
       inLanguage: 'pl-PL',
-      publisher: { '@id': `${baza}/#organizacja` },
+      publisher: { '@id': idOrganizacji },
     },
+    katalogLd,
     {
       '@type': 'ItemList',
       '@id': `${baza}/#realizacje`,

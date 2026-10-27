@@ -1,6 +1,6 @@
 ---
 tytul: "Ile trwa budowa strony firmy i co dostajesz?"
-tytulSeo: "Ile trwa budowa strony firmy? — EcoPower Polska"
+tytulSeo: "Ile trwa budowa strony firmy i co dostajesz?"
 opisSeo: "Od czego zależy termin budowy strony, sześć kroków od ustalenia zakresu do utrzymania i co dostajesz po publikacji: repozytorium, panel, pomiar."
 dataPublikacji: "2026-10-23T12:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-studioagat.jpg"
@@ -27,7 +27,7 @@ Każda strona przechodzi przez te same etapy:
 5. **Przepięcie domeny.** Przełączamy domenę na nową stronę, a stare adresy przekierowujemy na nowe.
 6. **Utrzymanie.** Po publikacji wprowadzamy zmiany, mierzymy szybkość i pilnujemy Search Console.
 
-Krótszy opis tych kroków jest w sekcji [jak pracujemy przy budowie strony](/#oferta).
+Krótszy opis tych kroków jest w sekcji [jak pracujemy przy budowie strony](/#oferta), a dłuższy, razem z technologią, panelem i hostingiem, na stronie [tworzenie strony internetowej krok po kroku](/strony-internetowe-warszawa/).
 
 ## Dlaczego nowa strona powstaje obok starej?
 

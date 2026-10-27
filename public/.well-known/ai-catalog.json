@@ -6,11 +6,10 @@
       "displayName": "EcoPower Polska - katalog zasobów (ard.json)",
       "type": "application/ai-catalog+json",
       "url": "https://www.ecopowerpolska.pl/.well-known/ard.json",
-      "description": "Katalog zasobów www.ecopowerpolska.pl: opis spółki i jej serwisów dla modeli językowych (llms.txt) i mapa strony (sitemap.xml).",
+      "description": "Katalog zasobów www.ecopowerpolska.pl: firma, usługi (strony, sklepy, wizytówki, prowadzenie stron), cennik, mapa strony i blog.",
       "representativeQueries": [
-        "EcoPower Polska",
-        "EcoPower Polska sp. z o.o. KRS",
-        "serwisy EcoPower Polska",
+        "EcoPower Polska strony i sklepy internetowe",
+        "tworzenie stron internetowych Warszawa",
         "EcoPower Polska kontakt"
       ]
     }

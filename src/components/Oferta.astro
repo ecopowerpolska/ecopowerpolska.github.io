@@ -4,6 +4,9 @@
 // `czesc="kontakt"`: kontakt mailem i telefonem plus adres siedziby z firma.json (odpis KRS).
 // Kierunek „rejestr" bez zmian: lewostronnie, kreski zamiast kart, kolory tylko z motyw.css.
 // Zero JS. Każdy napis przez tekst(): wyczyszczone pole w panelu wraca do domyślnego.
+// Runda 5 (2026-10-27): pozycja „Czym się zajmujemy” z polem `link` (adres strony usługi) jest klikalna
+// w całości — odnośnik siedzi w <h3> (nazwa = tekst odnośnika), a jego ::after rozpięty na kafelek.
+// Wygląd w spoczynku bez zmian; fokus = obrys kafelka, najechanie = podkreślona nazwa.
 import ofertaJson from '../data/oferta.json';
 import firma from '../data/firma.json';
 import { tekst } from '../lib/tekst';
@@ -17,15 +20,16 @@ const { czesc } = Astro.props;
 interface Pozycja {
   nazwa?: string | null;
   opis?: string | null;
+  link?: string | null;
 }
 
 const o = ofertaJson as Record<string, unknown>;
 const napis = (klucz: string, domyslny: string) => tekst(o[klucz] as string | null | undefined, domyslny);
 
 // Lista z panelu bywa pusta albo ma wpis bez nazwy — taki wpis po prostu się nie pokazuje.
-const pozycje = (klucz: string): { nazwa: string; opis: string }[] =>
+const pozycje = (klucz: string): { nazwa: string; opis: string; link: string }[] =>
   (Array.isArray(o[klucz]) ? (o[klucz] as Pozycja[]) : [])
-    .map((p) => ({ nazwa: p?.nazwa?.trim() ?? '', opis: p?.opis?.trim() ?? '' }))
+    .map((p) => ({ nazwa: p?.nazwa?.trim() ?? '', opis: p?.opis?.trim() ?? '', link: p?.link?.trim() ?? '' }))
     .filter((p) => p.nazwa !== '');
 
 const zakres = pozycje('zakres');
@@ -52,8 +56,8 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
           {o.zakresLead && <p class="sekcja__lead">{String(o.zakresLead)}</p>}
           <ul class="zakres">
             {zakres.map((p) => (
-              <li>
-                <h3>{p.nazwa}</h3>
+              <li class:list={[{ 'zakres__kafel': p.link }]}>
+                <h3>{p.link ? <a class="zakres__link" href={p.link}>{p.nazwa}</a> : p.nazwa}</h3>
                 {p.opis && <p>{p.opis}</p>}
               </li>
             ))}
@@ -188,6 +192,37 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
   .zakres li {
     padding-top: var(--o-4);
     border-top: 2px solid var(--akcent);
+  }
+
+  /* Kafelek z odnośnikiem: cały klikalny (::after odnośnika rozpięty na <li>). */
+  .zakres__kafel {
+    position: relative;
+  }
+
+  .zakres__link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .zakres__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .zakres__kafel:hover .zakres__link {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .zakres__link:focus-visible {
+    outline: none;
+  }
+
+  .zakres__link:focus-visible::after {
+    outline: 2px solid var(--akcent);
+    outline-offset: 3px;
+    border-radius: var(--promien-maly);
   }
 
   /* Dwie kolumny i nieparzysta liczba pozycji (9 = 2 + 2 + 2 + 2 + 1): trzy ostatnie

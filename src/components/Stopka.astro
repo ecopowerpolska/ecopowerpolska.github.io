@@ -33,6 +33,14 @@ const nazwaZbiorcza = guzikKopiujWszystko.replace(/^skopiuj\s+/i, '');
 const potwierdzenieKopiowania = tekst(napisyStopki.potwierdzenieKopiowania, 'Skopiowano');
 const bladKopiowania = tekst(napisyStopki.bladKopiowania, 'Nie udało się skopiować.');
 
+// Lista „Usługi” (runda 5, 2026-10-27): cztery strony usług — każda ma linki przychodzące z całej witryny.
+const uslugiStopki = [
+  { adres: '/strony-internetowe-warszawa/', nazwa: 'Tworzenie stron internetowych' },
+  { adres: '/sklepy-internetowe-warszawa/', nazwa: 'Tworzenie sklepów internetowych' },
+  { adres: '/strona-wizytowka/', nazwa: 'Strona wizytówka' },
+  { adres: '/prowadzenie-strony-internetowej/', nazwa: 'Prowadzenie strony' },
+];
+
 // Blok kopiowany guzikiem zbiorczym — do wklejenia w umowę albo przelew.
 const daneSpolki = [
   nazwaStopki,
@@ -69,6 +77,15 @@ const daneSpolki = [
         <li><a href="/faq/">{tekst(blog.menuFaq, 'FAQ')}</a></li>
         <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
         <li><a href="/kontakt/">{tekst(blog.menuKontakt, 'Kontakt')}</a></li>
+      </ul>
+    </nav>
+
+    <nav class="stopka__uslugi" aria-labelledby="stopka-uslugi">
+      <p id="stopka-uslugi" class="stopka__etykieta">Usługi</p>
+      <ul>
+        {uslugiStopki.map((u) => (
+          <li><a href={u.adres}>{u.nazwa}</a></li>
+        ))}
       </ul>
     </nav>
 
@@ -286,7 +303,8 @@ const daneSpolki = [
     color: var(--tekst-cichy);
   }
 
-  .stopka__menu ul {
+  .stopka__menu ul,
+  .stopka__uslugi ul {
     list-style: none;
     margin: 0 0 var(--o-4);
     padding: 0;
@@ -295,7 +313,14 @@ const daneSpolki = [
     gap: 0 var(--o-6);
   }
 
-  .stopka__menu a {
+  .stopka__etykieta {
+    margin: 0;
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  .stopka__menu a,
+  .stopka__uslugi a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
@@ -304,7 +329,8 @@ const daneSpolki = [
     color: var(--akcent);
   }
 
-  .stopka__menu a:hover {
+  .stopka__menu a:hover,
+  .stopka__uslugi a:hover {
     color: var(--tekst);
   }
 

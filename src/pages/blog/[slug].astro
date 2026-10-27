@@ -51,6 +51,11 @@ if (dane.zdjecie && !obraz) console.warn(`[wpis ${wpis.id}] zdjęcie ${dane.zdje
 const udostepnijAdres = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(adres)}`;
 const obrazAdres = obraz ? new URL(obraz.src, import.meta.env.SITE).href : undefined;
 
+// Wpis bez sufiksu marki w <title> (decyzja sesji 2026-10-27, plan SEO §3 B): marka jest w og:site_name,
+// okruszkach i JSON-LD `publisher`. Sufiks wpisany w panelu („ — EcoPower Polska”, „, EcoPower Polska”) zdejmujemy.
+const marka = tekst(firma.nazwaKrotka, 'EcoPower Polska').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const tytulKarty = dane.tytulSeo.replace(new RegExp(`\\s*[—–|,-]\\s*${marka}\\s*$`), '').trim() || dane.tytul;
+
 const nazwaBlogu = tekst(teksty.naglowek, 'Blog');
 const okruszki = [
   { nazwa: tekst(teksty.stronaGlowna, 'Strona główna'), adres: '/' },
@@ -88,7 +93,7 @@ const daneStrukturalne = {
 };
 ---
 
-<Bazowy tytul={dane.tytulSeo} opis={dane.opisSeo || dane.tytul} typOg="article" obrazOg={obrazAdres}>
+<Bazowy tytul={tytulKarty} opis={dane.opisSeo || dane.tytul} typOg="article" obrazOg={obrazAdres}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
 
   <PasekMarki />

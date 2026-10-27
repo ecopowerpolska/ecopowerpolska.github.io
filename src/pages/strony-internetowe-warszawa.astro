@@ -1,0 +1,772 @@
+---
+// /strony-internetowe-warszawa/ — strona usługi „Tworzenie stron internetowych” (runda 5, 2026-10-27; plan SEO §3 A1).
+// Treść: src/data/uslugi/strony-internetowe-warszawa.json (panel: kolekcja „Usługi”). Szkielet wspólny dla 4 stron usług
+// (A1–A4): ten plik różni się od pozostałych tylko importem JSON i stałą TRASA. 0 kB JS: <details> i linki, bez <script>.
+// Kwoty: {od: <pozycja z cena.json>} w tekście zamienia kod na cenę z cennika — ręcznie wpisanych kwot nie ma (plan §3).
+import { Image } from 'astro:assets';
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import d from '../data/uslugi/strony-internetowe-warszawa.json';
+import cenaJson from '../data/cena.json';
+import serwisyJson from '../data/serwisy.json';
+import pomiaryJson from '../data/pomiary.json';
+import blog from '../data/blog.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+import { plikObrazu } from '../lib/wpisy';
+
+const TRASA = '/strony-internetowe-warszawa/';
+
+type Rek = Record<string, unknown>;
+const dane = d as Rek;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (klucz: string, domyslny: string) => tekst(naTekst(dane[klucz]), domyslny);
+const lista = (v: unknown): Rek[] => (Array.isArray(v) ? (v as Rek[]).filter((x) => x && typeof x === 'object') : []);
+const napisy = (v: unknown): string[] => (Array.isArray(v) ? v.map(naTekst).filter(Boolean) : []);
+
+// Cena „od” z cennika po nazwie pozycji (wszystkie tabele cena.json). Brak pozycji = napis „wycena indywidualna”.
+const cena = cenaJson as Rek;
+const pozycjeCennika = Object.values(cena).flatMap((v) => lista(v));
+const cenaPozycji = (nazwa: string): string =>
+  naTekst(pozycjeCennika.find((p) => naTekst(p.pozycja) === nazwa.trim())?.cena);
+const brakCeny = tekst(naTekst(cena.brakCeny), 'wycena indywidualna');
+const zKwotami = (t: string): string =>
+  t.replace(/\{od:\s*([^}]+)\}/g, (_, nazwa: string) => (cenaPozycji(nazwa) || brakCeny).replace(/ /g, '\u00a0'));
+// Tekst z panelu → kawałki z linkami [kotwica](/trasa/) (lib/odnosniki.ts).
+const tresc = (t: string) => kawalki(zKwotami(t));
+
+const tytul = napis('tytulKarty', 'Tworzenie stron internetowych Warszawa — EcoPower Polska');
+const opis = napis('opisWyszukiwarki', 'Tworzymy strony internetowe dla firm z Warszawy.');
+const naglowek = napis('naglowek', 'Tworzenie stron internetowych dla firm w Warszawie');
+const lead = napis('lead', '');
+
+const coDostajesz = napisy(dane.coDostajesz);
+const sekcje = lista(dane.sekcje).map((s, i) => ({
+  id: naTekst(s.id) || `sekcja-${i + 1}`,
+  naglowek: naTekst(s.naglowek),
+  akapity: napisy(s.akapity),
+  punkty: napisy(s.lista),
+  akapityPo: napisy(s.akapityPo),
+  tabela: s.tabela && typeof s.tabela === 'object' ? (s.tabela as Rek) : null,
+})).filter((s) => s.naglowek);
+
+// Przykłady: nazwa, zrzut i alt z serwisy.json, wynik z pomiary.json (plik generowany skryptem PSI).
+const serwisy = lista((serwisyJson as Rek).serwisy);
+const pomiary = ((pomiaryJson as Rek).pomiary ?? {}) as Record<string, Rek>;
+const FORMAT_DATY = new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Warsaw' });
+const przyklady = lista(dane.przyklady)
+  .map((p) => {
+    const adres = naTekst(p.adres);
+    const s = serwisy.find((x) => naTekst(x.adres) === adres);
+    const pm = pomiary[adres];
+    const tel = (pm?.mobile as Rek | undefined)?.wydajnosc;
+    const komp = (pm?.desktop as Rek | undefined)?.wydajnosc;
+    const data = naTekst(pm?.data);
+    return {
+      adres,
+      nazwa: naTekst(p.nazwa) || naTekst(s?.nazwa),
+      domena: adres.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+      zdanie: naTekst(p.zdanie),
+      obrazek: plikObrazu(naTekst(s?.obrazek)),
+      alt: naTekst(s?.alt),
+      wynik: typeof tel === 'number' && typeof komp === 'number' ? { tel, komp, data: data ? FORMAT_DATY.format(new Date(data)) : '' } : null,
+    };
+  })
+  .filter((p) => p.adres && p.nazwa);
+
+const proces = lista(dane.proces).map((k) => ({ nazwa: naTekst(k.nazwa), opis: naTekst(k.opis) })).filter((k) => k.nazwa);
+const pytania = lista(dane.pytania).map((p) => ({ pytanie: naTekst(p.pytanie), odpowiedz: naTekst(p.odpowiedz) })).filter((p) => p.pytanie && p.odpowiedz);
+const zobaczTez = lista(dane.zobaczTez).map((z) => ({ adres: naTekst(z.adres), tekst: naTekst(z.tekst) })).filter((z) => z.adres.startsWith('/') && z.tekst);
+
+// Wideo (decyzja 10): pole `wideo` = adres YouTube; pusty albo nierozpoznany = sekcja się nie renderuje.
+// Fasada bez JS: ramka z `srcdoc` pokazuje miniaturę i guzik, odtwarzacz YouTube ładuje się dopiero po kliknięciu.
+const idWideo = (() => {
+  const m = naTekst(dane.wideo).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : '';
+})();
+const tytulWideo = napis('wideoNaglowek', 'Film o tej usłudze');
+const srcdocWideo = idWideo
+  ? `<style>*{margin:0}html,body{height:100%}a{display:grid;place-items:center;height:100%;background:#15201a center/cover url(https://i.ytimg.com/vi/${idWideo}/hqdefault.jpg)}span{padding:.6em 1.2em;border-radius:6px;background:#166653;color:#fff;font:600 20px/1.2 system-ui,sans-serif}</style><a href="https://www.youtube-nocookie.com/embed/${idWideo}?autoplay=1"><span>▶ Odtwórz film</span></a>`
+  : '';
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(TRASA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: napis('okruszek', naglowek), adres: TRASA },
+];
+
+const minCena = Number(cenaPozycji(napis('cenaOdPozycja', '')).replace(/[^\d]/g, ''));
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      '@id': `${adres}#usluga`,
+      name: napis('uslugaNazwa', naglowek),
+      serviceType: napis('uslugaTyp', naglowek),
+      description: napis('uslugaOpis', opis),
+      url: adres,
+      provider: { '@id': `${baza}/#organizacja` },
+      areaServed: { '@type': 'City', name: 'Warszawa' },
+      ...(minCena > 0
+        ? {
+            offers: {
+              '@type': 'Offer',
+              url: new URL('/cena/', import.meta.env.SITE).href,
+              priceCurrency: 'PLN',
+              priceSpecification: { '@type': 'PriceSpecification', minPrice: minCena, priceCurrency: 'PLN', valueAddedTaxIncluded: false },
+            },
+          }
+        : {}),
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@id': `${baza}/#witryna` },
+      about: { '@id': `${adres}#usluga` },
+      mainEntity: { '@id': `${adres}#usluga` },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="usluga">
+    <nav class="okruszki" aria-label={tekst(blog.okruszkiEtykieta, 'Ścieżka')}>
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="usluga__tytul">{naglowek}</h1>
+    {lead && <p class="usluga__lead">{tresc(lead).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>}
+
+    {coDostajesz.length > 0 && (
+      <section class="usluga__dostajesz" aria-labelledby="co-dostajesz">
+        <h2 id="co-dostajesz">{napis('coDostajeszNaglowek', 'Co dostajesz')}</h2>
+        <ul class="usluga__lista">
+          {coDostajesz.map((p) => <li>{tresc(p).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</li>)}
+        </ul>
+      </section>
+    )}
+
+    {sekcje.map((s) => (
+      <section class="usluga__sekcja" aria-labelledby={s.id}>
+        <h2 id={s.id}>{s.naglowek}</h2>
+        {s.akapity.map((a) => <p>{tresc(a).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>)}
+        {s.punkty.length > 0 && (
+          <ul class="usluga__punkty">
+            {s.punkty.map((p) => <li>{tresc(p).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</li>)}
+          </ul>
+        )}
+        {s.tabela && Array.isArray(s.tabela.kolumny) && Array.isArray(s.tabela.wiersze) && (
+          <div class="usluga__tabela" role="region" aria-labelledby={s.id} tabindex="0">
+            <table role="table">
+              {naTekst(s.tabela.podpis) && <caption>{naTekst(s.tabela.podpis)}</caption>}
+              <thead role="rowgroup">
+                <tr role="row">{(s.tabela.kolumny as unknown[]).map((k) => <th scope="col" role="columnheader">{naTekst(k)}</th>)}</tr>
+              </thead>
+              <tbody role="rowgroup">
+                {(s.tabela.wiersze as unknown[][]).filter(Array.isArray).map((w) => (
+                  <tr role="row">
+                    {w.map((komorka, j) =>
+                      j === 0 ? <th scope="row" role="rowheader">{naTekst(komorka)}</th> : <td role="cell" data-etykieta={naTekst((s.tabela!.kolumny as unknown[])[j])}>{zKwotami(naTekst(komorka))}</td>,
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {s.akapityPo.map((a) => <p>{tresc(a).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>)}
+      </section>
+    ))}
+
+    {przyklady.length > 0 && (
+      <section class="usluga__przyklady" aria-labelledby="przyklady">
+        <h2 id="przyklady">{napis('przykladyNaglowek', 'Przykłady')}</h2>
+        {napis('przykladyLead', '') && <p>{tresc(napis('przykladyLead', '')).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>}
+        <ul class="usluga__siatka">
+          {przyklady.map((p) => (
+            <li class="usluga__karta">
+              {p.obrazek && (
+                <Image
+                  src={p.obrazek}
+                  alt={p.alt}
+                  width={720}
+                  height={450}
+                  format="webp"
+                  densities={[1, 2]}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <h3>{p.nazwa}</h3>
+              {p.zdanie && <p>{p.zdanie}</p>}
+              {p.wynik && (
+                <p class="usluga__wynik">
+                  PageSpeed, wydajność: telefon <strong>{p.wynik.tel}</strong>, komputer <strong>{p.wynik.komp}</strong>
+                  {p.wynik.data && <> (pomiar {p.wynik.data})</>}
+                </p>
+              )}
+              <a class="usluga__domena" href={p.adres} target="_blank" rel="noopener">{p.domena}<span class="sr-only"> (otwiera się w nowej karcie)</span></a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {proces.length > 0 && (
+      <section class="usluga__proces" aria-labelledby="jak-pracujemy">
+        <h2 id="jak-pracujemy">{napis('procesNaglowek', 'Jak pracujemy')}</h2>
+        {napis('procesLead', '') && <p>{tresc(napis('procesLead', '')).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>}
+        <ol class="usluga__kroki">
+          {proces.map((k) => (
+            <li>
+              <h3>{k.nazwa}</h3>
+              <p>{tresc(k.opis).map((x) => (x.adres ? <a href={x.adres}>{x.tekst}</a> : x.tekst))}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    {idWideo && (
+      <section class="usluga__wideo" aria-labelledby="wideo">
+        <h2 id="wideo">{tytulWideo}</h2>
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${idWideo}?autoplay=1`}
+          srcdoc={srcdocWideo}
+          title={tytulWideo}
+          width="720"
+          height="405"
+          loading="lazy"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </section>
+    )}
+
+    {pytania.length > 0 && (
+      <section class="usluga__pytania" aria-labelledby="pytania">
+        <h2 id="pytania">{napis('pytaniaNaglowek', 'Pytania')}</h2>
+        {pytania.map((p) => (
+          <details class="usluga__pytanie">
+            <summary>{p.pytanie}</summary>
+            <p>{tresc(p.odpowiedz).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>
+          </details>
+        ))}
+      </section>
+    )}
+
+    <section class="usluga__cena" aria-labelledby="ile-kosztuje">
+      <h2 id="ile-kosztuje">{napis('cenaNaglowek', 'Ile to kosztuje')}</h2>
+      {napisy(dane.cenaTekst).map((a) => <p>{tresc(a).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>)}
+      <div class="usluga__przyciski">
+        <a class="usluga__przycisk" href="/cena/#kalkulator">{napis('przyciskKalkulator', 'Policz cenę w kalkulatorze')}</a>
+        <a class="usluga__przycisk usluga__przycisk--drugi" href="/kontakt/">{napis('przyciskKontakt', 'Zapytaj o wycenę')}</a>
+      </div>
+    </section>
+
+    {zobaczTez.length > 0 && (
+      <nav class="usluga__zobacz" aria-labelledby="zobacz-tez">
+        <h2 id="zobacz-tez">{napis('zobaczTezNaglowek', 'Zobacz też')}</h2>
+        <ul>
+          {zobaczTez.map((z) => <li><a href={z.adres}>{z.tekst}</a></li>)}
+        </ul>
+      </nav>
+    )}
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  /* min-width: 0 — element siatki body; bez tego tabela z min-width rozpycha całą stronę na telefonie. */
+  .usluga {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  /* Kolumna tekstu: miara czytelna; siatka przykładów wychodzi na pełną szerokość treści. */
+  .usluga > h1,
+  .usluga__lead,
+  .usluga > section > h2,
+  .usluga > section > p,
+  .usluga > section > ul:not(.usluga__siatka),
+  .usluga > section > ol,
+  .usluga__tabela,
+  .usluga__pytanie,
+  .usluga__przyciski,
+  .usluga__zobacz {
+    max-width: 46rem;
+  }
+
+  .usluga__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .usluga__lead {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .usluga > section,
+  .usluga__zobacz {
+    margin-top: var(--o-12);
+  }
+
+  .usluga h2 {
+    font-size: var(--t-xl);
+    line-height: 1.2;
+    margin-bottom: var(--o-4);
+  }
+
+  .usluga h3 {
+    font-size: var(--t-l);
+    line-height: 1.25;
+  }
+
+  .usluga section p {
+    margin: 0 0 var(--o-4);
+  }
+
+  /* Linki w akapitach i listach PODKREŚLONE (Lighthouse link-in-text-block, runda 4). */
+  .usluga p a,
+  .usluga li a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .usluga p a:hover,
+  .usluga li a:hover {
+    color: var(--tekst);
+  }
+
+  /* „Co dostajesz”: znacznik ✓ w kolorze akcentu, tło karty. */
+  .usluga__lista {
+    list-style: none;
+    margin: 0;
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    display: grid;
+    gap: var(--o-3);
+  }
+
+  .usluga__lista li {
+    position: relative;
+    padding-left: var(--o-8);
+  }
+
+  .usluga__lista li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--akcent);
+  }
+
+  .usluga__punkty {
+    margin: 0 0 var(--o-4);
+    padding-left: var(--o-6);
+    display: grid;
+    gap: var(--o-2);
+  }
+
+  /* Tabela porównania (np. drogi sklepu): przewijanie w bok tylko jako zapas. */
+  .usluga__tabela {
+    overflow-x: auto;
+    margin: 0 0 var(--o-6);
+  }
+
+  .usluga__tabela table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    font-size: var(--t-s);
+    line-height: 1.45;
+  }
+
+  .usluga__tabela caption {
+    text-align: left;
+    margin-bottom: var(--o-2);
+    color: var(--tekst-cichy);
+  }
+
+  .usluga__tabela thead th {
+    text-align: left;
+    font-size: var(--t-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--tekst-cichy);
+    padding: var(--o-2) var(--o-3);
+    border-bottom: 2px solid var(--tekst);
+  }
+
+  .usluga__tabela tbody th,
+  .usluga__tabela tbody td {
+    padding: var(--o-3);
+    vertical-align: top;
+    text-align: left;
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .usluga__tabela tbody th {
+    font-weight: 600;
+  }
+
+  .usluga__tabela tbody tr:nth-child(even) {
+    background: var(--powierzchnia);
+  }
+
+  /* Telefon: wiersz tabeli = karta (jak na /cena/), etykieta kolumny z data-etykieta przed wartością. */
+  @media (max-width: 40rem) {
+    .usluga__tabela table {
+      min-width: 0;
+    }
+
+    .usluga__tabela thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .usluga__tabela tbody,
+    .usluga__tabela tr,
+    .usluga__tabela tbody th,
+    .usluga__tabela tbody td {
+      display: block;
+    }
+
+    .usluga__tabela tbody tr {
+      padding: var(--o-3);
+      border-bottom: 1px solid var(--linia);
+    }
+
+    .usluga__tabela tbody th,
+    .usluga__tabela tbody td {
+      padding: var(--o-1) 0;
+      border-bottom: 0;
+    }
+
+    .usluga__tabela tbody th {
+      font-size: var(--t-m);
+    }
+
+    .usluga__tabela tbody td::before {
+      content: attr(data-etykieta) ': ';
+      font-weight: 600;
+      color: var(--tekst-cichy);
+    }
+  }
+
+  /* Przykłady: 3 kolumny na komputerze, 1 na telefonie. */
+  .usluga__siatka {
+    list-style: none;
+    margin: var(--o-6) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-8) var(--o-6);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  }
+
+  .usluga__karta {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+  }
+
+  .usluga__karta img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border: 1px solid var(--linia);
+    border-radius: var(--promien);
+    margin-bottom: var(--o-2);
+  }
+
+  .usluga__karta p {
+    margin: 0;
+  }
+
+  .usluga__wynik {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .usluga__wynik strong {
+    color: var(--tekst);
+  }
+
+  .usluga__domena {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--cel-dotyku);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  /* Kroki: numer w kółku akcentu. */
+  .usluga__kroki {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: krok;
+    display: grid;
+    gap: var(--o-6);
+  }
+
+  .usluga__kroki li {
+    counter-increment: krok;
+    position: relative;
+    padding-left: 3.25rem;
+  }
+
+  .usluga__kroki li::before {
+    content: counter(krok);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--akcent);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .usluga__kroki h3 {
+    font-size: var(--t-m);
+    line-height: 2.25rem;
+  }
+
+  .usluga__kroki p {
+    margin: var(--o-1) 0 0;
+  }
+
+  .usluga__wideo iframe {
+    display: block;
+    width: 100%;
+    max-width: 46rem;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: var(--promien);
+  }
+
+  /* Pytania: <details> jak na /faq/, bez FAQPage (bramka A10). */
+  .usluga__pytanie {
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .usluga__pytanie:first-of-type {
+    border-top: 1px solid var(--linia);
+  }
+
+  .usluga__pytanie summary {
+    display: flex;
+    align-items: center;
+    min-height: var(--cel-dotyku);
+    padding: var(--o-3) 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Plus/minus jak /faq/ i A3/A4 (D19, integrator 2026-10-27). */
+  .usluga__pytanie summary {
+    gap: var(--o-3);
+    list-style: none;
+  }
+
+  .usluga__pytanie summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .usluga__pytanie summary::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.875rem;
+    height: 0.875rem;
+    background:
+      linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat,
+      linear-gradient(var(--akcent), var(--akcent)) center / 2px 100% no-repeat;
+  }
+
+  .usluga__pytanie[open] > summary::before {
+    background: linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat;
+  }
+
+  .usluga__pytanie p {
+    padding-left: calc(0.875rem + var(--o-3));
+  }
+
+  .usluga__pytanie p {
+    margin: 0 0 var(--o-4);
+  }
+
+  .usluga__cena {
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    max-width: 46rem;
+  }
+
+  .usluga__przyciski {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3);
+    margin-top: var(--o-2);
+  }
+
+  /* Przycisk główny: wypełniony akcentem; #fff na #166653 = 6,6:1. Drugi: obrys jak .realizacje__przycisk. */
+  .usluga__przycisk {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--cel-dotyku);
+    padding: var(--o-2) var(--o-6);
+    font-weight: 600;
+    color: #fff;
+    background: var(--akcent);
+    border: 1px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    text-decoration: none;
+  }
+
+  .usluga__przycisk:hover {
+    background: var(--tekst);
+    border-color: var(--tekst);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .usluga__przycisk:active {
+    opacity: 0.8;
+  }
+
+  .usluga__przycisk--drugi {
+    color: var(--akcent);
+    background: var(--tlo);
+  }
+
+  .usluga__przycisk--drugi:hover {
+    color: var(--tekst);
+    background: var(--tlo);
+  }
+
+  .usluga__zobacz ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0 var(--o-6);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .usluga__zobacz a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--cel-dotyku);
+    font-weight: 600;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

@@ -632,6 +632,7 @@ collections:
             fields:
               - { name: nazwa, label: "Nazwa", widget: string }
               - { name: opis, label: "Opis", widget: text, required: false }
+              - { name: link, label: "Adres strony usługi (np. /strony-internetowe-warszawa/)", widget: string, required: false }
           - { name: procesNaglowek, label: "Nagłówek: jak pracujemy", widget: string, required: false }
           - name: proces
             label: "Kroki pracy (kolejność = numer)"
@@ -1120,6 +1121,109 @@ collections:
             hint: >-
               Odnośnik prowadzący na stronę główną. Puste pole = wraca napis domyślny:
               Wróć na stronę główną.
+
+  # Kolekcja „Usługi” (runda 5, W1): 4 strony usług, ten sam zestaw pól (kotwica YAML &pola_uslugi).
+  # W2 dopisuje dwa pliki z `fields: *pola_uslugi`. Tekst akapitów: [kotwica](/trasa/) = link, {od: Nazwa pozycji z cennika} = kwota z cennika.
+  - name: uslugi
+    label: "Usługi"
+    files:
+      - name: strony-internetowe-warszawa
+        label: "Tworzenie stron internetowych (/strony-internetowe-warszawa/)"
+        file: "src/data/uslugi/strony-internetowe-warszawa.json"
+        fields: &pola_uslugi
+          - { name: tytulKarty, label: "Tytuł karty (do 60 znaków)", widget: string }
+          - { name: opisWyszukiwarki, label: "Opis w Google (do 155 znaków)", widget: text }
+          - { name: naglowek, label: "Nagłówek H1", widget: string }
+          - { name: okruszek, label: "Nazwa w okruszkach", widget: string }
+          - { name: lead, label: "Wstęp pod nagłówkiem", widget: text }
+          - { name: uslugaNazwa, label: "Usługa: nazwa (dane strukturalne)", widget: string }
+          - { name: uslugaTyp, label: "Usługa: rodzaj (dane strukturalne)", widget: string }
+          - { name: uslugaOpis, label: "Usługa: opis (dane strukturalne)", widget: text }
+          - { name: cenaOdPozycja, label: "Cena „od”: nazwa pozycji z cennika", widget: string, hint: "Dokładnie jak w kolumnie Półka cennika, np. Wizytówka, strona jednostronicowa" }
+          - { name: cenaJednostkaKod, label: "Kod jednostki ceny (MON = miesięcznie, ANN = rocznie, puste = jednorazowo)", widget: string, required: false }
+          - { name: coDostajeszNaglowek, label: "Co dostajesz: nagłówek", widget: string }
+          - { name: coDostajesz, label: "Co dostajesz: punkty", widget: list, field: { name: punkt, label: "Punkt", widget: text } }
+          - name: sekcje
+            label: "Sekcje z pytaniami (H2)"
+            label_singular: "Sekcja"
+            widget: list
+            collapsed: true
+            summary: "{{fields.naglowek}}"
+            fields:
+              - { name: id, label: "Kotwica (bez polskich znaków)", widget: string }
+              - { name: naglowek, label: "Nagłówek H2", widget: string }
+              - { name: akapity, label: "Akapity", widget: list, field: { name: akapit, label: "Akapit", widget: text } }
+              - { name: lista, label: "Lista punktów", widget: list, required: false, field: { name: punkt, label: "Punkt", widget: text } }
+              - { name: akapityPo, label: "Akapity pod listą lub tabelą", widget: list, required: false, field: { name: akapit, label: "Akapit", widget: text } }
+              - name: tabela
+                label: "Tabela (opcjonalna)"
+                widget: object
+                required: false
+                fields:
+                  - { name: podpis, label: "Podpis tabeli", widget: string, required: false }
+                  - { name: kolumny, label: "Nagłówki kolumn", widget: list, field: { name: kolumna, label: "Kolumna", widget: string } }
+                  - name: wiersze
+                    label: "Wiersze"
+                    widget: list
+                    field: { name: wiersz, label: "Wiersz (komórki po kolei)", widget: list, field: { name: komorka, label: "Komórka", widget: string } }
+          - { name: przykladyNaglowek, label: "Przykłady: nagłówek", widget: string }
+          - { name: przykladyLead, label: "Przykłady: wstęp", widget: text }
+          - name: przyklady
+            label: "Przykłady (realizacje)"
+            label_singular: "Przykład"
+            widget: list
+            summary: "{{fields.adres}}"
+            hint: "Adres musi być taki jak w Realizacjach (zrzut, nazwa i wynik PageSpeed biorą się stamtąd)."
+            fields:
+              - { name: adres, label: "Adres realizacji", widget: string }
+              - { name: nazwa, label: "Nazwa (puste = jak w Realizacjach)", widget: string, required: false }
+              - { name: zdanie, label: "Jedno zdanie o realizacji", widget: text }
+          - { name: procesNaglowek, label: "Jak pracujemy: nagłówek", widget: string }
+          - { name: procesLead, label: "Jak pracujemy: wstęp", widget: text, required: false }
+          - name: proces
+            label: "Kroki"
+            label_singular: "Krok"
+            widget: list
+            summary: "{{fields.nazwa}}"
+            fields:
+              - { name: nazwa, label: "Nazwa kroku", widget: string }
+              - { name: opis, label: "Opis kroku", widget: text }
+          - { name: wideo, label: "Film (adres YouTube)", widget: string, required: false, hint: "Puste pole = sekcja filmu się nie pokazuje." }
+          - { name: wideoNaglowek, label: "Film: nagłówek", widget: string, required: false }
+          - { name: pytaniaNaglowek, label: "Pytania: nagłówek", widget: string }
+          - name: pytania
+            label: "Pytania"
+            label_singular: "Pytanie"
+            widget: list
+            collapsed: true
+            summary: "{{fields.pytanie}}"
+            fields:
+              - { name: pytanie, label: "Pytanie", widget: string }
+              - { name: odpowiedz, label: "Odpowiedź", widget: text }
+          - { name: cenaNaglowek, label: "Cena: nagłówek", widget: string }
+          - { name: cenaTekst, label: "Cena: akapity", widget: list, field: { name: akapit, label: "Akapit", widget: text } }
+          - { name: przyciskKalkulator, label: "Przycisk kalkulatora", widget: string }
+          - { name: przyciskKontakt, label: "Przycisk kontaktu", widget: string }
+          - { name: zobaczTezNaglowek, label: "Zobacz też: nagłówek", widget: string }
+          - name: zobaczTez
+            label: "Zobacz też: linki"
+            widget: list
+            summary: "{{fields.tekst}}"
+            fields:
+              - { name: adres, label: "Adres (zaczyna się od /)", widget: string }
+              - { name: tekst, label: "Tekst linku", widget: string }
+      - name: sklepy-internetowe-warszawa
+        label: "Tworzenie sklepów internetowych (/sklepy-internetowe-warszawa/)"
+        file: "src/data/uslugi/sklepy-internetowe-warszawa.json"
+        fields: *pola_uslugi
+      - name: strona-wizytowka
+        label: "Strona wizytówka (/strona-wizytowka/)"
+        file: "src/data/uslugi/strona-wizytowka.json"
+        fields: *pola_uslugi
+      - name: prowadzenie-strony-internetowej
+        label: "Prowadzenie strony (/prowadzenie-strony-internetowej/)"
+        file: "src/data/uslugi/prowadzenie-strony-internetowej.json"
+        fields: *pola_uslugi
 
   # ── ④ DANE FIRMY ────────────────────────────────────────────────────────────
   - name: firma

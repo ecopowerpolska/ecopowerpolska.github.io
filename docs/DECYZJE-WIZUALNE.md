@@ -304,3 +304,4 @@ przewijania w dół; stopki: „EcoPower Polska Sp. z o.o.”; guzik: „jeżeli
   kafle stają parami na środku (3 + 2 + 2), przy 2 kolumnach i reszcie 1 trzy ostatnie w jednym rzędzie.
 - **Cennik** — tabela do 56 rem (kwota w zasięgu wzroku na 1440 px). **Krój zapasowy nagłówków** liczony względem
   Times New Roman (`fallbacks: ['serif']`), nie Ariala.
+- **D15 (2026-10-27)** — `/jak-sprawdzic-szybkosc-strony/`: poradnik + formularz GET do oficjalnego raportu pagespeed.web.dev (działa bez JS); wynik na miejscu z PSI API tylko z kluczem przeglądarkowym `PUBLIC_PSI_KLUCZ` (bez klucza Google daje limit 0, 429); w menu NIE (7. pozycja łamie pasek na 390 px na 2 rzędy), link w stopce, FAQ i llms.txt.

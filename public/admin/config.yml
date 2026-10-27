@@ -811,6 +811,7 @@ collections:
           - { name: menuOferta, label: "Menu i stopka: pozycja oferty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Oferta" }
           - { name: menuRealizacje, label: "Menu i stopka: pozycja realizacji", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Realizacje" }
           - { name: menuCena, label: "Menu i stopka: pozycja cen", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Cena" }
+          - { name: menuSzybkosc, label: "Stopka i ścieżka: pozycja testu szybkości strony", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Szybkość" }
           - { name: menuFaq, label: "Menu: pozycja pytań i odpowiedzi", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: FAQ" }
           - { name: menuBlog, label: "Menu i stopka: pozycja bloga", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Blog" }
           - { name: menuKontakt, label: "Menu i stopka: pozycja kontaktu", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Kontakt" }

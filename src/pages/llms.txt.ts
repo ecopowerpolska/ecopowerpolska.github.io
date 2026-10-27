@@ -68,6 +68,7 @@ export const GET: APIRoute = async () => {
     '',
     `- [Strona główna](${baza}/): oferta, realizacje, kontakt i dane rejestrowe spółki.`,
     `- [Cennik orientacyjny EcoPower Polska (ceny netto)](${baza}/cena/): wykonanie i prowadzenie strony internetowej i sklepu.`,
+    `- [Jak sprawdzić szybkość strony internetowej](${baza}/jak-sprawdzic-szybkosc-strony/): darmowy test w Google PageSpeed Insights, oficjalny wynik na telefonie i komputerze, jak czytać wynik.`,
     `- [Pytania i odpowiedzi](${baza}/faq/): najczęstsze pytania o strony i sklepy.`,
     `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów internetowych.`,
     '',

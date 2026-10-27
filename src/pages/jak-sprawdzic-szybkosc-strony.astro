@@ -1,0 +1,539 @@
+---
+// /jak-sprawdzic-szybkosc-strony — poradnik + test szybkości strony w Google PageSpeed Insights (od 2026-10-27, D15).
+// Bez JS: formularz GET otwiera oficjalny raport pagespeed.web.dev/analysis?url=… w nowej karcie.
+// Z JS: wynik na miejscu z PSI API v5 — TYLKO gdy build dostał klucz przeglądarkowy (PUBLIC_PSI_KLUCZ, ograniczony
+// do adresu strony). Bez klucza Google nie przyjmuje zapytań (limit 0 na dobę, zmierzone 2026-10-27: 429) — wtedy
+// skrypt nic nie przechwytuje i działa formularz. Klucza pagespeed-z440 z ~/.sekrety/ tu nie wolno.
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import firma from '../data/firma.json';
+import blog from '../data/blog.json';
+import { tekst } from '../lib/tekst';
+
+const klucz = (import.meta.env.PUBLIC_PSI_KLUCZ ?? '').trim();
+const naglowek = 'Jak sprawdzić szybkość strony internetowej';
+const tytul = 'Jak sprawdzić szybkość strony internetowej? Darmowy test PageSpeed — EcoPower Polska';
+const opis =
+  'Sprawdź szybkość swojej strony w Google PageSpeed Insights: darmowy test, oficjalny wynik Google na telefonie i komputerze. Wyjaśniamy, jak czytać wynik.';
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/jak-sprawdzic-szybkosc-strony/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: tekst(blog.menuSzybkosc, 'Szybkość'), adres: '/jak-sprawdzic-szybkosc-strony/' },
+];
+
+const kategorie = [
+  ['performance', 'Wydajność'],
+  ['accessibility', 'Ułatwienia dostępu'],
+  ['best-practices', 'Sprawdzone metody'],
+  ['seo', 'SEO'],
+  ['agentic-browsing', 'Przeglądanie agentowe'],
+];
+const metryki = [
+  ['first-contentful-paint', 'Pierwsze wyrenderowanie treści (FCP)'],
+  ['largest-contentful-paint', 'Największe wyrenderowanie treści (LCP)'],
+  ['total-blocking-time', 'Całkowity czas blokowania (TBT)'],
+  ['cumulative-layout-shift', 'Skumulowane przesunięcie układu (CLS)'],
+  ['speed-index', 'Indeks szybkości (SI)'],
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="szybkosc">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="szybkosc__tytul">{naglowek}</h1>
+    <p class="szybkosc__lead">
+      Wpisz adres swojej strony. Google zmierzy ją w PageSpeed Insights i pokaże oficjalny wynik na telefonie i na
+      komputerze. Test jest darmowy.
+    </p>
+
+    <section class="test" aria-labelledby="test-tytul">
+      <h2 id="test-tytul" class="test__tytul">Sprawdź szybkość twojej strony</h2>
+      <form
+        id="psi"
+        class="test__formularz"
+        action="https://pagespeed.web.dev/analysis"
+        method="get"
+        target="_blank"
+        rel="noopener"
+        data-klucz={klucz || undefined}
+      >
+        <label for="psi-adres">Adres strony</label>
+        <div class="test__wiersz">
+          <input
+            id="psi-adres"
+            type="url"
+            name="url"
+            required
+            inputmode="url"
+            autocomplete="url"
+            placeholder="https://twojafirma.pl"
+          />
+          <button type="submit">Sprawdź szybkość twojej strony</button>
+        </div>
+      </form>
+      <p class="test__nota">Pomiar wykonuje Google. Adres strony trafia do Google, my go nie zapisujemy.</p>
+      <p class="test__stan" id="psi-stan" aria-live="polite"></p>
+
+      <div class="wynik" id="psi-wynik" hidden>
+        <table class="pomiar__tabela">
+          <caption class="pomiar__tytul">Wynik w PageSpeed Insights (0–100)</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="pomiar__rog"><span class="tylko-czytnik">Kategoria</span></th>
+              <th scope="col">Telefon</th>
+              <th scope="col">Komputer</th>
+            </tr>
+          </thead>
+          <tbody>
+            {kategorie.map(([id, nazwa]) => (
+              <tr>
+                <th scope="row">{nazwa}</th>
+                <td><span class="pastylka" data-k={id} data-s="mobile"></span></td>
+                <td><span class="pastylka" data-k={id} data-s="desktop"></span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <table class="pomiar__tabela pomiar__tabela--metryki">
+          <caption class="pomiar__tytul">Metryki z testu laboratoryjnego</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="pomiar__rog"><span class="tylko-czytnik">Metryka</span></th>
+              <th scope="col">Telefon</th>
+              <th scope="col">Komputer</th>
+            </tr>
+          </thead>
+          <tbody>
+            {metryki.map(([id, nazwa]) => (
+              <tr>
+                <th scope="row">{nazwa}</th>
+                <td data-m={id} data-s="mobile"></td>
+                <td data-m={id} data-s="desktop"></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="test__raport" id="psi-raport" hidden>
+        <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">Pełny raport w PageSpeed Insights</a>
+      </p>
+    </section>
+
+    <div class="tresc">
+      <h2>Co mierzy Google PageSpeed Insights</h2>
+      <p>
+        PageSpeed Insights to bezpłatne narzędzie Google. Uruchamia na stronie test Lighthouse i daje pięć wyników od 0
+        do 100. Wydajność mówi, jak szybko strona się pokazuje i reaguje. Ułatwienia dostępu sprawdzają kontrast, opisy
+        zdjęć i etykiety pól. Sprawdzone metody obejmują HTTPS i błędy w przeglądarce. SEO sprawdza tytuł, opis i to,
+        czy wyszukiwarka może stronę odczytać. Przeglądanie agentowe mówi, czy z treści skorzystają asystenci AI.
+      </p>
+      <p>
+        Każdy wynik jest osobno dla telefonu i dla komputera. Test na telefonie symuluje wolniejsze urządzenie i słabszą
+        sieć, dlatego zwykle wypada niżej.
+      </p>
+
+      <h2>Jak czytać wynik</h2>
+      <p>
+        Google uznaje 90–100 punktów za wynik dobry, 50–89 za wymagający poprawy, a 0–49 za słaby. Pod wynikami są
+        metryki. LCP to czas, po którym widać największy element strony. CLS mówi, czy treść skacze podczas ładowania.
+        TBT pokazuje, jak długo strona nie reaguje na dotyk.
+      </p>
+
+      <h2>Dlaczego szybkość ma znaczenie</h2>
+      <p>
+        Google bierze pod uwagę wrażenia użytkownika, w tym szybkość, gdy ustala kolejność wyników. Ważniejsi są jednak
+        klienci. Strona, która ładuje się kilka sekund, traci część odwiedzających, zanim cokolwiek zobaczą. Szybka
+        strona to więcej telefonów i zapytań z tej samej liczby wejść.
+      </p>
+
+      <h2>Co znaczy „Brak danych”</h2>
+      <p>
+        U góry raportu jest sekcja z wrażeniami prawdziwych użytkowników. Google zbiera je z przeglądarki Chrome przez 28
+        dni (raport CrUX). Mała albo nowa strona często nie ma tylu odwiedzin i widzi napis „Brak danych”. To nie błąd.
+        Wtedy liczy się test laboratoryjny poniżej. Więcej piszemy w odpowiedzi{' '}
+        <a href="/faq/#brak-danych">o braku danych w PageSpeed Insights</a>.
+      </p>
+
+      <h2>Jak sprawdzić, czy strona jest szybka w Google</h2>
+      <p>
+        Wpisz adres w polu na górze tej strony albo otwórz <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener"
+          >pagespeed.web.dev</a
+        >. Odczekaj około minuty. Sprawdź wynik na telefonie i na komputerze. Zmierz kilka podstron, nie tylko stronę
+        główną, bo każda ma inne zdjęcia i inny kod.
+      </p>
+      <p>
+        Nasze strony mierzymy tak samo. Wyniki każdej realizacji pokazujemy w sekcji{' '}
+        <a href="/#realizacje">Realizacje</a>, a ceny wykonania i prowadzenia strony są w <a href="/cena/">cenniku</a>.
+      </p>
+    </div>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<script>
+  // Wynik na miejscu z PSI API v5 (D15). Bez klucza w data-klucz nic nie przechwytuje: formularz otwiera raport Google.
+  (() => {
+    const f = document.getElementById('psi');
+    if (!f || !window.fetch) return;
+    const $ = (s) => document.getElementById(s);
+    const stan = $('psi-stan'), wynik = $('psi-wynik'), raport = $('psi-raport'), guzik = f.querySelector('button');
+    const KAT = ['performance', 'accessibility', 'best-practices', 'seo', 'agentic-browsing'];
+    const MET = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift', 'speed-index'];
+    const zapytaj = (u, s, k) =>
+      fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' + encodeURIComponent(u) + '&locale=pl&strategy=' + s +
+        KAT.map((c) => '&category=' + c).join('') + '&key=' + encodeURIComponent(k)).then((r) =>
+        r.json().then((j) => { if (!r.ok) throw r.status; return j.lighthouseResult; }));
+    f.addEventListener('submit', (e) => {
+      const k = f.dataset.klucz;
+      if (!k) return;
+      e.preventDefault();
+      let u = f.url.value.trim();
+      if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+      try { u = new URL(u).href; } catch { stan.textContent = 'To nie wygląda na adres strony. Wpisz na przykład https://twojafirma.pl.'; return; }
+      raport.querySelector('a').href = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(u);
+      wynik.hidden = true; raport.hidden = true; guzik.disabled = true;
+      stan.textContent = 'Google mierzy stronę, to trwa około minuty.';
+      Promise.all(['mobile', 'desktop'].map((s) => zapytaj(u, s, k).then((l) => {
+        wynik.querySelectorAll('[data-s="' + s + '"]').forEach((el) => {
+          if (el.dataset.k) {
+            const c = l.categories[el.dataset.k];
+            const w = c && c.score != null ? Math.round(c.score * 100) : null;
+            el.textContent = w == null ? '–' : w;
+            el.className = 'pastylka ' + (w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
+          } else {
+            const a = l.audits[el.dataset.m];
+            el.textContent = a && a.displayValue ? a.displayValue : '–';
+          }
+        });
+      }))).then(() => {
+        stan.textContent = 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
+        wynik.hidden = false;
+      }).catch((b) => {
+        stan.textContent = b === 429 || b === 403
+          ? 'Google chwilowo nie przyjmuje kolejnych pomiarów z naszej strony. Otwórz pełny raport poniżej.'
+          : 'Google nie zdołał zmierzyć tej strony. Sprawdź adres albo otwórz pełny raport poniżej.';
+      }).finally(() => { raport.hidden = false; guzik.disabled = false; });
+    });
+  })();
+</script>
+
+<style>
+  .szybkosc {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (jedna linia, D14). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .szybkosc__tytul,
+  .szybkosc__lead,
+  .test,
+  .tresc {
+    max-width: 44rem;
+  }
+
+  .szybkosc__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .szybkosc__lead {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .test {
+    margin: var(--o-8) 0 var(--o-12);
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-left: 4px solid var(--akcent);
+    border-radius: var(--promien);
+  }
+
+  .test__tytul {
+    font-size: var(--t-l);
+    margin: 0 0 var(--o-4);
+  }
+
+  .test__formularz label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--o-2);
+  }
+
+  .test__wiersz {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3);
+  }
+
+  .test__wiersz input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 var(--o-3);
+    font: inherit;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+  }
+
+  .test__wiersz button {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    font: inherit;
+    font-weight: 600;
+    color: var(--tlo);
+    background: var(--akcent);
+    border: 0;
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .test__wiersz button:hover {
+    background: var(--tekst);
+  }
+
+  .test__wiersz button:disabled {
+    cursor: progress;
+    background: var(--tekst-cichy);
+  }
+
+  .test__wiersz input:focus-visible,
+  .test__wiersz button:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 30rem) {
+    .test {
+      padding: var(--o-4);
+    }
+
+    .test__wiersz button {
+      flex: 1 1 100%;
+    }
+  }
+
+  .test__nota {
+    margin: var(--o-3) 0 0;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .test__stan:empty {
+    display: none;
+  }
+
+  .test__stan {
+    margin: var(--o-4) 0 0;
+    font-weight: 600;
+  }
+
+  .test__raport {
+    margin: var(--o-4) 0 0;
+  }
+
+  .test__raport a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  /* Tabela wyniku — ten sam wygląd co tabela pomiaru w kafelku realizacji (Kafelek.astro). */
+  .wynik {
+    margin-top: var(--o-4);
+    font-size: var(--t-s);
+    line-height: 1.4;
+  }
+
+  .pomiar__tabela {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .pomiar__tabela + .pomiar__tabela {
+    margin-top: var(--o-6);
+  }
+
+  .pomiar__tytul {
+    margin: 0 0 var(--o-2);
+    text-align: left;
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  .pomiar__tabela th,
+  .pomiar__tabela td {
+    padding: 0.25rem 0;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .pomiar__tabela thead th {
+    font-weight: 600;
+    color: var(--tekst-cichy);
+    padding-bottom: var(--o-1);
+  }
+
+  .pomiar__tabela tbody th {
+    font-weight: 400;
+    color: var(--tekst);
+    padding-right: var(--o-2);
+  }
+
+  .pomiar__tabela thead th,
+  .pomiar__tabela td {
+    width: 1%;
+    white-space: nowrap;
+    padding-left: var(--o-3);
+  }
+
+  .pomiar__tabela thead .pomiar__rog {
+    width: auto;
+    padding-left: 0;
+  }
+
+  .pomiar__tabela--metryki td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pastylka {
+    display: inline-block;
+    min-width: 2.5rem;
+    padding: 0.0625rem var(--o-2);
+    border-radius: 999px;
+    font-weight: 600;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pastylka--dobry {
+    background: var(--akcent);
+    color: var(--tlo);
+  }
+
+  .pastylka--ponizej {
+    border: 1px solid var(--akcent);
+    color: var(--tekst);
+  }
+
+  .tylko-czytnik {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .tresc h2 {
+    font-size: var(--t-xl);
+    line-height: 1.2;
+    margin: var(--o-12) 0 var(--o-3);
+  }
+
+  .tresc p {
+    margin: 0 0 var(--o-4);
+    line-height: 1.6;
+  }
+
+  .tresc a {
+    font-weight: 600;
+  }
+</style>

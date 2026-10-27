@@ -10,6 +10,7 @@ import Stopka from '../../components/Stopka.astro';
 import faqJson from '../../data/faq.json';
 import firma from '../../data/firma.json';
 import { tekst } from '../../lib/tekst';
+import { kawalki } from '../../lib/odnosniki';
 
 // Panel może zapisać null w wyczyszczonym polu albo usunąć pole — wszystko sprowadzone do tekstu, nic nie zatrzymuje builda.
 const faq = faqJson as Record<string, unknown>;
@@ -110,7 +111,7 @@ const daneStrukturalne = {
         <details class="pytanie" name="faq" id={p.kotwica}>
           <summary class="pytanie__tytul"><h2>{p.pytanie}</h2></summary>
           <div class="pytanie__odpowiedz">
-            {p.akapity.map((a) => <p>{a}</p>)}
+            {p.akapity.map((a) => <p>{kawalki(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
           </div>
         </details>
       ))}

@@ -5,6 +5,7 @@
 // Bez JSON-LD: dane strukturalne strony głównej niesie DaneStrukturalne.astro, FAQPage jest zablokowany bramką (A10).
 import faqJson from '../data/faq.json';
 import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
 
 interface Props {
   /** Ile pytań pokazać (domyślnie 4). */
@@ -37,7 +38,7 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
         <details class="pytanie">
           <summary><h3 class="pytanie__tytul">{p.pytanie}</h3></summary>
           <div class="pytanie__odpowiedz">
-            {p.akapity.map((a) => <p>{a}</p>)}
+            {p.akapity.map((a) => <p>{kawalki(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
           </div>
         </details>
       ))}

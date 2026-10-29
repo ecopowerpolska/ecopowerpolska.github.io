@@ -102,11 +102,13 @@ const daneStrukturalne = {
   .blog__tytul {
     /* Jak .wpis__tytul: przy 320 px słowo „internetowych” w --t-xxl (44 px) miało 307 px i rozpychało stronę do 355 px. */
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
   }
 
   .blog__lead {
-    margin: var(--o-4) 0 var(--o-12);
-    max-width: var(--miara);
+    margin: var(--o-4) auto var(--o-12);
+    max-width: 44rem;
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);
@@ -124,6 +126,13 @@ const daneStrukturalne = {
   @media (min-width: 60rem) {
     .blog__lista {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Nieparzysta liczba wpisów: ostatni stoi sam na środku, tej samej szerokości co pozostałe (D22). */
+    .blog__lista > li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: calc(50% - var(--o-3));
     }
   }
 

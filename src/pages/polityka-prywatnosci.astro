@@ -180,18 +180,23 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
+  /* D22 (2026-10-30): kolumna 44 rem wyśrodkowana, H1 i wstęp na środku, tekst w kolumnie do lewej. */
+  .okruszki,
   .polityka__tytul,
   .polityka__lead,
   .tresc {
     max-width: 44rem;
+    margin-inline: auto;
   }
 
   .polityka__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
   }
 
   .polityka__lead {
-    margin: var(--o-4) 0 0;
+    margin-block: var(--o-4) 0;
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);

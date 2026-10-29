@@ -323,3 +323,12 @@ przewijania w dół; stopki: „EcoPower Polska Sp. z o.o.”; guzik: „jeżeli
 ## D21 — Budżet JS 6 kB dla testu szybkości (2026-10-29)
 
 **D21 — `guard.config.json` `jsGzipKB`: 3 → 6.** Powód: `/jak-sprawdzic-szybkosc-strony/` dostała zegary wg wzorca Piotra (wskazówka, animacja pomiaru i dojazdu) oraz sekcję „Co poprawić na tej stronie” z modułem `src/lib/psi-zalecenia.ts` (progi Google i audyty Lighthouse). Wersja z zegarami v1 (2026-10-29, 23:0x) zajmowała cały dawny budżet: 3,0 kB. Podziałka zegara powstaje w buildzie (trzy ścieżki SVG), więc nie kosztuje JS; rośnie tylko logika zaleceń. Zmierzone `npm run guard:build` 2026-10-29: trasa testu **5,1 kB** JS gzip (CSS 9,7 kB), pozostałe najcięższe: `/cena/` 2,4 kB, `/kontakt/` 2,1 kB, reszta ≤ 1,5 kB — czyli poza tą jedną trasą budżet 3 kB nadal obowiązuje w praktyce, a zapas trasy testu to 0,9 kB. Zegary na telefonie stoją obok siebie, a sekcja testu ma pełną szerokość kontenera (`--szerokosc-tresci`), nie 44 rem; poradnik pod spodem zostaje w kolumnie 44 rem.
+
+## D22 — Treść wyśrodkowana na każdej podstronie (2026-10-30)
+
+Słowa Piotra 2026-10-30 (gniew): „A dlaczego wszystkie te teksty są do lewej strony? Dlaczego to nie jest wypośrodkowane? Strona, która ma robić strony internetowe, ma spieprzony najważniejszy parametr, wypośrodkowanie materiałów na stronie. I to prawie na każdej podstronie.” — „Ma to być naprawione.” Uchyla układ lewostronny z przebudowy 2026-09-06 (to była decyzja sesji, nie Piotra); D14 (FAQ i wpisy wyśrodkowane) bez zmian, reguła obejmuje teraz całą witrynę.
+- **Wąska kolumna tekstu** (44 rem, na wpisach i FAQ 42 rem, na stronach usług 46 rem) stoi na środku kontenera (`margin-inline: auto`); akapity, listy i tabele w kolumnie zostają do lewej (czytelność). Okruszki stoją w tej samej kolumnie.
+- **H1 i wstęp** każdej podstrony są wyśrodkowane (`text-align: center`), także H1 wpisu bloga, jego data i pierwszy akapit (wstęp), na stronie głównej hero z przyciskiem.
+- **Nagłówki sekcji H2 nad siatkami** (oferta, realizacje, ostatnie wpisy, FAQ-skrót, cena, kalkulator, przykłady na stronach usług) i ich wstępy są wyśrodkowane. H2 nad zwykłym tekstem w kolumnie stoi razem z tekstem.
+- **Siatki kart i ramki** (oferta, realizacje, efekty, cennik, kalkulator, formularz, test szybkości, poradnik w dwóch kolumnach) zajmują całą szerokość kontenera; gdy mają mniej kolumn niż miejsca, stoją na środku (`justify-content: center`, samotny ostatni wpis bloga na środku rzędu).
+- **Nagłówek witryny (logo + menu) i stopka bez zmian.**

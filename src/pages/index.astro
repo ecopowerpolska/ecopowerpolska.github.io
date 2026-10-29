@@ -76,22 +76,24 @@ const lead = tekst(
 </Bazowy>
 
 <style>
-  /* Hero lewostronny, H1 płynny (clamp) — jak dotąd; dłuższe zdanie dostaje 22ch miary. */
+  /* Hero wyśrodkowany (D22, 2026-10-30), H1 płynny (clamp); H1 dostaje 22ch miary. */
   .hero {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
     padding: var(--o-16) var(--o-6) var(--o-12);
+    text-align: center;
   }
 
   .hero__tytul {
     font-size: clamp(var(--t-xxl), 3.4vw + 1.4rem, var(--t-display));
     letter-spacing: -0.015em;
     max-width: 22ch;
+    margin-inline: auto;
   }
 
   .hero__opis {
-    margin: var(--o-4) 0 0;
-    max-width: var(--miara);
+    margin: var(--o-4) auto 0;
+    max-width: 44rem;
     font-size: var(--t-l);
     color: var(--tekst-cichy);
     line-height: 1.5;
@@ -134,8 +136,9 @@ const lead = tekst(
   }
 
   .zamkniecie p {
-    max-width: var(--miara);
-    margin: 0;
+    max-width: 44rem;
+    margin: 0 auto;
+    text-align: center;
     padding-top: var(--o-8);
     border-top: 1px solid var(--linia);
     font-size: var(--t-m);

@@ -2,7 +2,7 @@
 // Oferta.astro — sekcje oferty firmy z src/data/oferta.json (2026-10-23).
 // `czesc="oferta"`: czym się zajmujemy, jak pracujemy, co dostajesz, dlaczego Astro i hosting.
 // `czesc="kontakt"`: kontakt mailem i telefonem plus adres siedziby z firma.json (odpis KRS).
-// Kierunek „rejestr" bez zmian: lewostronnie, kreski zamiast kart, kolory tylko z motyw.css.
+// Układ wyśrodkowany (D22, 2026-10-30): nagłówki, wstępy i kontakt na środku, siatka na pełną szerokość; kreski zamiast kart, kolory tylko z motyw.css.
 // Zero JS. Każdy napis przez tekst(): wyczyszczone pole w panelu wraca do domyślnego.
 // Runda 5 (2026-10-27): pozycja „Czym się zajmujemy” z polem `link` (adres strony usługi) jest klikalna
 // w całości — odnośnik siedzi w <h3> (nazwa = tekst odnośnika), a jego ::after rozpięty na kafelek.
@@ -151,11 +151,13 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
   .sekcja__naglowek {
     font-size: var(--t-xl);
     margin-bottom: var(--o-6);
+    text-align: center;
   }
 
   .sekcja__lead {
-    max-width: var(--miara);
-    margin: calc(-1 * var(--o-3)) 0 var(--o-8);
+    max-width: 44rem;
+    margin: calc(-1 * var(--o-3)) auto var(--o-8);
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);
@@ -253,6 +255,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
     display: grid;
     gap: var(--o-6);
     max-width: 48rem;
+    margin-inline: auto;
   }
 
   .proces li {
@@ -328,6 +331,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
     display: flex;
     flex-wrap: wrap;
     gap: var(--o-3) var(--o-4);
+    justify-content: center;
   }
 
   .kontakt__link {
@@ -361,6 +365,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
 
   .kontakt__adres {
     margin: var(--o-6) 0 0;
+    text-align: center;
     color: var(--tekst-cichy);
   }
 

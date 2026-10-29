@@ -188,25 +188,31 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
+  /* D22 (2026-10-30): wąska kolumna 44 rem wyśrodkowana, H1 i wstęp na środku. */
+  .okruszki,
   .efekty__tytul,
   .efekty__lead,
   .efekty__wydajnosc {
     max-width: 44rem;
+    margin-inline: auto;
   }
 
   .efekty__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
   }
 
   .efekty__lead {
-    margin: var(--o-4) 0 0;
+    margin-block: var(--o-4) 0;
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);
   }
 
   .efekty__wydajnosc {
-    margin: var(--o-4) 0 0;
+    margin-block: var(--o-4) 0;
+    text-align: center;
     color: var(--tekst-cichy);
   }
 

@@ -241,6 +241,8 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
+  /* D22 (2026-10-30): wąska kolumna 44 rem wyśrodkowana; H1, wstęp i opisy na środku, tabele 56 rem też na środku. */
+  .okruszki,
   .cena__tytul,
   .cena__lead,
   .cena__zastrzezenie,
@@ -248,14 +250,17 @@ const daneStrukturalne = {
   .tabela__opis,
   .kontakt {
     max-width: 44rem;
+    margin-inline: auto;
   }
 
   .cena__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
   }
 
   .cena__lead {
-    margin: var(--o-4) 0 0;
+    margin-block: var(--o-4) 0;
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);
@@ -263,8 +268,9 @@ const daneStrukturalne = {
 
   /* Ramka „ceny netto + VAT, aktualność cennika” — wypełnienie i kreska akcentu, żeby nie zginęła. */
   .cena__zastrzezenie {
-    margin: var(--o-6) 0 var(--o-8);
+    margin-block: var(--o-6) var(--o-8);
     padding: var(--o-4) var(--o-6);
+    text-align: center;
     background: var(--powierzchnia);
     border-left: 4px solid var(--akcent);
     border-radius: var(--promien-maly);
@@ -296,16 +302,19 @@ const daneStrukturalne = {
   .tabela__tytul {
     font-size: var(--t-xl);
     line-height: 1.2;
+    text-align: center;
   }
 
   .tabela__opis {
-    margin: var(--o-2) 0 var(--o-4);
+    margin-block: var(--o-2) var(--o-4);
     color: var(--tekst-cichy);
+    text-align: center;
   }
 
   .tabela__linki {
-    margin: var(--o-2) 0 var(--o-4);
+    margin: var(--o-2) auto var(--o-4);
     max-width: 44rem;
+    text-align: center;
   }
 
   .tabela__linki a {
@@ -318,6 +327,7 @@ const daneStrukturalne = {
   /* 56 rem: kwota stoi w zasięgu wzroku od nazwy pozycji także na 1440 px (D14). */
   .przewijanie {
     max-width: 56rem;
+    margin-inline: auto;
     overflow-x: auto;
     background:
       linear-gradient(to right, var(--tlo) 30%, rgb(244 245 241 / 0%)) left / 2rem 100% no-repeat local,
@@ -462,6 +472,7 @@ const daneStrukturalne = {
   .kontakt {
     margin-top: var(--o-16);
     padding: var(--o-6);
+    text-align: center;
     background: var(--powierzchnia);
     border-radius: var(--promien);
   }
@@ -480,6 +491,7 @@ const daneStrukturalne = {
     padding: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0 var(--o-6);
   }
 

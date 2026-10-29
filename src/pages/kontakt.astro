@@ -98,6 +98,8 @@ const daneStrukturalne = {
     padding: var(--o-8) var(--o-6) var(--o-16);
   }
   /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14). */
+  /* D22 (2026-10-30): okruszki, H1 i wstęp w wąskiej kolumnie wyśrodkowanej, układ formularza na pełną szerokość. */
+  .okruszki { max-width: 44rem; margin-inline: auto; }
   .okruszki ol { list-style: none; margin: 0 0 var(--o-6); padding: 0; display: flex; gap: 0 var(--o-2); font-size: var(--t-s); color: var(--tekst-cichy); }
   .okruszki li { display: inline-flex; align-items: center; flex: 0 0 auto; white-space: nowrap; }
   .okruszki li:last-child { flex: 1 1 0; min-width: 0; contain: inline-size; }
@@ -106,8 +108,8 @@ const daneStrukturalne = {
   .okruszki a { display: inline-flex; align-items: center; min-height: 44px; }
   .okruszki a:hover { color: var(--tekst); }
 
-  .kontakt__tytul { max-width: 44rem; font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl)); }
-  .kontakt__lead { max-width: 44rem; margin: var(--o-4) 0 var(--o-8); font-size: var(--t-l); line-height: 1.5; color: var(--tekst-cichy); }
+  .kontakt__tytul { max-width: 44rem; margin-inline: auto; text-align: center; font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl)); }
+  .kontakt__lead { max-width: 44rem; margin: var(--o-4) auto var(--o-8); text-align: center; font-size: var(--t-l); line-height: 1.5; color: var(--tekst-cichy); }
 
   .kontakt__uklad { display: grid; gap: var(--o-12); }
   @media (min-width: 64rem) {

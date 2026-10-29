@@ -9,8 +9,9 @@
    nie do odróżnienia od dowolnej innej strony). EcoPower Polska jest spółką prowadzącą
    PUBLICZNY REJESTR własnych serwisów (KRS/NIP/REGON w stopce to fakt, nie ozdoba) —
    kierunek czerpie z tego wprost, cechami sprawdzalnymi, nie przymiotnikiem:
-     · układ lewostronny, jedna wspólna szerokość kontenera od nagłówka po stopkę
-       (krawędzie się nie gubią przy przewijaniu — czytelny „margines akt"),
+     · układ wyśrodkowany (decyzja Piotra 2026-10-30, D22): wąska kolumna tekstu na środku
+       kontenera, H1, wstęp i nagłówki sekcji na środku, siatki kart na pełną szerokość;
+       jedna wspólna szerokość kontenera od nagłówka po stopkę,
      · promień kart ZREDUKOWANY (6px, nie 18px) — karta wygląda jak wpis w rejestrze,
        nie jak bąbel interfejsu telefonu,
      · dwa kroje o jasno różnych rolach: nagłówki serifem (powaga rejestru), reszta
@@ -89,11 +90,11 @@
   --promien-maly: 4px;
 
   /* Jedna szerokość kontenera dla CAŁEJ strony — nagłówek, hero, siatka i stopka
-     dzielą tę samą lewą/prawą krawędź. To jest zamierzona różnica wobec poprzedniej
-     wersji (wąska 980px kolumna wyśrodkowana jak apple.com): tu strona ma wyglądać
-     jak jeden dokument o stałym marginesie, nie jak wyspa treści na środku ekranu. */
+     dzielą tę samą lewą/prawą krawędź. Treść w kontenerze jest wyśrodkowana (decyzja
+     Piotra 2026-10-30, D22): wąska kolumna tekstu 42–46 rem na środku z równymi
+     marginesami, H1 i wstęp na środku, siatki kart na całą szerokość kontenera. */
   --szerokosc-tresci: 76rem;
-  /* Miara akapitu (nie całej strony) — utrzymuje linię tekstu pod ~75 znaków. */
+  /* Miara akapitu (nie całej strony) — utrzymuje linię tekstu pod ~75 znaków; kolumna tekstu stoi na środku. */
   --miara: 36rem;
 
   /* Ruch ujawniania sekcji przy przewijaniu (src/components/Ujawnianie.astro, decyzja Piotra

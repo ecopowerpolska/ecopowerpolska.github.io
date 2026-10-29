@@ -360,7 +360,13 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* Kolumna tekstu: miara czytelna; siatka przykładów wychodzi na pełną szerokość treści. */
+  /* D22 (2026-10-30): kolumna tekstu 46 rem wyśrodkowana; H1, wstęp i nagłówek przykładów na środku;
+     siatka przykładów wychodzi na pełną szerokość treści i też stoi na środku. */
+  .okruszki {
+    max-width: 46rem;
+    margin-inline: auto;
+  }
+
   .usluga > h1,
   .usluga__lead,
   .usluga > section > h2,
@@ -372,14 +378,17 @@ const daneStrukturalne = {
   .usluga__przyciski,
   .usluga__zobacz {
     max-width: 46rem;
+    margin-inline: auto;
   }
 
   .usluga__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
   }
 
   .usluga__lead {
-    margin: var(--o-4) 0 0;
+    margin-block: var(--o-4) 0;
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);
@@ -402,7 +411,12 @@ const daneStrukturalne = {
   }
 
   .usluga section p {
-    margin: 0 0 var(--o-4);
+    margin-block: 0 var(--o-4);
+  }
+
+  .usluga__przyklady > h2,
+  .usluga__przyklady > p {
+    text-align: center;
   }
 
   /* Linki w akapitach i listach PODKREŚLONE (Lighthouse link-in-text-block, runda 4). */
@@ -452,7 +466,7 @@ const daneStrukturalne = {
   /* Tabela porównania (np. drogi sklepu): przewijanie w bok tylko jako zapas. */
   .usluga__tabela {
     overflow-x: auto;
-    margin: 0 0 var(--o-6);
+    margin-block: 0 var(--o-6);
   }
 
   .usluga__tabela table {
@@ -547,7 +561,8 @@ const daneStrukturalne = {
     padding: 0;
     display: grid;
     gap: var(--o-8) var(--o-6);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 23rem));
+    justify-content: center;
   }
 
   .usluga__karta {

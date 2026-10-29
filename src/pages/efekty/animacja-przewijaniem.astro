@@ -308,21 +308,29 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
+  /* D22 (2026-10-30): okruszki i opisy w kolumnie 44 rem na środku, H1 i wstęp wyśrodkowane; sceny na pełną szerokość. */
+  .okruszki {
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
   .przyklad__tytul {
     font-size: var(--t-xxl);
     margin-bottom: var(--o-4);
+    text-align: center;
   }
 
   .przyklad__lead {
-    max-width: var(--miara);
-    margin: 0 0 var(--o-12);
+    max-width: 44rem;
+    margin: 0 auto var(--o-12);
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.45;
   }
 
   .opis {
-    max-width: var(--miara);
-    margin: var(--o-12) 0 var(--o-6);
+    max-width: 44rem;
+    margin: var(--o-12) auto var(--o-6);
   }
 
   .opis h2 {

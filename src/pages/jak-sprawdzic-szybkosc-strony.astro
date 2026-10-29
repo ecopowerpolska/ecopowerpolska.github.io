@@ -613,12 +613,20 @@ const daneStrukturalne = {
     max-width: none;
   }
 
+  /* D22 (2026-10-30): okruszki w kolumnie 44 rem na środku, H1 i wstęp wyśrodkowane; test i poradnik zostają na pełnej szerokości. */
+  .okruszki {
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
   .szybkosc__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
   }
 
   .szybkosc__lead {
     margin: var(--o-4) 0 0;
+    text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst-cichy);

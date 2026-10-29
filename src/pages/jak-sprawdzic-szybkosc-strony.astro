@@ -606,11 +606,11 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* Poradnik i nagłówek zostają w czytelnej kolumnie; sekcja testu ma pełną szerokość kontenera strony (decyzja Piotra 2026-10-29). */
+  /* Cała strona na pełną szerokość kontenera (decyzja Piotra 2026-10-30): bez ograniczeń szerokości tekstu; poradnik w dwóch kolumnach od 64rem. */
   .szybkosc__tytul,
   .szybkosc__lead,
   .tresc {
-    max-width: 44rem;
+    max-width: none;
   }
 
   .szybkosc__tytul {
@@ -1261,6 +1261,22 @@ const daneStrukturalne = {
     font-size: var(--t-xl);
     line-height: 1.2;
     margin: var(--o-12) 0 var(--o-3);
+    break-after: avoid;
+  }
+
+  .tresc h2:first-child {
+    margin-top: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .tresc {
+      columns: 2;
+      column-gap: 3rem;
+    }
+
+    .tresc p {
+      break-inside: avoid;
+    }
   }
 
   .tresc p {

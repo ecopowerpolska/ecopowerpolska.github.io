@@ -1,0 +1,11 @@
+{
+  "jawne_klucze": [
+    {
+      "prefiks": "AIzaSyDbX8z_",
+      "nazwa": "PSI przeglądarka ecopowerpolska.pl",
+      "ograniczenie": "referer https://www.ecopowerpolska.pl/*, tylko PageSpeed Insights API",
+      "zatwierdzil": "Piotr 2026-10-29",
+      "wygasa": "2027-04-29"
+    }
+  ]
+}

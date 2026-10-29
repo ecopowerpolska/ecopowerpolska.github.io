@@ -50,8 +50,20 @@ jobs:
         run: npm run guard
 
       # Instaluje zależności (npm ci), buduje i pakuje artefakt dla Pages.
+      #
+      # PUBLIC_PSI_KLUCZ to JAWNA zmienna Actions (Settings → Variables), NIE sekret:
+      # klucz PageSpeed Insights jest przeglądarkowy, ograniczony w Google Cloud do
+      # referera https://www.ecopowerpolska.pl/* i https://ecopowerpolska.pl/* oraz do
+      # samego PageSpeed Insights API, i trafia do HTML strony /jak-sprawdzic-szybkosc-strony/.
+      # Nagłówek „żadnego sekretu w GitHub Secrets" zostaje prawdziwy. Szczegóły: docs/PSI-MODUL.md.
+      # `env:` kroku widzą wewnętrzne kroki akcji złożonej (composite), w tym `npm run build`,
+      # a Astro czyta PUBLIC_* ze środowiska procesu (withastro/action ma tylko inputy
+      # path/node-version/package-manager/build-cmd/cache/cache-dir/out-dir — odczyt action.yml 2026-10-29).
+      # Zmienna pusta albo nieustawiona = strona bez modułu na miejscu (formularz GET do pagespeed.web.dev).
       - name: Instalacja, build i spakowanie artefaktu
         uses: withastro/action@v6
+        env:
+          PUBLIC_PSI_KLUCZ: ${{ vars.PUBLIC_PSI_KLUCZ }}
 
       # Audyt tego, co naprawdę poleciało: waga JS/CSS per strona + podstawy SEO.
       # Też zero zależności; czyta dist/ zostawiony przez krok wyżej.

@@ -1,6 +1,8 @@
 ---
 // /jak-sprawdzic-szybkosc-strony — poradnik + test szybkości strony w Google PageSpeed Insights (od 2026-10-27, D15).
 // Bez JS: formularz GET otwiera oficjalny raport pagespeed.web.dev/analysis?url=… w nowej karcie.
+// Adres wpisuje się bez https:// (pole tekstowe, skrypt dopisuje schemat także przed zwykłym wysłaniem formularza).
+// Pod wynikiem: zdanie po ludzku z wyniku telefonu i wezwanie do /kontakt/ (też po błędzie pomiaru).
 // Z JS: wynik na miejscu z PSI API v5 — TYLKO gdy build dostał klucz przeglądarkowy (PUBLIC_PSI_KLUCZ, ograniczony
 // do adresu strony). Bez klucza Google nie przyjmuje zapytań (limit 0 na dobę, zmierzone 2026-10-27: 429) — wtedy
 // skrypt nic nie przechwytuje i działa formularz. Klucza pagespeed-z440 z ~/.sekrety/ tu nie wolno.
@@ -12,10 +14,10 @@ import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
 
 const klucz = (import.meta.env.PUBLIC_PSI_KLUCZ ?? '').trim();
-const naglowek = 'Jak sprawdzić szybkość strony internetowej';
-const tytul = 'Szybkość strony: darmowy test PageSpeed — EcoPower Polska';
+const naglowek = 'Darmowe narzędzie do sprawdzania szybkości strony';
+const tytul = 'Darmowe narzędzie do sprawdzania szybkości strony | EcoPower Polska';
 const opis =
-  'Sprawdź szybkość strony internetowej w Google PageSpeed Insights: darmowy test na telefonie i komputerze. Wyjaśniamy wynik i co z nim zrobić.';
+  'Darmowe narzędzie do sprawdzania szybkości strony: wpisz adres, a wynik Google PageSpeed dla telefonu i komputera zobaczysz od razu, po polsku.';
 
 const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
 const adres = new URL('/jak-sprawdzic-szybkosc-strony/', import.meta.env.SITE).href;
@@ -83,12 +85,12 @@ const daneStrukturalne = {
 
     <h1 class="szybkosc__tytul">{naglowek}</h1>
     <p class="szybkosc__lead">
-      Wpisz adres swojej strony. Google zmierzy ją w PageSpeed Insights i pokaże oficjalny wynik na telefonie i na
-      komputerze. Test jest darmowy.
+      Sprawdź za darmo szybkość strony internetowej: wpisz adres, a Google zmierzy ją w PageSpeed Insights i pokaże
+      oficjalny wynik na telefonie i na komputerze.
     </p>
 
     <section class="test" aria-labelledby="test-tytul">
-      <h2 id="test-tytul" class="test__tytul">Sprawdź szybkość twojej strony</h2>
+      <h2 id="test-tytul" class="test__tytul">Sprawdź szybkość swojej strony za darmo</h2>
       <form
         id="psi"
         class="test__formularz"
@@ -99,23 +101,35 @@ const daneStrukturalne = {
         data-klucz={klucz || undefined}
       >
         <label for="psi-adres">Adres strony</label>
+        <p class="test__podpowiedz" id="psi-podpowiedz">Bez https:// i www, same wpiszemy.</p>
         <div class="test__wiersz">
           <input
             id="psi-adres"
-            type="url"
+            type="text"
             name="url"
             required
             inputmode="url"
             autocomplete="url"
-            placeholder="https://twojafirma.pl"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-describedby="psi-podpowiedz"
+            placeholder="twojafirma.pl"
           />
           <button type="submit">Sprawdź szybkość twojej strony</button>
         </div>
       </form>
       <p class="test__nota">Pomiar wykonuje Google. Adres strony trafia do Google, my go nie zapisujemy.</p>
-      <p class="test__stan" id="psi-stan" aria-live="polite"></p>
+      <div class="test__stan" id="psi-stan" aria-live="polite">
+        <p class="test__stan-opis" id="psi-stan-opis"></p>
+        <ul class="test__etapy" id="psi-etapy" hidden>
+          <li data-e="mobile"></li>
+          <li data-e="desktop"></li>
+        </ul>
+      </div>
 
       <div class="wynik" id="psi-wynik" hidden>
+        <p class="werdykt" id="psi-werdykt" hidden></p>
+        <p class="werdykt werdykt--lcp" id="psi-lcp" hidden></p>
         <table class="pomiar__tabela">
           <caption class="pomiar__tytul">Wynik w PageSpeed Insights (0–100)</caption>
           <thead>
@@ -155,13 +169,19 @@ const daneStrukturalne = {
           </tbody>
         </table>
       </div>
+      <div class="wezwanie" id="psi-wezwanie" hidden>
+        <p class="wezwanie__tekst">
+          Chcesz, żeby było szybciej? Napisz do nas — sprawdzimy, co spowalnia stronę, i podamy cenę.
+        </p>
+        <a class="wezwanie__guzik" href="/kontakt/">Napisz do nas</a>
+      </div>
       <p class="test__raport" id="psi-raport" hidden>
         <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">Pełny raport w PageSpeed Insights</a>
       </p>
     </section>
 
     <div class="tresc">
-      <h2>Co mierzy Google PageSpeed Insights</h2>
+      <h2>Darmowe narzędzia do sprawdzania strony: szybkość, SEO, dostępność</h2>
       <p>
         PageSpeed Insights to bezpłatne narzędzie Google. Uruchamia na stronie test Lighthouse i daje pięć wyników od 0
         do 100. Wydajność mówi, jak szybko strona się pokazuje i reaguje. Ułatwienia dostępu sprawdzają kontrast, opisy
@@ -184,7 +204,7 @@ const daneStrukturalne = {
       <p>
         Google bierze pod uwagę wrażenia użytkownika, w tym szybkość, gdy ustala kolejność wyników. Ważniejsi są jednak
         klienci. Strona, która ładuje się kilka sekund, traci część odwiedzających, zanim cokolwiek zobaczą. Szybka
-        strona to więcej telefonów i zapytań z tej samej liczby wejść. Dlatego robimy
+        strona to więcej telefonów i zapytań z tej samej liczby wejść. Dlatego robimy{' '}
         <a href="/strony-internetowe-warszawa/">strony budowane pod wynik 97–100 w PageSpeed</a>.
       </p>
 
@@ -214,49 +234,83 @@ const daneStrukturalne = {
 </Bazowy>
 
 <script>
-  // Wynik na miejscu z PSI API v5 (D15). Bez klucza w data-klucz nic nie przechwytuje: formularz otwiera raport Google.
+  // Wynik na miejscu z PSI API v5 (D15). Bez klucza w data-klucz nic nie przechwytuje: formularz otwiera raport Google,
+  // ale adres bez https:// i tak dostaje schemat przed wysłaniem.
   (() => {
     const f = document.getElementById('psi') as HTMLFormElement | null;
-    if (!f || !window.fetch) return;
+    if (!f) return;
     const $ = (s: string) => document.getElementById(s) as HTMLElement;
-    const stan = $('psi-stan'), wynik = $('psi-wynik'), raport = $('psi-raport'), guzik = f.querySelector('button') as HTMLButtonElement;
+    const opis = $('psi-stan-opis'), etapy = $('psi-etapy'), wynik = $('psi-wynik');
+    const werdykt = $('psi-werdykt'), lcp = $('psi-lcp'), wezwanie = $('psi-wezwanie'), raport = $('psi-raport');
+    const guzik = f.querySelector('button') as HTMLButtonElement;
     const adres = f.elements.namedItem('url') as HTMLInputElement;
     const KAT = ['performance', 'accessibility', 'best-practices', 'seo', 'agentic-browsing'];
     const MET = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift', 'speed-index'];
+    const BLAD_ADRESU = 'To nie wygląda na adres strony. Wpisz na przykład twojafirma.pl.';
+    // Adres jak komu wygodnie: twojafirma.pl, www.twojafirma.pl, https://twojafirma.pl/oferta. Zwraca pełny adres albo null.
+    const normalizuj = (raw: string): string | null => {
+      let u = raw.trim().split(/\s+/)[0] || '';
+      if (!u) return null;
+      if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(u)) u = 'https://' + u.replace(/^\/+/, '');
+      try {
+        const a = new URL(u);
+        if (!/^https?:$/.test(a.protocol) || !/\.[^.]/.test(a.hostname)) return null;
+        return a.href;
+      } catch { return null; }
+    };
+    const ustaw = (el: HTMLElement, t: string) => { el.textContent = t; el.hidden = !t; };
+    const etap = (s: string, t: string) => { (etapy.querySelector('[data-e="' + s + '"]') as HTMLElement).textContent = t; };
     const zapytaj = (u: string, s: string, k: string): Promise<any> =>
       fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' + encodeURIComponent(u) + '&locale=pl&strategy=' + s +
         KAT.map((c) => '&category=' + c).join('') + '&key=' + encodeURIComponent(k)).then((r) =>
         r.json().then((j) => { if (!r.ok) throw r.status; return j.lighthouseResult; }));
+    const opisz = (l: any) => {
+      const c = l.categories.performance, w = c && c.score != null ? Math.round(c.score * 100) : null;
+      ustaw(werdykt, w == null ? '' : w >= 90 ? 'Strona na telefonie ładuje się szybko.'
+        : w >= 50 ? 'Na telefonie jest przeciętnie — da się przyspieszyć.'
+        : 'Na telefonie strona ładuje się wolno — to pierwsza rzecz do poprawy.');
+      const a = l.audits['largest-contentful-paint'], sek = a && typeof a.numericValue === 'number' ? a.numericValue / 1000 : 0;
+      ustaw(lcp, sek > 2.5 ? 'Największy element pojawia się po ' + sek.toFixed(1).replace('.', ',') + ' s, Google oczekuje do 2,5 s.' : '');
+    };
+    const wypelnij = (s: string, l: any) => {
+      wynik.querySelectorAll<HTMLElement>('[data-s="' + s + '"]').forEach((el) => {
+        if (el.dataset.k) {
+          const c = l.categories[el.dataset.k];
+          const w = c && c.score != null ? Math.round(c.score * 100) : null;
+          el.textContent = w == null ? '–' : String(w);
+          el.className = 'pastylka ' + (w != null && w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
+        } else {
+          const a = l.audits[el.dataset.m as string];
+          el.textContent = a && a.displayValue ? a.displayValue : '–';
+        }
+      });
+    };
     f.addEventListener('submit', (e) => {
-      const k = f.dataset.klucz;
-      if (!k) return;
-      e.preventDefault();
-      let u = adres.value.trim();
-      if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
-      try { u = new URL(u).href; } catch { stan.textContent = 'To nie wygląda na adres strony. Wpisz na przykład https://twojafirma.pl.'; return; }
+      const u = normalizuj(adres.value);
+      if (!u) { e.preventDefault(); etapy.hidden = true; opis.textContent = BLAD_ADRESU; return; }
+      adres.value = u;
       (raport.querySelector('a') as HTMLAnchorElement).href = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(u);
-      wynik.hidden = true; raport.hidden = true; guzik.disabled = true;
-      stan.textContent = 'Google mierzy stronę, to trwa około minuty.';
+      const k = f.dataset.klucz;
+      if (!k || !window.fetch) return;
+      e.preventDefault();
+      wynik.hidden = true; raport.hidden = true; wezwanie.hidden = true; ustaw(werdykt, ''); ustaw(lcp, ''); guzik.disabled = true;
+      etapy.hidden = false;
+      opis.textContent = 'Google mierzy stronę. To trwa zwykle 20–40 sekund.';
+      etap('mobile', 'Mierzymy na telefonie…'); etap('desktop', 'Mierzymy na komputerze…');
       Promise.all(['mobile', 'desktop'].map((s) => zapytaj(u, s, k).then((l) => {
-        wynik.querySelectorAll<HTMLElement>('[data-s="' + s + '"]').forEach((el) => {
-          if (el.dataset.k) {
-            const c = l.categories[el.dataset.k];
-            const w = c && c.score != null ? Math.round(c.score * 100) : null;
-            el.textContent = w == null ? '–' : String(w);
-            el.className = 'pastylka ' + (w != null && w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
-          } else {
-            const a = l.audits[el.dataset.m as string];
-            el.textContent = a && a.displayValue ? a.displayValue : '–';
-          }
-        });
+        etap(s, (s === 'mobile' ? 'Telefon' : 'Komputer') + ': gotowe.');
+        wypelnij(s, l);
+        if (s === 'mobile') opisz(l);
       }))).then(() => {
-        stan.textContent = 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
+        opis.textContent = 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
+        etapy.hidden = true;
         wynik.hidden = false;
       }).catch((b) => {
-        stan.textContent = b === 429 || b === 403
-          ? 'Google chwilowo nie przyjmuje kolejnych pomiarów z naszej strony. Otwórz pełny raport poniżej.'
-          : 'Google nie zdołał zmierzyć tej strony. Sprawdź adres albo otwórz pełny raport poniżej.';
-      }).finally(() => { raport.hidden = false; guzik.disabled = false; });
+        etapy.hidden = true;
+        opis.textContent = b === 429 || b === 403
+          ? 'Google chwilowo nie przyjmuje kolejnych pomiarów. Spróbuj za chwilę albo otwórz pełny raport.'
+          : 'Google nie zdołał zmierzyć tej strony. Sprawdź, czy adres działa, albo otwórz pełny raport.';
+      }).finally(() => { raport.hidden = false; wezwanie.hidden = false; guzik.disabled = false; });
     });
   })();
 </script>
@@ -403,7 +457,8 @@ const daneStrukturalne = {
       padding: var(--o-4);
     }
 
-    .test__wiersz button {
+    .test__wiersz button,
+    .wezwanie__guzik {
       flex: 1 1 100%;
     }
   }
@@ -414,17 +469,84 @@ const daneStrukturalne = {
     color: var(--tekst-cichy);
   }
 
-  .test__stan:empty {
-    display: none;
+  .test__podpowiedz {
+    margin: calc(var(--o-1) * -1) 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
   }
 
   .test__stan {
-    margin: var(--o-4) 0 0;
     font-weight: 600;
+  }
+
+  .test__stan-opis:not(:empty) {
+    margin: var(--o-4) 0 0;
+  }
+
+  .test__etapy {
+    margin: var(--o-2) 0 0;
+    padding-left: var(--o-4);
+    font-weight: 400;
+  }
+
+  .werdykt {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .werdykt--lcp {
+    font-size: inherit;
+    font-weight: 400;
+  }
+
+  .wezwanie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--o-3) var(--o-4);
+    margin: var(--o-6) 0 0;
+    padding-top: var(--o-4);
+    border-top: 1px solid var(--tekst-cichy);
+  }
+
+  .wezwanie[hidden] {
+    display: none;
+  }
+
+  .wezwanie__tekst {
+    flex: 1 1 16rem;
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .wezwanie__guzik {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    font-weight: 600;
+    color: var(--tlo);
+    background: var(--akcent);
+    border-radius: var(--promien-maly);
+  }
+
+  .wezwanie__guzik:hover {
+    background: var(--tekst);
+  }
+
+  .wezwanie__guzik:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
   }
 
   .test__raport {
     margin: var(--o-4) 0 0;
+    font-size: var(--t-s);
   }
 
   .test__raport a {

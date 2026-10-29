@@ -45,20 +45,34 @@ const metryki = [
   ['speed-index', 'Indeks szybkości (SI)', '3400,5800'],
 ];
 
-// Zegar: łuk 240° (od 150° do 30° po obwodzie, zgodnie z ruchem wskazówek), skala 0–100, kreska co 10, długa co 50.
-const CX = 140, CY = 135, R = 95;
+// Zegar wg wzorca Piotra (2026-10-29): łuk 240° (start 150° po obwodzie SVG = −210°), skala Google 0–100, trzy strefy toru
+// (0–49 czerwona, 50–89 pomarańczowa, 90–100 zielona), podziałka co 2 (cienka), co 10 (średnia), gruba przy 0/50/90/100,
+// liczby co 10 na zewnątrz łuku. Cała podziałka powstaje tu, w buildzie: trzy ścieżki zamiast 50 elementów, zero JS na rysowanie.
+const CX = 150, CY = 145, R = 100;
 const pt = (r: number, v: number): [number, number] => {
   const a = ((150 + 2.4 * v) * Math.PI) / 180;
   return [+(CX + r * Math.cos(a)).toFixed(1), +(CY + r * Math.sin(a)).toFixed(1)];
 };
-const [x0, y0] = pt(R, 0), [x1, y1] = pt(R, 100);
-const sciezka = `M ${x0} ${y0} A ${R} ${R} 0 1 1 ${x1} ${y1}`;
-const kreski = Array.from({ length: 11 }, (_, i) => {
-  const v = i * 10, dl = v % 50 === 0;
-  const [ax, ay] = pt(R + 11, v), [bx, by] = pt(R + (dl ? 20 : 16), v);
-  return { dl, ax, ay, bx, by };
+const luk = (v0: number, v1: number) => {
+  const [ax, ay] = pt(R, v0), [bx, by] = pt(R, v1);
+  return `M${ax} ${ay}A${R} ${R} 0 ${v1 - v0 > 75 ? 1 : 0} 1 ${bx} ${by}`;
+};
+const sciezka = luk(0, 100);
+const strefy = [
+  ['zly', luk(0, 50)],
+  ['sredni', luk(50, 90)],
+  ['dobry', luk(90, 100)],
+];
+const kreskiD = { c: '', s: '', g: '' };
+for (let v = 0; v <= 100; v += 2) {
+  const grube = [0, 50, 90, 100].includes(v), k = grube ? 'g' : v % 10 === 0 ? 's' : 'c';
+  const [ax, ay] = pt(R + 8, v), [bx, by] = pt(R + (grube ? 20 : v % 10 === 0 ? 16 : 12), v);
+  kreskiD[k] += `M${ax} ${ay}L${bx} ${by}`;
+}
+const etykiety = Array.from({ length: 11 }, (_, i) => {
+  const v = i * 10, [x, y] = pt(R + 35, v);
+  return { v, x, y, k: v === 50 || v === 90 ? ' zegar__skala--w' : v % 20 === 10 ? ' zegar__skala--p' : '' };
 });
-const etykiety = [0, 50, 100].map((v) => { const [x, y] = pt(R + 30, v); return { v, x, y }; });
 
 const daneStrukturalne = {
   '@context': 'https://schema.org',
@@ -151,22 +165,28 @@ const daneStrukturalne = {
             <h3 class="zegar__nazwa">{nazwa}</h3>
             <svg
               class="zegar__svg"
-              viewBox="0 0 280 210"
+              viewBox="0 0 300 240"
               role="meter"
               aria-valuemin="0"
               aria-valuemax="100"
               aria-label={`Wydajność, ${nazwa.toLowerCase()}`}
             >
-              <path class="zegar__tlo" d={sciezka} pathLength="100" />
-              {kreski.map((k) => (
-                <line class={k.dl ? 'zegar__kreska zegar__kreska--dl' : 'zegar__kreska'} x1={k.ax} y1={k.ay} x2={k.bx} y2={k.by} />
-              ))}
-              {etykiety.map((e) => (
-                <text class="zegar__skala" x={e.x} y={e.y} text-anchor="middle" dominant-baseline="central">{e.v}</text>
-              ))}
+              {strefy.map(([st, d]) => <path class={`zegar__strefa zegar__strefa--${st}`} d={d} />)}
               <path class="zegar__luk" d={sciezka} pathLength="100" />
-              <text class="zegar__liczba" x="140" y="148" text-anchor="middle">0</text>
-              <text class="zegar__jednostka" x="140" y="171" text-anchor="middle">punktów wydajności</text>
+              <g aria-hidden="true">
+                <path class="zegar__kr zegar__kr--c" d={kreskiD.c} />
+                <path class="zegar__kr zegar__kr--s" d={kreskiD.s} />
+                <path class="zegar__kr zegar__kr--g" d={kreskiD.g} />
+                {etykiety.map((e) => (
+                  <text class={'zegar__skala' + e.k} x={e.x} y={e.y} text-anchor="middle" dominant-baseline="central">{e.v}</text>
+                ))}
+              </g>
+              <g transform={`translate(${CX} ${CY})`} aria-hidden="true">
+                <line class="zegar__igla" x1="0" y1="0" x2="94" y2="0" />
+                <circle class="zegar__os" r="6" />
+              </g>
+              <text class="zegar__liczba" x="150" y="212" text-anchor="middle">0</text>
+              <text class="zegar__jednostka" x="150" y="232" text-anchor="middle">punktów</text>
             </svg>
             <p class="zegar__podpis" data-e={s}></p>
           </div>
@@ -176,6 +196,13 @@ const daneStrukturalne = {
       <div class="wynik" id="psi-wynik" hidden>
         <p class="werdykt" id="psi-werdykt" hidden></p>
         <p class="werdykt werdykt--lcp" id="psi-lcp" hidden></p>
+        <section class="zalecenia" id="psi-zalecenia" aria-labelledby="psi-zal-tytul" hidden>
+          <h3 class="zalecenia__tytul" id="psi-zal-tytul">Co poprawić na tej stronie</h3>
+          <ol class="zalecenia__lista" id="psi-zal-lista"></ol>
+          <p class="zalecenia__brak" id="psi-zal-brak" hidden>
+            Nie ma nic pilnego do poprawy. Utrzymaj to przy kolejnych zmianach na stronie.
+          </p>
+        </section>
         <div class="paski">
           {strony.map(([s, nazwa]) => (
             <section class="paski__kol" data-s={s} aria-label={`Szczegóły wyniku: ${nazwa.toLowerCase()}`}>
@@ -268,6 +295,7 @@ const daneStrukturalne = {
 </Bazowy>
 
 <script>
+  import { zalecenia, zaleceniaTekst } from '../lib/psi-zalecenia';
   // Wynik na miejscu z PSI API v5 (D15). Bez klucza w data-klucz nic nie przechwytuje: formularz otwiera raport Google,
   // ale adres bez https:// i tak dostaje schemat przed wysłaniem. Zegary i paski: czysty SVG/CSS, bez bibliotek.
   (() => {
@@ -275,7 +303,7 @@ const daneStrukturalne = {
     if (!f) return;
     const $ = (s: string) => document.getElementById(s) as HTMLElement;
     const opis = $('psi-stan-opis'), trwa = $('psi-trwa'), zegary = $('psi-zegary'), wynik = $('psi-wynik');
-    const werdykt = $('psi-werdykt'), lcp = $('psi-lcp'), wezwanie = $('psi-wezwanie'), raport = $('psi-raport');
+    const werdykt = $('psi-werdykt'), lcp = $('psi-lcp'), zal = $('psi-zalecenia'), zalLista = $('psi-zal-lista'), zalBrak = $('psi-zal-brak'), wezwanie = $('psi-wezwanie'), raport = $('psi-raport');
     const kopiuj = $('psi-kopiuj') as HTMLButtonElement, kopia = $('psi-kopia') as HTMLTextAreaElement;
     const guzik = f.querySelector('button') as HTMLButtonElement;
     const adres = f.elements.namedItem('url') as HTMLInputElement;
@@ -285,7 +313,8 @@ const daneStrukturalne = {
     const BLAD_ADRESU = 'To nie wygląda na adres strony. Wpisz na przykład twojafirma.pl.';
     const dane: Record<string, any> = {};
     const timery: Record<string, any> = {};
-    let ostatni = '';
+    let ostatni = '', zalTekst = '';
+    const URZ: Record<string, string> = { telefon: 'Telefon', komputer: 'Komputer', oba: 'Telefon i komputer' };
 
     // Adres jak komu wygodnie: twojafirma.pl, www.twojafirma.pl, https://twojafirma.pl/oferta. Zwraca pełny adres albo null.
     const normalizuj = (raw: string): string | null => {
@@ -321,7 +350,7 @@ const daneStrukturalne = {
     const zg = (s: string) => zegary.querySelector('.zegar[data-s="' + s + '"]') as HTMLElement;
     const czesc = (s: string) => {
       const z = zg(s), q = (k: string) => z.querySelector(k) as SVGElement;
-      return { z, svg: q('svg'), luk: q('.zegar__luk'), liczba: q('.zegar__liczba'), podpis: q('.zegar__podpis') };
+      return { z, svg: q('svg'), luk: q('.zegar__luk'), igla: q('.zegar__igla'), liczba: q('.zegar__liczba'), podpis: q('.zegar__podpis') };
     };
     const licz = (el: Element, w: number) => {
       if (spokoj) { el.textContent = String(w); return; }
@@ -339,9 +368,10 @@ const daneStrukturalne = {
       c.z.removeAttribute('data-stan');
       c.svg.removeAttribute('aria-valuenow');
       c.luk.style.setProperty('--off', '100');
+      c.igla.style.setProperty('--w', '0');
       c.z.classList.add('zegar--pracuje');
       c.podpis.textContent = 'Mierzymy na ' + c.z.dataset.na + '…';
-      const los = () => { c.liczba.textContent = String(15 + Math.floor(Math.random() * 71)); };
+      const los = () => { const v = 15 + Math.floor(Math.random() * 71); c.liczba.textContent = String(v); c.igla.style.setProperty('--w', String(v)); };
       if (spokoj) c.liczba.textContent = '…';
       else { los(); timery[s] = setInterval(los, 300); }
     };
@@ -351,6 +381,7 @@ const daneStrukturalne = {
       c.z.classList.remove('zegar--pracuje');
       if (w == null) {
         c.liczba.textContent = '0';
+        c.igla.style.setProperty('--w', '0');
         c.z.dataset.stan = 'brak';
         c.podpis.textContent = 'Bez wyniku.';
         return;
@@ -358,6 +389,7 @@ const daneStrukturalne = {
       void c.luk.getBoundingClientRect();
       c.z.dataset.stan = stanOceny(w);
       c.luk.style.setProperty('--off', String(100 - w));
+      c.igla.style.setProperty('--w', String(w));
       c.svg.setAttribute('aria-valuenow', String(w));
       c.podpis.textContent = 'Gotowe.';
       licz(c.liczba, w);
@@ -405,6 +437,22 @@ const daneStrukturalne = {
       });
     };
 
+    // ── zalecenia (moduł src/lib/psi-zalecenia.ts: progi Google + audyty Lighthouse) ──
+    const pokazZalecenia = () => {
+      const lista = zalecenia(dane.mobile || null, dane.desktop || null);
+      zalLista.textContent = '';
+      lista.forEach((x) => {
+        const li = document.createElement('li'), t = document.createElement('strong'), o = document.createElement('span'), e = document.createElement('small');
+        t.textContent = x.tytul; o.textContent = x.opis; e.textContent = URZ[x.urzadzenie];
+        li.append(t, o, e);
+        zalLista.append(li);
+      });
+      zalBrak.hidden = lista.length > 0;
+      zalLista.hidden = !lista.length;
+      zal.hidden = false;
+      zalTekst = lista.length ? zaleceniaTekst(lista) : zalBrak.textContent!.trim();
+    };
+
     // ── kopiowanie ──
     const met = (l: any, id: string) => {
       const a = l && l.audits && l.audits[id];
@@ -419,7 +467,8 @@ const daneStrukturalne = {
       return 'Wynik PageSpeed dla ' + u + ' (' + data + '): telefon ' + o(m, 'performance') + '/100, komputer ' + o(d, 'performance') + '/100. ' +
         'Ułatwienia dostępu ' + para('accessibility') + ', Sprawdzone metody ' + para('best-practices') + ', SEO ' + para('seo') + ' (telefon/komputer). ' +
         'LCP ' + par('largest-contentful-paint') + '; CLS ' + par('cumulative-layout-shift') + '; TBT ' + par('total-blocking-time') + '. ' +
-        'Zmierzono na ' + (wezwanie.dataset.strona || location.href);
+        'Zmierzono na ' + (wezwanie.dataset.strona || location.href) +
+        (zalTekst ? '\n\nCo poprawić na tej stronie:\n' + zalTekst : '');
     };
     let zegarKopii: any;
     kopiuj.addEventListener('click', async () => {
@@ -449,11 +498,17 @@ const daneStrukturalne = {
       e.preventDefault();
       ostatni = u;
       Object.keys(dane).forEach((x) => delete dane[x]);
+      zalTekst = ''; zal.hidden = true;
       wynik.hidden = true; raport.hidden = true; wezwanie.hidden = true; kopiuj.hidden = true; kopia.hidden = true;
       ustaw(werdykt, ''); ustaw(lcp, ''); guzik.disabled = true;
       resetPaskow();
       zegary.hidden = false; trwa.hidden = false; opis.textContent = '';
       STRONY.forEach(startZegara);
+      // Enter na telefonie: chowamy klawiaturę i pokazujemy komunikat z zegarami (po schowaniu klawiatury zmienia się wysokość okna).
+      adres.blur();
+      const doKomunikatu = () => trwa.scrollIntoView({ block: 'start', behavior: spokoj ? 'auto' : 'smooth' });
+      doKomunikatu();
+      setTimeout(doKomunikatu, 350);
       let limit = false;
       Promise.all(STRONY.map((s) => zapytaj(u, s, k).then((l) => {
         dane[s] = l;
@@ -474,6 +529,7 @@ const daneStrukturalne = {
             : 'Google nie zdołał zmierzyć tej strony. Sprawdź, czy adres działa, albo otwórz pełny raport.';
         } else {
           kopiuj.hidden = false;
+          pokazZalecenia();
           opis.textContent = ile < 2 ? 'Google zmierzył tylko część wyniku.' : 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
         }
       }).finally(() => { raport.hidden = false; wezwanie.hidden = false; guzik.disabled = false; });
@@ -535,9 +591,9 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
+  /* Poradnik i nagłówek zostają w czytelnej kolumnie; sekcja testu ma pełną szerokość kontenera strony (decyzja Piotra 2026-10-29). */
   .szybkosc__tytul,
   .szybkosc__lead,
-  .test,
   .tresc {
     max-width: 44rem;
   }
@@ -690,10 +746,11 @@ const daneStrukturalne = {
     }
   }
 
+  /* Dwa zegary zawsze obok siebie (także na telefonie); od 64rem po 30 rem (480 px) wyśrodkowane. */
   .zegary {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--o-6);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--o-3);
     margin-top: var(--o-6);
   }
 
@@ -702,9 +759,19 @@ const daneStrukturalne = {
   }
 
   @media (min-width: 48rem) {
-    .zegary,
     .paski {
       grid-template-columns: 1fr 1fr;
+    }
+
+    .zegary {
+      gap: var(--o-6);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .zegary {
+      grid-template-columns: repeat(2, minmax(0, 30rem));
+      justify-content: center;
     }
   }
 
@@ -721,20 +788,33 @@ const daneStrukturalne = {
   .zegar__svg {
     display: block;
     width: 100%;
-    max-width: 20rem;
     height: auto;
     margin: 0 auto;
     overflow: visible;
   }
 
-  .zegar__tlo,
+  .zegar__strefa,
   .zegar__luk {
     fill: none;
-    stroke-width: 14;
+    stroke-width: 12;
   }
 
-  .zegar__tlo {
-    stroke: var(--linia);
+  /* Elementy listy zaleceń tworzy skrypt, więc selektory potomków są :global (bez atrybutu zakresu Astro). */
+  /* Strefy toru wg progów Google (0–49 słaby, 50–89 do poprawy, 90–100 dobry): te same kolory co wypełnienie, ale blade. */
+  .zegar__strefa {
+    stroke-opacity: 0.4;
+  }
+
+  .zegar__strefa--zly {
+    stroke: var(--stan-zly);
+  }
+
+  .zegar__strefa--sredni {
+    stroke: var(--stan-sredni);
+  }
+
+  .zegar__strefa--dobry {
+    stroke: var(--stan-dobry);
   }
 
   .zegar__luk {
@@ -768,32 +848,62 @@ const daneStrukturalne = {
     }
   }
 
-  .zegar__kreska {
+  /* Podziałka: kreski o stałej grubości na ekranie (cienka co 2, średnia co 10, gruba przy 0, 50, 90 i 100). */
+  .zegar__kr {
+    fill: none;
+    vector-effect: non-scaling-stroke;
     stroke: var(--tekst-cichy);
-    stroke-width: 1.5;
+    stroke-width: 0.75px;
   }
 
-  .zegar__kreska--dl {
+  .zegar__kr--s {
+    stroke-width: 1.25px;
+  }
+
+  .zegar__kr--g {
     stroke: var(--tekst);
-    stroke-width: 2.5;
+    stroke-width: 2.5px;
   }
 
   .zegar__skala {
     fill: var(--tekst-cichy);
     font-size: 13px;
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zegar__skala--w {
+    fill: var(--tekst);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .zegar__igla {
+    stroke: var(--tekst);
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+    transform: rotate(calc(150deg + var(--w, 0) * 2.4deg));
+    transition: transform 1.2s ease-out;
+  }
+
+  .zegar--pracuje .zegar__igla {
+    transition-duration: 0.3s;
+  }
+
+  .zegar__os {
+    fill: var(--tekst);
   }
 
   .zegar__liczba {
     fill: var(--tekst);
-    font-size: 46px;
+    font-size: 52px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
 
   .zegar__jednostka {
     fill: var(--tekst-cichy);
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .zegar__podpis {
@@ -801,6 +911,49 @@ const daneStrukturalne = {
     font-size: var(--t-s);
     font-weight: 400;
     color: var(--tekst-cichy);
+  }
+
+  /* Telefon: zegar ma ok. 45 % szerokości, więc liczby wokół łuku rosną względem rysunku, a pośrednie (10, 30, 70) znikają. */
+  @media (max-width: 48rem) {
+    .zegar__skala {
+      font-size: 21px;
+    }
+
+    .zegar__skala--w {
+      font-size: 23px;
+    }
+
+    .zegar__skala--p {
+      display: none;
+    }
+
+    .zegar__liczba {
+      font-size: 64px;
+    }
+
+    .zegar__jednostka {
+      font-size: 19px;
+    }
+
+    .zegar__nazwa {
+      font-size: var(--t-s);
+    }
+
+    .zegar__kr {
+      stroke-width: 0.5px;
+    }
+
+    .zegar__kr--s {
+      stroke-width: 1px;
+    }
+
+    .zegar__kr--g {
+      stroke-width: 2px;
+    }
+  }
+
+  .trwa {
+    scroll-margin-top: 6rem;
   }
 
   .werdykt {
@@ -893,6 +1046,60 @@ const daneStrukturalne = {
     to {
       background-position: 0 0;
     }
+  }
+
+  .zalecenia {
+    margin: 0 0 var(--o-6);
+    font-size: var(--t-m);
+    line-height: 1.45;
+  }
+
+  .zalecenia[hidden],
+  .zalecenia__lista[hidden],
+  .zalecenia__brak[hidden] {
+    display: none;
+  }
+
+  .zalecenia__tytul {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-l);
+  }
+
+  .zalecenia__lista {
+    display: grid;
+    gap: var(--o-3);
+    margin: 0;
+    padding-left: var(--o-6);
+  }
+
+  .zalecenia__lista :global(li) {
+    padding-left: var(--o-1);
+  }
+
+  .zalecenia__lista :global(strong) {
+    display: block;
+    font-weight: 700;
+  }
+
+  .zalecenia__lista :global(span) {
+    display: block;
+    font-weight: 400;
+  }
+
+  .zalecenia__lista :global(small) {
+    display: inline-block;
+    margin-top: var(--o-1);
+    padding: 0 var(--o-2);
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--tekst-cichy);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: 999px;
+  }
+
+  .zalecenia__brak {
+    margin: 0;
+    font-weight: 600;
   }
 
   .wezwanie {
@@ -1006,6 +1213,10 @@ const daneStrukturalne = {
     .zegar--pracuje .zegar__luk,
     .paski__kol--pracuje .pasek {
       animation: none;
+    }
+
+    .zegar__igla {
+      transition: none;
     }
 
     .zegar--pracuje .zegar__luk {

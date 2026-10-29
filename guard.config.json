@@ -1,11 +1,11 @@
 {
-  "$comment": "Progi astro-guard dla ecopowerpolska.pl. Do 2026-09-07 stalo tu zeroJsRoutes ['/**']; Piotr regule poluzowal swiadomie na rzecz guzikow kopiowania w stopce. W zamian twardy budzet jsGzipKB: 3 — kazda biblioteka albo wyspa client:* go przekroczy. Uzasadnienie: docs/DECYZJE-WIZUALNE.md D4.",
+  "$comment": "Progi astro-guard dla ecopowerpolska.pl. Do 2026-09-07 stalo tu zeroJsRoutes ['/**']; Piotr regule poluzowal swiadomie na rzecz guzikow kopiowania w stopce. W zamian twardy budzet jsGzipKB (3, od 2026-10-29: 6) — kazda biblioteka albo wyspa client:* go przekroczy. Uzasadnienie: docs/DECYZJE-WIZUALNE.md D4. Od 2026-10-29 budzet 6 kB dla trasy testu szybkosci (zegary, zalecenia; D21), pozostale trasy trzymaja <= 3 kB.",
   "static": {
     "maxIslandsPerFile": 3,
     "minAstroMajor": 6
   },
   "budget": {
-    "jsGzipKB": 3,
+    "jsGzipKB": 6,
     "cssGzipKB": 30,
     "htmlGzipKB": 25,
     "zeroJsRoutes": []

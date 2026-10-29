@@ -112,6 +112,8 @@
   ],
   "wiadomoscEtykieta": "Wiadomość",
   "wiadomoscPodpowiedz": "Nieobowiązkowa, gdy zaznaczyłeś coś wyżej albo dołączyłeś wyliczenie.",
+  "psiNotka": "Dołączyliśmy wynik pomiaru dla {adres}. Dopisz, czego potrzebujesz.",
+  "psiUsun": "Usuń wynik",
   "zgodaEtykieta": "Zapoznałem się z [polityką prywatności](/polityka-prywatnosci/) i wiem, jak EcoPower Polska przetwarza dane z formularza, żeby odpowiedzieć na zapytanie.",
   "zgodaInformacja": "Administratorem danych jest {nazwa}, {adres}. Dane z formularza wykorzystujemy tylko do odpowiedzi na zapytanie i przygotowania oferty (art. 6 ust. 1 lit. b RODO). Masz prawo dostępu do danych, ich poprawienia i usunięcia oraz skargi do Prezesa UODO. Formularz chroni Cloudflare Turnstile, który sprawdza, że wysyła człowiek. Napisz na {email}, jeśli chcesz, żebyśmy usunęli Twoje dane. Szczegóły są w [polityce prywatności](/polityka-prywatnosci/).",
   "turnstileCzekaj": "Sprawdzamy, że wysyła człowiek. Jeśli pojawi się ramka do zaznaczenia, kliknij ją.",

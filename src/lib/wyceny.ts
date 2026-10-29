@@ -135,10 +135,11 @@ export function usunWycene(id: string): Wycena[] {
   return nowe;
 }
 
-/** Po wysłaniu zapytania: wyceny i szkic znikają. */
+/** Po wysłaniu zapytania: wyceny, szkic i wynik testu szybkości (ep.psi) znikają. */
 export function wyczysc(): void {
   usunKlucz(KLUCZ_WYCENY);
   usunKlucz(KLUCZ_SZKIC);
+  usunKlucz('ep.psi');
   oglos([]);
 }
 

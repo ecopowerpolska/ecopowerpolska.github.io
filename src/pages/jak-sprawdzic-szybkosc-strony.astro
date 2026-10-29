@@ -231,7 +231,7 @@ const daneStrukturalne = {
           Chcesz, żeby było szybciej? Napisz do nas — sprawdzimy, co spowalnia stronę, i podamy cenę.
         </p>
         <div class="wezwanie__guziki">
-          <a class="wezwanie__guzik" href="/kontakt/">Napisz do nas</a>
+          <a class="wezwanie__guzik" href="/kontakt/#formularz">Napisz do nas</a>
           <button class="wezwanie__guzik wezwanie__guzik--drugi" type="button" id="psi-kopiuj" aria-live="polite" hidden>Skopiuj wyniki</button>
         </div>
         <textarea class="test__kopia" id="psi-kopia" rows="6" readonly hidden aria-label="Wyniki do skopiowania"></textarea>
@@ -313,7 +313,7 @@ const daneStrukturalne = {
     const BLAD_ADRESU = 'To nie wygląda na adres strony. Wpisz na przykład twojafirma.pl.';
     const dane: Record<string, any> = {};
     const timery: Record<string, any> = {};
-    let ostatni = '', zalTekst = '';
+    let ostatni = '', zalTekst = '', zalPelna: any[] = [];
     const URZ: Record<string, string> = { telefon: 'Telefon', komputer: 'Komputer', oba: 'Telefon i komputer' };
 
     // Adres jak komu wygodnie: twojafirma.pl, www.twojafirma.pl, https://twojafirma.pl/oferta. Zwraca pełny adres albo null.
@@ -450,6 +450,7 @@ const daneStrukturalne = {
       zalBrak.hidden = lista.length > 0;
       zalLista.hidden = !lista.length;
       zal.hidden = false;
+      zalPelna = lista;
       zalTekst = lista.length ? zaleceniaTekst(lista) : zalBrak.textContent!.trim();
     };
 
@@ -458,18 +459,30 @@ const daneStrukturalne = {
       const a = l && l.audits && l.audits[id];
       return a && a.displayValue ? a.displayValue : 'brak';
     };
+    const LIMIT = 3900; // ten sam próg co w Formularz.astro (pole wiadomości ma 4000 znaków)
     const tekstKopii = (u: string) => {
       const m = dane.mobile, d = dane.desktop;
       const o = (l: any, k: string) => { const w = l ? ocena(l, k) : null; return w == null ? 'brak' : String(w); };
       const para = (k: string) => o(m, k) + '/' + o(d, k);
       const par = (id: string) => 'telefon ' + met(m, id) + ', komputer ' + met(d, id);
       const data = new Date().toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      return 'Wynik PageSpeed dla ' + u + ' (' + data + '): telefon ' + o(m, 'performance') + '/100, komputer ' + o(d, 'performance') + '/100. ' +
+      const sklej = (z: string) => 'Wynik PageSpeed dla ' + u + ' (' + data + '): telefon ' + o(m, 'performance') + '/100, komputer ' + o(d, 'performance') + '/100. ' +
         'Ułatwienia dostępu ' + para('accessibility') + ', Sprawdzone metody ' + para('best-practices') + ', SEO ' + para('seo') + ' (telefon/komputer). ' +
         'LCP ' + par('largest-contentful-paint') + '; CLS ' + par('cumulative-layout-shift') + '; TBT ' + par('total-blocking-time') + '. ' +
         'Zmierzono na ' + (wezwanie.dataset.strona || location.href) +
-        (zalTekst ? '\n\nCo poprawić na tej stronie:\n' + zalTekst : '');
+        (z ? '\n\nCo poprawić na tej stronie:\n' + z : '');
+      const pelny = sklej(zalTekst);
+      return pelny.length > LIMIT && zalPelna.length > 3
+        ? sklej(zaleceniaTekst(zalPelna.slice(0, 3)) + '\n(pełna lista na stronie testu)')
+        : pelny;
     };
+    const zapamietaj = (u: string) => {
+      try {
+        const d = new Date().toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        sessionStorage.setItem('ep.psi', JSON.stringify({ adres: u, data: d, tekst: tekstKopii(u) }));
+      } catch { /* tryb prywatny */ }
+    };
+    const zapomnij = () => { try { sessionStorage.removeItem('ep.psi'); } catch { /* tryb prywatny */ } };
     let zegarKopii: any;
     kopiuj.addEventListener('click', async () => {
       const t = tekstKopii(ostatni);
@@ -498,7 +511,7 @@ const daneStrukturalne = {
       e.preventDefault();
       ostatni = u;
       Object.keys(dane).forEach((x) => delete dane[x]);
-      zalTekst = ''; zal.hidden = true;
+      zalTekst = ''; zalPelna = []; zal.hidden = true;
       wynik.hidden = true; raport.hidden = true; wezwanie.hidden = true; kopiuj.hidden = true; kopia.hidden = true;
       ustaw(werdykt, ''); ustaw(lcp, ''); guzik.disabled = true;
       resetPaskow();
@@ -527,9 +540,11 @@ const daneStrukturalne = {
           opis.textContent = limit
             ? 'Google chwilowo nie przyjmuje kolejnych pomiarów. Spróbuj za chwilę albo otwórz pełny raport.'
             : 'Google nie zdołał zmierzyć tej strony. Sprawdź, czy adres działa, albo otwórz pełny raport.';
+          zapomnij();
         } else {
           kopiuj.hidden = false;
           pokazZalecenia();
+          zapamietaj(u);
           opis.textContent = ile < 2 ? 'Google zmierzył tylko część wyniku.' : 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
         }
       }).finally(() => { raport.hidden = false; wezwanie.hidden = false; guzik.disabled = false; });

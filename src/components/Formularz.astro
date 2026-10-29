@@ -1,7 +1,7 @@
 ---
 // Formularz zapytania /kontakt/ (runda 4, 2026-10-27). Mechanizm z pan-stolarz.pl i kuchnia-na-wymiar-warszawa.pl:
 // żetony (checkbox w etykiecie, bez JS), pole technologii i adresu pokazuje CSS :has(), karty wycen z sessionStorage
-// (src/lib/wyceny.ts), szkic pól `ep.szkic`, honeypot `dodatkowe`, czas wypełniania `t`, Cloudflare Turnstile render=explicit.
+// (src/lib/wyceny.ts), szkic pól `ep.szkic`, wynik testu szybkości `ep.psi` (notka + „Usuń wynik”), honeypot `dodatkowe`, czas wypełniania `t`, Cloudflare Turnstile render=explicit.
 // Wysyłka zwykłym POST na handler PHP na lh.pl (GitHub Pages nie ma PHP): 303 → /dziekujemy/ albo /kontakt/?blad=<kod>.
 // Teksty: src/data/kontakt.json (panel: Teksty strony → Kontakt). Opis całości: docs/FORMULARZ.md.
 import k from '../data/kontakt.json';
@@ -37,6 +37,7 @@ const b = k.bledy as Record<string, string>;
   data-rocznie={tekst(k.wycenyRocznie, 'rocznie')}
   data-dodaj={tekst(k.wycenyDodaj, 'Dodaj kolejne wyliczenie')}
   data-policz={tekst(k.wycenyPolicz, 'Policz cenę w kalkulatorze')}
+  data-psi-notka={tekst(k.psiNotka, 'Dołączyliśmy wynik pomiaru dla {adres}. Dopisz, czego potrzebujesz.')}
 >
   <p class="formularz__blad" id="formularz-blad" role="alert" tabindex="-1" hidden></p>
   <noscript><p class="formularz__blad">{podstaw(tekst(k.bezJs, 'Napisz na {email} albo zadzwoń: {telefon}.'))}</p></noscript>
@@ -107,6 +108,10 @@ const b = k.bledy as Record<string, string>;
   <div class="pole">
     <label for="pole-wiadomosc">{tekst(k.wiadomoscEtykieta, 'Wiadomość')}</label>
     <p class="podpowiedz" id="podpowiedz-wiadomosc">{k.wiadomoscPodpowiedz}</p>
+    <div class="psi-notka" id="psi-notka" hidden>
+      <p class="psi-notka__tekst" id="psi-notka-tekst" role="status"></p>
+      <button class="psi-notka__usun" id="psi-usun" type="button">{tekst(k.psiUsun, 'Usuń wynik')}</button>
+    </div>
     <textarea id="pole-wiadomosc" name="wiadomosc" rows="5" maxlength="4000" aria-describedby="podpowiedz-wiadomosc"></textarea>
   </div>
 
@@ -176,6 +181,19 @@ const b = k.bledy as Record<string, string>;
   textarea { resize: vertical; }
   input:focus-visible, textarea:focus-visible { outline: 3px solid var(--akcent); outline-offset: 1px; }
   [aria-invalid='true'] { border-color: #a1260d; border-width: 2px; }
+
+  /* Notka o dołączonym wyniku testu szybkości (sessionStorage ep.psi, strona /jak-sprawdzic-szybkosc-strony/). */
+  .psi-notka {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--o-2) var(--o-4);
+    padding: var(--o-2) var(--o-4); background: var(--powierzchnia); border: 1px solid var(--linia); border-radius: var(--promien-maly);
+  }
+  .psi-notka[hidden] { display: none; }
+  .psi-notka__tekst { margin: 0; flex: 1 1 16rem; font-size: var(--t-s); }
+  .psi-notka__usun {
+    min-height: 44px; min-width: 44px; padding: 0 var(--o-3); font: inherit; font-size: var(--t-s); color: var(--tekst);
+    background: transparent; border: 1px solid var(--tekst-cichy); border-radius: var(--promien-maly); cursor: pointer;
+  }
+  .psi-notka__usun:focus-visible { outline: 3px solid var(--akcent); outline-offset: 2px; }
 
   .wyceny {
     padding: var(--o-4) var(--o-6); background: var(--powierzchnia); border: 1px solid var(--linia); border-radius: var(--promien);
@@ -304,6 +322,68 @@ const b = k.bledy as Record<string, string>;
     form.addEventListener('input', szkic);
     form.addEventListener('change', () => { szkic(); wymaganieWiadomosci(); });
     wymaganieWiadomosci();
+
+    // ── Wynik testu szybkości: sessionStorage['ep.psi'] = { adres, data, tekst } (zapisuje /jak-sprawdzic-szybkosc-strony/) ──
+    const ZNACZNIK = 'Wynik PageSpeed dla';
+    const LIMIT = 3900; // handler przyjmuje 4000 znaków (MAKS_WIADOMOSC); zapas na ręczny dopisek
+    const notka = $('psi-notka');
+    const notkaTekst = $('psi-notka-tekst');
+    const usunPsi = $('psi-usun');
+    let wykryty = '';
+    const ustawStrone = (adres: string) => {
+      const tak = form.querySelector<HTMLInputElement>('input[name="strona"][value="tak"]');
+      if (tak && !tak.checked) { tak.checked = true; tak.dispatchEvent(new Event('change', { bubbles: true })); }
+      const a = pole('adres');
+      if (a && adres && !a.value.trim()) { a.value = adres.slice(0, 300); a.dispatchEvent(new Event('input', { bubbles: true })); }
+    };
+    const adresZTekstu = (t: string) => t.match(/Wynik PageSpeed dla (https?:\/\/[^\s)]+)/)?.[1] ?? '';
+    // Wklejony raport (z „Skopiuj wyniki”): „Tak, mam stronę” i adres, raz na adres — ręczna zmiana nie jest cofana.
+    const wykryj = () => {
+      const adres = adresZTekstu(wiadomosc?.value ?? '');
+      if (!adres || adres === wykryty) return;
+      wykryty = adres;
+      ustawStrone(adres);
+    };
+    wiadomosc?.addEventListener('paste', () => setTimeout(wykryj, 0));
+    wiadomosc?.addEventListener('input', wykryj);
+    let psi: { adres: string; tekst: string } | null = null;
+    try {
+      const o = JSON.parse(sessionStorage.getItem('ep.psi') || 'null');
+      if (o && typeof o.tekst === 'string' && o.tekst.includes(ZNACZNIK)) {
+        psi = { adres: String(o.adres || adresZTekstu(o.tekst) || '').slice(0, 300), tekst: o.tekst };
+      }
+    } catch { /* brak pamięci sesji albo zły JSON */ }
+    if (psi && wiadomosc) {
+      wykryty = adresZTekstu(psi.tekst) || psi.adres;
+      ustawStrone(psi.adres);
+      if (!wiadomosc.value.includes(ZNACZNIK)) {
+        const stara = wiadomosc.value.trimEnd();
+        const przerwa = stara ? '\n\n' : '';
+        const miejsce = LIMIT - stara.length - przerwa.length;
+        if (miejsce > 1) {
+          wiadomosc.value = stara + przerwa + (psi.tekst.length > miejsce ? psi.tekst.slice(0, miejsce - 1).trimEnd() + '…' : psi.tekst);
+        }
+      }
+      szkic();
+      wymaganieWiadomosci();
+      if (notka && notkaTekst) {
+        notkaTekst.textContent = (d.psiNotka ?? '').replace('{adres}', psi.adres);
+        notka.hidden = false;
+      }
+      usunPsi?.addEventListener('click', () => {
+        const w = wiadomosc.value;
+        const i = psi ? w.lastIndexOf(psi.tekst) : -1;
+        const j = w.indexOf(ZNACZNIK);
+        // Dokładny fragment; gdy dopisek skrócił albo zmienił raport — od znacznika do końca.
+        wiadomosc.value = (i >= 0 ? w.slice(0, i) + w.slice(i + (psi?.tekst.length ?? 0)) : j >= 0 ? w.slice(0, j) : w).trim();
+        try { sessionStorage.removeItem('ep.psi'); } catch { /* brak pamięci sesji */ }
+        wykryty = '';
+        if (notka) notka.hidden = true;
+        szkic();
+        wymaganieWiadomosci();
+        wiadomosc.focus();
+      });
+    }
 
     // ── Komunikat z handlera: /kontakt/?blad=<kod> ──
     const kod = new URLSearchParams(location.search).get('blad');

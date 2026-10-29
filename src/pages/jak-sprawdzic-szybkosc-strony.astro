@@ -26,20 +26,39 @@ const okruszki = [
   { nazwa: tekst(blog.menuSzybkosc, 'Szybkość'), adres: '/jak-sprawdzic-szybkosc-strony/' },
 ];
 
+const strony = [
+  ['mobile', 'Telefon'],
+  ['desktop', 'Komputer'],
+];
 const kategorie = [
-  ['performance', 'Wydajność'],
   ['accessibility', 'Ułatwienia dostępu'],
   ['best-practices', 'Sprawdzone metody'],
   ['seo', 'SEO'],
   ['agentic-browsing', 'Przeglądanie agentowe'],
 ];
+// Progi Google: [dobry do, słaby od]. Szerokość paska w skrypcie = wartość / próg „słaby”.
 const metryki = [
-  ['first-contentful-paint', 'Pierwsze wyrenderowanie treści (FCP)'],
-  ['largest-contentful-paint', 'Największe wyrenderowanie treści (LCP)'],
-  ['total-blocking-time', 'Całkowity czas blokowania (TBT)'],
-  ['cumulative-layout-shift', 'Skumulowane przesunięcie układu (CLS)'],
-  ['speed-index', 'Indeks szybkości (SI)'],
+  ['first-contentful-paint', 'Pierwsza treść (FCP)', '1800,3000'],
+  ['largest-contentful-paint', 'Największy element (LCP)', '2500,4000'],
+  ['total-blocking-time', 'Blokowanie (TBT)', '200,600'],
+  ['cumulative-layout-shift', 'Przesunięcie układu (CLS)', '0.1,0.25'],
+  ['speed-index', 'Indeks szybkości (SI)', '3400,5800'],
 ];
+
+// Zegar: łuk 240° (od 150° do 30° po obwodzie, zgodnie z ruchem wskazówek), skala 0–100, kreska co 10, długa co 50.
+const CX = 140, CY = 135, R = 95;
+const pt = (r: number, v: number): [number, number] => {
+  const a = ((150 + 2.4 * v) * Math.PI) / 180;
+  return [+(CX + r * Math.cos(a)).toFixed(1), +(CY + r * Math.sin(a)).toFixed(1)];
+};
+const [x0, y0] = pt(R, 0), [x1, y1] = pt(R, 100);
+const sciezka = `M ${x0} ${y0} A ${R} ${R} 0 1 1 ${x1} ${y1}`;
+const kreski = Array.from({ length: 11 }, (_, i) => {
+  const v = i * 10, dl = v % 50 === 0;
+  const [ax, ay] = pt(R + 11, v), [bx, by] = pt(R + (dl ? 20 : 16), v);
+  return { dl, ax, ay, bx, by };
+});
+const etykiety = [0, 50, 100].map((v) => { const [x, y] = pt(R + 30, v); return { v, x, y }; });
 
 const daneStrukturalne = {
   '@context': 'https://schema.org',
@@ -119,61 +138,76 @@ const daneStrukturalne = {
         </div>
       </form>
       <p class="test__nota">Pomiar wykonuje Google. Adres strony trafia do Google, my go nie zapisujemy.</p>
+      <p class="trwa" id="psi-trwa" role="status" hidden>
+        Trwa sprawdzanie, nie zamykaj strony. To potrwa około 20–40 sekund.
+      </p>
       <div class="test__stan" id="psi-stan" aria-live="polite">
         <p class="test__stan-opis" id="psi-stan-opis"></p>
-        <ul class="test__etapy" id="psi-etapy" hidden>
-          <li data-e="mobile"></li>
-          <li data-e="desktop"></li>
-        </ul>
+      </div>
+
+      <div class="zegary" id="psi-zegary" hidden>
+        {strony.map(([s, nazwa]) => (
+          <div class="zegar" data-s={s} data-na={s === 'mobile' ? 'telefonie' : 'komputerze'}>
+            <h3 class="zegar__nazwa">{nazwa}</h3>
+            <svg
+              class="zegar__svg"
+              viewBox="0 0 280 210"
+              role="meter"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label={`Wydajność, ${nazwa.toLowerCase()}`}
+            >
+              <path class="zegar__tlo" d={sciezka} pathLength="100" />
+              {kreski.map((k) => (
+                <line class={k.dl ? 'zegar__kreska zegar__kreska--dl' : 'zegar__kreska'} x1={k.ax} y1={k.ay} x2={k.bx} y2={k.by} />
+              ))}
+              {etykiety.map((e) => (
+                <text class="zegar__skala" x={e.x} y={e.y} text-anchor="middle" dominant-baseline="central">{e.v}</text>
+              ))}
+              <path class="zegar__luk" d={sciezka} pathLength="100" />
+              <text class="zegar__liczba" x="140" y="148" text-anchor="middle">0</text>
+              <text class="zegar__jednostka" x="140" y="171" text-anchor="middle">punktów wydajności</text>
+            </svg>
+            <p class="zegar__podpis" data-e={s}></p>
+          </div>
+        ))}
       </div>
 
       <div class="wynik" id="psi-wynik" hidden>
         <p class="werdykt" id="psi-werdykt" hidden></p>
         <p class="werdykt werdykt--lcp" id="psi-lcp" hidden></p>
-        <table class="pomiar__tabela">
-          <caption class="pomiar__tytul">Wynik w PageSpeed Insights (0–100)</caption>
-          <thead>
-            <tr>
-              <th scope="col" class="pomiar__rog"><span class="tylko-czytnik">Kategoria</span></th>
-              <th scope="col">Telefon</th>
-              <th scope="col">Komputer</th>
-            </tr>
-          </thead>
-          <tbody>
-            {kategorie.map(([id, nazwa]) => (
-              <tr>
-                <th scope="row">{nazwa}</th>
-                <td><span class="pastylka" data-k={id} data-s="mobile"></span></td>
-                <td><span class="pastylka" data-k={id} data-s="desktop"></span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <table class="pomiar__tabela pomiar__tabela--metryki">
-          <caption class="pomiar__tytul">Metryki z testu laboratoryjnego</caption>
-          <thead>
-            <tr>
-              <th scope="col" class="pomiar__rog"><span class="tylko-czytnik">Metryka</span></th>
-              <th scope="col">Telefon</th>
-              <th scope="col">Komputer</th>
-            </tr>
-          </thead>
-          <tbody>
-            {metryki.map(([id, nazwa]) => (
-              <tr>
-                <th scope="row">{nazwa}</th>
-                <td data-m={id} data-s="mobile"></td>
-                <td data-m={id} data-s="desktop"></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div class="paski">
+          {strony.map(([s, nazwa]) => (
+            <section class="paski__kol" data-s={s} aria-label={`Szczegóły wyniku: ${nazwa.toLowerCase()}`}>
+              <p class="paski__nag">{nazwa}: kategorie (0–100)</p>
+              {kategorie.map(([id, n]) => (
+                <div class="wiersz" data-k={id}>
+                  <span class="wiersz__nazwa">{n}</span>
+                  <span class="wiersz__wart">…</span>
+                  <div class="pasek" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label={`${n}, ${nazwa.toLowerCase()}`}><span></span></div>
+                </div>
+              ))}
+              <p class="paski__nag paski__nag--m">{nazwa}: metryki z testu laboratoryjnego</p>
+              {metryki.map(([id, n, pr]) => (
+                <div class="wiersz" data-m={id} data-p={pr}>
+                  <span class="wiersz__nazwa">{n}</span>
+                  <span class="wiersz__wart">…</span>
+                  <div class="pasek" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label={`${n}, ${nazwa.toLowerCase()}`}><span></span></div>
+                </div>
+              ))}
+            </section>
+          ))}
+        </div>
       </div>
-      <div class="wezwanie" id="psi-wezwanie" hidden>
+      <div class="wezwanie" id="psi-wezwanie" data-strona={adres} hidden>
         <p class="wezwanie__tekst">
           Chcesz, żeby było szybciej? Napisz do nas — sprawdzimy, co spowalnia stronę, i podamy cenę.
         </p>
-        <a class="wezwanie__guzik" href="/kontakt/">Napisz do nas</a>
+        <div class="wezwanie__guziki">
+          <a class="wezwanie__guzik" href="/kontakt/">Napisz do nas</a>
+          <button class="wezwanie__guzik wezwanie__guzik--drugi" type="button" id="psi-kopiuj" aria-live="polite" hidden>Skopiuj wyniki</button>
+        </div>
+        <textarea class="test__kopia" id="psi-kopia" rows="6" readonly hidden aria-label="Wyniki do skopiowania"></textarea>
       </div>
       <p class="test__raport" id="psi-raport" hidden>
         <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">Pełny raport w PageSpeed Insights</a>
@@ -235,18 +269,24 @@ const daneStrukturalne = {
 
 <script>
   // Wynik na miejscu z PSI API v5 (D15). Bez klucza w data-klucz nic nie przechwytuje: formularz otwiera raport Google,
-  // ale adres bez https:// i tak dostaje schemat przed wysłaniem.
+  // ale adres bez https:// i tak dostaje schemat przed wysłaniem. Zegary i paski: czysty SVG/CSS, bez bibliotek.
   (() => {
     const f = document.getElementById('psi') as HTMLFormElement | null;
     if (!f) return;
     const $ = (s: string) => document.getElementById(s) as HTMLElement;
-    const opis = $('psi-stan-opis'), etapy = $('psi-etapy'), wynik = $('psi-wynik');
+    const opis = $('psi-stan-opis'), trwa = $('psi-trwa'), zegary = $('psi-zegary'), wynik = $('psi-wynik');
     const werdykt = $('psi-werdykt'), lcp = $('psi-lcp'), wezwanie = $('psi-wezwanie'), raport = $('psi-raport');
+    const kopiuj = $('psi-kopiuj') as HTMLButtonElement, kopia = $('psi-kopia') as HTMLTextAreaElement;
     const guzik = f.querySelector('button') as HTMLButtonElement;
     const adres = f.elements.namedItem('url') as HTMLInputElement;
     const KAT = ['performance', 'accessibility', 'best-practices', 'seo', 'agentic-browsing'];
-    const MET = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift', 'speed-index'];
+    const STRONY = ['mobile', 'desktop'];
+    const spokoj = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const BLAD_ADRESU = 'To nie wygląda na adres strony. Wpisz na przykład twojafirma.pl.';
+    const dane: Record<string, any> = {};
+    const timery: Record<string, any> = {};
+    let ostatni = '';
+
     // Adres jak komu wygodnie: twojafirma.pl, www.twojafirma.pl, https://twojafirma.pl/oferta. Zwraca pełny adres albo null.
     const normalizuj = (raw: string): string | null => {
       let u = raw.trim().split(/\s+/)[0] || '';
@@ -259,57 +299,183 @@ const daneStrukturalne = {
       } catch { return null; }
     };
     const ustaw = (el: HTMLElement, t: string) => { el.textContent = t; el.hidden = !t; };
-    const etap = (s: string, t: string) => { (etapy.querySelector('[data-e="' + s + '"]') as HTMLElement).textContent = t; };
     const zapytaj = (u: string, s: string, k: string): Promise<any> =>
       fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' + encodeURIComponent(u) + '&locale=pl&strategy=' + s +
         KAT.map((c) => '&category=' + c).join('') + '&key=' + encodeURIComponent(k)).then((r) =>
         r.json().then((j) => { if (!r.ok) throw r.status; return j.lighthouseResult; }));
+    const stanOceny = (w: number) => (w >= 90 ? 'dobry' : w >= 50 ? 'sredni' : 'zly');
+    const ocena = (l: any, k: string): number | null => {
+      const c = l && l.categories && l.categories[k];
+      return c && c.score != null ? Math.round(c.score * 100) : null;
+    };
     const opisz = (l: any) => {
-      const c = l.categories.performance, w = c && c.score != null ? Math.round(c.score * 100) : null;
+      const w = ocena(l, 'performance');
       ustaw(werdykt, w == null ? '' : w >= 90 ? 'Strona na telefonie ładuje się szybko.'
         : w >= 50 ? 'Na telefonie jest przeciętnie — da się przyspieszyć.'
         : 'Na telefonie strona ładuje się wolno — to pierwsza rzecz do poprawy.');
       const a = l.audits['largest-contentful-paint'], sek = a && typeof a.numericValue === 'number' ? a.numericValue / 1000 : 0;
       ustaw(lcp, sek > 2.5 ? 'Największy element pojawia się po ' + sek.toFixed(1).replace('.', ',') + ' s, Google oczekuje do 2,5 s.' : '');
     };
-    const wypelnij = (s: string, l: any) => {
-      wynik.querySelectorAll<HTMLElement>('[data-s="' + s + '"]').forEach((el) => {
-        if (el.dataset.k) {
-          const c = l.categories[el.dataset.k];
-          const w = c && c.score != null ? Math.round(c.score * 100) : null;
-          el.textContent = w == null ? '–' : String(w);
-          el.className = 'pastylka ' + (w != null && w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
-        } else {
-          const a = l.audits[el.dataset.m as string];
-          el.textContent = a && a.displayValue ? a.displayValue : '–';
-        }
+
+    // ── zegary ──
+    const zg = (s: string) => zegary.querySelector('.zegar[data-s="' + s + '"]') as HTMLElement;
+    const czesc = (s: string) => {
+      const z = zg(s), q = (k: string) => z.querySelector(k) as SVGElement;
+      return { z, svg: q('svg'), luk: q('.zegar__luk'), liczba: q('.zegar__liczba'), podpis: q('.zegar__podpis') };
+    };
+    const licz = (el: Element, w: number) => {
+      if (spokoj) { el.textContent = String(w); return; }
+      const t0 = performance.now();
+      const krok = (t: number) => {
+        const p = Math.min(1, (t - t0) / 1200);
+        el.textContent = String(Math.round(w * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) requestAnimationFrame(krok);
+      };
+      requestAnimationFrame(krok);
+    };
+    const startZegara = (s: string) => {
+      const c = czesc(s);
+      clearInterval(timery[s]);
+      c.z.removeAttribute('data-stan');
+      c.svg.removeAttribute('aria-valuenow');
+      c.luk.style.setProperty('--off', '100');
+      c.z.classList.add('zegar--pracuje');
+      c.podpis.textContent = 'Mierzymy na ' + c.z.dataset.na + '…';
+      const los = () => { c.liczba.textContent = String(15 + Math.floor(Math.random() * 71)); };
+      if (spokoj) c.liczba.textContent = '…';
+      else { los(); timery[s] = setInterval(los, 300); }
+    };
+    const dojedzZegar = (s: string, w: number | null) => {
+      const c = czesc(s);
+      clearInterval(timery[s]);
+      c.z.classList.remove('zegar--pracuje');
+      if (w == null) {
+        c.liczba.textContent = '0';
+        c.z.dataset.stan = 'brak';
+        c.podpis.textContent = 'Bez wyniku.';
+        return;
+      }
+      void c.luk.getBoundingClientRect();
+      c.z.dataset.stan = stanOceny(w);
+      c.luk.style.setProperty('--off', String(100 - w));
+      c.svg.setAttribute('aria-valuenow', String(w));
+      c.podpis.textContent = 'Gotowe.';
+      licz(c.liczba, w);
+    };
+
+    // ── paski ──
+    const kolumna = (s: string) => wynik.querySelector('.paski__kol[data-s="' + s + '"]') as HTMLElement;
+    const resetPaskow = () => {
+      STRONY.forEach((s) => {
+        const kol = kolumna(s);
+        kol.classList.add('paski__kol--pracuje');
+        kol.querySelectorAll<HTMLElement>('.wiersz').forEach((w) => {
+          const p = w.querySelector('.pasek') as HTMLElement;
+          (p.firstElementChild as HTMLElement).style.width = '0%';
+          p.removeAttribute('aria-valuenow'); p.removeAttribute('aria-valuetext');
+          w.removeAttribute('data-stan');
+          (w.querySelector('.wiersz__wart') as HTMLElement).textContent = '…';
+        });
       });
     };
+    const paski = (s: string, l: any) => {
+      const kol = kolumna(s);
+      kol.classList.remove('paski__kol--pracuje');
+      void kol.offsetWidth;
+      let i = 0;
+      kol.querySelectorAll<HTMLElement>('.wiersz').forEach((w) => {
+        const p = w.querySelector('.pasek') as HTMLElement, wypelnienie = p.firstElementChild as HTMLElement;
+        let pct = 0, st = '', txt = '–';
+        if (w.dataset.k) {
+          const sc = ocena(l, w.dataset.k);
+          if (sc != null) { pct = sc; st = stanOceny(sc); txt = String(sc); }
+        } else {
+          const a = l.audits[w.dataset.m as string], pr = (w.dataset.p as string).split(',').map(Number);
+          if (a && typeof a.numericValue === 'number') {
+            const v = a.numericValue;
+            pct = Math.min(100, Math.max(2, (v / pr[1]) * 100));
+            st = v <= pr[0] ? 'dobry' : v <= pr[1] ? 'sredni' : 'zly';
+            txt = a.displayValue || String(v);
+          }
+        }
+        (w.querySelector('.wiersz__wart') as HTMLElement).textContent = txt;
+        if (st) { w.dataset.stan = st; p.setAttribute('aria-valuenow', String(Math.round(pct))); p.setAttribute('aria-valuetext', txt); }
+        wypelnienie.style.setProperty('--i', String(i++));
+        wypelnienie.style.width = pct + '%';
+      });
+    };
+
+    // ── kopiowanie ──
+    const met = (l: any, id: string) => {
+      const a = l && l.audits && l.audits[id];
+      return a && a.displayValue ? a.displayValue : 'brak';
+    };
+    const tekstKopii = (u: string) => {
+      const m = dane.mobile, d = dane.desktop;
+      const o = (l: any, k: string) => { const w = l ? ocena(l, k) : null; return w == null ? 'brak' : String(w); };
+      const para = (k: string) => o(m, k) + '/' + o(d, k);
+      const par = (id: string) => 'telefon ' + met(m, id) + ', komputer ' + met(d, id);
+      const data = new Date().toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      return 'Wynik PageSpeed dla ' + u + ' (' + data + '): telefon ' + o(m, 'performance') + '/100, komputer ' + o(d, 'performance') + '/100. ' +
+        'Ułatwienia dostępu ' + para('accessibility') + ', Sprawdzone metody ' + para('best-practices') + ', SEO ' + para('seo') + ' (telefon/komputer). ' +
+        'LCP ' + par('largest-contentful-paint') + '; CLS ' + par('cumulative-layout-shift') + '; TBT ' + par('total-blocking-time') + '. ' +
+        'Zmierzono na ' + (wezwanie.dataset.strona || location.href);
+    };
+    let zegarKopii: any;
+    kopiuj.addEventListener('click', async () => {
+      const t = tekstKopii(ostatni);
+      try {
+        if (!navigator.clipboard) throw 0;
+        await navigator.clipboard.writeText(t);
+        kopia.hidden = true;
+        kopiuj.textContent = 'Skopiowano';
+        clearTimeout(zegarKopii);
+        zegarKopii = setTimeout(() => { kopiuj.textContent = 'Skopiuj wyniki'; }, 2000);
+      } catch {
+        kopia.value = t;
+        kopia.hidden = false;
+        kopia.focus();
+        kopia.select();
+      }
+    });
+
     f.addEventListener('submit', (e) => {
       const u = normalizuj(adres.value);
-      if (!u) { e.preventDefault(); etapy.hidden = true; opis.textContent = BLAD_ADRESU; return; }
+      if (!u) { e.preventDefault(); opis.textContent = BLAD_ADRESU; return; }
       adres.value = u;
       (raport.querySelector('a') as HTMLAnchorElement).href = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(u);
       const k = f.dataset.klucz;
-      if (!k || !window.fetch) return;
+      if (!k) return;
       e.preventDefault();
-      wynik.hidden = true; raport.hidden = true; wezwanie.hidden = true; ustaw(werdykt, ''); ustaw(lcp, ''); guzik.disabled = true;
-      etapy.hidden = false;
-      opis.textContent = 'Google mierzy stronę. To trwa zwykle 20–40 sekund.';
-      etap('mobile', 'Mierzymy na telefonie…'); etap('desktop', 'Mierzymy na komputerze…');
-      Promise.all(['mobile', 'desktop'].map((s) => zapytaj(u, s, k).then((l) => {
-        etap(s, (s === 'mobile' ? 'Telefon' : 'Komputer') + ': gotowe.');
-        wypelnij(s, l);
-        if (s === 'mobile') opisz(l);
-      }))).then(() => {
-        opis.textContent = 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
-        etapy.hidden = true;
+      ostatni = u;
+      Object.keys(dane).forEach((x) => delete dane[x]);
+      wynik.hidden = true; raport.hidden = true; wezwanie.hidden = true; kopiuj.hidden = true; kopia.hidden = true;
+      ustaw(werdykt, ''); ustaw(lcp, ''); guzik.disabled = true;
+      resetPaskow();
+      zegary.hidden = false; trwa.hidden = false; opis.textContent = '';
+      STRONY.forEach(startZegara);
+      let limit = false;
+      Promise.all(STRONY.map((s) => zapytaj(u, s, k).then((l) => {
+        dane[s] = l;
+        dojedzZegar(s, ocena(l, 'performance'));
         wynik.hidden = false;
+        paski(s, l);
+        if (s === 'mobile') opisz(l);
       }).catch((b) => {
-        etapy.hidden = true;
-        opis.textContent = b === 429 || b === 403
-          ? 'Google chwilowo nie przyjmuje kolejnych pomiarów. Spróbuj za chwilę albo otwórz pełny raport.'
-          : 'Google nie zdołał zmierzyć tej strony. Sprawdź, czy adres działa, albo otwórz pełny raport.';
+        limit = limit || b === 429 || b === 403;
+        dojedzZegar(s, null);
+        kolumna(s).classList.remove('paski__kol--pracuje');
+      }))).then(() => {
+        trwa.hidden = true;
+        const ile = Object.keys(dane).length;
+        if (!ile) {
+          opis.textContent = limit
+            ? 'Google chwilowo nie przyjmuje kolejnych pomiarów. Spróbuj za chwilę albo otwórz pełny raport.'
+            : 'Google nie zdołał zmierzyć tej strony. Sprawdź, czy adres działa, albo otwórz pełny raport.';
+        } else {
+          kopiuj.hidden = false;
+          opis.textContent = ile < 2 ? 'Google zmierzył tylko część wyniku.' : 'Gotowe. Wynik z PageSpeed Insights dla ' + u + '.';
+        }
       }).finally(() => { raport.hidden = false; wezwanie.hidden = false; guzik.disabled = false; });
     });
   })();
@@ -457,8 +623,7 @@ const daneStrukturalne = {
       padding: var(--o-4);
     }
 
-    .test__wiersz button,
-    .wezwanie__guzik {
+    .test__wiersz button {
       flex: 1 1 100%;
     }
   }
@@ -483,10 +648,159 @@ const daneStrukturalne = {
     margin: var(--o-4) 0 0;
   }
 
-  .test__etapy {
-    margin: var(--o-2) 0 0;
-    padding-left: var(--o-4);
+  /* Trzy stany wyniku (progi Google): dobry = akcent motywu; pomarańcz i czerwień tylko jako wypełnienie łuku i pasków
+     (kontrast grafiki ≥ 3:1 na --linia i --powierzchnia, policzony: #b45309 3,07 / 4,14, #b3261e 3,99 / 5,38).
+     Tekst zostaje w kolorze --tekst, więc stan nie zależy od samego koloru: niesie go też liczba. */
+  .test {
+    --stan-dobry: var(--akcent);
+    --stan-sredni: #b45309;
+    --stan-zly: #b3261e;
+  }
+
+  .trwa {
+    display: flex;
+    align-items: center;
+    gap: var(--o-3);
+    margin: var(--o-4) 0 0;
+    padding: var(--o-3) var(--o-4);
+    font-weight: 600;
+    line-height: 1.4;
+    background: var(--tlo);
+    border-radius: var(--promien-maly);
+  }
+
+  .trwa[hidden] {
+    display: none;
+  }
+
+  .trwa::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--akcent);
+    animation: puls 1.1s ease-in-out infinite;
+  }
+
+  @keyframes puls {
+    50% {
+      opacity: 0.25;
+      transform: scale(0.7);
+    }
+  }
+
+  .zegary {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--o-6);
+    margin-top: var(--o-6);
+  }
+
+  .zegary[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .zegary,
+    .paski {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .zegar {
+    text-align: center;
+  }
+
+  .zegar__nazwa {
+    margin: 0;
+    font-size: var(--t-m);
+    font-weight: 600;
+  }
+
+  .zegar__svg {
+    display: block;
+    width: 100%;
+    max-width: 20rem;
+    height: auto;
+    margin: 0 auto;
+    overflow: visible;
+  }
+
+  .zegar__tlo,
+  .zegar__luk {
+    fill: none;
+    stroke-width: 14;
+  }
+
+  .zegar__tlo {
+    stroke: var(--linia);
+  }
+
+  .zegar__luk {
+    stroke: var(--stan-dobry);
+    stroke-dasharray: 100 100;
+    stroke-dashoffset: var(--off, 100);
+    transition: stroke-dashoffset 1.2s ease-out, stroke 0.4s;
+  }
+
+  .zegar[data-stan='sredni'] .zegar__luk {
+    stroke: var(--stan-sredni);
+  }
+
+  .zegar[data-stan='zly'] .zegar__luk {
+    stroke: var(--stan-zly);
+  }
+
+  /* Pomiar trwa: krótki odcinek łuku krąży po skali (cały bieg offsetu: od przed początkiem do za końcem). */
+  .zegar--pracuje .zegar__luk {
+    stroke-dasharray: 12 400;
+    transition: none;
+    animation: krazenie 1.6s ease-in-out infinite;
+  }
+
+  @keyframes krazenie {
+    from {
+      stroke-dashoffset: 12;
+    }
+    to {
+      stroke-dashoffset: -100;
+    }
+  }
+
+  .zegar__kreska {
+    stroke: var(--tekst-cichy);
+    stroke-width: 1.5;
+  }
+
+  .zegar__kreska--dl {
+    stroke: var(--tekst);
+    stroke-width: 2.5;
+  }
+
+  .zegar__skala {
+    fill: var(--tekst-cichy);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .zegar__liczba {
+    fill: var(--tekst);
+    font-size: 46px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zegar__jednostka {
+    fill: var(--tekst-cichy);
+    font-size: 13px;
+  }
+
+  .zegar__podpis {
+    margin: var(--o-1) 0 0;
+    font-size: var(--t-s);
     font-weight: 400;
+    color: var(--tekst-cichy);
   }
 
   .werdykt {
@@ -499,6 +813,86 @@ const daneStrukturalne = {
   .werdykt--lcp {
     font-size: inherit;
     font-weight: 400;
+  }
+
+  .wynik {
+    margin-top: var(--o-6);
+    font-size: var(--t-s);
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  .wynik[hidden] {
+    display: none;
+  }
+
+  .paski {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--o-6);
+  }
+
+  .paski__nag {
+    margin: 0 0 var(--o-2);
+    font-weight: 600;
+  }
+
+  .paski__nag--m {
+    margin-top: var(--o-4);
+  }
+
+  .wiersz {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.125rem var(--o-3);
+    margin-bottom: var(--o-2);
+  }
+
+  .wiersz__wart {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .pasek {
+    grid-column: 1 / -1;
+    height: 0.625rem;
+    overflow: hidden;
+    background: var(--linia);
+    border-radius: 999px;
+  }
+
+  .pasek > span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--stan-dobry);
+    border-radius: inherit;
+    transition: width 1s ease-out, background-color 0.4s;
+    transition-delay: calc(var(--i, 0) * 80ms);
+  }
+
+  .wiersz[data-stan='sredni'] .pasek > span {
+    background: var(--stan-sredni);
+  }
+
+  .wiersz[data-stan='zly'] .pasek > span {
+    background: var(--stan-zly);
+  }
+
+  /* Kolumna czeka na wynik: tło paska „przesuwa się”, żeby widać było, że pomiar trwa. */
+  .paski__kol--pracuje .pasek {
+    background: linear-gradient(90deg, var(--linia) 0 35%, var(--powierzchnia-mocna) 50%, var(--linia) 65% 100%) 0 0 / 250% 100%;
+    animation: blysk 1.4s linear infinite;
+  }
+
+  @keyframes blysk {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: 0 0;
+    }
   }
 
   .wezwanie {
@@ -522,6 +916,12 @@ const daneStrukturalne = {
     line-height: 1.4;
   }
 
+  .wezwanie__guziki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3);
+  }
+
   .wezwanie__guzik {
     flex: 0 0 auto;
     display: inline-flex;
@@ -529,19 +929,53 @@ const daneStrukturalne = {
     justify-content: center;
     min-height: 48px;
     padding: 0 var(--o-6);
+    font: inherit;
     font-weight: 600;
     color: var(--tlo);
     background: var(--akcent);
+    border: 2px solid var(--akcent);
     border-radius: var(--promien-maly);
+    cursor: pointer;
   }
 
   .wezwanie__guzik:hover {
     background: var(--tekst);
+    border-color: var(--tekst);
+  }
+
+  .wezwanie__guzik[hidden] {
+    display: none;
+  }
+
+  .wezwanie__guzik--drugi {
+    color: var(--akcent);
+    background: transparent;
+  }
+
+  .wezwanie__guzik--drugi:hover {
+    color: var(--tlo);
   }
 
   .wezwanie__guzik:focus-visible {
     outline: 3px solid var(--akcent);
     outline-offset: 2px;
+  }
+
+  .test__kopia {
+    flex: 1 1 100%;
+    width: 100%;
+    padding: var(--o-3);
+    font: inherit;
+    font-size: var(--t-s);
+    line-height: 1.5;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+  }
+
+  .test__kopia[hidden] {
+    display: none;
   }
 
   .test__raport {
@@ -556,82 +990,33 @@ const daneStrukturalne = {
     font-weight: 600;
   }
 
-  /* Tabela wyniku — ten sam wygląd co tabela pomiaru w kafelku realizacji (Kafelek.astro). */
-  .wynik {
-    margin-top: var(--o-4);
-    font-size: var(--t-s);
-    line-height: 1.4;
+  @media (max-width: 30rem) {
+    .wezwanie__guziki {
+      flex: 1 1 100%;
+    }
+
+    .wezwanie__guzik {
+      flex: 1 1 100%;
+    }
   }
 
-  .pomiar__tabela {
-    width: 100%;
-    border-collapse: collapse;
-  }
+  /* Ruch ograniczony: bez krążenia, migania i przesuwania, łuk i paski ustawiają się od razu. */
+  @media (prefers-reduced-motion: reduce) {
+    .trwa::before,
+    .zegar--pracuje .zegar__luk,
+    .paski__kol--pracuje .pasek {
+      animation: none;
+    }
 
-  .pomiar__tabela + .pomiar__tabela {
-    margin-top: var(--o-6);
-  }
+    .zegar--pracuje .zegar__luk {
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 100;
+    }
 
-  .pomiar__tytul {
-    margin: 0 0 var(--o-2);
-    text-align: left;
-    font-weight: 600;
-    color: var(--tekst);
-  }
-
-  .pomiar__tabela th,
-  .pomiar__tabela td {
-    padding: 0.25rem 0;
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  .pomiar__tabela thead th {
-    font-weight: 600;
-    color: var(--tekst-cichy);
-    padding-bottom: var(--o-1);
-  }
-
-  .pomiar__tabela tbody th {
-    font-weight: 400;
-    color: var(--tekst);
-    padding-right: var(--o-2);
-  }
-
-  .pomiar__tabela thead th,
-  .pomiar__tabela td {
-    width: 1%;
-    white-space: nowrap;
-    padding-left: var(--o-3);
-  }
-
-  .pomiar__tabela thead .pomiar__rog {
-    width: auto;
-    padding-left: 0;
-  }
-
-  .pomiar__tabela--metryki td {
-    font-variant-numeric: tabular-nums;
-  }
-
-  .pastylka {
-    display: inline-block;
-    min-width: 2.5rem;
-    padding: 0.0625rem var(--o-2);
-    border-radius: 999px;
-    font-weight: 600;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .pastylka--dobry {
-    background: var(--akcent);
-    color: var(--tlo);
-  }
-
-  .pastylka--ponizej {
-    border: 1px solid var(--akcent);
-    color: var(--tekst);
+    .zegar__luk,
+    .pasek > span {
+      transition: none;
+    }
   }
 
   .tylko-czytnik {

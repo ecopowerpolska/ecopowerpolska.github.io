@@ -1,9 +1,8 @@
 # formularz/ — handler PHP formularza /kontakt/ (www.ecopowerpolska.pl)
 
 Strona stoi na GitHub Pages (bez PHP), więc formularz wysyła zwykły POST na lh.pl:
-`https://pan-stolarz.pl/formularz/ecopower/wyslij.php` (konto `serwer263249`, katalog
-`public_html/pan-stolarz.pl/formularz/ecopower/`). Podkatalog `formularz/` pan-stolarz.pl, bo jego przepływ
-`build-i-wgranie` kasuje (`--delete`) wszystko poza `formularz/`, `_astro/` i `.well-known/`.
+`https://api.ecopowerpolska.pl/wyslij.php` (konto `serwer263249`, katalog
+`public_html/api.ecopowerpolska.pl/`, własna subdomena z certyfikatem Let's Encrypt).
 
 | Plik | Rola |
 |---|---|
@@ -28,7 +27,7 @@ zmiana w jednym miejscu = zmiana w drugim. Wgranie i test: `docs/FORMULARZ.md`.
 
 
 ## firma.php — kontrakt JSON (od 2026-10-30)
-`GET https://pan-stolarz.pl/formularz/ecopower/firma.php?nip=7011019372` (przedrostek `PL`, spacje i myślniki są dopuszczone):
+`GET https://api.ecopowerpolska.pl/firma.php?nip=7011019372` (przedrostek `PL`, spacje i myślniki są dopuszczone):
 ```json
 {"nazwa":"ECOPOWER POLSKA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ","forma_prawna":"Spółka z ograniczoną odpowiedzialnością",
  "nip":"7011019372","regon":"388143240","krs":"0000881612",

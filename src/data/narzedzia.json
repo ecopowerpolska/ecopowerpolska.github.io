@@ -117,7 +117,7 @@
       "stan": "dziala",
       "adres": "/generator-regulaminu/",
       "guzik": "Otwórz",
-      "api": "https://pan-stolarz.pl/formularz/ecopower/firma.php"
+      "api": "https://api.ecopowerpolska.pl/firma.php"
     },
     {
       "id": "generator-polityki-prywatnosci",
@@ -127,7 +127,7 @@
       "stan": "dziala",
       "adres": "/generator-polityki-prywatnosci/",
       "guzik": "Otwórz",
-      "api": "https://pan-stolarz.pl/formularz/ecopower/firma.php"
+      "api": "https://api.ecopowerpolska.pl/firma.php"
     }
   ]
 }

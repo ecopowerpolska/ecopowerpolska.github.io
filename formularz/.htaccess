@@ -1,4 +1,4 @@
-# Handler formularza www.ecopowerpolska.pl na koncie lh.pl (public_html/pan-stolarz.pl/formularz/ecopower/).
+# Handler formularza www.ecopowerpolska.pl na koncie lh.pl (public_html/api.ecopowerpolska.pl/).
 # Z sieci odpowiadają wyslij.php (POST formularza), firma.php (GET dane firmy po NIP) i audyt.php (GET audyt obcej strony; moduły testy/ zamyka ich własny .htaccess); konfig/ i stan/ (z podkatalogami firma/, firma-ip/)
 # zamykają ich własne .htaccess (bez FilesMatch "wszystko poza", pułapka ⑱).
 Options -Indexes

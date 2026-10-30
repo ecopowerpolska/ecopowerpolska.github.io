@@ -1,6 +1,5 @@
 {
-  "_uwaga": "TYMCZASOWO stary adres (public_html/pan-stolarz.pl/formularz/ecopower/). Po wystawieniu SSL dla api.ecopowerpolska.pl zmienić baze na https://api.ecopowerpolska.pl oraz akcja w kontakt.json, domyslny adres w Formularz.astro i pole api obu generatorow w narzedzia.json (docs/FORMULARZ.md).",
-  "baza": "https://pan-stolarz.pl/formularz/ecopower",
+  "baza": "https://api.ecopowerpolska.pl",
   "audyt": "/audyt.php",
   "firma": "/firma.php",
   "formularz": "/wyslij.php"

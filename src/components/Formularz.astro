@@ -17,7 +17,7 @@ const podstaw = (s: string) =>
     .replaceAll('{adres}', `${firma.adresSiedziby}, ${firma.kodPocztowy} ${firma.miejscowosc}`)
     .replaceAll('{email}', mail)
     .replaceAll('{telefon}', telefon);
-const akcja = tekst(k.akcja, 'https://pan-stolarz.pl/formularz/ecopower/wyslij.php');
+const akcja = tekst(k.akcja, 'https://api.ecopowerpolska.pl/wyslij.php');
 const sitekey = (k.turnstileSitekey ?? '').trim();
 const b = k.bledy as Record<string, string>;
 ---

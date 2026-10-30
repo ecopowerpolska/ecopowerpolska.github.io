@@ -3,7 +3,7 @@
   "opisWyszukiwarki": "Zapytaj o wycenę strony albo sklepu internetowego: zaznacz zakres i platformę, dołącz wyliczenie z kalkulatora. Odpowiadamy z wyceną.",
   "naglowek": "Kontakt i wycena",
   "lead": "Zaznacz, czego potrzebujesz, a odpiszemy z wyceną i pytaniami. Jeśli policzyłeś cenę w kalkulatorze, wyliczenie dołączy się samo.",
-  "akcja": "https://pan-stolarz.pl/formularz/ecopower/wyslij.php",
+  "akcja": "https://api.ecopowerpolska.pl/wyslij.php",
   "turnstileSitekey": "0x4AAAAAAFocIUKeGUjpJcZ3",
   "daneNaglowek": "Wolisz zadzwonić albo napisać?",
   "daneTekst": "Napisz albo zadzwoń, odpowiemy z wyceną.",

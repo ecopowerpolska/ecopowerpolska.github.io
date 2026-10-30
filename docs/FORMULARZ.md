@@ -17,21 +17,21 @@
 
 ## 2. Handler
 `formularz/wyslij.php` (opis pól i kodów: `formularz/README.md`). GitHub Pages nie ma PHP, więc handler stoi na lh.pl, konto
-`serwer263249`, katalog `public_html/pan-stolarz.pl/formularz/ecopower/`, adres `https://pan-stolarz.pl/formularz/ecopower/wyslij.php`.
-Podkatalog `formularz/` pan-stolarz.pl, bo przepływ `build-i-wgranie` pan-stolarz.pl kasuje (`--delete`) wszystko inne w katalogu strony.
+`serwer263249`, katalog `public_html/api.ecopowerpolska.pl/`, adres `https://api.ecopowerpolska.pl/wyslij.php` (subdomena `api` z certyfikatem
+Let's Encrypt; DNS i SSL założył Piotr). Do 30.10.2026 skrypty stały w `pan-stolarz.pl/formularz/ecopower/`; katalog zarchiwizowany poza `public_html`.
 List idzie do `kontakt@ecopowerpolska.pl`, nadawca `formularz@pan-stolarz.pl` (SPF konta lh.pl), `Reply-To` = klient;
 sekcje `=== WYCENY Z KALKULATORA ===`, `=== WIADOMOŚĆ KLIENTA ===`, `=== WYBÓR ===`.
 Konfiguracja: `konfig/ecopowerpolska.pl.php` na koncie (600, katalog 700), dziś jeden klucz `turnstile_sekret`; wzór `formularz/konfig.przyklad`.
 Brak sekretu = handler pomija Turnstile z wpisem w logu (formularz dalej działa). Licznik i dziennik wysyłek (bez danych osobowych): `stan/`.
 
-**Po założeniu subdomeny** (np. `formularz.ecopowerpolska.pl` w panelu lh.pl i DNS — robi Piotr): wgrać ten sam katalog pod nowy adres
-i zmienić jedno pole `akcja` w `kontakt.json`.
+**Zmiana adresu handlera** (kolejna subdomena): wgrać ten sam katalog pod nowy adres i zmienić miejsca w kodzie: `src/data/api.json` `baza`,
+`kontakt.json` `akcja` + domyślny adres w `Formularz.astro`, pole `api` obu generatorów w `narzedzia.json`.
 
 ## 3. Wgranie ręczne (przepływ `wgranie-formularza.yml` śpi bez sekretów repo)
 ```bash
 cd strony/ecopowerpolska.pl/formularz
 tar -cf - wyslij.php .htaccess konfig/.htaccess stan/.htaccess | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 \
-  serwer263249@serwer263249.lh.pl 'set -e; D=public_html/pan-stolarz.pl/formularz/ecopower; mkdir -p "$D"; cd "$D"; tar -xf -;
+  serwer263249@serwer263249.lh.pl 'set -e; D=public_html/api.ecopowerpolska.pl; mkdir -p "$D"; cd "$D"; tar -xf -;
   chmod 644 wyslij.php .htaccess konfig/.htaccess stan/.htaccess; chmod 700 konfig stan; php -l wyslij.php'
 ```
 Sekret Turnstile (wartość tylko w zmiennej, z API Cloudflare tokenem `cloudflare-token`):
@@ -43,7 +43,7 @@ Wgranie tylko tego pliku i `.htaccess` (reszta zostaje; `konfig/` i `stan/` niet
 ```bash
 cd strony/ecopowerpolska.pl/formularz
 tar -cf - firma.php .htaccess | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 \
-  serwer263249@serwer263249.lh.pl 'set -e; cd public_html/pan-stolarz.pl/formularz/ecopower; tar -xf -; chmod 644 firma.php .htaccess; php -l firma.php'
+  serwer263249@serwer263249.lh.pl 'set -e; cd public_html/api.ecopowerpolska.pl; tar -xf -; chmod 644 firma.php .htaccess; php -l firma.php'
 ```
 Token CEIDG i sól skrótu IP dopisujemy do TEGO SAMEGO pliku `konfig/ecopowerpolska.pl.php` co sekret Turnstile (zostaje nietknięty). Wartości
 idą tylko standardowym wejściem ssh, nigdy w argumentach (nie widać ich w `ps`), kod PHP jedzie jako base64:
@@ -63,38 +63,36 @@ PHP
 B64=$(printf '%s' "$KOD" | base64 -w0)
 T=$(bash /home/ecopower/projekty/test-claude/potwor/scripts/klucze-dostepne.sh ceidg-token)
 printf '%s\n%s\n' "$T" "$(openssl rand -hex 24)" | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 serwer263249@serwer263249.lh.pl \
-  "cd public_html/pan-stolarz.pl/formularz/ecopower && K=\$(echo $B64 | base64 -d) && php -r \"\$K\""
+  "cd public_html/api.ecopowerpolska.pl && K=\$(echo $B64 | base64 -d) && php -r \"\$K\""
 unset T KOD B64
 ```
 Drugi przebieg nie zmienia `sol_ip` (zmiana soli zeruje tylko liczniki IP), a token odnawia. Przed pierwszym użyciem sprawdź `php -l` na koncie.
 Test z żywego adresu (CORS i pamięć podręczna; NIP spółki Piotra, nie jednoosobowej działalności):
 ```bash
-U=https://pan-stolarz.pl/formularz/ecopower/firma.php
+U=https://api.ecopowerpolska.pl/firma.php
 curl -s -H 'Origin: https://www.ecopowerpolska.pl' "$U?nip=7011019372"                       # JSON: zrodla MF,KRS, cache:false
 curl -s -H 'Origin: https://www.ecopowerpolska.pl' "$U?nip=7011019372" | grep -o '"cache":true'  # drugie wywołanie z pamięci
 curl -s -o /dev/null -w '%{http_code}\n' "$U?nip=1234567890"                                    # 400 (zła suma kontrolna)
 curl -s -o /dev/null -w '%{http_code}\n' -X POST "$U"                                          # 405
-curl -s -o /dev/null -w '%{http_code}\n' https://pan-stolarz.pl/formularz/ecopower/stan/firma/7011019372.json   # 403
+curl -s -o /dev/null -w '%{http_code}\n' https://api.ecopowerpolska.pl/stan/firma/7011019372.json   # 403
 ```
 Limit CEIDG jest wspólny dla konta (nagłówek `x-rate-limit-limit: 1000`). Dokumentacja Hurtowni Danych CEIDG API v3 (v1.4, sekcja 3): „ograniczenie do 1000 żądań w okresie 60 minut” — okno 60 minut, nie doba; bezpiecznik `ceidg_limit_na_godz` (100/h) leży wielokrotnie poniżej. Limit dobowy MF: NIE USTALONO. Jednoosobowych działalności nie testuj w pętli.
 
 ### 3b. `audyt.php` + `testy/` — narzędzia audytu (od 2026-10-30; `/narzedzia/<slug>/`)
-Wgranie (konfig/ i stan/ nietknięte; `stan/audyt/` i `stan/audyt-ip/` skrypt tworzy sam). Katalogi docelowe: `public_html/api.ecopowerpolska.pl/` oraz — do czasu
-SSL subdomeny — `public_html/pan-stolarz.pl/formularz/ecopower/` (stary adres, z którego strona czyta wtedy `src/data/api.json`):
+Wgranie (konfig/ i stan/ nietknięte; `stan/audyt/` i `stan/audyt-ip/` skrypt tworzy sam). Katalog docelowy: `public_html/api.ecopowerpolska.pl/`:
 ```bash
 cd strony/ecopowerpolska.pl/formularz
 tar -cf - audyt.php .htaccess testy | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 serwer263249@serwer263249.lh.pl 'set -e;
-  T=$(mktemp -d); cd "$T"; tar -xf -; for D in public_html/api.ecopowerpolska.pl public_html/pan-stolarz.pl/formularz/ecopower; do
+  T=$(mktemp -d); cd "$T"; tar -xf -; D=public_html/api.ecopowerpolska.pl;
   cd ~/"$D"; mkdir -p testy; cp "$T"/audyt.php "$T"/.htaccess .; cp "$T"/testy/*.php "$T"/testy/.htaccess testy/;
-  chmod 644 audyt.php .htaccess testy/*.php testy/.htaccess; chmod 755 testy; for f in audyt.php testy/*.php; do php -l "$f" | grep -v "^No syntax"; done; done; rm -rf "$T"'
+  chmod 644 audyt.php .htaccess testy/*.php testy/.htaccess; chmod 755 testy; for f in audyt.php testy/*.php; do php -l "$f" | grep -v "^No syntax"; done; rm -rf "$T"'
 ```
 Klucz serwerowy PageSpeed (`psi_klucz`, z `~/.sekrety/pagespeed-z440`) wchodzi do `konfig/ecopowerpolska.pl.php` standardowym wejściem, jak token CEIDG w §3a; moduły go dziś nie wymagają. Test (Origin wymagany, 20 sprawdzeń/h z jednego IP,
 ten sam adres z pamięci podręcznej nie liczy się): `curl -s -H 'Origin: https://www.ecopowerpolska.pl' "$U/audyt.php?test=seo-techniczne&url=https://nadihome.pl/"` → `wynik.pozycje`; `?test=x` → 400; POST → 405; `testy/_wspolne.php` z sieci → 403.
-Po wystawieniu SSL `api.ecopowerpolska.pl`: trzy miejsca zmiany w kodzie strony (`api.json` `baza`, `kontakt.json` `akcja` + domyślny adres w `Formularz.astro`, pole `api` obu generatorów w `narzedzia.json`), potem kasowanie starego katalogu na pan-stolarz.pl.
 
 ## 4. Kontrola
 ```bash
-U=https://pan-stolarz.pl/formularz/ecopower
+U=https://api.ecopowerpolska.pl
 curl -s -o /dev/null -w '%{http_code}\n' $U/wyslij.php                        # 405
 curl -s -o /dev/null -w '%{http_code}\n' $U/konfig/ecopowerpolska.pl.php      # 403
 curl -s -o /dev/null -w '%{http_code}\n' $U/stan/                             # 403

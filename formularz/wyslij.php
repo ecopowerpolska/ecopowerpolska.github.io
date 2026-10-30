@@ -4,8 +4,7 @@ declare(strict_types=1);
  * Formularz /kontakt/ www.ecopowerpolska.pl — handler PHP 8.4 na lh.pl (strona stoi na GitHub Pages, które PHP nie mają).
  * Wzorzec: pan-stolarz.pl serwer/formularz/index.php (Turnstile, honeypot, czas, licznik, pole `wyceny`).
  * Różnica: zwykły POST z innej domeny, więc KAŻDA odpowiedź to 303 — sukces na /dziekujemy/, błąd na /kontakt/?blad=<kod>#formularz.
- * Miejsce na koncie serwer263249: public_html/pan-stolarz.pl/formularz/ecopower/ (katalog formularz/ pomija --delete
- * przepływu build-i-wgranie pan-stolarz.pl). Konfiguracja: konfig/ecopowerpolska.pl.php (600), licznik: stan/. Opis: README.md.
+ * Miejsce na koncie serwer263249: public_html/api.ecopowerpolska.pl/ (adres https://api.ecopowerpolska.pl/wyslij.php). Konfiguracja: konfig/ecopowerpolska.pl.php (600), licznik: stan/. Opis: README.md.
  */
 
 const DOMENA_KONFIGURACJI = 'ecopowerpolska.pl';

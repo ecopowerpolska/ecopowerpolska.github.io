@@ -3,8 +3,8 @@
 # 🔴 UŚPIONY: to repozytorium NIE MA sekretów LHPL_* (zakaz sekretów repo bez zdania Piotra z nazwą sekretu i repo,
 #    CLAUDE.md warsztatu §4 pkt 4). Bez nich przepływ kończy się sukcesem z napisem „pominięto” i niczego nie wgrywa.
 #    Dziś handler wgrywa się ręcznie przez SSH (docs/FORMULARZ.md §3). Strona sama stoi na GitHub Pages (build-i-wdrozenie.yml).
-# Cel na koncie serwer263249: public_html/pan-stolarz.pl/formularz/ecopower/ (podkatalog formularz/ pan-stolarz.pl,
-# który jego build-i-wgranie pomija przy --delete). Adres publiczny: https://pan-stolarz.pl/formularz/ecopower/wyslij.php.
+# Cel na koncie serwer263249: public_html/api.ecopowerpolska.pl/ (własny katalog subdomeny, poza przepływami pan-stolarz.pl).
+# Adres publiczny: https://api.ecopowerpolska.pl/wyslij.php.
 name: wgranie-formularza
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  ADRES_HANDLERA: https://pan-stolarz.pl/formularz/ecopower
+  ADRES_HANDLERA: https://api.ecopowerpolska.pl
 
 jobs:
   wgranie-formularza:

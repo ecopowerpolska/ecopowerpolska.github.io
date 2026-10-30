@@ -1,0 +1,37 @@
+---
+// Krok 3 generatora: podgląd dokumentu składany w przeglądarce z <template> (HTML sekcji zbudowany w buildzie, src/components/generator/szablon.ts),
+// guziki Kopiuj / Pobierz HTML / Drukuj (pokazuje je skrypt) i lista „Sprawdź przed publikacją”.
+interface Props {
+  d: {
+    naglowek: string; lead: string; kopiuj: string; pobierz: string; drukuj: string; podglad: string; bezJs: string; sprawdz: string;
+  };
+  szablon: string;
+  sprawdz: string[];
+  numer: number;
+}
+const { d, szablon, sprawdz, numer } = Astro.props;
+---
+
+<section class="krok krok--dok" aria-labelledby="g-krok3">
+  <h2 class="krok__tytul" id="g-krok3"><span class="krok__numer" aria-hidden="true">{numer}</span>{d.naglowek}</h2>
+  <p class="krok__lead">{d.lead}</p>
+
+  <div class="narzedzia-dok" id="g-narzedzia" hidden>
+    <button class="guzik" type="button" id="g-kopiuj">{d.kopiuj}</button>
+    <button class="guzik guzik--drugi" type="button" id="g-pobierz">{d.pobierz}</button>
+    <button class="guzik guzik--drugi" type="button" id="g-drukuj">{d.drukuj}</button>
+  </div>
+  <p class="stan" id="g-dok-stan" role="status"></p>
+  <p class="braki" id="g-braki"></p>
+
+  <noscript><p class="blad">{d.bezJs}</p></noscript>
+  <div class="dok" id="g-dok" role="region" aria-label={d.podglad}></div>
+  <template id="g-szablon" set:html={szablon} />
+
+  <div class="sprawdz">
+    <h3>{d.sprawdz}</h3>
+    <ul>
+      {sprawdz.map((s) => <li>{s}</li>)}
+    </ul>
+  </div>
+</section>

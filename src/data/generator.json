@@ -1,0 +1,837 @@
+{
+  "_uwaga": "Dane generatorów /generator-regulaminu/ i /generator-polityki-prywatnosci/ (runda 8, 2026-10-30). Plik NIE jest w panelu /admin/ celowo: sekcje dokumentów mają zagnieżdżoną strukturę warunkową, której panel nie odtworzy, a zapis z panelu skasowałby pola spoza configu. Składnia sekcji: { id, tytul, warunek, tresc[] }. warunek: null albo id żetonu lub pola firmy (nip, regon, krs, telefon, forma_prawna); wiele po | (wystarczy jeden), & łączy warunki w obrębie jednego członu (muszą być spełnione wszystkie), ! przed id = zaprzeczenie. Blok treści: tekst (akapit) | { p, w } | { lista: [element], w } (punktory) | { ust: [element], w } (ustępy 1. 2. 3., podpunkty a) b) c)) | { tabela: { naglowki, wiersze: [{ k: [komórki], w }] }, w }. Element listy: tekst | { t, w, lista: [element] }. Placeholdery: {{nazwa}} {{forma_prawna}} {{adres}} {{nip}} {{regon}} {{krs}} {{email}} {{telefon}} {{www}} {{data}}. Link: [tekst](https://adres).",
+  "wspolne": {
+    "nazwaNarzedzia": "EcoPower Polska",
+    "okruszkiStrona": "Strona główna",
+    "okruszkiNarzedzia": "Darmowe narzędzia",
+    "krok1": {
+      "naglowek": "Dane firmy",
+      "lead": "Wpisz NIP, a pobierzemy dane z rejestrów urzędowych. Pola możesz też wypełnić ręcznie albo poprawić po pobraniu.",
+      "nipEtykieta": "NIP firmy",
+      "nipPodpowiedz": "10 cyfr. Spacje i kreski usuniemy za Ciebie.",
+      "guzik": "Pobierz dane z rejestrów",
+      "wersaliki": "Zamień WERSALIKI na zwykłe litery",
+      "wersalikiPodpowiedz": "Rejestry podają nazwę i adres wielkimi literami. Zmiana dotyczy nazwy, ulicy i miasta w dokumencie; pola powyżej zostają bez zmian.",
+      "ladowanie": "Pytamy rejestry MF, KRS i CEIDG…",
+      "sukces": "Dane pobrane z: {z} (stan na {k}). Sprawdź je i popraw, jeśli trzeba.",
+      "bledy": {
+        "nip": "To nie jest poprawny NIP. NIP ma 10 cyfr i sumę kontrolną, sprawdź numer.",
+        "brak": "Nie znaleźliśmy firmy o tym NIP-ie w rejestrach. Sprawdź numer albo wpisz dane ręcznie.",
+        "limit": "Z Twojego adresu poszło za dużo zapytań. Spróbuj za godzinę albo wpisz dane ręcznie.",
+        "zrodlo": "Rejestr urzędowy nie odpowiada. Spróbuj za chwilę albo wpisz dane ręcznie.",
+        "origin": "Usługa odrzuciła zapytanie z tej strony. Wpisz dane ręcznie albo napisz do nas.",
+        "siec": "Nie udało się połączyć z usługą pobierania danych. Wpisz dane ręcznie albo spróbuj ponownie."
+      },
+      "pola": [
+        { "id": "nazwa", "etykieta": "Nazwa firmy", "ac": "organization", "szeroka": true },
+        { "id": "forma_prawna", "etykieta": "Forma prawna", "ac": "off", "podpowiedz": "np. spółka z o.o." },
+        { "id": "ulica", "etykieta": "Ulica i numer", "ac": "address-line1" },
+        { "id": "kod", "etykieta": "Kod pocztowy", "ac": "postal-code" },
+        { "id": "miasto", "etykieta": "Miejscowość", "ac": "address-level2" },
+        { "id": "regon", "etykieta": "REGON", "ac": "off", "tryb": "numeric" },
+        { "id": "krs", "etykieta": "KRS (jeśli firma ma)", "ac": "off", "tryb": "numeric" },
+        { "id": "email", "etykieta": "E-mail do kontaktu", "ac": "email", "typ": "email" },
+        { "id": "telefon", "etykieta": "Telefon (nieobowiązkowo)", "ac": "tel", "typ": "tel" },
+        { "id": "www", "etykieta": "Adres strony", "ac": "url", "tryb": "url", "podpowiedz": "np. https://twojafirma.pl", "szeroka": true }
+      ]
+    },
+    "braki": {
+      "nazwa": "nazwa firmy",
+      "forma_prawna": "forma prawna",
+      "adres": "adres siedziby",
+      "nip": "NIP",
+      "regon": "REGON",
+      "krs": "KRS",
+      "email": "e-mail",
+      "telefon": "telefon",
+      "www": "adres strony"
+    },
+    "krok3": {
+      "naglowek": "Dokument",
+      "lead": "Podgląd zmienia się na bieżąco, gdy poprawiasz dane i zaznaczasz żetony.",
+      "kopiuj": "Kopiuj tekst",
+      "pobierz": "Pobierz HTML",
+      "drukuj": "Drukuj / zapisz PDF",
+      "skopiowano": "Skopiowano do schowka.",
+      "bladKopii": "Nie udało się skopiować. Zaznacz tekst ręcznie.",
+      "braki": "W dokumencie zostały pola do uzupełnienia w kroku 1: ",
+      "podglad": "Podgląd dokumentu",
+      "bezJs": "Generator składa dokument w Twojej przeglądarce, więc potrzebuje włączonego JavaScriptu. Bez niego napisz do nas, a przygotujemy dokument za Ciebie.",
+      "sprawdz": "Sprawdź przed publikacją"
+    },
+    "jakNaglowek": "Jak to działa",
+    "jak": [
+      "Wpisz NIP firmy. Pobierzemy z urzędowych rejestrów nazwę, adres, REGON i KRS, a Ty poprawisz, co trzeba.",
+      "Zaznacz, co ma Twoja strona: formularz, sklep, newsletter, analitykę i inne. Dokument dopasuje się do wyborów.",
+      "Skopiuj tekst, pobierz plik HTML albo zapisz dokument jako PDF i opublikuj na swojej stronie."
+    ],
+    "zawieraNaglowek": "Co zawiera dokument",
+    "zawieraPodpis": "Część sekcji pojawia się dopiero po zaznaczeniu odpowiedniego żetonu.",
+    "prywatnosc": {
+      "naglowek": "Twoje dane i ten generator",
+      "akapity": [
+        "Wpisany NIP przeglądarka wysyła do naszego skryptu na serwerze LH.pl (pan-stolarz.pl/formularz/ecopower/), a ten pyta o dane firmy rejestry Ministerstwa Finansów (biała lista podatników VAT), Krajowy Rejestr Sądowy i CEIDG. Skrypt przechowuje odpowiedź do 24 godzin i liczy zapytania z danego adresu IP (jako skrót z solą), żeby jedna osoba nie wyczerpała limitów rejestrów. Standardowe logi połączeń serwera hostingu mogą zapisać adres zapytania.",
+        "Pozostałe dane (e-mail, telefon, adres strony i Twoje wybory) oraz gotowy dokument powstają w Twojej przeglądarce. Nie wysyłamy ich na nasz serwer i nie zapisujemy w pamięci przeglądarki. Szczegóły: [polityka prywatności](/polityka-prywatnosci/)."
+      ]
+    },
+    "zastrzezenie": {
+      "naglowek": "To wzór, nie porada prawna",
+      "akapity": [
+        "Dokument ma charakter informacyjny i nie zastępuje porady prawnej. To wzór: dopasuj go do swojej działalności i sprawdź z prawnikiem, zanim opublikujesz go na stronie."
+      ]
+    },
+    "wezwanie": {
+      "naglowek": "Wolisz, żebyśmy zrobili to za Ciebie?",
+      "tekst": "Opisz, co ma Twoja strona albo sklep, a przygotujemy dokumenty i pomożemy je wdrożyć.",
+      "guzik": "Napisz do nas",
+      "adres": "/kontakt/"
+    },
+    "stopkaDokumentu": "Dokument wygenerowany w narzędziu EcoPower Polska dnia {{data}}; ma charakter informacyjny i nie zastępuje porady prawnej.",
+    "eksportCss": "body{font:16px/1.6 system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#15201a}h1{font-size:1.75rem}h2{font-size:1.25rem;margin:2rem 0 .5rem}p,li{margin:0 0 .6rem}ol,ul{padding-left:1.5rem}ol ul{list-style:lower-alpha}a{color:#166653}.dok__tabela{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid #c7ccc0;padding:.4rem;text-align:left;vertical-align:top}.dok__wersja,.dok__stopka{color:#4b5a4f;font-size:.9rem}.brak{background:#fff3b0}"
+  },
+  "regulamin": {
+    "kafelek": "generator-regulaminu",
+    "trasa": "/generator-regulaminu/",
+    "plik": "regulamin",
+    "numeracja": true,
+    "tytulKarty": "Generator regulaminu strony i sklepu internetowego po NIP | EcoPower Polska",
+    "opisWyszukiwarki": "Darmowy generator regulaminu serwisu internetowego: wpisz NIP, pobierzemy dane firmy z rejestrów, zaznacz funkcje strony i pobierz gotowy regulamin jako tekst, HTML albo PDF.",
+    "okruszek": "Generator regulaminu",
+    "naglowek": "Darmowy generator regulaminu strony i sklepu",
+    "lead": "Wpisz NIP firmy, zaznacz, co ma Twoja strona, a w kilka chwil dostaniesz regulamin świadczenia usług drogą elektroniczną do skopiowania, pobrania albo wydruku.",
+    "krok2": {
+      "naglowek": "Co ma Twoja strona",
+      "lead": "Zaznacz wszystko, co dotyczy Twojego serwisu. Sekcje regulaminu dopasują się do wyboru.",
+      "grupy": [
+        {
+          "id": "funkcje",
+          "legenda": "Funkcje serwisu",
+          "typ": "checkbox",
+          "zetony": [
+            { "id": "formularz", "etykieta": "Formularz kontaktowy" },
+            { "id": "newsletter", "etykieta": "Newsletter" },
+            { "id": "konto", "etykieta": "Konto użytkownika" },
+            { "id": "sklep", "etykieta": "Sklep i płatności" },
+            { "id": "kalkulator", "etykieta": "Kalkulator / wyceny" },
+            { "id": "komentarze", "etykieta": "Komentarze" },
+            { "id": "czat", "etykieta": "Czat / asystent AI" }
+          ]
+        },
+        {
+          "id": "cookies",
+          "legenda": "Pliki cookie i narzędzia zewnętrzne",
+          "podpowiedz": "Narzędzia, które wymagają zgody, wykluczają wybór „tylko niezbędne”.",
+          "typ": "checkbox",
+          "zetony": [
+            { "id": "analityka", "etykieta": "Analityka (GA4 / Pixel)", "zgoda": true },
+            { "id": "tlumaczenie", "etykieta": "Tłumaczenie Google", "zgoda": true },
+            { "id": "niezbedne", "etykieta": "Tylko niezbędne cookies" }
+          ]
+        }
+      ]
+    },
+    "krok3": {
+      "tytulDokumentu": "Regulamin serwisu {{www}}",
+      "wersja": "Wersja obowiązująca od {{data}}."
+    },
+    "sprawdz": [
+      "Przeczytaj całość i usuń lub zmień to, co nie pasuje do Twojej działalności. Generator nie zna szczegółów Twojej oferty.",
+      "Jeśli sprzedajesz konsumentom, sprawdź z prawnikiem części o zamówieniach, odstąpieniu od umowy i reklamacjach towaru: wymagają dopasowania do Twoich produktów, dostawy i płatności.",
+      "Dopisz w regulaminie to, czego generator nie zna: konkretne sposoby płatności i dostawy, terminy realizacji, ceny usług płatnych.",
+      "Regulamin musi być dostępny w Serwisie nieodpłatnie i przed zawarciem umowy. Umieść do niego link w stopce każdej podstrony."
+    ],
+    "sekcje": [
+      {
+        "id": "postanowienia-ogolne",
+        "tytul": "Postanowienia ogólne",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Regulamin określa zasady korzystania ze strony internetowej {{www}} (zwanej dalej „Serwisem”) oraz rodzaje, zakres i warunki usług świadczonych w niej drogą elektroniczną. Wydajemy go na podstawie ustawy z 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.",
+              {
+                "t": "Usługodawcą i właścicielem Serwisu jest {{nazwa}}. Dane Usługodawcy:",
+                "lista": [
+                  "adres: {{adres}}",
+                  { "t": "forma prawna: {{forma_prawna}}", "w": "forma_prawna" },
+                  { "t": "NIP: {{nip}}", "w": "nip" },
+                  { "t": "REGON: {{regon}}", "w": "regon" },
+                  { "t": "KRS: {{krs}}", "w": "krs" }
+                ]
+              },
+              {
+                "t": "Kontakt z nami:",
+                "lista": [
+                  "e-mail: {{email}}",
+                  { "t": "telefon: {{telefon}}", "w": "telefon" },
+                  "adres do korespondencji: jak adres siedziby"
+                ]
+              },
+              "Z Serwisu korzysta każdy, kto go odwiedza: osoba prywatna, przedsiębiorca albo instytucja. W regulaminie piszemy o niej „Ty” albo „Użytkownik”.",
+              "Regulamin jest dostępny nieodpłatnie w Serwisie. Możesz go przeczytać przed skorzystaniem z jakiejkolwiek usługi, zapisać albo wydrukować. Na prośbę wysłaną na adres {{email}} prześlemy go też w pliku."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "uslugi",
+        "tytul": "Rodzaje i zakres usług",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              {
+                "t": "Świadczymy w Serwisie następujące usługi drogą elektroniczną:",
+                "lista": [
+                  "Treści informacyjne: możesz je czytać bez żadnych formalności.",
+                  { "t": "Formularz kontaktowy: możesz wysłać nam wiadomość z danymi do kontaktu i opisem sprawy.", "w": "formularz" },
+                  { "t": "Newsletter: wysyłamy na Twój adres e-mail informacje o nowościach i ofercie. Zapisujesz się, podając adres e-mail i wyrażając zgodę.", "w": "newsletter" },
+                  { "t": "Konto użytkownika: po rejestracji masz dostęp do swoich danych i ustawień w Serwisie.", "w": "konto" },
+                  { "t": "Sklep internetowy: możesz przeglądać ofertę, składać zamówienia i płacić za nie w Serwisie.", "w": "sklep" },
+                  { "t": "Kalkulator i wyceny: wyliczasz orientacyjną cenę usługi lub produktu na podstawie podanych parametrów.", "w": "kalkulator" },
+                  { "t": "Komentarze: możesz dodawać publiczne komentarze pod treściami Serwisu.", "w": "komentarze" },
+                  { "t": "Czat i asystent AI: zadajesz pytania asystentowi, który odpowiada automatycznie z użyciem sztucznej inteligencji.", "w": "czat" },
+                  { "t": "Tłumaczenie strony: przełącznik języków tłumaczy Serwis automatycznie przy użyciu usługi Google. Wersją źródłową jest polska.", "w": "tlumaczenie" }
+                ]
+              },
+              { "t": "Korzystanie z Serwisu jest bezpłatne. Płacisz wyłącznie za produkty zamówione w sklepie, według cen podanych w Serwisie.", "w": "sklep" },
+              { "t": "Usługi w Serwisie są świadczone nieodpłatnie.", "w": "!sklep" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "warunki-techniczne",
+        "tytul": "Wymagania techniczne i bezpieczeństwo",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Do korzystania z Serwisu potrzebujesz urządzenia z dostępem do internetu i aktualnej przeglądarki, która obsługuje HTML5, CSS i JavaScript.",
+              "Do działania niektórych funkcji Serwisu potrzebny jest włączony JavaScript.",
+              "Serwis może zapisywać na Twoim urządzeniu pliki cookie i podobne wpisy w pamięci przeglądarki. Ich rodzaje, cel i czas przechowywania opisuje Polityka prywatności.",
+              { "t": "Serwis używa wyłącznie wpisów niezbędnych do jego działania.", "w": "!analityka&!tlumaczenie" },
+              { "t": "Wpisy, które wymagają zgody (na przykład analityka albo tłumaczenie), zapisujemy dopiero po Twojej zgodzie. Wybór zmienisz w każdej chwili w ustawieniach cookie w Serwisie.", "w": "analityka|tlumaczenie" },
+              "Korzystanie z internetu wiąże się z zagrożeniami, takimi jak złośliwe oprogramowanie, wyłudzanie danych i podsłuch w publicznych sieciach. Zadbaj o aktualną przeglądarkę i system oraz o program zabezpieczający."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "zasady-korzystania",
+        "tytul": "Zasady korzystania z Serwisu",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Korzystasz z Serwisu zgodnie z prawem, regulaminem i dobrymi obyczajami.",
+              "Nie wolno dostarczać nam treści o charakterze bezprawnym (art. 8 ust. 3 pkt 2 lit. b ustawy o świadczeniu usług drogą elektroniczną). Dotyczy to treści naruszających prawo lub prawa osób trzecich, gróźb, obelg i złośliwego oprogramowania.",
+              "Nie wolno nadużywać Serwisu. Zakazane jest wysyłanie formularzy programami i skryptami, rozsyłanie spamu i niezamówionych ofert, omijanie zabezpieczeń i masowe pobieranie treści, które obciąża Serwis.",
+              { "t": "Komentarze są publiczne. Nie podawaj w nich danych, których nie chcesz ujawniać. Możemy usunąć komentarz, który narusza regulamin lub prawo, w szczególności zawiera treści bezprawne, obraźliwe lub reklamowe.", "w": "komentarze" },
+              "Serwis i jego treści (teksty, grafiki, zdjęcia, układ, kod) są chronione prawem autorskim. © {{nazwa}}.",
+              "Możesz cytować fragmenty treści w granicach dozwolonego użytku, podając źródło: nazwę Serwisu i adres podstrony. Kopiowanie w całości, rozpowszechnianie i użycie w celach komercyjnych wymaga naszej zgody."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "umowa",
+        "tytul": "Zawarcie i rozwiązanie umowy o usługę",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Umowa o usługę drogą elektroniczną zawiera się z chwilą, gdy zaczynasz z niej korzystać, na przykład wysyłasz formularz albo uruchamiasz kalkulator.",
+              "Umowa kończy się z chwilą zakończenia korzystania z usługi: gdy opuścisz Serwis, zamkniesz kartę albo wyślesz formularz. Możesz zakończyć w każdej chwili, bez podawania powodu i bez kosztów.",
+              "Możemy odmówić dalszego świadczenia usługi i zablokować dostęp, jeśli naruszasz zasady z części „Zasady korzystania z Serwisu”. Możemy też zmienić zakres usług albo przestać świadczyć którąś z nich z ważnych powodów, takich jak bezpieczeństwo, zmiany techniczne lub przepisy.",
+              { "t": "Zamówienie w sklepie to osobna umowa sprzedaży; zasady jej zawarcia opisuje część „Zamówienia i płatności”.", "w": "sklep" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "konto",
+        "tytul": "Konto użytkownika",
+        "warunek": "konto",
+        "tresc": [
+          {
+            "ust": [
+              "Konto zakładasz, wypełniając formularz rejestracji w Serwisie. Podajesz dane prawdziwe i aktualne.",
+              "Dostęp do konta chronisz hasłem i nie udostępniasz go innym osobom. Gdy podejrzewasz, że ktoś go przejął, napisz do nas na adres {{email}}.",
+              "Konto możesz usunąć w każdej chwili, pisząc na adres {{email}} albo w ustawieniach konta, jeśli Serwis taką funkcję udostępnia.",
+              "Możemy zablokować lub usunąć konto, które narusza regulamin."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "newsletter",
+        "tytul": "Newsletter",
+        "warunek": "newsletter",
+        "tresc": [
+          {
+            "ust": [
+              "Zapisujesz się na newsletter, podając adres e-mail i wyrażając zgodę na otrzymywanie wiadomości.",
+              "Zgodę możesz cofnąć w każdej chwili, klikając odnośnik rezygnacji w wiadomości albo pisząc na adres {{email}}. Cofnięcie zgody nie wpływa na zgodność z prawem wysyłek sprzed cofnięcia.",
+              "Informacje handlowe wysyłamy tylko za Twoją zgodą (art. 398 ustawy Prawo komunikacji elektronicznej oraz art. 6 ust. 1 lit. a RODO).",
+              "Newsletter jest bezpłatny."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "wyceny",
+        "tytul": "Wyceny z kalkulatora",
+        "warunek": "kalkulator",
+        "tresc": [
+          {
+            "ust": [
+              "Wyliczenia kalkulatora są orientacyjne. Nie stanowią oferty handlowej i nie zobowiązują żadnej ze stron do zawarcia umowy.",
+              "Wiążąca jest wyłącznie wycena przygotowana na piśmie (e-mailem) po ustaleniu zakresu. Gdy różni się od wyliczenia z kalkulatora, obowiązuje wycena pisemna."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "czat",
+        "tytul": "Czat i asystent AI",
+        "warunek": "czat",
+        "tresc": [
+          {
+            "ust": [
+              "Asystent odpowiada automatycznie, z użyciem sztucznej inteligencji. Rozmawiasz z programem, nie z człowiekiem, chyba że wyraźnie napisano inaczej.",
+              "Odpowiedzi asystenta mają charakter informacyjny i mogą zawierać błędy. Nie stanowią porady prawnej, medycznej ani finansowej ani wiążącej oferty.",
+              "Nie wpisuj w rozmowie haseł, danych kart płatniczych ani innych informacji, których nie chcesz ujawniać."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "zamowienia",
+        "tytul": "Zamówienia i płatności",
+        "warunek": "sklep",
+        "tresc": [
+          {
+            "ust": [
+              "Zamówienia w sklepie składasz przez formularz zamówienia w Serwisie. Podajesz dane niezbędne do realizacji zamówienia.",
+              "Ceny w sklepie są podane w złotych polskich i zawierają podatek VAT, chyba że wyraźnie wskazano inaczej.",
+              "Dostępne sposoby płatności i dostawy oraz ich koszty są podane w Serwisie przed złożeniem zamówienia. Wiążące są te z podsumowania zamówienia.",
+              "Umowa sprzedaży zostaje zawarta w chwili, gdy potwierdzimy przyjęcie zamówienia do realizacji.",
+              "Zamówienie realizujemy w terminie podanym przy produkcie albo w podsumowaniu zamówienia."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "odstapienie",
+        "tytul": "Odstąpienie od umowy i reklamacje towaru",
+        "warunek": "sklep",
+        "tresc": [
+          {
+            "ust": [
+              "Jeśli jesteś konsumentem, możesz odstąpić od umowy zawartej na odległość w ciągu 14 dni bez podawania przyczyny, na zasadach określonych w ustawie o prawach konsumenta. Prawo to nie przysługuje w przypadkach, które ustawa wyłącza.",
+              "Oświadczenie o odstąpieniu od umowy wyślij na adres {{email}} albo pocztą na adres {{adres}}.",
+              "Odpowiadamy za zgodność towaru z umową oraz za jego wady na zasadach określonych w przepisach ustawy o prawach konsumenta i Kodeksu cywilnego.",
+              "Reklamację towaru wyślij na adres {{email}} albo pocztą na adres {{adres}}. Opisz wadę i to, jak chcesz ją rozwiązać."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "odpowiedzialnosc",
+        "tytul": "Odpowiedzialność",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Dbamy o to, żeby Serwis działał, ale nie gwarantujemy jego nieprzerwanej dostępności. Mogą zdarzyć się przerwy techniczne: konserwacja, awaria albo problem u dostawcy hostingu.",
+              "Treści informacyjne w Serwisie mają charakter ogólny. Nie zastępują porady prawnej, podatkowej ani indywidualnej wyceny.",
+              "Serwis zawiera odnośniki do stron innych podmiotów. Nie odpowiadamy za ich treść ani zasady.",
+              { "t": "Tłumaczenie automatyczne wykonuje Google i może zawierać błędy. W razie wątpliwości obowiązuje wersja polska.", "w": "tlumaczenie" },
+              { "t": "Za treść wiadomości wysłanej formularzem odpowiadasz Ty.", "w": "formularz" },
+              "Regulamin nie wyłącza ani nie ogranicza odpowiedzialności w zakresie, w jakim przepisy bezwzględnie obowiązujące tego zakazują, w tym wobec konsumentów."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "reklamacje",
+        "tytul": "Reklamacje",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Reklamację dotyczącą działania usług w Serwisie (na przykład formularz się nie wysyła albo podstrona nie otwiera się) wyślij na adres {{email}} albo pocztą na adres {{adres}}.",
+              {
+                "t": "W zgłoszeniu napisz:",
+                "lista": [
+                  "imię i nazwisko albo nazwę firmy oraz adres e-mail, na który mamy odpowiedzieć,",
+                  "co nie działa, na której podstronie, kiedy i w jakiej przeglądarce lub na jakim urządzeniu,",
+                  "czego oczekujesz; jeśli możesz, dołącz zrzut ekranu."
+                ]
+              },
+              "Odpowiadamy w ciągu 14 dni od otrzymania zgłoszenia. Gdy brakuje danych, poprosimy o uzupełnienie i wtedy 14 dni liczymy od otrzymania uzupełnienia.",
+              { "t": "Reklamacje towarów kupionych w sklepie rozpatrujemy na zasadach z części „Odstąpienie od umowy i reklamacje towaru”.", "w": "sklep" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dane-osobowe",
+        "tytul": "Dane osobowe",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Administratorem danych osobowych jest Usługodawca. Kto i po co przetwarza Twoje dane, komu je przekazuje, jak długo je przechowuje, jakie masz prawa i jak działają pliki cookie opisuje Polityka prywatności dostępna w Serwisie.",
+              { "t": "Dane w formularzach podajesz dobrowolnie, ale część z nich jest potrzebna do świadczenia usługi. Bez nich nie możemy jej zrealizować.", "w": "formularz|konto|newsletter|sklep" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "postanowienia-koncowe",
+        "tytul": "Postanowienia końcowe",
+        "warunek": null,
+        "tresc": [
+          {
+            "ust": [
+              "Do usług w Serwisie stosuje się prawo polskie. Jeśli jesteś konsumentem, nie pozbawia Cię to ochrony wynikającej z przepisów obowiązujących w kraju Twojego zamieszkania, o ile są dla Ciebie korzystniejsze.",
+              "Zmiany regulaminu publikujemy w Serwisie, razem z datą, od której obowiązują. Do usługi, z której zaczynasz korzystać, stosujemy wersję obowiązującą w chwili rozpoczęcia korzystania z niej.",
+              "Jeśli jesteś konsumentem i spór z nami nie zakończy się reklamacją, możesz skorzystać z pozasądowych sposobów rozwiązywania sporów konsumenckich. Pomocy udzielają powiatowi i miejscy rzecznicy konsumentów, a informacje o dostępnych sposobach zbiera Urząd Ochrony Konkurencji i Konsumentów (uokik.gov.pl).",
+              "Pozostałe spory rozstrzyga sąd właściwy według przepisów ogólnych.",
+              "Ten regulamin obowiązuje od {{data}}."
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "polityka": {
+    "kafelek": "generator-polityki-prywatnosci",
+    "trasa": "/generator-polityki-prywatnosci/",
+    "plik": "polityka-prywatnosci",
+    "numeracja": false,
+    "tytulKarty": "Generator polityki prywatności i cookies strony po NIP | EcoPower Polska",
+    "opisWyszukiwarki": "Darmowy generator polityki prywatności (RODO) i plików cookie dla strony i sklepu: wpisz NIP, zaznacz funkcje i narzędzia, pobierz gotowy dokument jako tekst, HTML albo PDF.",
+    "okruszek": "Generator polityki prywatności",
+    "naglowek": "Darmowy generator polityki prywatności",
+    "lead": "Wpisz NIP firmy, zaznacz funkcje i narzędzia swojej strony, a dostaniesz politykę prywatności z tabelą plików cookie, zgodną z wymogami RODO, do skopiowania, pobrania albo wydruku.",
+    "krok2": {
+      "naglowek": "Co ma Twoja strona",
+      "lead": "Zaznacz wszystko, co dotyczy Twojego serwisu. Sekcje polityki i tabela cookie dopasują się do wyboru.",
+      "grupy": [
+        {
+          "id": "funkcje",
+          "legenda": "Funkcje serwisu",
+          "typ": "checkbox",
+          "zetony": [
+            { "id": "formularz", "etykieta": "Formularz kontaktowy" },
+            { "id": "newsletter", "etykieta": "Newsletter" },
+            { "id": "konto", "etykieta": "Konto użytkownika" },
+            { "id": "sklep", "etykieta": "Sklep i płatności" },
+            { "id": "kalkulator", "etykieta": "Kalkulator / wyceny" },
+            { "id": "komentarze", "etykieta": "Komentarze" },
+            { "id": "czat", "etykieta": "Czat / asystent AI" }
+          ]
+        },
+        {
+          "id": "hosting",
+          "legenda": "Gdzie stoi strona",
+          "typ": "radio",
+          "zetony": [
+            { "id": "hosting_lhpl", "etykieta": "Hosting lh.pl" },
+            { "id": "hosting_inny", "etykieta": "Inny hosting" }
+          ]
+        },
+        {
+          "id": "zabezpieczenia",
+          "legenda": "Ochrona formularza",
+          "typ": "checkbox",
+          "zetony": [
+            { "id": "turnstile", "etykieta": "Formularz chroni Cloudflare Turnstile" }
+          ]
+        },
+        {
+          "id": "cookies",
+          "legenda": "Pliki cookie i narzędzia zewnętrzne",
+          "podpowiedz": "Narzędzia, które wymagają zgody, wykluczają wybór „tylko niezbędne”.",
+          "typ": "checkbox",
+          "zetony": [
+            { "id": "ga4", "etykieta": "Google Analytics 4", "zgoda": true },
+            { "id": "pixel", "etykieta": "Meta Pixel", "zgoda": true },
+            { "id": "tlumaczenie", "etykieta": "Tłumaczenie GTranslate / Google", "zgoda": true },
+            { "id": "youtube", "etykieta": "Filmy YouTube", "zgoda": true },
+            { "id": "maps", "etykieta": "Mapy Google", "zgoda": true },
+            { "id": "niezbedne", "etykieta": "Tylko niezbędne cookies" }
+          ]
+        }
+      ]
+    },
+    "krok3": {
+      "tytulDokumentu": "Polityka prywatności serwisu {{www}}",
+      "wersja": "Wersja obowiązująca od {{data}}."
+    },
+    "sprawdz": [
+      "Przeczytaj całość i usuń lub zmień to, co nie pasuje do Twojej działalności. Generator nie zna szczegółów Twoich procesów.",
+      "Sprawdź, czy administrator wyznaczył inspektora ochrony danych. Jeśli tak, dopisz jego dane w części „Inspektor ochrony danych”.",
+      "Dopasuj okresy przechowywania danych do tego, jak naprawdę je usuwasz.",
+      "Skrypty narzędzi, które wymagają zgody (analityka, Pixel, tłumaczenie, YouTube, mapy), muszą ładować się dopiero po zgodzie. Polityka tego nie zastąpi: strona potrzebuje okna zgody na cookie.",
+      "Sprawdź w dokumentacji dostawców nazwy i okresy ważności plików cookie. Tabela podaje je ogólnie i mogą się zmienić.",
+      "Wymień w odbiorcach danych własnych dostawców: operatora płatności, firmę kurierską, system newslettera, dostawcę czatu."
+    ],
+    "sekcje": [
+      {
+        "id": "administrator",
+        "tytul": "Administrator danych",
+        "warunek": null,
+        "tresc": [
+          "Administratorem danych osobowych zbieranych przez stronę {{www}} jest:",
+          {
+            "lista": [
+              "{{nazwa}}",
+              "{{adres}}",
+              { "t": "forma prawna: {{forma_prawna}}", "w": "forma_prawna" },
+              { "t": "NIP: {{nip}}", "w": "nip" },
+              { "t": "KRS: {{krs}}", "w": "krs" },
+              { "t": "REGON: {{regon}}", "w": "regon" },
+              "e-mail: {{email}}",
+              { "t": "telefon: {{telefon}}", "w": "telefon" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "inspektor",
+        "tytul": "Inspektor ochrony danych",
+        "warunek": null,
+        "tresc": [
+          "Administrator nie wyznaczył inspektora ochrony danych. W sprawach danych osobowych napisz na adres {{email}}."
+        ]
+      },
+      {
+        "id": "zakres",
+        "tytul": "Czego dotyczy ta polityka",
+        "warunek": null,
+        "tresc": [
+          "Polityka dotyczy strony {{www}} i opisanych w niej funkcji. Spełnia obowiązek informacyjny z art. 13 rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 (RODO).",
+          {
+            "p": "Na stronie działają:",
+            "w": "formularz|newsletter|konto|sklep|kalkulator|komentarze|czat|tlumaczenie|youtube|maps|ga4|pixel"
+          },
+          {
+            "lista": [
+              { "t": "formularz kontaktowy", "w": "formularz" },
+              { "t": "zapis na newsletter", "w": "newsletter" },
+              { "t": "konta użytkowników", "w": "konto" },
+              { "t": "sklep internetowy z płatnościami", "w": "sklep" },
+              { "t": "kalkulator i wyceny", "w": "kalkulator" },
+              { "t": "komentarze", "w": "komentarze" },
+              { "t": "czat i asystent AI", "w": "czat" },
+              { "t": "przełącznik tłumaczenia strony", "w": "tlumaczenie" },
+              { "t": "osadzone filmy YouTube", "w": "youtube" },
+              { "t": "osadzone mapy Google", "w": "maps" },
+              { "t": "statystyki odwiedzin i pomiar reklam", "w": "ga4|pixel" }
+            ],
+            "w": "formularz|newsletter|konto|sklep|kalkulator|komentarze|czat|tlumaczenie|youtube|maps|ga4|pixel"
+          }
+        ]
+      },
+      {
+        "id": "formularz",
+        "tytul": "Dane z formularza kontaktowego",
+        "warunek": "formularz",
+        "tresc": [
+          "Formularz zbiera dane, które w nim wpiszesz, na przykład imię, adres e-mail i treść wiadomości. Pola oznaczone jako dobrowolne wypełniasz według uznania.",
+          "Dane służą do tego, żeby odpowiedzieć na zapytanie.",
+          "Serwer, który odbiera formularz, może zapisywać adres IP nadawcy oraz datę i godzinę wysłania. Pomaga to rozpoznać nadużycia. Te informacje usuwamy razem z wiadomością.",
+          { "p": "Formularz ma zabezpieczenia przed automatami. Opisujemy je w części o Cloudflare Turnstile.", "w": "turnstile" }
+        ]
+      },
+      {
+        "id": "ochrona-formularza",
+        "tytul": "Ochrona formularza przed automatami: Cloudflare Turnstile",
+        "warunek": "turnstile",
+        "tresc": [
+          "Formularz chroni usługa Cloudflare Turnstile. Sprawdza ona, czy formularz wypełnia człowiek, a nie program rozsyłający spam. Zwykle odbywa się to bez żadnego zadania do wykonania.",
+          "Skrypt Turnstile ładuje się z serwerów Cloudflare (challenges.cloudflare.com). Do sprawdzenia Cloudflare przetwarza adres IP oraz techniczne informacje o przeglądarce i połączeniu.",
+          "Dostawcą usługi jest Cloudflare, Inc. z siedzibą w Stanach Zjednoczonych, działający na nasze zlecenie jako podmiot przetwarzający. Podstawą prawną jest art. 6 ust. 1 lit. f RODO, czyli prawnie uzasadniony interes w ochronie formularza i skrzynki przed spamem i nadużyciami.",
+          "Widget działa w osobnej ramce z domeny challenges.cloudflare.com. To, co zapisuje w tej ramce, należy do Cloudflare i nie jest ciasteczkiem tej strony."
+        ]
+      },
+      {
+        "id": "newsletter",
+        "tytul": "Newsletter",
+        "warunek": "newsletter",
+        "tresc": [
+          "Do wysyłania newslettera potrzebujemy Twojego adresu e-mail. Podajesz go przy zapisie i wyrażasz zgodę na otrzymywanie wiadomości.",
+          "Zgodę możesz cofnąć w każdej chwili, klikając odnośnik rezygnacji w wiadomości albo pisząc na adres {{email}}. Cofnięcie zgody nie wpływa na zgodność z prawem przetwarzania sprzed jej cofnięcia.",
+          "Podstawą przetwarzania jest Twoja zgoda: art. 6 ust. 1 lit. a RODO. Informacje handlowe wysyłamy tylko za Twoją zgodą także na podstawie art. 398 ustawy Prawo komunikacji elektronicznej."
+        ]
+      },
+      {
+        "id": "konto",
+        "tytul": "Konto użytkownika",
+        "warunek": "konto",
+        "tresc": [
+          "Przy zakładaniu konta zbieramy dane niezbędne do jego prowadzenia, na przykład adres e-mail i hasło (przechowywane w postaci zaszyfrowanej). Podajesz też dane, które sam dodasz do konta.",
+          "Dane konta przetwarzamy po to, żeby je prowadzić i świadczyć Ci usługi dostępne po zalogowaniu. Podstawą jest art. 6 ust. 1 lit. b RODO."
+        ]
+      },
+      {
+        "id": "zamowienia",
+        "tytul": "Zamówienia i płatności w sklepie",
+        "warunek": "sklep",
+        "tresc": [
+          "Przy zamówieniu zbieramy dane potrzebne do jego realizacji: imię i nazwisko albo nazwę firmy, adres dostawy, adres e-mail, numer telefonu oraz dane do faktury.",
+          "Płatności obsługuje operator płatności, któremu przekazujemy dane niezbędne do przeprowadzenia płatności. Nie przechowujemy numerów Twoich kart płatniczych.",
+          "Dane zamówień przetwarzamy po to, żeby zawrzeć i wykonać umowę sprzedaży (art. 6 ust. 1 lit. b RODO), a dokumenty rozliczeniowe przechowujemy tak długo, jak wymagają tego przepisy podatkowe (art. 6 ust. 1 lit. c RODO)."
+        ]
+      },
+      {
+        "id": "kalkulator",
+        "tytul": "Kalkulator i wyceny",
+        "warunek": "kalkulator",
+        "tresc": [
+          "Dane wpisane w kalkulatorze służą do wyliczenia orientacyjnej wyceny. Do nas trafiają wtedy, gdy sam wyślesz je w zapytaniu."
+        ]
+      },
+      {
+        "id": "komentarze",
+        "tytul": "Komentarze",
+        "warunek": "komentarze",
+        "tresc": [
+          "Pod komentarzem publikujemy treść, którą wpiszesz, oraz imię albo pseudonim, który podasz. Komentarze są widoczne publicznie. Adres e-mail, jeśli go podasz, nie jest wyświetlany.",
+          "Dane z komentarzy przetwarzamy po to, żeby świadczyć usługę komentowania i dbać o jej porządek. Podstawą jest art. 6 ust. 1 lit. b i f RODO."
+        ]
+      },
+      {
+        "id": "czat",
+        "tytul": "Czat i asystent AI",
+        "warunek": "czat",
+        "tresc": [
+          "Treść rozmowy z asystentem trafia do dostawcy usługi czatu, który przetwarza ją, żeby odpowiedzieć na Twoje pytania. Odpowiada program oparty na sztucznej inteligencji, nie człowiek.",
+          "Nie wpisuj w rozmowie haseł, danych kart płatniczych ani innych informacji, których nie chcesz ujawniać.",
+          "Podstawą przetwarzania jest prawnie uzasadniony interes administratora, czyli obsługa Twoich pytań: art. 6 ust. 1 lit. f RODO."
+        ]
+      },
+      {
+        "id": "podstawa",
+        "tytul": "Cel i podstawa prawna",
+        "warunek": null,
+        "tresc": [
+          {
+            "lista": [
+              { "t": "odpowiedź na zapytanie z formularza, czyli działania na Twoje żądanie przed zawarciem umowy: art. 6 ust. 1 lit. b RODO", "w": "formularz" },
+              { "t": "zawarcie i wykonanie umowy (zamówienie w sklepie, konto użytkownika): art. 6 ust. 1 lit. b RODO", "w": "sklep|konto" },
+              { "t": "wysyłka newslettera i informacji handlowych: Twoja zgoda, art. 6 ust. 1 lit. a RODO i art. 398 ustawy Prawo komunikacji elektronicznej", "w": "newsletter" },
+              { "t": "publikacja komentarzy i dbanie o ich porządek: art. 6 ust. 1 lit. b i f RODO", "w": "komentarze" },
+              { "t": "obsługa rozmowy z asystentem: art. 6 ust. 1 lit. f RODO", "w": "czat" },
+              { "t": "statystyki, pomiar reklam, tłumaczenie strony, filmy i mapy z usług zewnętrznych: Twoja zgoda, art. 6 ust. 1 lit. a RODO i art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej", "w": "ga4|pixel|tlumaczenie|youtube|maps" },
+              "prowadzenie korespondencji, bezpieczeństwo serwera i strony, ochrona przed nadużyciami oraz ustalenie i dochodzenie roszczeń: art. 6 ust. 1 lit. f RODO, czyli prawnie uzasadniony interes administratora",
+              { "t": "przechowywanie dokumentów rozliczeniowych wymaganych przepisami podatkowymi: art. 6 ust. 1 lit. c RODO", "w": "sklep" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ciasteczka",
+        "tytul": "Pliki cookie i pamięć przeglądarki",
+        "warunek": null,
+        "tresc": [
+          { "p": "Strona zapisuje na Twoim urządzeniu wyłącznie wpisy niezbędne do jej działania (pliki cookie albo wpisy w pamięci przeglądarki). Nie wymagają one zgody (art. 399 ust. 3 ustawy Prawo komunikacji elektronicznej: wyjątek dla wpisów koniecznych do usługi, o którą prosisz).", "w": "!ga4&!pixel&!tlumaczenie&!youtube&!maps" },
+          { "p": "Wpisy niezbędne zapisujemy bez pytania o zgodę, bo bez nich strona nie działałaby (art. 399 ust. 3 ustawy Prawo komunikacji elektronicznej: wyjątek dla wpisów koniecznych do usługi, o którą prosisz). Zgody wymagają narzędzia, które nie są do tego konieczne (art. 399 ust. 1 tej ustawy; do zgody stosuje się przepisy o ochronie danych osobowych, art. 400). Przy pierwszej wizycie pytamy o to w oknie cookie, w którym obie odpowiedzi mają ten sam wygląd i żadna nie jest zaznaczona domyślnie.", "w": "ga4|pixel|tlumaczenie|youtube|maps" },
+          {
+            "tabela": {
+              "naglowki": ["Nazwa", "Kto zapisuje", "Cel", "Jak długo", "Podstawa"],
+              "wiersze": [
+                { "k": ["Wpisy techniczne strony (cookie lub pamięć przeglądarki)", "Ta strona", "Działanie strony: zapamiętanie ustawień i sesji", "Do zamknięcia karty albo czas wskazany przy konkretnym wpisie", "Niezbędny: art. 399 ust. 3 ustawy Prawo komunikacji elektronicznej"] },
+                { "k": ["Wybór z okna cookie", "Ta strona", "Zapamiętanie Twojego wyboru i daty wyboru", "Do zmiany wyboru albo wyczyszczenia danych strony w przeglądarce", "Niezbędny: bez niego okno pytałoby na każdej podstronie"], "w": "ga4|pixel|tlumaczenie|youtube|maps" },
+                { "k": ["Sesja logowania", "Ta strona", "Zapamiętanie, że jesteś zalogowany", "Do wylogowania albo wygaśnięcia sesji", "Niezbędny: usługa, o którą prosisz"], "w": "konto" },
+                { "k": ["Koszyk i sesja zamówienia", "Ta strona", "Zapamiętanie produktów w koszyku i przebiegu zamówienia", "Do zakończenia sesji albo czas ustawiony w sklepie", "Niezbędny: usługa, o którą prosisz"], "w": "sklep" },
+                { "k": ["Wpisy operatora płatności", "Operator płatności, z którego korzystasz przy zamówieniu", "Bezpieczna obsługa płatności i wykrywanie nadużyć", "Według zasad operatora płatności", "Niezbędny do płatności, o którą prosisz"], "w": "sklep" },
+                { "k": ["Wpisy czatu", "Ta strona albo dostawca czatu", "Zapamiętanie przebiegu rozmowy w oknie czatu", "Według ustawień czatu", "Niezbędny: usługa, o którą prosisz"], "w": "czat" },
+                { "k": ["Wpisy ramki Turnstile", "Cloudflare, Inc. (ramka challenges.cloudflare.com)", "Sprawdzenie, że formularz wypełnia człowiek, a nie program rozsyłający spam", "Według zasad Cloudflare; dokładną listę wpisów ustala Cloudflare, nie ta strona", "Niezbędny do ochrony formularza: art. 6 ust. 1 lit. f RODO"], "w": "turnstile" },
+                { "k": ["_ga, _ga_* (Google Analytics 4)", "Google", "Statystyki odwiedzin: rozróżnianie odwiedzających i liczenie wizyt", "Według zasad Google; okres podaje dokumentacja Google Analytics", "Zgoda: art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej"], "w": "ga4" },
+                { "k": ["_fbp (Meta Pixel)", "Meta Platforms", "Pomiar skuteczności i dopasowanie reklam", "Według zasad Meta; okres podaje dokumentacja Meta", "Zgoda: art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej"], "w": "pixel" },
+                { "k": ["__GT_TRANSLATE_LANGS (local storage)", "GTranslate Inc. (skrypt z cdn.gtranslate.net)", "Zapamiętanie języka, który wybierasz w przełączniku", "Do zmiany języka na polski albo wyczyszczenia danych strony w przeglądarce", "Zgoda: wybór języka przyciskiem albo zgoda w oknie cookie"], "w": "tlumaczenie" },
+                { "k": ["Wpisy YouTube", "Google", "Odtworzenie osadzonego filmu i statystyki odtwarzania", "Według zasad Google", "Zgoda: art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej"], "w": "youtube" },
+                { "k": ["Wpisy Map Google", "Google", "Wyświetlenie osadzonej mapy", "Według zasad Google", "Zgoda: art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej"], "w": "maps" }
+              ]
+            }
+          },
+          { "p": "Zgodę wycofujesz tak samo łatwo, jak ją dajesz, w ustawieniach cookie na stronie. Pliki cookie możesz też usunąć albo zablokować w ustawieniach przeglądarki. Odmowa zgody nie ogranicza działania strony.", "w": "ga4|pixel|tlumaczenie|youtube|maps" }
+        ]
+      },
+      {
+        "id": "analityka",
+        "tytul": "Statystyki i pomiar reklam",
+        "warunek": "ga4|pixel",
+        "tresc": [
+          { "p": "Strona używa Google Analytics 4, usługi Google, do statystyk odwiedzin. Google dostaje adres IP i informacje o przeglądarce oraz o tym, jak korzystasz ze strony. Skrypt ładuje się dopiero po Twojej zgodzie.", "w": "ga4" },
+          { "p": "Strona używa Meta Pixel, narzędzia Meta Platforms, do mierzenia skuteczności reklam i dopasowywania ich do odwiedzających. Meta dostaje adres IP i informacje o przeglądarce oraz o tym, co robisz na stronie. Skrypt ładuje się dopiero po Twojej zgodzie.", "w": "pixel" },
+          "Podstawą prawną jest Twoja zgoda: art. 6 ust. 1 lit. a RODO i art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej. Zgodę wycofasz w ustawieniach cookie na stronie."
+        ]
+      },
+      {
+        "id": "tlumaczenie",
+        "tytul": "Tłumaczenie strony: GTranslate i Google",
+        "warunek": "tlumaczenie",
+        "tresc": [
+          "Na stronie jest przełącznik języków, który pozwala przeczytać ją w innym języku. Tłumaczenie jest automatyczne i może zawierać błędy; wersją źródłową jest polska.",
+          "Przełącznik pochodzi od GTranslate Inc. z USA. Jego skrypt ładuje się z serwerów GTranslate (cdn.gtranslate.net) po Twojej zgodzie albo po kliknięciu przycisku języka. Firma widzi wtedy Twój adres IP i informacje o przeglądarce.",
+          "Po wyborze języka treść oglądanej podstrony trafia do usługi tłumaczenia Google, która zwraca przekład. Do chwili wyboru języka Google nie dostaje żadnej treści.",
+          "Podstawą prawną jest Twoja zgoda: art. 6 ust. 1 lit. a RODO i art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej. Zgodę cofniesz, wybierając w przełączniku język polski i ustawiając „tylko niezbędne” w ustawieniach cookie."
+        ]
+      },
+      {
+        "id": "youtube",
+        "tytul": "Osadzone filmy YouTube",
+        "warunek": "youtube",
+        "tresc": [
+          "Na stronie osadzamy filmy z YouTube, usługi Google. Po uruchomieniu filmu Google dostaje Twój adres IP i informacje o przeglądarce i może zapisać własne wpisy na Twoim urządzeniu.",
+          "Film ładuje się po Twojej zgodzie albo po kliknięciu w niego. Podstawą prawną jest Twoja zgoda: art. 6 ust. 1 lit. a RODO i art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej."
+        ]
+      },
+      {
+        "id": "mapy",
+        "tytul": "Osadzone mapy Google",
+        "warunek": "maps",
+        "tresc": [
+          "Na stronie osadzamy mapy Google. Po wyświetleniu mapy Google dostaje Twój adres IP i informacje o przeglądarce i może zapisać własne wpisy na Twoim urządzeniu.",
+          "Mapa ładuje się po Twojej zgodzie albo po kliknięciu w nią. Podstawą prawną jest Twoja zgoda: art. 6 ust. 1 lit. a RODO i art. 399 ust. 1 ustawy Prawo komunikacji elektronicznej."
+        ]
+      },
+      {
+        "id": "hosting",
+        "tytul": "Hosting i logi serwera",
+        "warunek": null,
+        "tresc": [
+          { "p": "Strona działa na serwerach LH.pl Sp. z o.o. Ta firma przetwarza dane na zlecenie administratora, jako podmiot przetwarzający.", "w": "hosting_lhpl" },
+          { "p": "Strona działa na serwerach dostawcy hostingu, który przetwarza dane na zlecenie administratora, jako podmiot przetwarzający.", "w": "!hosting_lhpl" },
+          "Serwer zapisuje standardowe logi połączeń: adres IP, datę i godzinę, adres pobranego pliku oraz informacje o przeglądarce i błędach.",
+          "Logi służą bezpieczeństwu i utrzymaniu serwera. Podstawą jest art. 6 ust. 1 lit. f RODO. Okres przechowywania logów wynika z zasad dostawcy hostingu."
+        ]
+      },
+      {
+        "id": "odbiorcy",
+        "tytul": "Komu przekazujemy dane",
+        "warunek": null,
+        "tresc": [
+          "Danych nie sprzedajemy i nie przekazujemy w celach marketingowych. Trafiają wyłącznie do odbiorców wymienionych niżej.",
+          {
+            "lista": [
+              { "t": "LH.pl Sp. z o.o.: hosting strony i poczta", "w": "hosting_lhpl" },
+              { "t": "dostawca hostingu: serwery, na których działa strona", "w": "!hosting_lhpl" },
+              { "t": "Cloudflare, Inc.: ochrona formularza usługą Turnstile (adres IP i informacje techniczne o przeglądarce)", "w": "turnstile" },
+              { "t": "dostawca usługi wysyłki newslettera", "w": "newsletter" },
+              { "t": "operator płatności i firma realizująca dostawę zamówień", "w": "sklep" },
+              { "t": "dostawca czatu i asystenta AI (treść rozmowy)", "w": "czat" },
+              { "t": "Google: statystyki odwiedzin w Google Analytics 4", "w": "ga4" },
+              { "t": "Meta Platforms: pomiar reklam w Meta Pixel", "w": "pixel" },
+              { "t": "GTranslate Inc. i Google LLC: przełącznik języków i tłumaczenie strony, gdy z nich korzystasz", "w": "tlumaczenie" },
+              { "t": "Google: osadzone filmy YouTube i mapy Google, gdy je wyświetlasz", "w": "youtube|maps" },
+              "osoby upoważnione przez administratora, które obsługują zapytania",
+              { "t": "biuro rachunkowe i doradca prawny administratora, w zakresie potrzebnym do rozliczeń i obrony przed roszczeniami", "w": "sklep" },
+              "organy publiczne, gdy wymaga tego przepis prawa"
+            ]
+          },
+          { "p": "Część tych odbiorców ma siedzibę poza Europejskim Obszarem Gospodarczym, w szczególności w Stanach Zjednoczonych. Dane trafiają tam na podstawie mechanizmów przewidzianych w rozdziale V RODO, na przykład standardowych klauzul umownych zatwierdzonych przez Komisję Europejską.", "w": "turnstile|ga4|pixel|tlumaczenie|youtube|maps|czat" }
+        ]
+      },
+      {
+        "id": "okresy",
+        "tytul": "Jak długo przechowujemy dane",
+        "warunek": null,
+        "tresc": [
+          {
+            "lista": [
+              { "t": "wiadomości z formularza: przez czas obsługi zapytania, a jeśli nie dojdzie do umowy, do 12 miesięcy od ostatniego kontaktu", "w": "formularz" },
+              { "t": "dane konta: do usunięcia konta, a potem przez okres przedawnienia roszczeń", "w": "konto" },
+              { "t": "dane zamówień: przez czas wykonania umowy, okres przedawnienia roszczeń i okres wymagany przepisami podatkowymi", "w": "sklep" },
+              { "t": "adres e-mail do newslettera: do cofnięcia zgody", "w": "newsletter" },
+              { "t": "komentarze: do czasu ich usunięcia", "w": "komentarze" },
+              { "t": "rozmowy z asystentem: przez czas niezbędny do odpowiedzi, a potem do usunięcia ich z systemu czatu", "w": "czat" },
+              "logi serwera: przez okres wynikający z zasad dostawcy hostingu",
+              { "t": "wybór z okna cookie i wybrany język tłumaczenia: do zmiany albo wyczyszczenia danych strony w przeglądarce", "w": "ga4|pixel|tlumaczenie|youtube|maps" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "prawa",
+        "tytul": "Twoje prawa",
+        "warunek": null,
+        "tresc": [
+          "W związku z przetwarzaniem danych masz prawa wynikające z art. 15–21 RODO:",
+          {
+            "lista": [
+              "dostępu do danych i otrzymania ich kopii",
+              "sprostowania danych nieprawidłowych lub niepełnych",
+              "usunięcia danych, gdy nie są już potrzebne do celu, w którym je zebraliśmy",
+              "ograniczenia przetwarzania",
+              "sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie administratora",
+              "przeniesienia danych przetwarzanych w związku z umową",
+              { "t": "cofnięcia zgody w dowolnym momencie, gdy przetwarzanie opiera się na zgodzie; cofnięcie nie wpływa na zgodność z prawem przetwarzania sprzed jej cofnięcia", "w": "newsletter|ga4|pixel|tlumaczenie|youtube|maps" },
+              "wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "jak-skorzystac-z-praw",
+        "tytul": "Jak skorzystać ze swoich praw",
+        "warunek": null,
+        "tresc": [
+          "Napisz na adres {{email}} i opisz, czego dotyczy żądanie. Jeśli nie będziemy mogli Cię rozpoznać, poprosimy o dodatkowe informacje.",
+          "Odpowiadamy bez zbędnej zwłoki, najpóźniej w ciągu miesiąca od otrzymania żądania. W sprawach złożonych termin może się wydłużyć, o czym Cię poinformujemy."
+        ]
+      },
+      {
+        "id": "dobrowolnosc",
+        "tytul": "Czy musisz podać dane",
+        "warunek": null,
+        "tresc": [
+          "Podanie danych jest dobrowolne.",
+          { "p": "Adres e-mail jest potrzebny, żebyśmy mogli odpowiedzieć na zapytanie. Bez niego formularz się nie wyśle.", "w": "formularz" },
+          { "p": "Dane potrzebne do zamówienia (dane do dostawy, kontaktowe i do faktury) są niezbędne do zawarcia i wykonania umowy sprzedaży. Bez nich nie zrealizujemy zamówienia.", "w": "sklep" },
+          { "p": "Dane do założenia konta są niezbędne do jego prowadzenia.", "w": "konto" }
+        ]
+      },
+      {
+        "id": "profilowanie",
+        "tytul": "Decyzje automatyczne",
+        "warunek": null,
+        "tresc": [
+          { "p": "Nie podejmujemy decyzji w sposób zautomatyzowany i nie profilujemy osób, które do nas piszą.", "w": "!pixel" },
+          { "p": "Nie podejmujemy wobec Ciebie decyzji w sposób zautomatyzowany, które wywoływałyby skutki prawne. Dostawca narzędzia reklamowego (Meta Pixel) może jednak dopasowywać reklamy do Twoich zainteresowań na własnych zasadach.", "w": "pixel" }
+        ]
+      },
+      {
+        "id": "zmiany",
+        "tytul": "Zmiany polityki",
+        "warunek": null,
+        "tresc": [
+          "Politykę zmieniamy, gdy zmienia się działanie strony albo przepisy. Aktualna wersja jest zawsze pod tym adresem.",
+          "Ta wersja obowiązuje od {{data}}."
+        ]
+      },
+      {
+        "id": "podstawy-prawne",
+        "tytul": "Podstawy prawne",
+        "warunek": null,
+        "tresc": [
+          {
+            "lista": [
+              "[Rozporządzenie Parlamentu Europejskiego i Rady (UE) 2016/679 (RODO)](https://eur-lex.europa.eu/eli/reg/2016/679/oj)",
+              "[Ustawa o świadczeniu usług drogą elektroniczną](https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20240001513)",
+              { "t": "ustawa Prawo komunikacji elektronicznej (art. 399 i 400)", "w": "!newsletter" },
+              { "t": "ustawa Prawo komunikacji elektronicznej (art. 398, 399 i 400)", "w": "newsletter" },
+              { "t": "ustawa o prawach konsumenta", "w": "sklep" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

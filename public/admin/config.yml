@@ -986,8 +986,9 @@ collections:
         label: "Darmowe narzędzia (/darmowe-narzedzia)"
         file: "src/data/narzedzia.json"
         description: >-
-          Kafelki darmowych narzędzi. Stan „działa” wymaga adresu narzędzia; „wkrótce” pokazuje nieaktywny guzik
-          i odnośnik „Powiadom mnie”. Uruchomienie nowego narzędzia: zmień stan na „działa” i wpisz adres.
+          Kafelki darmowych narzędzi. Stan „działa” wymaga adresu narzędzia; „wkrótce” pokazuje nieaktywny guzik.
+          Uruchomienie nowego narzędzia: zmień stan na „działa” i wpisz adres. Treści generatorów regulaminu i polityki
+          (src/data/generator.json) NIE są w panelu: mają strukturę warunkową, zmienia je się w repozytorium.
         fields:
           - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
           - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
@@ -1011,9 +1012,7 @@ collections:
               - { name: stan, label: "Stan", widget: select, options: ["dziala", "wkrotce"], default: "wkrotce" }
               - { name: adres, label: "Adres narzędzia (wymagany dla stanu „działa”)", widget: string, required: false }
               - { name: guzik, label: "Napis guzika", widget: string, required: false }
-              - { name: powiadom, label: "Napis odnośnika „Powiadom mnie” (stan: wkrótce)", widget: string, required: false }
-              - { name: powiadomAdres, label: "Adres odnośnika „Powiadom mnie”", widget: string, required: false }
-              - { name: api, label: "Zarezerwowane na adres usługi (dziś puste)", widget: hidden, required: false }
+              - { name: api, label: "Adres usługi pobierania danych firmy (skrypt na lh.pl; nie zmieniać bez wgrania skryptu)", widget: hidden, required: false }
 
       # ---- stopka ----
       - name: stopka

@@ -8,4 +8,8 @@ return [
     // 'dozwolone_origin' => ['https://www.ecopowerpolska.pl', 'https://ecopowerpolska.pl'],
     // 'turnstile_hosty'  => ['www.ecopowerpolska.pl', 'ecopowerpolska.pl'],
     // 'limit_na_godzine' => 30,
+    // --- firma.php (dane firmy po NIP, generatory w /darmowe-narzedzia/) ---
+    'ceidg_token'      => '',   // token CEIDG API v3 z sejfu Z440 (~/.sekrety/ceidg-token); pusty = źródło CEIDG pominięte
+    'sol_ip'           => '',   // dowolny długi losowy ciąg: sól skrótu adresu IP w stan/firma-ip/ (pusty = sól zapasowa, słabsza)
+    // 'firma_limit_na_godz' => 30, 'ceidg_limit_na_godz' => 100, 'cache_sekundy' => 86400, 'cache_brak_sekundy' => 900,
 ];

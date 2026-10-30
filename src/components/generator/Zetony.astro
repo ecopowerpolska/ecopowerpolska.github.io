@@ -1,0 +1,31 @@
+---
+// Krok 2 generatora: żetony (checkbox albo radio w etykiecie, jak w formularzu kontaktowym). Id żetonu to warunek sekcji szablonu.
+// `zgoda: true` = narzędzie wymagające zgody; skrypt odznacza wtedy „tylko niezbędne” (i odwrotnie).
+type Zeton = { id: string; etykieta: string; zgoda?: boolean };
+type Grupa = { id: string; legenda: string; podpowiedz?: string; typ: string; zetony: Zeton[] };
+interface Props {
+  d: { naglowek: string; lead: string; grupy: Grupa[] };
+  numer: number;
+}
+const { d, numer } = Astro.props;
+---
+
+<section class="krok" aria-labelledby="g-krok2">
+  <h2 class="krok__tytul" id="g-krok2"><span class="krok__numer" aria-hidden="true">{numer}</span>{d.naglowek}</h2>
+  <p class="krok__lead">{d.lead}</p>
+
+  {d.grupy.map((g) => (
+    <fieldset class="grupa">
+      <legend>{g.legenda}</legend>
+      {g.podpowiedz && <p class="podpowiedz">{g.podpowiedz}</p>}
+      <div class="zetony">
+        {g.zetony.map((z) => (
+          <label class="zeton">
+            <input type={g.typ as 'checkbox'} name={g.typ === 'radio' ? g.id : undefined} value={z.id} data-zgoda={z.zgoda ? '1' : undefined} />
+            <span>{z.etykieta}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  ))}
+</section>

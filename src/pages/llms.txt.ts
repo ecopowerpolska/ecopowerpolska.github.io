@@ -133,7 +133,9 @@ export const GET: APIRoute = async () => {
     `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów — ceny, czas budowy, panel, wybór platformy.`,
     `- [Polityka prywatności](${baza}/polityka-prywatnosci/): administrator danych, dane z formularza, Cloudflare Turnstile, hosting GitHub Pages i LH.pl, pamięć przeglądarki i tłumaczenie strony po zgodzie, brak statystyk, prawa osób.`,
     `- [Regulamin](${baza}/regulamin/): zasady korzystania z usług serwisu: formularz, kalkulator, test szybkości, reklamacje.`,
-    `- [Darmowe narzędzia](${baza}/darmowe-narzedzia/): test szybkości strony i kolejne narzędzia dla firm (w przygotowaniu).`,
+    `- [Darmowe narzędzia](${baza}/darmowe-narzedzia/): test szybkości strony oraz generatory regulaminu i polityki prywatności na podstawie NIP firmy.`,
+    `- [Generator regulaminu serwisu](${baza}/generator-regulaminu/): wpisujesz NIP, dane firmy pobieramy z rejestrów (MF, KRS, CEIDG), dokument powstaje w przeglądarce; kopiowanie, plik HTML, wydruk.`,
+    `- [Generator polityki prywatności](${baza}/generator-polityki-prywatnosci/): wpisujesz NIP, wybierasz używane narzędzia (formularz, cookies, analityka), wzór polityki (informacyjny, nie porada prawna) powstaje w przeglądarce.`,
     '',
   ];
 

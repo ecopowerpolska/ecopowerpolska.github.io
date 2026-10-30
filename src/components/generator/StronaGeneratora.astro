@@ -1,0 +1,441 @@
+---
+// Wspólna strona obu generatorów (runda 8, 2026-10-30): /generator-regulaminu/ i /generator-polityki-prywatnosci/.
+// Cienkie pliki w src/pages/ przekazują tylko `typ`. Treści i szablony dokumentów: src/data/generator.json (plik poza panelem /admin/),
+// adres API pobierania danych firmy: src/data/narzedzia.json → kafelek `api` (nie wpisujemy go w kod).
+// Mechanizm: krok 1 (DaneFirmy), krok 2 (Zetony), krok 3 (Dokument). Dokument powstaje w przeglądarce: <template> z HTML sekcji,
+// skrypt podmienia placeholdery i chowa sekcje bez spełnionego warunku. Do serwera idzie wyłącznie NIP (GET do firma.php).
+// Układ: H1 i wstęp na środku, kroki 1 i 2 obok siebie od 64 rem, podgląd dokumentu na pełną szerokość (D22). Poza menu: link z kafelka /darmowe-narzedzia/.
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../PasekMarki.astro';
+import Stopka from '../Stopka.astro';
+import DaneFirmy from './DaneFirmy.astro';
+import Zetony from './Zetony.astro';
+import Dokument from './Dokument.astro';
+import { dokumentHtml, tr, type Sekcja } from './szablon';
+import firma from '../../data/firma.json';
+import narzedzia from '../../data/narzedzia.json';
+import g from '../../data/generator.json';
+import { tekst } from '../../lib/tekst';
+import { kawalki } from '../../lib/odnosniki';
+
+interface Props {
+  typ: 'regulamin' | 'polityka';
+}
+const { typ } = Astro.props;
+const w = g.wspolne;
+const c = g[typ];
+const sekcje = c.sekcje as Sekcja[];
+const api = narzedzia.kafelki.find((k) => k.id === c.kafelek)?.api ?? '';
+
+const szablon = dokumentHtml(c.krok3.tytulDokumentu, c.krok3.wersja, sekcje, c.numeracja, w.stopkaDokumentu);
+const interfejs = JSON.stringify({
+  laduje: w.krok1.ladowanie,
+  sukces: w.krok1.sukces,
+  bledy: w.krok1.bledy,
+  skopiowano: w.krok3.skopiowano,
+  bladKopii: w.krok3.bladKopii,
+  braki: w.krok3.braki,
+});
+
+const TRASA = c.trasa;
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(TRASA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(w.okruszkiStrona, 'Strona główna'), adres: '/' },
+  { nazwa: w.okruszkiNarzedzia, adres: '/darmowe-narzedzia/' },
+  { nazwa: c.okruszek, adres: TRASA },
+];
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: c.naglowek,
+      description: c.opisWyszukiwarki,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+const czesci = (t: string) => kawalki(t);
+---
+
+<Bazowy tytul={c.tytulKarty} opis={c.opisWyszukiwarki}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="generator">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="generator__tytul">{c.naglowek}</h1>
+    <p class="generator__lead">{c.lead}</p>
+
+    <div class="gen" data-gen data-api={api} data-plik={c.plik} data-css={w.eksportCss} data-i={interfejs} data-b={JSON.stringify(w.braki)}>
+      <div class="gen__kroki">
+        <DaneFirmy d={w.krok1} numer={1} />
+        <Zetony d={c.krok2} numer={2} />
+      </div>
+      <Dokument d={w.krok3} szablon={szablon} sprawdz={c.sprawdz} numer={3} />
+    </div>
+
+    <div class="gen__opis">
+      <section class="blok" aria-labelledby="g-jak">
+        <h2 id="g-jak">{w.jakNaglowek}</h2>
+        <ol>
+          {w.jak.map((j) => <li>{j}</li>)}
+        </ol>
+      </section>
+      <section class="blok" aria-labelledby="g-zawiera">
+        <h2 id="g-zawiera">{w.zawieraNaglowek}</h2>
+        <ul class="zawiera">
+          {sekcje.map((s) => <li>{s.tytul}</li>)}
+        </ul>
+        <p class="blok__nota">{w.zawieraPodpis}</p>
+      </section>
+      <section class="blok" aria-labelledby="g-prywatnosc">
+        <h2 id="g-prywatnosc">{w.prywatnosc.naglowek}</h2>
+        {w.prywatnosc.akapity.map((a) => <p>{czesci(a).map((k) => (k.adres ? <a href={k.adres}>{k.tekst}</a> : k.tekst))}</p>)}
+      </section>
+      <section class="blok" aria-labelledby="g-zastrzezenie">
+        <h2 id="g-zastrzezenie">{w.zastrzezenie.naglowek}</h2>
+        {w.zastrzezenie.akapity.map((a) => <p>{a}</p>)}
+      </section>
+    </div>
+
+    <section class="wezwanie" aria-labelledby="g-wezwanie">
+      <h2 id="g-wezwanie">{w.wezwanie.naglowek}</h2>
+      <p>{w.wezwanie.tekst}</p>
+      <a class="guzik" href={w.wezwanie.adres}>{w.wezwanie.guzik}</a>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style is:global>
+  .generator {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na pozostałych podstronach (jedna linia, D14). */
+  .generator .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+  .generator .okruszki li { display: inline-flex; align-items: center; flex: 0 0 auto; white-space: nowrap; }
+  .generator .okruszki li:last-child { flex: 1 1 0; min-width: 0; contain: inline-size; }
+  .generator .okruszki [aria-current] { display: block; overflow: hidden; text-overflow: ellipsis; line-height: 44px; }
+  .generator .okruszki li + li::before { content: '›'; margin-right: var(--o-2); }
+  .generator .okruszki a { display: inline-flex; align-items: center; min-height: 44px; }
+  .generator .okruszki a:hover { color: var(--tekst); }
+
+  .generator__tytul,
+  .generator__lead { max-width: 44rem; margin-inline: auto; text-align: center; }
+  .generator__tytul { font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl)); }
+  .generator__lead { margin-block: var(--o-4) 0; font-size: var(--t-l); line-height: 1.5; color: var(--tekst-cichy); }
+
+  .gen { display: grid; gap: var(--o-6); margin-top: var(--o-12); }
+  .gen__kroki { display: grid; gap: var(--o-6); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 64rem) {
+    .gen__kroki { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  }
+
+  .krok { padding: var(--o-6); background: var(--powierzchnia); border-radius: var(--promien); min-width: 0; }
+  .krok__tytul { display: flex; align-items: center; gap: var(--o-3); margin: 0; font-size: var(--t-l); }
+  .krok__numer {
+    flex: none; display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%;
+    background: var(--akcent); color: #fff; font-size: var(--t-s); font-weight: 600;
+  }
+  .krok__lead { margin: var(--o-3) 0 var(--o-6); color: var(--tekst-cichy); }
+
+  /* Pola i żetony: ten sam wygląd co formularz /kontakt/. */
+  .gen .pole { display: grid; gap: var(--o-1); align-content: start; }
+  .gen .pole label { font-weight: 600; }
+  .gen .podpowiedz { margin: 0; font-size: var(--t-s); color: var(--tekst-cichy); }
+  .gen input[type='text'], .gen input[type='email'], .gen input[type='tel'] {
+    width: 100%; min-height: 44px; padding: var(--o-2) var(--o-3); font: inherit; color: var(--tekst);
+    background: #fff; border: 1px solid var(--tekst-cichy); border-radius: var(--promien-maly);
+  }
+  .gen input:focus-visible { outline: 3px solid var(--akcent); outline-offset: 1px; }
+  .gen [aria-invalid='true'] { border-color: #a1260d; border-width: 2px; }
+  .gen .pola { display: grid; gap: var(--o-4); margin-top: var(--o-6); grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .gen .pole--szeroka { grid-column: 1 / -1; }
+  .gen .nip { display: flex; flex-wrap: wrap; gap: var(--o-2); }
+  .gen .nip input { flex: 1 1 11rem; width: auto; max-width: 16rem; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+  .gen .stan { margin: var(--o-2) 0 0; font-size: var(--t-s); color: var(--akcent); font-weight: 600; }
+  .gen .stan:empty, .gen .braki:empty { display: none; }
+  .gen .blad {
+    margin: var(--o-2) 0 0; padding: var(--o-3) var(--o-4); border-left: 4px solid #a1260d; background: #fbeae6; color: #6e1a09;
+    font-weight: 600; border-radius: var(--promien-maly);
+  }
+  .gen .blad[hidden] { display: none; }
+  .gen .braki { margin: var(--o-2) 0 0; font-size: var(--t-s); color: var(--tekst-cichy); }
+
+  .gen .grupa { margin: 0 0 var(--o-6); padding: 0; border: 0; min-width: 0; }
+  .gen .grupa:last-child { margin-bottom: 0; }
+  .gen legend { padding: 0; margin-bottom: var(--o-2); font-weight: 600; font-size: var(--t-m); }
+  .gen .zetony { display: flex; flex-wrap: wrap; gap: var(--o-2); margin-top: var(--o-2); }
+  .gen .zeton { position: relative; display: inline-flex; }
+  .gen .zeton input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .gen .zeton span {
+    display: inline-flex; align-items: center; min-height: 44px; padding: var(--o-2) var(--o-4);
+    border: 1px solid var(--linia); border-radius: 999px; background: var(--tlo); font-size: var(--t-s); cursor: pointer;
+  }
+  .gen .zeton input:checked + span { background: var(--akcent); border-color: var(--akcent); color: #fff; font-weight: 600; }
+  .gen .zeton input:checked + span::before { content: '✓'; margin-right: var(--o-2); }
+  .gen .zeton input:focus-visible + span { outline: 3px solid var(--akcent); outline-offset: 2px; }
+  .gen .zeton:hover span { border-color: var(--tekst-cichy); }
+  .gen .wers { margin-top: var(--o-4); }
+  .gen .wers .podpowiedz { margin-top: var(--o-2); }
+
+  .gen .guzik {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--o-6);
+    font: inherit; font-weight: 600; color: #fff; background: var(--akcent); border: 0; border-radius: var(--promien-maly);
+    text-decoration: none; cursor: pointer;
+  }
+  .gen .guzik:hover { background: var(--tekst); }
+  .gen .guzik:focus-visible, .wezwanie .guzik:focus-visible { outline: 3px solid var(--tekst); outline-offset: 3px; }
+  .gen .guzik[hidden] { display: none; }
+  .gen .guzik[aria-busy='true'] { opacity: 0.7; cursor: progress; }
+  .gen .guzik--drugi { color: var(--tekst); background: transparent; border: 1.5px solid var(--tekst-cichy); }
+  .gen .guzik--drugi:hover { color: #fff; }
+  .gen .narzedzia-dok { display: flex; flex-wrap: wrap; gap: var(--o-3); }
+  .gen .narzedzia-dok[hidden] { display: none; }
+
+  /* Podgląd dokumentu: biała kartka na pełną szerokość, treść w kolumnach jak /regulamin/ i /polityka-prywatnosci/. */
+  .gen .dok { margin-top: var(--o-4); padding: var(--o-6); background: #fff; border: 1px solid var(--linia); border-radius: var(--promien); }
+  .gen .dok:empty { display: none; }
+  .gen .dok [hidden] { display: none !important; }
+  .dok__tytul { margin: 0; font-size: clamp(var(--t-l), 2vw + 1rem, var(--t-xl)); text-align: center; }
+  .dok__wersja { margin: var(--o-2) 0 0; text-align: center; font-size: var(--t-s); color: var(--tekst-cichy); }
+  .dok__tresc { margin-top: var(--o-6); columns: 24rem; column-gap: var(--o-12); column-rule: 1px solid var(--linia); }
+  .dok__tresc h4 { margin: var(--o-6) 0 var(--o-2); font-size: var(--t-m); line-height: 1.25; break-after: avoid; }
+  .dok__tresc section:first-child h4 { margin-top: 0; }
+  .dok .dok__tresc p, .dok .dok__tresc li { margin: 0 0 var(--o-3); line-height: 1.6; orphans: 3; widows: 3; }
+  .dok .dok__tresc ul, .dok .dok__tresc ol { margin: 0 0 var(--o-3); padding-left: 1.5rem; }
+  .dok .dok__tresc ol.ust > li > ul { list-style: lower-alpha; margin: var(--o-2) 0 0; }
+  .dok__tresc a { font-weight: 600; text-decoration: underline; text-underline-offset: 0.15em; }
+  .dok__stopka { margin: var(--o-6) 0 0; font-size: var(--t-s); color: var(--tekst-cichy); text-align: center; }
+  .dok .brak { background: #fff3b0; border-radius: 2px; }
+  .dok__tabela { column-span: all; margin: var(--o-3) 0; overflow-x: auto; }
+  .dok__tabela table { width: 100%; border-collapse: collapse; font-size: var(--t-s); }
+  .dok__tabela th, .dok__tabela td { padding: var(--o-2) var(--o-3); text-align: left; vertical-align: top; border: 1px solid var(--linia); }
+  .dok__tabela th { background: var(--powierzchnia); }
+
+  .gen .sprawdz { margin-top: var(--o-6); padding: var(--o-4) var(--o-6); background: var(--tlo); border-left: 4px solid var(--akcent); border-radius: var(--promien-maly); }
+  .gen .sprawdz h3 { margin: 0 0 var(--o-2); font-size: var(--t-m); }
+  .gen .sprawdz ul { margin: 0; padding-left: 1.25rem; line-height: 1.6; }
+
+  /* Opisy pod narzędziem: 2 kolumny od 64 rem. */
+  .gen__opis { display: grid; gap: var(--o-8) var(--o-12); margin-top: var(--o-12); grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 64rem) {
+    .gen__opis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .blok h2 { margin: 0 0 var(--o-3); font-size: var(--t-l); }
+  .blok p, .blok li { line-height: 1.6; }
+  .blok ol, .blok ul { margin: 0; padding-left: 1.5rem; }
+  .blok li + li { margin-top: var(--o-2); }
+  .blok p { margin: 0 0 var(--o-3); }
+  .blok a { font-weight: 600; text-decoration: underline; text-underline-offset: 0.15em; }
+  .zawiera { columns: 2 14rem; column-gap: var(--o-6); }
+  .blok__nota { margin-top: var(--o-3); font-size: var(--t-s); color: var(--tekst-cichy); }
+
+  .wezwanie { margin-top: var(--o-12); padding: var(--o-8) var(--o-6); text-align: center; background: var(--powierzchnia); border-radius: var(--promien); }
+  .wezwanie h2 { margin: 0; font-size: var(--t-l); }
+  .wezwanie p { max-width: 36rem; margin: var(--o-3) auto var(--o-6); }
+  .wezwanie .guzik {
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--o-6); font-weight: 600; color: #fff;
+    background: var(--akcent); border-radius: var(--promien-maly); text-decoration: none;
+  }
+  .wezwanie .guzik:hover { background: var(--tekst); }
+
+  /* Wydruk i „zapisz jako PDF”: zostaje sam dokument (ścieżka body > main > .gen > .krok--dok > .dok). */
+  @media print {
+    body > :not(main), main > :not(.gen), .gen > :not(.krok--dok), .krok--dok > :not(.dok) { display: none !important; }
+    .generator { max-width: none; padding: 0; }
+    .gen { margin: 0; }
+    .krok--dok { padding: 0; background: none; }
+    .gen .dok { margin: 0; padding: 0; border: 0; }
+    .dok__tresc { columns: 1; column-rule: 0; }
+    .dok .brak { background: none; }
+  }
+</style>
+
+<script>
+  // Generator: pobieranie danych firmy po NIP, składanie dokumentu z <template>, kopiowanie, pobieranie HTML, druk. Nic nie zapisuje w pamięci przeglądarki.
+  const g = document.querySelector<HTMLElement>('[data-gen]');
+  if (g) {
+    const I = JSON.parse(g.dataset.i!);
+    const B: Record<string, string> = JSON.parse(g.dataset.b!);
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+    const dok = $('g-dok');
+    const nip = $<HTMLInputElement>('g-nip');
+    const szukaj = $<HTMLButtonElement>('g-szukaj');
+    const stan = $('g-nip-stan');
+    const blad = $('g-nip-blad');
+    const dokStan = $('g-dok-stan');
+    const wszystkie = <T extends Element>(s: string, r: ParentNode = g) => [...r.querySelectorAll<T>(s)];
+    dok.append($<HTMLTemplateElement>('g-szablon').content.cloneNode(true));
+    const dzis = new Date().toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+    let czas: number;
+
+    const odswiez = () => {
+      const f: Record<string, string> = { data: dzis };
+      wszystkie<HTMLInputElement>('.pola input, #g-nip').forEach((i) => (f[i.name] = i.value.trim()));
+      // Przełącznik „Zamień WERSALIKI”: słowa pisane wielkimi literami dostają wielką tylko pierwszą literę; „z i w o ul. al.” małe, skróty do 3 znaków zostają.
+      if ($<HTMLInputElement>('g-wers').checked)
+        for (const k of ['nazwa', 'ulica', 'miasto'])
+          f[k] = f[k].replace(/\p{L}+\.?/gu, (s) => {
+            const m = s.toLowerCase();
+            return s != s.toUpperCase() ? s : /^(z|i|w|o|ul\.|al\.)$/.test(m) ? m : s.length < 4 ? s : m[0].toUpperCase() + m.slice(1);
+          });
+      f.adres = [f.ulica, [f.kod, f.miasto].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+      const z = new Set(wszystkie<HTMLInputElement>('.zeton input:checked').map((i) => i.value));
+      const ma = (n: string) => z.has(n) || !!f[n];
+      wszystkie<HTMLElement>('[data-f]', dok).forEach((e) => {
+        const v = f[e.dataset.f!];
+        e.textContent = v || '[' + B[e.dataset.f!] + ']';
+        e.classList.toggle('brak', !v);
+      });
+      wszystkie<HTMLElement>('[data-w]', dok).forEach((e) => {
+        e.hidden = !e.dataset.w!.split('|').some((c) => c.split('&').every((n) => (n[0] == '!' ? !ma(n.slice(1)) : ma(n))));
+      });
+      wszystkie<HTMLElement>('.dok__tresc > section:not([hidden]) .nr', dok).forEach((e, i) => (e.textContent = '§ ' + (i + 1) + '. '));
+      const brak = [...new Set(wszystkie<HTMLElement>('.brak', dok).filter((e) => !e.closest('[hidden]')).map((e) => B[e.dataset.f!]))];
+      $('g-braki').textContent = brak.length ? I.braki + brak.join(', ') + '.' : '';
+    };
+    const opoznij = () => {
+      clearTimeout(czas);
+      czas = window.setTimeout(odswiez, 150);
+    };
+
+    g.addEventListener('input', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t == nip) t.value = t.value.replace(/\D/g, '').slice(0, 10);
+      opoznij();
+    });
+    g.addEventListener('change', (e) => {
+      const t = e.target as HTMLInputElement;
+      // Narzędzie wymagające zgody wyklucza „tylko niezbędne” i odwrotnie.
+      if (t.checked && (t.value == 'niezbedne' || t.dataset.zgoda))
+        wszystkie<HTMLInputElement>(t.value == 'niezbedne' ? '[data-zgoda]' : '[value=niezbedne]').forEach((i) => (i.checked = false));
+      odswiez();
+    });
+
+    // ── Krok 1: dane firmy z rejestrów ──
+    const zle = (t: string) => {
+      stan.textContent = '';
+      blad.textContent = t;
+      blad.hidden = false;
+      nip.setAttribute('aria-invalid', 'true');
+      nip.focus();
+    };
+    const sumaOk = (n: string) => /^\d{10}$/.test(n) && [6, 5, 7, 2, 3, 4, 5, 6, 7].reduce((s, w, i) => s + w * +n[i], 0) % 11 == +n[9];
+    const pobierz = async () => {
+      if (szukaj.hasAttribute('aria-busy')) return;
+      blad.hidden = true;
+      nip.removeAttribute('aria-invalid');
+      stan.textContent = '';
+      if (!sumaOk(nip.value)) return zle(I.bledy.nip);
+      szukaj.setAttribute('aria-busy', 'true');
+      stan.textContent = I.laduje;
+      try {
+        const d = await (await fetch(g.dataset.api + '?nip=' + nip.value, { signal: AbortSignal.timeout(15000) })).json();
+        if (d.blad) return zle(I.bledy[d.blad] || I.bledy.siec);
+        const a = d.adres || {};
+        const w: Record<string, string> = {
+          nazwa: d.nazwa, forma_prawna: d.forma_prawna, ulica: [a.ulica, a.numer].filter(Boolean).join(' '),
+          kod: a.kod, miasto: a.miasto, nip: d.nip || nip.value, regon: d.regon, krs: d.krs,
+        };
+        for (const k in w) $<HTMLInputElement>('g-' + k).value = w[k] || '';
+        stan.textContent = I.sukces.replace('{z}', (d.zrodla || []).join(', ')).replace('{k}', String(d.pobrano || '').replace(/(\d+)-(\d+)-(\d+)T(\S+)/, '$3.$2.$1, $4'));
+        odswiez();
+      } catch {
+        zle(I.bledy.siec);
+      } finally {
+        szukaj.removeAttribute('aria-busy');
+      }
+    };
+    szukaj.hidden = false;
+    $('g-wers-w').hidden = false;
+    szukaj.addEventListener('click', pobierz);
+    nip.addEventListener('keydown', (e) => {
+      if (e.key == 'Enter') {
+        e.preventDefault();
+        pobierz();
+      }
+    });
+
+    // ── Krok 3: kopiowanie, plik HTML, druk ──
+    const tx = (e: Element): string =>
+      [...e.children]
+        .filter((c) => !(c as HTMLElement).hidden)
+        .map((c) => {
+          const t = c.tagName;
+          if (t == 'P' || t == 'H3' || t == 'H4') return c.textContent;
+          if (t == 'UL' || t == 'OL')
+            return [...c.children]
+              .filter((l) => !(l as HTMLElement).hidden)
+              .map((l, i) => (t == 'OL' ? i + 1 + '. ' : '- ') + [...l.childNodes].filter((n) => !/^[UO]L$/.test((n as Element).tagName || '')).map((n) => n.textContent).join('') + (l.querySelector('ul') ? '\n' + tx(l).replace(/^/gm, '   ') : ''))
+              .join('\n');
+          if (t == 'TABLE') return [...(c as HTMLTableElement).rows].filter((r) => !r.hidden).map((r) => [...r.cells].map((k) => k.textContent).join(' | ')).join('\n');
+          return tx(c);
+        })
+        .filter(Boolean)
+        .join('\n\n');
+    $('g-narzedzia').hidden = false;
+    $('g-kopiuj').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(tx(dok).trim());
+        dokStan.textContent = I.skopiowano;
+      } catch {
+        dokStan.textContent = I.bladKopii;
+      }
+    });
+    $('g-pobierz').addEventListener('click', () => {
+      const c = dok.cloneNode(true) as HTMLElement;
+      wszystkie('[hidden]', c).forEach((e) => e.remove());
+      const tytul = c.querySelector('h3')!.textContent!.replaceAll('&', '&amp;').replaceAll('<', '&lt;');
+      const html =
+        '<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + tytul + '</title><style>' + g.dataset.css + '</style></head><body>' +
+        c.innerHTML.replace(/<(\/?)h([34])/g, (_, s, n) => '<' + s + 'h' + (n - 2)) + '</body></html>';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+      a.download = g.dataset.plik + (nip.value ? '-' + nip.value : '') + '.html';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1e4);
+    });
+    $('g-drukuj').addEventListener('click', () => window.print());
+
+    odswiez();
+  }
+</script>

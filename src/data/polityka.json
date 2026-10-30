@@ -33,7 +33,7 @@
       "id": "zakres",
       "naglowek": "Czego dotyczy ta polityka",
       "akapity": [
-        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), okna zgody na pliki cookie i przełącznika języków w stopce.",
+        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), [generatorów regulaminu i polityki prywatności](/darmowe-narzedzia/), okna zgody na pliki cookie i przełącznika języków w stopce.",
         "Strona nie prowadzi sprzedaży, nie zakłada kont, nie wysyła newslettera i nie pokazuje reklam."
       ]
     },
@@ -164,6 +164,17 @@
       ]
     },
     {
+      "id": "generatory",
+      "naglowek": "Generatory regulaminu i polityki prywatności: NIP i dane firmy",
+      "akapity": [
+        "W [darmowych narzędziach](/darmowe-narzedzia/) możesz wpisać NIP firmy, a generator regulaminu albo polityki prywatności pobierze jej dane z rejestrów. Przeglądarka wysyła wtedy sam NIP do naszego skryptu na serwerze LH.pl, a skrypt pyta o dane firmy rejestry urzędowe: białą listę podatników VAT Ministerstwa Finansów, Krajowy Rejestr Sądowy i, gdy firma nie ma numeru KRS, Centralną Ewidencję i Informację o Działalności Gospodarczej (CEIDG).",
+        "Skrypt przechowuje odpowiedź rejestrów na serwerze przez 24 godziny, żeby nie pytać urzędów o ten sam NIP wielokrotnie; stare odpowiedzi usuwa przy kolejnych zapytaniach. Liczy też zapytania z danego adresu IP, żeby jedna osoba nie wyczerpała limitów rejestrów. Adresu IP w liczniku nie przechowujemy w postaci jawnej, tylko jako skrót z tajną solą. Dziennik skryptu zawiera tylko czas i kod wyniku, bez NIP-u i adresu IP, i jest usuwany po 30 dniach. Standardowe logi połączeń serwera hostingu mogą zapisać adres zapytania razem z NIP-em.",
+        "NIP przedsiębiorcy prowadzącego jednoosobową działalność może być daną osobową. Przetwarzamy go tylko po to, żeby wyświetlić Ci dane firmy i chronić usługę przed nadużyciami. Podstawą jest art. 6 ust. 1 lit. f RODO, czyli nasz prawnie uzasadniony interes w świadczeniu bezpłatnego narzędzia i jego zabezpieczeniu.",
+        "Pozostałe dane (e-mail, telefon, adres strony i Twoje wybory) oraz gotowy dokument powstają wyłącznie w Twojej przeglądarce. Nie wysyłamy ich na nasz serwer, nie zapisujemy wygenerowanych dokumentów i nie zapamiętujemy ich w pamięci przeglądarki. Pobranie pliku HTML albo wydruk odbywa się na Twoim urządzeniu.",
+        "Generatory tworzą dokument informacyjny, który nie jest poradą prawną. Za treść opublikowaną na Twojej stronie odpowiadasz Ty."
+      ]
+    },
+    {
       "id": "zasoby-zewnetrzne",
       "naglowek": "Czcionki i zasoby zewnętrzne",
       "akapity": [
@@ -177,7 +188,7 @@
       "naglowek": "Hosting i logi serwera",
       "akapity": [
         "Strona działa na GitHub Pages, usłudze GitHub, Inc. z siedzibą w Stanach Zjednoczonych. GitHub zapisuje adres IP odwiedzających stronę w celach bezpieczeństwa.",
-        "Skrypt formularza i skrzynka pocztowa działają na serwerach LH.pl Sp. z o.o. Ta firma przetwarza dane na zlecenie administratora, jako podmiot przetwarzający. Serwer zapisuje standardowe logi połączeń: adres IP, datę i godzinę, adres pobranego pliku oraz informacje o przeglądarce i błędach.",
+        "Skrypt formularza i generatorów oraz skrzynka pocztowa działają na serwerach LH.pl Sp. z o.o. Ta firma przetwarza dane na zlecenie administratora, jako podmiot przetwarzający. Serwer zapisuje standardowe logi połączeń: adres IP, datę i godzinę, adres pobranego pliku oraz informacje o przeglądarce i błędach.",
         "Logi służą bezpieczeństwu i utrzymaniu serwera. Podstawą jest art. 6 ust. 1 lit. f RODO. Okres przechowywania logów wynika z zasad dostawców hostingu."
       ]
     },
@@ -189,7 +200,8 @@
       ],
       "lista": [
         "GitHub, Inc.: hosting strony (adres IP i informacje techniczne o przeglądarce)",
-        "LH.pl Sp. z o.o.: skrypt formularza i poczta, na którą trafiają wiadomości z formularza",
+        "LH.pl Sp. z o.o.: skrypt formularza i generatorów (NIP wpisany w generatorze) oraz poczta, na którą trafiają wiadomości z formularza",
+        "Ministerstwo Finansów, Krajowy Rejestr Sądowy i CEIDG: rejestry urzędowe, do których nasz skrypt wysyła NIP (i numer KRS, który zwróciła biała lista), żeby pobrać dane firmy dla generatorów",
         "Cloudflare, Inc.: ochrona formularza kontaktowego usługą Turnstile (adres IP i informacje techniczne o przeglądarce)",
         "GTranslate Inc. i Google LLC: przełącznik języków i tłumaczenie strony, gdy z nich korzystasz (adres IP, informacje o przeglądarce i treść tłumaczonej podstrony)",
         "osoby upoważnione przez administratora, które obsługują zapytania",
@@ -208,6 +220,7 @@
         "wiadomości z formularza: przez czas obsługi zapytania, a jeśli nie dojdzie do umowy, do 12 miesięcy od ostatniego kontaktu",
         "wpis w dzienniku nieudanych wysyłek formularza: do obsługi zapytania",
         "dane osób, które zamówiły usługę: przez czas wykonania umowy, okres przedawnienia roszczeń i okres wymagany przepisami podatkowymi",
+        "odpowiedź rejestrów dla NIP wpisanego w generatorze: 24 godziny; licznik zapytań z adresu IP (skrót z solą): 2 godziny; dziennik skryptu bez NIP-u i adresu IP: 30 dni",
         "logi serwera: przez okres wynikający z zasad dostawców hostingu",
         "pamięć sesji przeglądarki: wyliczenia, dane z formularza i wynik testu szybkości do zamknięcia karty albo wysłania zapytania",
         "wybór z okna cookie i wybrany język tłumaczenia: do zmiany albo wyczyszczenia danych strony w przeglądarce"

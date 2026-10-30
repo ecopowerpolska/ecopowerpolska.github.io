@@ -30,7 +30,9 @@
             "Kalkulator cen z koszykiem wycen ([Cena](/cena/)): wyliczasz orientacyjną cenę strony albo sklepu, a do pięciu wyliczeń zostaje w pamięci Twojej przeglądarki, dopóki nie zamkniesz karty ani nie wyślesz zapytania.",
             "Test szybkości strony ([Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/)): wpisujesz adres strony, a pomiar wykonuje Google PageSpeed Insights. Wpisany adres trafia do Google.",
             "Blog i treści informacyjne ([Blog](/blog/), [FAQ](/faq/), opisy usług i realizacji): możesz je czytać bez żadnych formalności.",
-            "Tłumaczenie strony: przełącznik języków GTranslate w stopce. Tłumaczy automatycznie Google, a wersją źródłową jest polska."
+            "Tłumaczenie strony: przełącznik języków GTranslate w stopce. Tłumaczy automatycznie Google, a wersją źródłową jest polska.",
+            "Generator regulaminu serwisu ([Darmowe narzędzia](/darmowe-narzedzia/)): wpisujesz NIP, a my pobieramy dane firmy z rejestrów urzędowych (Ministerstwa Finansów, KRS i CEIDG) przez nasz skrypt na serwerze LH.pl. Z tych danych i Twoich wyborów przeglądarka składa wzór regulaminu, który kopiujesz, pobierasz jako plik HTML albo drukujesz. Wzór jest informacją, a nie poradą prawną.",
+            "Generator polityki prywatności (te same [Darmowe narzędzia](/darmowe-narzedzia/)): działa tak samo jak generator regulaminu, ale składa wzór polityki prywatności. Na naszym serwerze nie zapisujemy ani wpisanych przez Ciebie danych, ani gotowego dokumentu; do skryptu trafia tylko NIP."
           ]
         },
         "Serwis nie ma newslettera ani kont użytkowników i nie prowadzi sprzedaży: nie złożysz w nim zamówienia i nie zapłacisz. Wykonanie strony, sklepu albo opieka nad nimi to usługi poza Serwisem, wykonywane na podstawie osobnych umów."
@@ -41,7 +43,7 @@
       "naglowek": "Wymagania techniczne i bezpieczeństwo",
       "punkty": [
         "Do korzystania z Serwisu potrzebujesz urządzenia z dostępem do internetu i aktualnej przeglądarki, która obsługuje HTML5, CSS i JavaScript.",
-        "Treści czytasz także z wyłączonym JavaScriptem. Bez niego kalkulator, koszyk wycen i test szybkości nie działają w pełni.",
+        "Treści czytasz także z wyłączonym JavaScriptem. Bez niego kalkulator, koszyk wycen, test szybkości i generatory dokumentów nie działają w pełni.",
         "Serwis zapisuje w pamięci Twojej przeglądarki wpisy techniczne, na przykład wyliczenia z kalkulatora, szkic formularza i Twój wybór w oknie zgody. Ich nazwy, cel i czas przechowywania opisuje [Polityka prywatności](/polityka-prywatnosci/). Wybór zmienisz w każdej chwili przyciskiem „Ustawienia cookie” w stopce.",
         "Korzystanie z internetu wiąże się z zagrożeniami, takimi jak złośliwe oprogramowanie, wyłudzanie danych i podsłuch w publicznych sieciach. Zadbaj o aktualną przeglądarkę i system oraz o program zabezpieczający. Formularz nie prosi o hasła ani dane kart płatniczych, więc nie wpisuj ich w wiadomości."
       ]
@@ -86,6 +88,7 @@
         "Serwis zawiera odnośniki do stron innych podmiotów, na przykład Google PageSpeed Insights i stron naszych realizacji. Nie odpowiadamy za ich treść ani zasady.",
         "Wyniki testu szybkości pochodzą od Google PageSpeed Insights. Zależą od chwili pomiaru, sieci i serwera badanej strony, więc kolejne pomiary mogą się różnić. Nie odpowiadamy za ich dokładność ani za decyzje podjęte na ich podstawie.",
         "Tłumaczenie automatyczne wykonuje Google i może zawierać błędy. W razie wątpliwości obowiązuje wersja polska.",
+        "Dokumenty z generatorów regulaminu i polityki prywatności to wzory informacyjne, a nie porada prawna. Dane firmy pochodzą z rejestrów urzędowych i mogą być nieaktualne albo niepełne. Za sprawdzenie dokumentu, dopasowanie go do swojej działalności i za jego publikację odpowiada osoba, która z niego korzysta.",
         "Za treść wiadomości wysłanej formularzem odpowiadasz Ty.",
         "Regulamin nie wyłącza ani nie ogranicza odpowiedzialności w zakresie, w jakim przepisy bezwzględnie obowiązujące tego zakazują, w tym wobec konsumentów."
       ]

@@ -1,0 +1,52 @@
+---
+// Krok 1 generatora: NIP + guzik pobierania danych z rejestrów (guzik pokazuje dopiero skrypt) i edytowalne pola firmy.
+// Bez JS pola działają jak zwykłe pola do wpisania. Teksty: src/data/generator.json → wspolne.krok1.
+type Pole = { id: string; etykieta: string; ac?: string; typ?: string; tryb?: string; podpowiedz?: string; szeroka?: boolean };
+interface Props {
+  d: { naglowek: string; lead: string; nipEtykieta: string; nipPodpowiedz: string; guzik: string; wersaliki: string; wersalikiPodpowiedz: string; pola: Pole[] };
+  numer: number;
+}
+const { d, numer } = Astro.props;
+---
+
+<section class="krok" aria-labelledby="g-krok1">
+  <h2 class="krok__tytul" id="g-krok1"><span class="krok__numer" aria-hidden="true">{numer}</span>{d.naglowek}</h2>
+  <p class="krok__lead">{d.lead}</p>
+
+  <div class="pole pole--nip">
+    <label for="g-nip">{d.nipEtykieta}</label>
+    <p class="podpowiedz" id="g-nip-pod">{d.nipPodpowiedz}</p>
+    <div class="nip">
+      <input id="g-nip" name="nip" type="text" inputmode="numeric" autocomplete="off" aria-describedby="g-nip-pod g-nip-stan g-nip-blad" />
+      <button class="guzik nip__guzik" type="button" id="g-szukaj" hidden>{d.guzik}</button>
+    </div>
+    <p class="stan" id="g-nip-stan" role="status"></p>
+    <p class="blad" id="g-nip-blad" role="alert" hidden></p>
+  </div>
+
+  <div class="pola">
+    {d.pola.map((p) => (
+      <div class:list={['pole', { 'pole--szeroka': p.szeroka }]}>
+        <label for={`g-${p.id}`}>{p.etykieta}</label>
+        <input
+          id={`g-${p.id}`}
+          name={p.id}
+          type={(p.typ ?? 'text') as 'text'}
+          inputmode={p.tryb as 'text' | undefined}
+          autocomplete={p.ac}
+          placeholder={p.podpowiedz}
+        />
+      </div>
+    ))}
+  </div>
+
+  <div class="wers" id="g-wers-w" hidden>
+    <div class="zetony">
+      <label class="zeton">
+        <input type="checkbox" id="g-wers" value="wersaliki" aria-describedby="g-wers-pod" />
+        <span>{d.wersaliki}</span>
+      </label>
+    </div>
+    <p class="podpowiedz" id="g-wers-pod">{d.wersalikiPodpowiedz}</p>
+  </div>
+</section>

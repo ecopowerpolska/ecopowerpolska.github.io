@@ -1,13 +1,13 @@
 {
   "tytulKarty": "Darmowe narzędzia dla właścicieli stron: test szybkości, generator regulaminu i polityki | EcoPower Polska",
-  "opisWyszukiwarki": "Bezpłatne narzędzia dla właścicieli stron i sklepów: test szybkości strony w Google PageSpeed oraz, wkrótce, generator regulaminu i polityki prywatności na podstawie NIP firmy.",
+  "opisWyszukiwarki": "Bezpłatne narzędzia dla właścicieli stron i sklepów: test szybkości strony w Google PageSpeed oraz generator regulaminu i polityki prywatności na podstawie NIP firmy.",
   "okruszek": "Darmowe narzędzia",
   "naglowek": "Darmowe narzędzia dla właścicieli stron",
   "lead": "Bezpłatne, bez logowania, działają w przeglądarce.",
   "etykietaSiatki": "Lista narzędzi",
   "stanDziala": "Działa",
   "stanWkrotce": "W przygotowaniu",
-  "nota": "Narzędzia są bezpłatne i nie wymagają konta. Danych wpisanych w narzędziach nie zapisujemy na naszym serwerze: w teście szybkości adres strony trafia do Google, a nie do nas (więcej w [polityce prywatności](/polityka-prywatnosci/)).",
+  "nota": "Narzędzia są bezpłatne i nie wymagają konta. W teście szybkości adres strony trafia do Google, a nie do nas. W generatorach do naszego skryptu na lh.pl trafia tylko NIP (skrypt pyta o dane firmy rejestry urzędowe), a gotowy dokument powstaje w Twojej przeglądarce i nie jest nigdzie zapisywany (więcej w [polityce prywatności](/polityka-prywatnosci/)).",
   "kafelki": [
     {
       "id": "test-szybkosci",
@@ -24,24 +24,20 @@
       "ikona": "regulamin",
       "nazwa": "Generator regulaminu serwisu",
       "opis": "Podasz NIP, pobierzemy dane firmy z rejestru i złożymy regulamin świadczenia usług drogą elektroniczną do pobrania.",
-      "stan": "wkrotce",
-      "adres": "",
-      "guzik": "Wkrótce",
-      "powiadom": "Powiadom mnie",
-      "powiadomAdres": "/kontakt/",
-      "api": ""
+      "stan": "dziala",
+      "adres": "/generator-regulaminu/",
+      "guzik": "Otwórz",
+      "api": "https://pan-stolarz.pl/formularz/ecopower/firma.php"
     },
     {
       "id": "generator-polityki-prywatnosci",
       "ikona": "prywatnosc",
       "nazwa": "Generator polityki prywatności",
       "opis": "Podasz NIP, pobierzemy dane firmy z rejestru i złożymy politykę prywatności zgodną z RODO, z plikami cookie i narzędziami używanymi na stronie.",
-      "stan": "wkrotce",
-      "adres": "",
-      "guzik": "Wkrótce",
-      "powiadom": "Powiadom mnie",
-      "powiadomAdres": "/kontakt/",
-      "api": ""
+      "stan": "dziala",
+      "adres": "/generator-polityki-prywatnosci/",
+      "guzik": "Otwórz",
+      "api": "https://pan-stolarz.pl/formularz/ecopower/firma.php"
     }
   ]
 }

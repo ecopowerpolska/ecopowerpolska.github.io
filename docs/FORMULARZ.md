@@ -38,6 +38,46 @@ Sekret Turnstile (wartość tylko w zmiennej, z API Cloudflare tokenem `cloudfla
 `GET accounts/a4bd3ef73ffd555540dd362fa6250242/challenges/widgets/0x4AAAAAAFocIUKeGUjpJcZ3` → `result.secret` →
 `printf "<?php\nreturn ['turnstile_sekret' => '%s'];\n" "$SEK" | ssh … 'umask 077; cat > …/konfig/ecopowerpolska.pl.php; chmod 600 …'`; `unset SEK`.
 
+### 3a. `firma.php` — dane firmy po NIP (od 2026-10-30; generatory w `/darmowe-narzedzia/`)
+Wgranie tylko tego pliku i `.htaccess` (reszta zostaje; `konfig/` i `stan/` nietknięte):
+```bash
+cd strony/ecopowerpolska.pl/formularz
+tar -cf - firma.php .htaccess | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 \
+  serwer263249@serwer263249.lh.pl 'set -e; cd public_html/pan-stolarz.pl/formularz/ecopower; tar -xf -; chmod 644 firma.php .htaccess; php -l firma.php'
+```
+Token CEIDG i sól skrótu IP dopisujemy do TEGO SAMEGO pliku `konfig/ecopowerpolska.pl.php` co sekret Turnstile (zostaje nietknięty). Wartości
+idą tylko standardowym wejściem ssh, nigdy w argumentach (nie widać ich w `ps`), kod PHP jedzie jako base64:
+```bash
+KOD=$(cat <<'PHP'
+[$t, $s] = array_map('trim', [(string)fgets(STDIN), (string)fgets(STDIN)]);
+if ($t === '' || $s === '') { fwrite(STDERR, "brak wartosci\n"); exit(1); }
+$p = 'konfig/ecopowerpolska.pl.php';
+$k = is_file($p) ? require $p : [];
+$k['ceidg_token'] = $t;
+if (empty($k['sol_ip'])) { $k['sol_ip'] = $s; }
+file_put_contents($p, "<?php\nreturn " . var_export($k, true) . ";\n");
+chmod($p, 0600);
+echo count($k), " kluczy w konfiguracji: ", implode(', ', array_keys($k)), "\n";
+PHP
+)
+B64=$(printf '%s' "$KOD" | base64 -w0)
+T=$(bash /home/ecopower/projekty/test-claude/potwor/scripts/klucze-dostepne.sh ceidg-token)
+printf '%s\n%s\n' "$T" "$(openssl rand -hex 24)" | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 serwer263249@serwer263249.lh.pl \
+  "cd public_html/pan-stolarz.pl/formularz/ecopower && K=\$(echo $B64 | base64 -d) && php -r \"\$K\""
+unset T KOD B64
+```
+Drugi przebieg nie zmienia `sol_ip` (zmiana soli zeruje tylko liczniki IP), a token odnawia. Przed pierwszym użyciem sprawdź `php -l` na koncie.
+Test z żywego adresu (CORS i pamięć podręczna; NIP spółki Piotra, nie jednoosobowej działalności):
+```bash
+U=https://pan-stolarz.pl/formularz/ecopower/firma.php
+curl -s -H 'Origin: https://www.ecopowerpolska.pl' "$U?nip=7011019372"                       # JSON: zrodla MF,KRS, cache:false
+curl -s -H 'Origin: https://www.ecopowerpolska.pl' "$U?nip=7011019372" | grep -o '"cache":true'  # drugie wywołanie z pamięci
+curl -s -o /dev/null -w '%{http_code}\n' "$U?nip=1234567890"                                    # 400 (zła suma kontrolna)
+curl -s -o /dev/null -w '%{http_code}\n' -X POST "$U"                                          # 405
+curl -s -o /dev/null -w '%{http_code}\n' https://pan-stolarz.pl/formularz/ecopower/stan/firma/7011019372.json   # 403
+```
+Limit CEIDG jest wspólny dla konta (nagłówek `x-rate-limit-limit: 1000`). Dokumentacja Hurtowni Danych CEIDG API v3 (v1.4, sekcja 3): „ograniczenie do 1000 żądań w okresie 60 minut” — okno 60 minut, nie doba; bezpiecznik `ceidg_limit_na_godz` (100/h) leży wielokrotnie poniżej. Limit dobowy MF: NIE USTALONO. Jednoosobowych działalności nie testuj w pętli.
+
 ## 4. Kontrola
 ```bash
 U=https://pan-stolarz.pl/formularz/ecopower

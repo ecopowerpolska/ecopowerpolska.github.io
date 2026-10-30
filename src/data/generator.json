@@ -70,7 +70,7 @@
     "prywatnosc": {
       "naglowek": "Twoje dane i ten generator",
       "akapity": [
-        "Wpisany NIP przeglądarka wysyła do naszego skryptu na serwerze LH.pl (pan-stolarz.pl/formularz/ecopower/), a ten pyta o dane firmy rejestry Ministerstwa Finansów (biała lista podatników VAT), Krajowy Rejestr Sądowy i CEIDG. Skrypt przechowuje odpowiedź do 24 godzin i liczy zapytania z danego adresu IP (jako skrót z solą), żeby jedna osoba nie wyczerpała limitów rejestrów. Standardowe logi połączeń serwera hostingu mogą zapisać adres zapytania.",
+        "Wpisany NIP przeglądarka wysyła do naszego skryptu na serwerze w Polsce (hosting LH.pl), a ten pyta o dane firmy rejestry Ministerstwa Finansów (biała lista podatników VAT), Krajowy Rejestr Sądowy i CEIDG. Skrypt przechowuje odpowiedź do 24 godzin i liczy zapytania z danego adresu IP (jako skrót z solą), żeby jedna osoba nie wyczerpała limitów rejestrów. Standardowe logi połączeń serwera hostingu mogą zapisać adres zapytania.",
         "Pozostałe dane (e-mail, telefon, adres strony i Twoje wybory) oraz gotowy dokument powstają w Twojej przeglądarce. Nie wysyłamy ich na nasz serwer i nie zapisujemy w pamięci przeglądarki. Szczegóły: [polityka prywatności](/polityka-prywatnosci/)."
       ]
     },

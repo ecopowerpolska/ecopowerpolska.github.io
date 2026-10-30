@@ -45,7 +45,7 @@
         "Możesz też zaznaczyć, czego potrzebujesz, i wybrać platformę sklepu.",
         "Jeśli dodasz wyliczenia z kalkulatora, formularz wyśle też wybrane w nich pozycje i wyliczone kwoty.",
         "Formularz nie przyjmuje załączników.",
-        "Strona stoi na GitHub Pages, gdzie nie działają skrypty serwera. Wiadomość wysyła więc skrypt na naszym koncie w LH.pl, pod adresem pan-stolarz.pl/formularz/ecopower/. Ta domena należy do tego samego administratora. Wiadomość trafia na skrzynkę {email}. Nie korzystamy z zewnętrznych usług formularzy.",
+        "Strona stoi na GitHub Pages, gdzie nie działają skrypty serwera. Wiadomość wysyła więc nasz skrypt na serwerze w Polsce (hosting LH.pl). Wiadomość trafia na skrzynkę {email}. Nie korzystamy z zewnętrznych usług formularzy.",
         "Dane służą nam do tego, żeby odpowiedzieć na zapytanie i przygotować wycenę.",
         "Razem z wiadomością zapisujemy adres IP, z którego ją wysłano, oraz datę i godzinę wysłania. Pomaga to rozpoznać nadużycia. Te informacje usuwamy razem z wiadomością.",
         "Gdy wysłanie wiadomości się nie uda, serwer zapisuje w dzienniku datę i adres e-mail, żebyśmy mogli odpisać. Ten wpis usuwamy po obsłudze zapytania.",
@@ -200,7 +200,7 @@
       ],
       "lista": [
         "GitHub, Inc.: hosting strony (adres IP i informacje techniczne o przeglądarce)",
-        "LH.pl Sp. z o.o.: skrypt formularza i generatorów (NIP wpisany w generatorze) oraz poczta, na którą trafiają wiadomości z formularza",
+        "LH.pl sp. z o.o. (hosting serwera, na którym działa skrypt formularza i narzędzi): NIP wpisany w generatorze oraz poczta, na którą trafiają wiadomości z formularza",
         "Ministerstwo Finansów, Krajowy Rejestr Sądowy i CEIDG: rejestry urzędowe, do których nasz skrypt wysyła NIP (i numer KRS, który zwróciła biała lista), żeby pobrać dane firmy dla generatorów",
         "Cloudflare, Inc.: ochrona formularza kontaktowego usługą Turnstile (adres IP i informacje techniczne o przeglądarce)",
         "GTranslate Inc. i Google LLC: przełącznik języków i tłumaczenie strony, gdy z nich korzystasz (adres IP, informacje o przeglądarce i treść tłumaczonej podstrony)",

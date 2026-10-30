@@ -33,7 +33,7 @@
       "id": "generator-polityki-prywatnosci",
       "ikona": "prywatnosc",
       "nazwa": "Generator polityki prywatności",
-      "opis": "Podasz NIP, pobierzemy dane firmy z rejestru i złożymy politykę prywatności zgodną z RODO, z plikami cookie i narzędziami używanymi na stronie.",
+      "opis": "Podasz NIP, pobierzemy dane firmy z rejestru i złożymy wzór polityki prywatności opartej na wymaganiach RODO, z plikami cookie i narzędziami używanymi na stronie.",
       "stan": "dziala",
       "adres": "/generator-polityki-prywatnosci/",
       "guzik": "Otwórz",

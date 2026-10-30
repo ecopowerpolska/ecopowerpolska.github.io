@@ -1,0 +1,59 @@
+---
+// /narzedzia/<slug>/ — jedna trasa dla wszystkich narzędzi audytu (runda 9, 2026-10-30). Narzędzie = plik src/data/narzedzia/<slug>.json
+// (pola: _wzor.json; pliki od „_” są pomijane). Układ, SEO, okruszki i dane strukturalne tu, ciało strony w StronaNarzedzia.astro.
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../../components/PasekMarki.astro';
+import Stopka from '../../components/Stopka.astro';
+import StronaNarzedzia from '../../components/narzedzia/StronaNarzedzia.astro';
+import firma from '../../data/firma.json';
+import blog from '../../data/blog.json';
+import { tekst } from '../../lib/tekst';
+
+export function getStaticPaths() {
+  const pliki = import.meta.glob('../../data/narzedzia/*.json', { eager: true }) as Record<string, { default: any }>;
+  return Object.entries(pliki)
+    .filter(([sciezka]) => !(sciezka.split('/').pop() ?? '').startsWith('_'))
+    .map(([, m]) => ({ params: { slug: m.default.slug as string }, props: { dane: m.default } }));
+}
+
+const { dane } = Astro.props;
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(`/narzedzia/${dane.slug}/`, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: 'Darmowe narzędzia', adres: '/darmowe-narzedzia/' },
+  { nazwa: dane.nazwa, adres: `/narzedzia/${dane.slug}/` },
+];
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: dane.nazwa,
+      description: dane.opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={dane.tytulSeo} opis={dane.opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+  <StronaNarzedzia dane={dane} okruszki={okruszki} />
+  <Stopka />
+</Bazowy>

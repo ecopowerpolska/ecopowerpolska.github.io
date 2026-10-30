@@ -1,0 +1,150 @@
+{
+  "slug": "dane-terenowe-crux",
+  "nazwa": "Dane z prawdziwych wizyt (Core Web Vitals)",
+  "tytulSeo": "Core Web Vitals strony z prawdziwych wizyt | EcoPower Polska",
+  "opis": "Darmowe narzędzie: wpisz adres, a zobaczysz, jak szybko Twoja strona działa u prawdziwych odwiedzających i czy zalicza Core Web Vitals Google.",
+  "lead": "Wpisz adres strony, a pokażemy, jak ładuje się u prawdziwych odwiedzających z ostatnich 28 dni: telefon i komputer, wynik adresu oraz całej witryny.",
+  "tryb": "psi",
+  "test": "",
+  "kategoriePsi": [],
+  "psiOba": true,
+  "pozycje": [
+    {
+      "id": "brak-danych",
+      "nazwa": "Dane terenowe",
+      "opis": "Google zbiera je z przeglądarek Chrome prawdziwych odwiedzających przez 28 dni. Mała strona zwykle ich nie ma, bo ma za mało wizyt.",
+      "zalecenie": "Gdy danych brak, o szybkości strony mówi test laboratoryjny: sprawdź ją w teście szybkości strony na tej witrynie.",
+      "waga": 1
+    },
+    {
+      "id": "cwv",
+      "nazwa": "Core Web Vitals tej strony: przechodzi czy nie",
+      "opis": "Google ocenia trzy wskaźniki (LCP, INP i CLS). Strona przechodzi test, gdy wszystkie trzy są w zielonym zakresie u trzech czwartych odwiedzających.",
+      "zalecenie": "Popraw najpierw wskaźnik oznaczony jako słaby; dopiero zielone LCP, INP i CLS naraz oznaczają zaliczony test.",
+      "waga": 3
+    },
+    {
+      "id": "crux:LARGEST_CONTENTFUL_PAINT_MS",
+      "nazwa": "Ta strona: Szybkość pokazania głównej treści (LCP)",
+      "opis": "Czas, po którym odwiedzający widzi największy element strony, zwykle zdjęcie lub nagłówek. Dobry wynik to do 2,5 s, słaby powyżej 4 s.",
+      "zalecenie": "Zmniejsz największe zdjęcie na górze strony, wczytaj je w nowoczesnym formacie i sprawdź czas odpowiedzi serwera.",
+      "waga": 3
+    },
+    {
+      "id": "crux:INTERACTION_TO_NEXT_PAINT",
+      "nazwa": "Ta strona: Reakcja na kliknięcie (INP)",
+      "opis": "Jak szybko strona reaguje, gdy ktoś klika, dotyka ekranu albo pisze. Dobry wynik to do 200 ms, słaby powyżej 500 ms.",
+      "zalecenie": "Usuń lub opóźnij zbędne skrypty (czaty, wtyczki, śledzenie), bo to one blokują reakcję strony.",
+      "waga": 3
+    },
+    {
+      "id": "crux:CUMULATIVE_LAYOUT_SHIFT_SCORE",
+      "nazwa": "Ta strona: Stabilność układu (CLS)",
+      "opis": "Czy treść „skacze” podczas wczytywania, tak że klient klika nie ten przycisk. Dobry wynik to do 0,1, słaby powyżej 0,25.",
+      "zalecenie": "Podaj wymiary wszystkich zdjęć i zarezerwuj miejsce na banery oraz reklamy, zanim się wczytają.",
+      "waga": 3
+    },
+    {
+      "id": "crux:FIRST_CONTENTFUL_PAINT_MS",
+      "nazwa": "Ta strona: Pierwszy widoczny element (FCP)",
+      "opis": "Czas, po którym na ekranie pojawia się cokolwiek poza białą kartką. Dobry wynik to do 1,8 s, słaby powyżej 3 s.",
+      "zalecenie": "Ogranicz zasoby blokujące wyświetlanie, czyli duże arkusze stylów i czcionki wczytywane z zewnątrz.",
+      "waga": 1
+    },
+    {
+      "id": "crux:EXPERIMENTAL_TIME_TO_FIRST_BYTE",
+      "nazwa": "Ta strona: Czas odpowiedzi serwera (TTFB)",
+      "opis": "Po ilu milisekundach serwer zaczyna wysyłać stronę. Dobry wynik to do 0,8 s, słaby powyżej 1,8 s.",
+      "zalecenie": "Włącz pamięć podręczną strony, sprawdź wtyczki i bazę danych albo przejdź na szybszy hosting.",
+      "waga": 2
+    },
+    {
+      "id": "cwv-origin",
+      "nazwa": "Core Web Vitals całej witryny: przechodzi czy nie",
+      "opis": "To samo co wyżej, ale policzone ze wszystkich podstron witryny razem. Gdy adres ma za mało wizyt, Google pokazuje tylko ten wynik.",
+      "zalecenie": "Poprawiaj podstrony z największym ruchem, bo to one ciągną wynik całej witryny.",
+      "waga": 3
+    },
+    {
+      "id": "crux-origin:LARGEST_CONTENTFUL_PAINT_MS",
+      "nazwa": "Cała witryna: Szybkość pokazania głównej treści (LCP)",
+      "opis": "Czas, po którym odwiedzający widzi największy element strony, zwykle zdjęcie lub nagłówek. Dobry wynik to do 2,5 s, słaby powyżej 4 s.",
+      "zalecenie": "Zmniejsz największe zdjęcie na górze strony, wczytaj je w nowoczesnym formacie i sprawdź czas odpowiedzi serwera.",
+      "waga": 3
+    },
+    {
+      "id": "crux-origin:INTERACTION_TO_NEXT_PAINT",
+      "nazwa": "Cała witryna: Reakcja na kliknięcie (INP)",
+      "opis": "Jak szybko strona reaguje, gdy ktoś klika, dotyka ekranu albo pisze. Dobry wynik to do 200 ms, słaby powyżej 500 ms.",
+      "zalecenie": "Usuń lub opóźnij zbędne skrypty (czaty, wtyczki, śledzenie), bo to one blokują reakcję strony.",
+      "waga": 3
+    },
+    {
+      "id": "crux-origin:CUMULATIVE_LAYOUT_SHIFT_SCORE",
+      "nazwa": "Cała witryna: Stabilność układu (CLS)",
+      "opis": "Czy treść „skacze” podczas wczytywania, tak że klient klika nie ten przycisk. Dobry wynik to do 0,1, słaby powyżej 0,25.",
+      "zalecenie": "Podaj wymiary wszystkich zdjęć i zarezerwuj miejsce na banery oraz reklamy, zanim się wczytają.",
+      "waga": 3
+    },
+    {
+      "id": "crux-origin:FIRST_CONTENTFUL_PAINT_MS",
+      "nazwa": "Cała witryna: Pierwszy widoczny element (FCP)",
+      "opis": "Czas, po którym na ekranie pojawia się cokolwiek poza białą kartką. Dobry wynik to do 1,8 s, słaby powyżej 3 s.",
+      "zalecenie": "Ogranicz zasoby blokujące wyświetlanie, czyli duże arkusze stylów i czcionki wczytywane z zewnątrz.",
+      "waga": 1
+    },
+    {
+      "id": "crux-origin:EXPERIMENTAL_TIME_TO_FIRST_BYTE",
+      "nazwa": "Cała witryna: Czas odpowiedzi serwera (TTFB)",
+      "opis": "Po ilu milisekundach serwer zaczyna wysyłać stronę. Dobry wynik to do 0,8 s, słaby powyżej 1,8 s.",
+      "zalecenie": "Włącz pamięć podręczną strony, sprawdź wtyczki i bazę danych albo przejdź na szybszy hosting.",
+      "waga": 2
+    }
+  ],
+  "progi": [
+    {
+      "od": 90,
+      "tekst": "Odwiedzający mają z tą stroną dobre doświadczenia. Utrzymaj ten poziom przy każdej zmianie."
+    },
+    {
+      "od": 50,
+      "tekst": "Wynik jest średni. Część odwiedzających czeka dłużej, niż powinna. Zacznij od pozycji oznaczonych jako słabe."
+    },
+    {
+      "od": 0,
+      "tekst": "Odwiedzający odczuwają problemy z szybkością. To może kosztować pozycję w Google i zapytania klientów."
+    }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": {
+    "tekst": "Wynik jest słaby albo nie wiesz, od czego zacząć? Napisz do nas — sprawdzimy stronę i podamy cenę poprawek.",
+    "guzik": "Napisz do nas",
+    "adres": "/kontakt/#formularz"
+  },
+  "pelnyRaport": "https://pagespeed.web.dev/analysis?url={url}",
+  "nota": "Adres trafia do Google PageSpeed, które wysyła nam dane zebrane z Chrome. Niczego nie zapisujemy.",
+  "pusto": "Google nie ma danych z prawdziwych wizyt dla tego adresu. Zbiera je z Chrome przez 28 dni i potrzebuje sporego ruchu, więc mała strona zwykle ich nie ma. W takim razie liczy się test laboratoryjny: użyj testu szybkości strony.",
+  "tresc": [
+    {
+      "h2": "Czym różnią się dane z prawdziwych wizyt od zwykłego testu",
+      "akapity": [
+        "Zwykły test szybkości ładuje stronę raz, na wzorcowym urządzeniu. Dane terenowe to wyniki prawdziwych odwiedzających z Chrome, zebrane przez 28 dni, na ich telefonach, łączach i komputerach.",
+        "Google bierze pod uwagę właśnie je, gdy ocenia stronę pod kątem Core Web Vitals. Dlatego mogą się różnić od testu laboratoryjnego, i to one decydują o ocenie."
+      ]
+    },
+    {
+      "h2": "Jak czytać wynik",
+      "akapity": [
+        "Pokazujemy 75. percentyl: tyle czasu lub tyle przesunięcia dotyczy trzech czwartych odwiedzających, lepszy wynik ma pozostała jedna czwarta. Zielony zakres to wynik dobry, żółty wymaga poprawy, czerwony jest słaby.",
+        "Strona zalicza Core Web Vitals, gdy trzy wskaźniki jednocześnie są dobre: szybkość głównej treści (LCP), reakcja na kliknięcie (INP) i stabilność układu (CLS). Pozostałe dwa, FCP i TTFB, pomagają znaleźć przyczynę."
+      ]
+    },
+    {
+      "h2": "Dlaczego czasem nie ma danych",
+      "akapity": [
+        "Google publikuje dane tylko dla adresów z wystarczającą liczbą wizyt z Chrome. Nowa albo mała strona często ich nie ma, wtedy sprawdzamy wynik całej witryny, a jeśli i tego brak, zostaje test laboratoryjny.",
+        "Brak danych nie oznacza błędu strony. Oznacza, że Google nie ma jeszcze z czego policzyć wyniku."
+      ]
+    }
+  ]
+}

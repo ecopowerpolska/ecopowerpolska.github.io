@@ -1,0 +1,55 @@
+{
+  "slug": "ochrona-przed-spamem",
+  "nazwa": "Ochrona przed spamem",
+  "tytulSeo": "Czy strona jest chroniona przed spamem? Test | EcoPower Polska",
+  "opis": "Darmowy test: czy ktoś może podszyć się pod Twoją domenę, czy formularze mają CAPTCHA i czy domena jest na czarnych listach spamu.",
+  "lead": "Wpisz adres strony, a sprawdzimy, czy formularze mają ochronę przed robotami, czy ktoś może podszyć się pod Twoją pocztę i czy domena nie trafiła na czarne listy spamu.",
+  "tryb": "serwer",
+  "test": "ochrona_przed_spamem",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "werdykt", "nazwa": "Czy jesteś zabezpieczony przed spamem?", "opis": "Zbiorcza odpowiedź z wszystkich poniższych sprawdzeń: tak, częściowo albo nie.", "zalecenie": "", "waga": 1 },
+    { "id": "dmarc", "nazwa": "DMARC — co zrobić z podszywającą się pocztą", "opis": "DMARC mówi odbiorcom, co zrobić z wiadomościami podszywającymi się pod Twoją domenę, i przysyła raporty o nadużyciach.", "zalecenie": "Dodaj w DNS rekord TXT _dmarc z wartością v=DMARC1; p=none; rua=mailto:dmarc@twojadomena.pl, a po kilku tygodniach zmień p=none na p=quarantine.", "waga": 3 },
+    { "id": "czarne-listy", "nazwa": "Czarne listy spamu (Spamhaus, SURBL, SpamCop, Barracuda)", "opis": "Domena albo serwer poczty na czarnej liście oznacza, że wiadomości z Twojej firmy trafiają do spamu lub są odrzucane.", "zalecenie": "Sprawdź przyczynę na stronie listy, usuń ją i złóż wniosek o wykreślenie.", "waga": 3 },
+    { "id": "formularze", "nazwa": "Formularze na stronie", "opis": "Formularz bez zabezpieczenia (CAPTCHA, pole-pułapka, pole czasu) zalewają roboty spamem.", "zalecenie": "Dodaj Cloudflare Turnstile (darmowy) i ukryte pole-pułapkę w formularzu.", "waga": 3 },
+    { "id": "spf", "nazwa": "SPF — kto może wysyłać pocztę z domeny", "opis": "SPF to lista serwerów, którym wolno wysyłać pocztę w imieniu Twojej domeny.", "zalecenie": "Dodaj rekord SPF zakończony ~all albo -all.", "waga": 2 },
+    { "id": "komentarze", "nazwa": "Komentarze pod wpisami", "opis": "Komentarze bez ochrony szybko zapełniają się linkami do podejrzanych stron.", "zalecenie": "Włącz Akismet albo CAPTCHA i moderację komentarzy.", "waga": 2 },
+    { "id": "dkim", "nazwa": "DKIM — podpis poczty", "opis": "DKIM to cyfrowy podpis wiadomości, który potwierdza, że wysłała ją Twoja firma i nikt jej nie zmienił.", "zalecenie": "Włącz podpisywanie DKIM u dostawcy poczty i wklej podany rekord do DNS.", "waga": 1 },
+    { "id": "email-w-html", "nazwa": "Adresy e-mail widoczne dla robotów", "opis": "Roboty przeszukują strony i zbierają adresy e-mail zapisane zwykłym tekstem, a potem wysyłają na nie spam.", "zalecenie": "Zamiast adresu wstaw formularz albo zapisz adres obrazkiem lub skryptem.", "waga": 1 },
+    { "id": "security-txt", "nazwa": "Kontakt do zgłaszania nadużyć", "opis": "Plik security.txt i skrzynka abuse@ pokazują, gdzie zgłosić nadużycie — to ułatwia też wykreślenie z czarnych list.", "zalecenie": "Dodaj plik /.well-known/security.txt i skrzynkę abuse@ w swojej domenie.", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Tak, jesteś dobrze zabezpieczony przed spamem i podszywaniem się pod domenę. Nie ma tu nic pilnego." },
+    { "od": 50, "tekst": "Częściowo. Część zabezpieczeń działa, ale zacznij od pozycji z błędem lub ostrzeżeniem." },
+    { "od": 0, "tekst": "Nie. Roboty mogą zalewać Twoje formularze, a ktoś może podszyć się pod Twoją pocztę. Zacznij od pozycji z błędem." }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Spam w formularzu albo skrzynce? Napisz do nas — wdrożymy ochronę (CAPTCHA, SPF, DKIM, DMARC) i podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "Adres strony trafia na nasz serwer, który pobiera jej stronę główną i sprawdza rekordy DNS oraz czarne listy spamu. Wyniku nie zapisujemy.",
+  "pusto": "",
+  "tresc": [
+    {
+      "h2": "Co sprawdza ten test",
+      "akapity": [
+        "Test składa się z dwóch części. Pierwsza dotyczy poczty: czy ktoś może wysłać wiadomość podpisaną Twoją domeną (SPF, DKIM, DMARC) i czy domena oraz serwery poczty nie trafiły na czarne listy spamu Spamhaus, SURBL, SpamCop i Barracuda.",
+        "Druga część dotyczy strony: czy formularze i komentarze mają ochronę przed robotami (Cloudflare Turnstile, reCAPTCHA, hCaptcha, ukryte pole-pułapka, pole czasu) oraz czy w kodzie nie leżą adresy e-mail zapisane zwykłym tekstem, które roboty zbierają do wysyłki spamu."
+      ]
+    },
+    {
+      "h2": "Dlaczego to ważne dla firmy",
+      "akapity": [
+        "Spam w formularzu to zmarnowany czas i ryzyko, że przeoczysz prawdziwe zapytanie klienta. Podszycie się pod domenę to gorszy kłopot: klienci dostają fałszywe faktury w Twoim imieniu, a Twoje prawdziwe wiadomości zaczynają lądować w spamie.",
+        "Większość zabezpieczeń jest darmowa. Cloudflare Turnstile działa bez łamigłówek, a rekordy SPF, DKIM i DMARC wystarczy raz dopisać w DNS. Po wpisaniu adresu dostajesz konkretne zalecenia z gotowym rekordem DMARC do wklejenia."
+      ]
+    },
+    {
+      "h2": "Jak czytać wynik",
+      "akapity": [
+        "Ocena od 0 do 100 liczona jest z wag: czarne listy, DMARC i formularz bez ochrony liczą się najmocniej, potem SPF, DKIM i adresy e-mail w kodzie. Wynik od 90 to zielona strefa, od 50 do 89 żółta, poniżej 50 czerwona.",
+        "Brak formularza lub komentarzy nie obniża oceny, bo nie ma co chronić. Sprawdzamy jedną stronę, którą wpiszesz, więc formularz na podstronie kontaktowej sprawdź osobno, wpisując jej adres."
+      ]
+    }
+  ]
+}

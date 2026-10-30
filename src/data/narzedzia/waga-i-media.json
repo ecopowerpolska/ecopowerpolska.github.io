@@ -1,0 +1,67 @@
+{
+  "slug": "waga-i-media",
+  "nazwa": "Waga strony i zdjęcia",
+  "tytulSeo": "Waga strony i zdjęć – darmowy test | EcoPower Polska",
+  "opis": "Darmowe narzędzie: ile waży Twoja strona, które zdjęcia ją spowalniają i co zmniejszyć. Wpisz adres i dostaniesz zalecenia po polsku.",
+  "lead": "Wpisz adres strony. Sprawdzimy, ile ważą kod, skrypty i zdjęcia, wskażemy największe pliki i powiemy, co zmniejszyć, żeby strona ładowała się szybciej.",
+  "tryb": "serwer",
+  "test": "waga_i_media",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "lacznie", "nazwa": "Łączna waga strony", "opis": "Im lżejsza strona, tym szybciej otwiera się na telefonie i mniej kosztuje transferu odwiedzających.", "zalecenie": "Zmniejsz zdjęcia i usuń nieużywane skrypty, by zejść poniżej 1 MB.", "waga": 3 },
+    { "id": "najwiekszy-obraz", "nazwa": "Największy obraz", "opis": "Jedno zbyt duże zdjęcie potrafi ważyć więcej niż cała reszta strony.", "zalecenie": "Zapisz największe zdjęcie w WebP w szerokości do 1600 px.", "waga": 3 },
+    { "id": "formaty", "nazwa": "Formaty obrazów", "opis": "WebP i AVIF dają tę samą jakość przy znacznie mniejszym pliku niż JPEG i PNG.", "zalecenie": "Zapisz zdjęcia w WebP albo AVIF.", "waga": 2 },
+    { "id": "wymiary", "nazwa": "Obrazy z podanymi wymiarami", "opis": "Gdy obraz nie ma wymiarów, strona przeskakuje podczas ładowania i psuje wynik Google (CLS).", "zalecenie": "Dodaj width i height do każdego obrazu.", "waga": 2 },
+    { "id": "lazy", "nazwa": "Leniwe ładowanie obrazów", "opis": "Obrazy poniżej pierwszego ekranu mogą ładować się dopiero przy przewijaniu.", "zalecenie": "Dodaj loading=\"lazy\" do obrazów poniżej pierwszego ekranu.", "waga": 1 },
+    { "id": "srcset", "nazwa": "Obrazy w kilku rozmiarach (srcset)", "opis": "Telefon nie potrzebuje zdjęcia o szerokości 3000 px, wystarczy mniejszy plik.", "zalecenie": "Użyj srcset, by telefon dostawał mniejsze zdjęcia.", "waga": 1 },
+    { "id": "skrypty", "nazwa": "Liczba skryptów", "opis": "Każdy skrypt to osobne pobranie i praca dla procesora telefonu.", "zalecenie": "Usuń nieużywane wtyczki i skrypty, pozostałe połącz.", "waga": 1 },
+    { "id": "arkusze", "nazwa": "Liczba arkuszy stylów", "opis": "Wiele osobnych arkuszy stylów wydłuża czas, zanim strona pokaże się na ekranie.", "zalecenie": "Połącz arkusze stylów w jeden.", "waga": 1 },
+    { "id": "html", "nazwa": "Rozmiar kodu strony (HTML)", "opis": "Kod strony pobiera się przed wszystkim innym, więc jego rozmiar opóźnia cały start.", "zalecenie": "Odchudź kod strony i usuń dane wbudowane w HTML.", "waga": 1 },
+    { "id": "czcionki", "nazwa": "Czcionki z zewnętrznych serwisów", "opis": "Czcionki z cudzego serwera dokładają połączenie i wolniejszy start.", "zalecenie": "Wczytuj czcionki WOFF2 z własnego serwera.", "waga": 1 },
+    { "id": "wideo", "nazwa": "Wideo i osadzone ramki", "opis": "Osadzony odtwarzacz YouTube ładuje się od razu i mocno obciąża stronę.", "zalecenie": "Pokaż miniaturę z przyciskiem odtwarzania i wczytaj film po kliknięciu.", "waga": 1 },
+    { "id": "wstawki", "nazwa": "Style i skrypty wpisane w HTML", "opis": "Duże wstawki w kodzie strony nie zapisują się w pamięci przeglądarki.", "zalecenie": "Wynieś duże style i skrypty do osobnych plików.", "waga": 1 },
+    { "id": "obrazy", "nazwa": "Liczba obrazów", "opis": "Informacja, ile znaczników obrazów ma strona.", "zalecenie": "", "waga": 1 },
+    { "id": "preload", "nazwa": "Podpowiedzi dla przeglądarki", "opis": "Preload i preconnect mogą przyspieszyć najważniejsze pliki, jeśli użyte z umiarem.", "zalecenie": "", "waga": 1 },
+    { "id": "najwieksze-pliki", "nazwa": "5 największych plików", "opis": "Lista zmierzonych plików od najcięższego, żeby wiedzieć, od czego zacząć odchudzanie.", "zalecenie": "", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Strona jest lekka. Nic tu nie spowalnia odwiedzających." },
+    { "od": 50, "tekst": "Strona jest cięższa, niż musi. Zacznij od największych zdjęć." },
+    { "od": 0, "tekst": "Strona jest bardzo ciężka i na telefonie będzie ładować się długo. Zacznij od zdjęć." }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Chcesz lżejszą i szybszą stronę? Napisz do nas — przejrzymy zdjęcia i skrypty, podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "",
+  "pusto": "",
+  "tresc": [
+    {
+      "h2": "Co sprawdza to narzędzie",
+      "akapity": [
+        "Pobieramy Twoją stronę główną jeden raz, tak jak robi to przeglądarka, i liczymy, ile ważą kod, skrypty i arkusze stylów. Następnie mierzymy rozmiar kilku najważniejszych plików, głównie zdjęć, i szacujemy łączną wagę.",
+        "Sprawdzamy też, czy obrazy mają wymiary, czy ładują się leniwie, w jakich są formatach i czy strona nie ciągnie czcionek z cudzych serwerów albo odtwarzacza YouTube od razu po wejściu."
+      ]
+    },
+    {
+      "h2": "Dlaczego waga strony ma znaczenie",
+      "akapity": [
+        "Ciężka strona dłużej otwiera się na telefonie, zwłaszcza przy słabszym zasięgu. Odwiedzający często rezygnują, zanim zobaczą treść, a Google bierze szybkość ładowania pod uwagę przy ocenie strony.",
+        "Najczęściej największą część wagi stanowią zdjęcia. Jedno nieoptymalne zdjęcie z aparatu potrafi ważyć kilka megabajtów, czyli więcej niż cała reszta strony razem wzięta."
+      ]
+    },
+    {
+      "h2": "Jak odchudzić stronę",
+      "akapity": [
+        "Najpierw zmniejsz zdjęcia: zapisz je w WebP lub AVIF w szerokości do 1600 px, a obrazy poniżej pierwszego ekranu oznacz jako ładowane leniwie. Do każdego dodaj wymiary, żeby strona nie przeskakiwała.",
+        "Potem usuń nieużywane wtyczki i skrypty, wczytuj czcionki z własnego serwera, a filmy pokazuj jako miniaturę, którą odtwarza się dopiero po kliknięciu."
+      ]
+    },
+    {
+      "h2": "Zakres pomiaru",
+      "akapity": [
+        "Mierzymy tylko stronę, której adres wpiszesz, i tylko publicznie dostępne pliki. Łączna waga jest oszacowaniem: liczymy kod strony i wybrane pliki (pierwsze zdjęcia, skrypty i arkusze), więc realna waga jest zwykle nieco większa."
+      ]
+    }
+  ]
+}

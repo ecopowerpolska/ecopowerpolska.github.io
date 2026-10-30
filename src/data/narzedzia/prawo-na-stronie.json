@@ -1,0 +1,51 @@
+{
+  "slug": "prawo-na-stronie",
+  "nazwa": "Prawo na stronie: polityka, cookies, regulamin",
+  "tytulSeo": "Sprawdź, czy strona spełnia wymogi prawne | EcoPower Polska",
+  "opis": "Darmowa kontrola: czy strona ma politykę prywatności, zgodę na cookies, regulamin, dane firmy i czy skrypty śledzące nie ładują się przed zgodą.",
+  "lead": "Wpisz adres strony. Sprawdzimy, czy widać na niej politykę prywatności, informację o cookies, regulamin i dane firmy oraz czy analityka nie działa przed zgodą.",
+  "tryb": "serwer",
+  "test": "prawo_na_stronie",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "polityka", "nazwa": "Polityka prywatności", "opis": "Kto zbiera dane z formularza i analityki, musi powiedzieć, kto je przetwarza i po co (RODO art. 13).", "zalecenie": "Dodaj w stopce link do polityki prywatności i opisz w niej administratora, cele, okres i prawa osoby.", "waga": 3 },
+    { "id": "polityka-tresc", "nazwa": "Czy polityka zawiera wymagane informacje", "opis": "Polityka powinna zawierać administratora, cele i podstawę, odbiorców, okres, prawa osoby i prawo skargi (RODO art. 13).", "zalecenie": "Uzupełnij politykę o brakujące elementy.", "waga": 2 },
+    { "id": "cookies", "nazwa": "Informacja o cookies i zgoda", "opis": "Pliki inne niż niezbędne wolno zapisać po informacji i zgodzie użytkownika (PKE art. 399).", "zalecenie": "Dodaj baner zgody z równorzędnymi przyciskami „Akceptuj” i „Odrzuć”.", "waga": 3 },
+    { "id": "skrypty-przed-zgoda", "nazwa": "Skrypty śledzące przed zgodą", "opis": "Analityka i piksele reklamowe mogą ruszyć dopiero po zgodzie (PKE art. 399).", "zalecenie": "Wstrzymaj skrypty do chwili zgody albo włącz Consent Mode ze stanem „denied”.", "waga": 3 },
+    { "id": "cookies-serwer", "nazwa": "Pliki cookies z nagłówka odpowiedzi", "opis": "Serwer nie powinien ustawiać plików analitycznych ani reklamowych przed zgodą (PKE art. 399).", "zalecenie": "Wyłącz ustawianie tych plików po stronie serwera do czasu zgody.", "waga": 1 },
+    { "id": "dane-firmy", "nazwa": "Dane firmy (NIP, REGON)", "opis": "Strona usługodawcy podaje nazwę, adres i NIP (UŚUDE art. 5; Prawo przedsiębiorców art. 20 ust. 3).", "zalecenie": "Podaj w stopce pełną nazwę firmy, adres i NIP albo link do podstrony z tymi danymi.", "waga": 2 },
+    { "id": "dane-spolki", "nazwa": "Dane spółki (KRS, sąd, kapitał)", "opis": "Spółka z o.o. lub S.A. podaje na stronie KRS, sąd rejestrowy i kapitał zakładowy (KSH art. 206 § 1).", "zalecenie": "Dopisz do stopki brakujące dane rejestrowe spółki.", "waga": 2 },
+    { "id": "regulamin", "nazwa": "Regulamin", "opis": "Usługi świadczone drogą elektroniczną (formularz, konto, koszyk) wymagają regulaminu (UŚUDE art. 8).", "zalecenie": "Jeśli strona ma formularz, koszyk lub konto, dodaj krótki regulamin i link w stopce.", "waga": 2 },
+    { "id": "regulamin-sklep", "nazwa": "Regulamin sklepu", "opis": "Sklep zawiera umowy na odległość, więc potrzebuje regulaminu i informacji o zwrotach (UŚUDE art. 8; prawa konsumenta).", "zalecenie": "Dodaj regulamin: zamawianie, płatność, dostawa, odstąpienie od umowy w 14 dni, reklamacje.", "waga": 3 },
+    { "id": "kontakt", "nazwa": "Adres e-mail i telefon", "opis": "Usługodawca podaje dane umożliwiające szybki kontakt (UŚUDE art. 5).", "zalecenie": "Dodaj e-mail i telefon w stopce albo na podstronie „Kontakt”.", "waga": 1 },
+    { "id": "sklep", "nazwa": "Czy to sklep internetowy", "opis": "Sklep ma więcej obowiązków niż wizytówka: regulamin, zwroty, przycisk zamówienia z obowiązkiem zapłaty.", "zalecenie": "", "waga": 1 },
+    { "id": "deklaracja-dostepnosci", "nazwa": "Deklaracja dostępności", "opis": "Dla stron podmiotów publicznych deklaracja dostępności jest obowiązkowa; dla firm to dobra praktyka.", "zalecenie": "", "waga": 1 },
+    { "id": "prawa-autorskie", "nazwa": "Zastrzeżenie praw autorskich", "opis": "Znak © w stopce informuje, że treści są chronione (Prawo autorskie art. 1).", "zalecenie": "", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Wszystko, co da się sprawdzić automatycznie, jest na swoim miejscu. To nie jest opinia prawna." },
+    { "od": 50, "tekst": "Brakuje części elementów. Zacznij od pozycji z błędem: polityki, zgody na cookies i skryptów przed zgodą." },
+    { "od": 0, "tekst": "Strona nie ma podstawowych elementów wymaganych prawem. Zacznij od polityki prywatności i zgody na cookies." }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}\n\nKontrola automatyczna, nie opinia prawna.",
+  "wezwanie": { "tekst": "Chcesz, żebyśmy dopisali politykę, baner zgody i regulamin do Twojej strony? Napisz do nas — sprawdzimy i podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "Nasz serwer pobiera stronę główną oraz najwyżej trzy podstrony (polityka, regulamin, cookies), jak przeglądarka. Wyniku nie zapisujemy, poza pamięcią podręczną na godzinę. To kontrola automatyczna, nie opinia prawna.",
+  "info": "To kontrola automatyczna, nie opinia prawna. Sprawdzamy obecność elementów na stronie głównej i na podstronach, do których prowadzą linki, nie oceniamy ich treści ani zgodności z prawem w Twojej sytuacji.",
+  "pusto": "",
+  "tresc": [
+    { "h2": "Co sprawdza to narzędzie", "akapity": [
+      "Narzędzie pobiera stronę główną i szuka na niej linków do polityki prywatności i regulaminu, informacji o cookies lub banera zgody, danych firmy (NIP, REGON, a dla spółek KRS, sądu i kapitału zakładowego) oraz adresu e-mail i telefonu. Potwierdza też, że podstrona polityki i regulaminu odpowiada i ma treść.",
+      "Osobno wyszukuje skrypty śledzące (Google Tag Manager, Google Analytics 4, Meta Pixel, Hotjar, TikTok) i sprawdza, czy ładują się przed zgodą użytkownika. Wykrywa też sklepy (WooCommerce, PrestaShop, Shoper), bo mają dodatkowe obowiązki wobec konsumentów."
+    ] },
+    { "h2": "Na jakich przepisach opieramy kontrolę", "akapity": [
+      "Zgodę na cookies i dostęp do informacji w urządzeniu reguluje Prawo komunikacji elektronicznej, art. 399 (Dz.U. 2024 poz. 1221). Regulamin usług elektronicznych i dane usługodawcy to ustawa o świadczeniu usług drogą elektroniczną, art. 5 i 8 (Dz.U. 2024 poz. 1513). Informację dla osób, których dane zbieramy, opisuje art. 13 RODO.",
+      "Dane spółki z o.o. i S.A. na stronie internetowej wskazuje art. 206 § 1 Kodeksu spółek handlowych (Dz.U. 2024 poz. 18), a dostępność sklepów internetowych ustawa o zapewnianiu dostępności produktów i usług (Dz.U. 2024 poz. 731). Pełne teksty aktów są w Internetowym Systemie Aktów Prawnych (isap.sejm.gov.pl)."
+    ] },
+    { "h2": "Czego to narzędzie nie robi", "akapity": [
+      "To kontrola automatyczna, nie opinia prawna. Nie ocenia, czy treść polityki jest poprawna, czy baner cookies ma równorzędne przyciski ani czy skrypt wstrzymywany przez narzędzie zgody naprawdę czeka na kliknięcie. Dane firmy mogą też leżeć na podstronie „Kontakt”, której nie pobieramy.",
+      "Wynik traktuj jako listę rzeczy do sprawdzenia. Gdy strona ma formularz, analitykę albo sklep, warto potwierdzić dokumenty z prawnikiem."
+    ] }
+  ]
+}

@@ -17,6 +17,9 @@ const mail = firma.email.toLowerCase();
 const etykietaKrs = tekst(napisyStopki.etykietaKrs, 'KRS');
 const etykietaNip = tekst(napisyStopki.etykietaNip, 'NIP');
 const etykietaRegon = tekst(napisyStopki.etykietaRegon, 'REGON');
+// Sąd rejestrowy i kapitał zakładowy (KSH art. 206 § 1, runda 9): dane z odpisu aktualnego KRS 0000881612 (kapitał) i z ustalenia Piotra (sąd; odpis go nie podaje).
+const etykietaSad = tekst(napisyStopki.etykietaSad, 'Sąd rejestrowy:');
+const etykietaKapital = tekst(napisyStopki.etykietaKapital, 'Kapitał zakładowy:');
 const etykietaAdresWww = tekst(napisyStopki.etykietaAdresWww, 'Adres WWW:');
 const etykietaEmail = tekst(napisyStopki.etykietaEmail, 'E-mail:');
 const etykietaAdres = tekst(napisyStopki.etykietaAdres, 'Adres:');
@@ -61,6 +64,8 @@ const uslugiStopki = [
 const daneSpolki = [
   nazwaStopki,
   `${firma.rejestr}, ${etykietaKrs} ${firma.krs}`,
+  firma.sad && `${etykietaSad} ${firma.sad}`,
+  firma.kapital && `${etykietaKapital} ${firma.kapital}`,
   `${etykietaNip} ${firma.nip}`,
   `${etykietaRegon} ${firma.regon}`,
   `${etykietaAdresWww} ${firma.adresWww}`,
@@ -163,6 +168,13 @@ const daneSpolki = [
         ></span
       >
     </p>
+
+    {(firma.sad || firma.kapital) && (
+      <p class="stopka__rejestr">
+        {firma.sad && <span class="pozycja">{etykietaSad} {firma.sad}</span>}
+        {firma.kapital && <span class="pozycja">{etykietaKapital} {firma.kapital}</span>}
+      </p>
+    )}
 
     <dl class="stopka__dane">
       <dt>{etykietaAdresWww}</dt>

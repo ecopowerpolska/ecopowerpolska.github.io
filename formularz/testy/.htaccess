@@ -1,0 +1,2 @@
+# Moduły testów audytu: wywołuje je wyłącznie audyt.php (require), z sieci zamknięte.
+Require all denied

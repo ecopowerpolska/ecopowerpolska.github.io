@@ -323,7 +323,7 @@ const b = k.bledy as Record<string, string>;
     form.addEventListener('change', () => { szkic(); wymaganieWiadomosci(); });
     wymaganieWiadomosci();
 
-    // ── Wynik testu szybkości: sessionStorage['ep.psi'] = { adres, data, tekst } (zapisuje /jak-sprawdzic-szybkosc-strony/) ──
+    // ── Wynik narzędzia: sessionStorage['ep.wynik'] (narzędzia audytu) albo ['ep.psi'] (test szybkości) = { adres, data, tekst } ──
     const ZNACZNIK = 'Wynik PageSpeed dla';
     const LIMIT = 3900; // handler przyjmuje 4000 znaków (MAKS_WIADOMOSC); zapas na ręczny dopisek
     const notka = $('psi-notka');
@@ -346,17 +346,20 @@ const b = k.bledy as Record<string, string>;
     };
     wiadomosc?.addEventListener('paste', () => setTimeout(wykryj, 0));
     wiadomosc?.addEventListener('input', wykryj);
-    let psi: { adres: string; tekst: string } | null = null;
-    try {
-      const o = JSON.parse(sessionStorage.getItem('ep.psi') || 'null');
-      if (o && typeof o.tekst === 'string' && o.tekst.includes(ZNACZNIK)) {
-        psi = { adres: String(o.adres || adresZTekstu(o.tekst) || '').slice(0, 300), tekst: o.tekst };
-      }
-    } catch { /* brak pamięci sesji albo zły JSON */ }
+    let psi: { adres: string; tekst: string; znacznik: string } | null = null;
+    for (const klucz of ['ep.wynik', 'ep.psi']) {
+      if (psi) break;
+      try {
+        const o = JSON.parse(sessionStorage.getItem(klucz) || 'null');
+        if (o && typeof o.tekst === 'string' && o.tekst.length > 20 && (klucz === 'ep.wynik' || o.tekst.includes(ZNACZNIK))) {
+          psi = { adres: String(o.adres || adresZTekstu(o.tekst) || '').slice(0, 300), tekst: o.tekst, znacznik: klucz === 'ep.wynik' ? o.tekst.slice(0, 24) : ZNACZNIK };
+        }
+      } catch { /* brak pamięci sesji albo zły JSON */ }
+    }
     if (psi && wiadomosc) {
       wykryty = adresZTekstu(psi.tekst) || psi.adres;
       ustawStrone(psi.adres);
-      if (!wiadomosc.value.includes(ZNACZNIK)) {
+      if (!wiadomosc.value.includes(psi.znacznik)) {
         const stara = wiadomosc.value.trimEnd();
         const przerwa = stara ? '\n\n' : '';
         const miejsce = LIMIT - stara.length - przerwa.length;
@@ -373,10 +376,10 @@ const b = k.bledy as Record<string, string>;
       usunPsi?.addEventListener('click', () => {
         const w = wiadomosc.value;
         const i = psi ? w.lastIndexOf(psi.tekst) : -1;
-        const j = w.indexOf(ZNACZNIK);
+        const j = psi ? w.indexOf(psi.znacznik) : -1;
         // Dokładny fragment; gdy dopisek skrócił albo zmienił raport — od znacznika do końca.
         wiadomosc.value = (i >= 0 ? w.slice(0, i) + w.slice(i + (psi?.tekst.length ?? 0)) : j >= 0 ? w.slice(0, j) : w).trim();
-        try { sessionStorage.removeItem('ep.psi'); } catch { /* brak pamięci sesji */ }
+        try { sessionStorage.removeItem('ep.psi'); sessionStorage.removeItem('ep.wynik'); } catch { /* brak pamięci sesji */ }
         wykryty = '';
         if (notka) notka.hidden = true;
         szkic();

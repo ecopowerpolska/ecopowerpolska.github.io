@@ -1,0 +1,54 @@
+{
+  "_opis": {
+    "_ten_plik": "Wzór i dokumentacja pól narzędzia audytu. Plik zaczyna się od _, więc trasa /narzedzia/[slug]/ go pomija. Kopia do src/data/narzedzia/<slug>.json = nowe narzędzie. Plik leży poza panelem /admin/ (struktura stała, zapis z panelu skasowałby pola).",
+    "slug": "Adres trasy /narzedzia/<slug>/ i nazwa pliku. Małe litery i myślniki.",
+    "nazwa": "Krótka nazwa narzędzia: nagłówek H1, okruszek, pierwsze zdanie kopiowanego wyniku.",
+    "tytulSeo": "Znacznik title (do ok. 60 znaków), z nazwą marki na końcu: „... | EcoPower Polska”.",
+    "opis": "Meta description (120–160 znaków), jedno zdanie o tym, co narzędzie sprawdza i że jest darmowe.",
+    "lead": "Jedno–dwa zdania pod H1, wyśrodkowane. Co dostaje użytkownik po wpisaniu adresu.",
+    "tryb": "Skąd wynik: „serwer” (fetch na audyt.php), „psi” (Google PageSpeed z przeglądarki, klucz jawny PUBLIC_PSI_KLUCZ) albo „oba” (równolegle, pozycje scalone przez id).",
+    "test": "Nazwa modułu PHP w formularz/testy/<test>.php, podkreślniki zamiast myślników (np. bezpieczenstwo_i_zaufanie). Wymagane przy trybach serwer i oba; przy psi puste.",
+    "kategoriePsi": "Lista kategorii PSI do zapytania, np. [\"accessibility\"], [\"agentic-browsing\"]. Tylko tryby psi i oba. Puste = [\"performance\"] (dane terenowe loadingExperience PSI zwraca zawsze razem z dowolną kategorią).",
+    "psiOba": "true = mierzy telefon i komputer (dwa zapytania, stan pozycji = gorszy, wartość „telefon X, komputer Y”). false = tylko telefon.",
+    "pozycje": "Lista pozycji wyniku w kolejności wyświetlania. Pola: id, nazwa, opis, zalecenie, waga (1–3).",
+    "pozycje.id": "Klucz łączący pozycję z wynikiem. Tryb serwer/oba: id zwracane przez moduł PHP (funkcja pozycja()). Tryb psi/oba: id audytu Lighthouse (np. color-contrast, llms-txt), „kat:<kategoria>” = wynik kategorii 0–100 (np. kat:accessibility), „crux:<METRYKA>” = dane terenowe adresu (loadingExperience), „crux-origin:<METRYKA>” = dane terenowe całej witryny, gdzie METRYKA to klucz PSI, np. LARGEST_CONTENTFUL_PAINT_MS, INTERACTION_TO_NEXT_PAINT, CUMULATIVE_LAYOUT_SHIFT_SCORE, FIRST_CONTENTFUL_PAINT_MS, EXPERIMENTAL_TIME_TO_FIRST_BYTE.",
+    "pozycje.nazwa": "Nazwa po polsku, widoczna na liście (bez żargonu albo z objaśnieniem w nawiasie). Ma pierwszeństwo przed nazwą z modułu.",
+    "pozycje.opis": "Jedno zdanie: co to jest i dlaczego ma znaczenie. Pokazywane, gdy moduł/PSI nie dał własnego opisu wyniku.",
+    "pozycje.zalecenie": "Jedno zdanie: co zrobić, gdy stan to uwaga albo błąd. Trafia do „Co poprawić”, gdy moduł nie dał własnego zalecenia.",
+    "pozycje.waga": "1–3: wpływ na ocenę i kolejność w „Co poprawić”. Ocena = suma(waga × punkty) / suma(waga); ok = 1, uwaga = 0,5, błąd = 0, info pomijane.",
+    "progi": "Werdykt pod zegarem. Lista od najwyższego progu: [{\"od\": 90, \"tekst\": ...}, {\"od\": 50, ...}, {\"od\": 0, ...}]. Pierwszy wpis z od ≤ ocena wygrywa.",
+    "tekstDoKopiowania": "Szablon tekstu dla „Skopiuj wyniki” i „Napisz do nas”. Znaczniki: {nazwa} {adres} {data} {ocena} {pozycje} (wiersze „- nazwa: wartość”) {poprawic} (numerowane zalecenia). Do 3900 znaków (limit pola w formularzu).",
+    "wezwanie": "Blok pod wynikiem: {tekst, guzik, adres}. Adres to zwykle /kontakt/#formularz.",
+    "pelnyRaport": "Szablon adresu „Pełny raport”, znacznik {url} = adres zakodowany. Puste = bez linku. Dla psi i oba domyślnie PageSpeed.",
+    "nota": "Opcjonalnie: zdanie pod polem adresu o tym, gdzie trafia adres (domyślnie zależy od trybu).",
+    "pusto": "Opcjonalnie: komunikat, gdy wynik nie ma ani jednej pozycji (np. brak danych terenowych przy małym ruchu).",
+    "tresc": "Opcjonalnie, ale zalecane dla SEO: [{\"h2\": ..., \"akapity\": [...]}] pod narzędziem, 3–4 sekcje po 2 akapity, bez lania wody."
+  },
+  "slug": "przyklad",
+  "nazwa": "Przykładowe narzędzie",
+  "tytulSeo": "Darmowe narzędzie przykładowe | EcoPower Polska",
+  "opis": "Przykład opisu strony narzędzia: co sprawdza, że jest darmowe i że wynik dostajesz po polsku.",
+  "lead": "Wpisz adres strony, a w kilka sekund zobaczysz wynik po polsku.",
+  "tryb": "serwer",
+  "test": "seo_techniczne",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "kod", "nazwa": "Kod odpowiedzi", "opis": "Strona powinna odpowiadać kodem 200.", "zalecenie": "Napraw adres albo serwer.", "waga": 3 },
+    { "id": "ttfb", "nazwa": "Czas odpowiedzi serwera", "opis": "Im krócej, tym szybciej zaczyna się ładować strona.", "zalecenie": "Włącz pamięć podręczną albo zmień hosting.", "waga": 1 },
+    { "id": "title", "nazwa": "Tytuł strony", "opis": "Tytuł widać w wynikach Google i na karcie przeglądarki.", "zalecenie": "Dodaj tytuł do 60 znaków.", "waga": 2 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Bardzo dobrze. Nie ma tu nic pilnego." },
+    { "od": 50, "tekst": "Jest co poprawić. Zacznij od pozycji z ostrzeżeniem." },
+    { "od": 0, "tekst": "Wynik jest słaby. Zacznij od pozycji z błędem." }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Chcesz, żebyśmy to poprawili? Napisz do nas — sprawdzimy i podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "",
+  "pusto": "",
+  "tresc": [
+    { "h2": "Co sprawdza to narzędzie", "akapity": ["Pierwszy akapit.", "Drugi akapit."] }
+  ]
+}

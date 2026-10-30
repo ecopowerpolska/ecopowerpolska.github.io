@@ -78,6 +78,20 @@ curl -s -o /dev/null -w '%{http_code}\n' https://pan-stolarz.pl/formularz/ecopow
 ```
 Limit CEIDG jest wspólny dla konta (nagłówek `x-rate-limit-limit: 1000`). Dokumentacja Hurtowni Danych CEIDG API v3 (v1.4, sekcja 3): „ograniczenie do 1000 żądań w okresie 60 minut” — okno 60 minut, nie doba; bezpiecznik `ceidg_limit_na_godz` (100/h) leży wielokrotnie poniżej. Limit dobowy MF: NIE USTALONO. Jednoosobowych działalności nie testuj w pętli.
 
+### 3b. `audyt.php` + `testy/` — narzędzia audytu (od 2026-10-30; `/narzedzia/<slug>/`)
+Wgranie (konfig/ i stan/ nietknięte; `stan/audyt/` i `stan/audyt-ip/` skrypt tworzy sam). Katalogi docelowe: `public_html/api.ecopowerpolska.pl/` oraz — do czasu
+SSL subdomeny — `public_html/pan-stolarz.pl/formularz/ecopower/` (stary adres, z którego strona czyta wtedy `src/data/api.json`):
+```bash
+cd strony/ecopowerpolska.pl/formularz
+tar -cf - audyt.php .htaccess testy | ssh -o IdentitiesOnly=yes -i ~/.ssh/lh-lejek -p 40022 serwer263249@serwer263249.lh.pl 'set -e;
+  T=$(mktemp -d); cd "$T"; tar -xf -; for D in public_html/api.ecopowerpolska.pl public_html/pan-stolarz.pl/formularz/ecopower; do
+  cd ~/"$D"; mkdir -p testy; cp "$T"/audyt.php "$T"/.htaccess .; cp "$T"/testy/*.php "$T"/testy/.htaccess testy/;
+  chmod 644 audyt.php .htaccess testy/*.php testy/.htaccess; chmod 755 testy; for f in audyt.php testy/*.php; do php -l "$f" | grep -v "^No syntax"; done; done; rm -rf "$T"'
+```
+Klucz serwerowy PageSpeed (`psi_klucz`, z `~/.sekrety/pagespeed-z440`) wchodzi do `konfig/ecopowerpolska.pl.php` standardowym wejściem, jak token CEIDG w §3a; moduły go dziś nie wymagają. Test (Origin wymagany, 20 sprawdzeń/h z jednego IP,
+ten sam adres z pamięci podręcznej nie liczy się): `curl -s -H 'Origin: https://www.ecopowerpolska.pl' "$U/audyt.php?test=seo-techniczne&url=https://nadihome.pl/"` → `wynik.pozycje`; `?test=x` → 400; POST → 405; `testy/_wspolne.php` z sieci → 403.
+Po wystawieniu SSL `api.ecopowerpolska.pl`: trzy miejsca zmiany w kodzie strony (`api.json` `baza`, `kontakt.json` `akcja` + domyślny adres w `Formularz.astro`, pole `api` obu generatorów w `narzedzia.json`), potem kasowanie starego katalogu na pan-stolarz.pl.
+
 ## 4. Kontrola
 ```bash
 U=https://pan-stolarz.pl/formularz/ecopower

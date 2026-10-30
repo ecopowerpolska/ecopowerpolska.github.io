@@ -1,0 +1,42 @@
+{
+  "slug": "bezpieczenstwo-i-zaufanie",
+  "nazwa": "Bezpieczeństwo i zaufanie strony",
+  "tytulSeo": "Test bezpieczeństwa strony: HTTPS, certyfikat, nagłówki | EcoPower Polska",
+  "opis": "Darmowy test bezpieczeństwa strony WWW: HTTPS, certyfikat, HSTS, nagłówki ochronne, mieszane treści, formularze i ciasteczka. Wynik po polsku, z zaleceniami.",
+  "lead": "Wpisz adres strony, a sprawdzimy, czy połączenie jest szyfrowane, certyfikat ważny, a przeglądarka dostaje ochronne nagłówki. Dostaniesz ocenę i konkretne kroki naprawy.",
+  "tryb": "serwer",
+  "test": "bezpieczenstwo_i_zaufanie",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "https", "nazwa": "Połączenie szyfrowane (HTTPS)", "opis": "Szyfrowanie chroni dane odwiedzających i pozwala uniknąć ostrzeżenia „Niezabezpieczona” w przeglądarce.", "zalecenie": "Zainstaluj certyfikat i ustaw stronę tak, by działała pod https://.", "waga": 3 },
+    { "id": "przekierowanie-https", "nazwa": "Przekierowanie z http na https", "opis": "Kto wpisze adres bez „https”, powinien trafić na wersję szyfrowaną.", "zalecenie": "Dodaj trwałe przekierowanie (301) z http:// na https://.", "waga": 2 },
+    { "id": "certyfikat", "nazwa": "Certyfikat TLS", "opis": "Certyfikat musi być ważny i wystawiony na nazwę strony, inaczej przeglądarka blokuje wejście.", "zalecenie": "Odnów certyfikat i włącz automatyczne odnawianie.", "waga": 3 },
+    { "id": "hsts", "nazwa": "HSTS (zawsze https)", "opis": "Nagłówek HSTS każe przeglądarce zawsze łączyć się ze stroną szyfrowanym połączeniem, bez wchodzenia przez http.", "zalecenie": "Dodaj nagłówek Strict-Transport-Security z max-age co najmniej 15552000.", "waga": 2 },
+    { "id": "csp", "nazwa": "Polityka treści (CSP)", "opis": "CSP ogranicza, skąd strona może ładować skrypty, więc utrudnia wstrzyknięcie obcego kodu.", "zalecenie": "Dodaj nagłówek Content-Security-Policy (najpierw w trybie Report-Only).", "waga": 1 },
+    { "id": "ramki", "nazwa": "Ochrona przed podszyciem w ramce", "opis": "Zakaz osadzania w obcych ramkach chroni przed wyłudzaniem kliknięć.", "zalecenie": "Dodaj X-Frame-Options: SAMEORIGIN albo frame-ancestors 'self' w CSP.", "waga": 2 },
+    { "id": "nosniff", "nazwa": "Zakaz zgadywania typu plików", "opis": "Nagłówek nosniff zabrania przeglądarce traktowania plików jako skryptów wbrew ich typowi.", "zalecenie": "Dodaj X-Content-Type-Options: nosniff.", "waga": 1 },
+    { "id": "referrer", "nazwa": "Polityka przekazywania adresu (Referrer-Policy)", "opis": "Określa, ile z adresu odwiedzanej strony zdradzasz serwisom, do których prowadzą linki.", "zalecenie": "Dodaj Referrer-Policy: strict-origin-when-cross-origin.", "waga": 1 },
+    { "id": "permissions", "nazwa": "Zakaz użycia kamery, mikrofonu i lokalizacji (Permissions-Policy)", "opis": "Strona może wyłączyć funkcje przeglądarki, których nie potrzebuje. To zalecenie dodatkowe, bez wpływu na ocenę.", "zalecenie": "Opcjonalnie dodaj Permissions-Policy: camera=(), microphone=(), geolocation=().", "waga": 1 },
+    { "id": "mieszane-tresci", "nazwa": "Mieszane treści (http na stronie https)", "opis": "Skrypty, arkusze i obrazy ładowane przez http psują kłódkę i bywają blokowane przez przeglądarkę.", "zalecenie": "Zamień adresy http:// zasobów na https://.", "waga": 3 },
+    { "id": "wersje", "nazwa": "Ujawniane wersje oprogramowania", "opis": "Numery wersji serwera, PHP i systemu treści ułatwiają atakującym dobór znanych luk.", "zalecenie": "Ukryj wersje w nagłówkach Server i X-Powered-By oraz w znaczniku generator.", "waga": 1 },
+    { "id": "formularze", "nazwa": "Formularze wysyłane przez https", "opis": "Dane z formularza powinny iść szyfrowanym połączeniem, inaczej można je przechwycić.", "zalecenie": "Ustaw w action każdego formularza adres https://.", "waga": 2 },
+    { "id": "ciasteczka", "nazwa": "Zabezpieczenie ciasteczek", "opis": "Flagi Secure i HttpOnly chronią ciasteczka przed odczytem przez obcy skrypt i przez połączenie bez szyfrowania.", "zalecenie": "Dodaj flagi Secure i HttpOnly do ciasteczek ustawianych przez serwer.", "waga": 1 },
+    { "id": "security-txt", "nazwa": "Kontakt dla zgłaszających luki (security.txt)", "opis": "Plik security.txt mówi, do kogo zgłosić znalezioną lukę. To informacja dodatkowa, bez wpływu na ocenę.", "zalecenie": "Opcjonalnie dodaj /.well-known/security.txt z wierszem Contact.", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Bardzo dobrze. Podstawy bezpieczeństwa są na swoim miejscu." },
+    { "od": 50, "tekst": "Jest co poprawić. Zacznij od pozycji z błędem, głównie od HTTPS, certyfikatu i mieszanych treści." },
+    { "od": 0, "tekst": "Wynik jest słaby. Strona nie ma podstawowych zabezpieczeń, a odwiedzający widzą ostrzeżenia lub są narażeni." }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Chcesz, żebyśmy to naprawili? Napisz do nas — ustawimy HTTPS i nagłówki, sprawdzimy i podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "",
+  "pusto": "",
+  "tresc": [
+    { "h2": "Co sprawdza ten test", "akapity": ["Sprawdzamy, czy strona działa przez szyfrowane połączenie HTTPS, czy certyfikat jest ważny i wystawiony na właściwą nazwę oraz czy adres z http przekierowuje na https. Kontrolujemy też nagłówki ochronne, które serwer wysyła przeglądarce: HSTS, politykę treści, ochronę przed ramkami, zakaz zgadywania typów plików i politykę przekazywania adresu.", "Do tego dochodzą mieszane treści (skrypty i obrazy ładowane przez http), ujawniane numery wersji, formularze wysyłane bez szyfrowania i ciasteczka bez flag Secure i HttpOnly."] },
+    { "h2": "Jak czytać wynik", "akapity": ["Ocena od 0 do 100 powstaje z wag pozycji: HTTPS, certyfikat i mieszane treści liczą się najmocniej, bo to je widzi odwiedzający jako kłódkę lub ostrzeżenie. Pozycje informacyjne, jak Permissions-Policy czy security.txt, nie wpływają na ocenę.", "Przy każdej pozycji z błędem lub ostrzeżeniem podajemy konkretne zalecenie, często gotowy wiersz do pliku .htaccess. Lista „Co poprawić” zaczyna od spraw o największej wadze."] },
+    { "h2": "Co robimy z adresem", "akapity": ["Pobieramy jedną stronę główną i kilka plików pomocniczych, tak jak zrobiłaby to przeglądarka. Nie logujemy się, nie skanujemy portów i niczego nie zmieniamy na Twojej stronie. Wynik trzymamy w pamięci podręcznej przez godzinę, potem go kasujemy."] }
+  ]
+}

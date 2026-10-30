@@ -1,0 +1,760 @@
+---
+// Ciało strony narzędzia audytu (runda 9, 2026-10-30): H1 i lead, pole adresu, komunikat o trwającym sprawdzaniu, zegar oceny (Zegar.astro),
+// lista pozycji ze stanem, „Co poprawić”, „Skopiuj wyniki”, „Napisz do nas” (wynik do formularza w pamięci karty, klucz ep.wynik), „Pełny raport”.
+// Dane narzędzia: src/data/narzedzia/<slug>.json (pola: _wzor.json). Układ strony, SEO i okruszki: src/pages/narzedzia/[slug].astro.
+// Źródło wyniku wg `tryb`: serwer (fetch audyt.php z api.json), psi (Google PageSpeed z przeglądarki, klucz PUBLIC_PSI_KLUCZ), oba (równolegle,
+// pozycje scalone przez id). Pozycję z JSON łączy z wynikiem `id`: moduł PHP zwraca id z JSON, a z PSI: id audytu Lighthouse,
+// `kat:<kategoria>` (wynik 0–100), `crux:<METRYKA>` / `crux-origin:<METRYKA>` (dane terenowe adresu / witryny).
+import Zegar from './Zegar.astro';
+import api from '../../data/api.json';
+
+interface Pozycja { id: string; nazwa: string; opis: string; zalecenie: string; waga: number; }
+interface Props {
+  dane: {
+    slug: string; nazwa: string; lead: string; tryb: 'serwer' | 'psi' | 'oba'; test: string; kategoriePsi?: string[]; psiOba?: boolean;
+    pozycje: Pozycja[]; progi: { od: number; tekst: string }[]; tekstDoKopiowania: string;
+    wezwanie: { tekst: string; guzik: string; adres: string }; pelnyRaport?: string; nota?: string; pusto?: string;
+    tresc?: { h2: string; akapity: string[] }[];
+  };
+  okruszki: { nazwa: string; adres: string }[];
+}
+const { dane: d, okruszki } = Astro.props;
+
+const klucz = (import.meta.env.PUBLIC_PSI_KLUCZ ?? '').trim();
+const adresApi = d.tryb === 'psi' ? '' : api.baza + api.audyt;
+const raport = d.pelnyRaport ?? (d.tryb === 'serwer' ? '' : 'https://pagespeed.web.dev/analysis?url={url}');
+const noty = {
+  serwer: 'Nasz serwer pobiera Twoją stronę jednorazowo, jak przeglądarka. Wyniku nie zapisujemy, poza pamięcią podręczną na jedną godzinę.',
+  psi: 'Pomiar wykonuje Google. Adres strony trafia do Google, my go nie zapisujemy.',
+  oba: 'Adres trafia na nasz serwer, który pobiera stronę jednorazowo, oraz do Google, który wykonuje pomiar. Wyniku nie zapisujemy, poza pamięcią podręczną na godzinę.',
+};
+// Napisy używane przez skrypt (przekazane w data-d: skrypt nie nosi tekstów).
+const u = {
+  adres: 'To nie wygląda na adres strony. Wpisz na przykład twojafirma.pl.',
+  siec: 'Nie udało się połączyć z narzędziem. Sprawdź internet i spróbuj ponownie.',
+  psi: 'Google nie zdołał zmierzyć tej strony. Sprawdź, czy adres działa, i spróbuj za chwilę.',
+  limit: 'Google chwilowo nie przyjmuje kolejnych pomiarów. Spróbuj za chwilę.',
+  pusto: 'Nie znaleźliśmy danych do pokazania dla tego adresu.',
+  gotowe: 'Gotowe. Sprawdziliśmy {adres}.',
+  stany: { ok: 'Dobrze', uwaga: 'Do poprawy', blad: 'Błąd', info: 'Informacja' },
+  tel: 'telefon',
+  kom: 'komputer',
+  kopiuj: 'Skopiuj wyniki',
+  skopiowano: 'Skopiowano',
+  brak: 'Nie ma nic pilnego do poprawy. Utrzymaj to przy kolejnych zmianach na stronie.',
+};
+const dane = JSON.stringify({
+  a: adresApi, t: d.test, m: d.tryb, k: d.kategoriePsi ?? [], o: !!d.psiOba, n: d.nazwa, v: d.progi, s: d.tekstDoKopiowania, r: raport, x: d.pusto ?? '',
+  p: d.pozycje.map((p) => [p.id, p.nazwa, p.opis, p.zalecenie, p.waga]), u,
+});
+---
+
+<main id="tresc" class="narz">
+  <nav class="okruszki" aria-label="Ścieżka">
+    <ol>
+      {okruszki.map((o, i) => (
+        <li>
+          {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+        </li>
+      ))}
+    </ol>
+  </nav>
+
+  <h1 class="narz__tytul">{d.nazwa}</h1>
+  <p class="narz__lead">{d.lead}</p>
+
+  <section class="test" aria-labelledby="narz-tytul">
+    <h2 id="narz-tytul" class="test__tytul">Sprawdź swoją stronę za darmo</h2>
+    <form id="narz-f" class="test__formularz" data-d={dane} data-klucz={klucz || undefined}>
+      <label for="narz-adres">Adres strony</label>
+      <p class="test__podpowiedz" id="narz-podp">Bez https:// i www, same wpiszemy.</p>
+      <div class="test__wiersz">
+        <input
+          id="narz-adres"
+          type="text"
+          name="url"
+          required
+          inputmode="url"
+          autocomplete="url"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-describedby="narz-podp"
+          placeholder="twojafirma.pl"
+        />
+        <button type="submit">Sprawdź</button>
+      </div>
+    </form>
+    <noscript><p class="test__nota">Narzędzie wymaga włączonego JavaScriptu.</p></noscript>
+    <p class="test__nota">{d.nota || noty[d.tryb]}</p>
+    <p class="trwa" id="narz-trwa" role="status" hidden>Trwa sprawdzanie, nie zamykaj strony.</p>
+    <p class="test__stan" id="narz-opis" aria-live="polite"></p>
+
+    <div class="narz__zegar" id="narz-zegar-wrap" hidden>
+      <Zegar id="narz-zegar" etykieta={`Ocena: ${d.nazwa}`} />
+      <p class="werdykt" id="narz-werdykt" hidden></p>
+    </div>
+
+    <div class="wynik" id="narz-wynik" hidden>
+      <ul class="pozycje" id="narz-lista"></ul>
+      <section class="zalecenia" id="narz-zal" aria-labelledby="narz-zal-t" hidden>
+        <h3 class="zalecenia__tytul" id="narz-zal-t">Co poprawić</h3>
+        <ol class="zalecenia__lista" id="narz-zal-l"></ol>
+        <p class="zalecenia__brak" id="narz-zal-b" hidden></p>
+      </section>
+      <div class="wezwanie">
+        <p class="wezwanie__tekst">{d.wezwanie.tekst}</p>
+        <div class="wezwanie__guziki">
+          <a class="wezwanie__guzik" id="narz-pisz" href={d.wezwanie.adres}>{d.wezwanie.guzik}</a>
+          <button class="wezwanie__guzik wezwanie__guzik--drugi" type="button" id="narz-kop" aria-live="polite">Skopiuj wyniki</button>
+        </div>
+        <textarea class="test__kopia" id="narz-kop-t" rows="6" readonly hidden aria-label="Wyniki do skopiowania"></textarea>
+      </div>
+      {raport && <p class="test__raport"><a id="narz-rap" href="#" target="_blank" rel="noopener">Pełny raport</a></p>}
+    </div>
+  </section>
+
+  {d.tresc && d.tresc.length > 0 && (
+    <div class="tresc">
+      {d.tresc.map((s) => (
+        <>
+          <h2>{s.h2}</h2>
+          {s.akapity.map((a) => <p>{a}</p>)}
+        </>
+      ))}
+    </div>
+  )}
+</main>
+
+<script>
+  (() => {
+    const f = document.getElementById('narz-f') as HTMLFormElement | null;
+    if (!f) return;
+    const D = JSON.parse(f.dataset.d || '{}'), U = D.u, K = f.dataset.klucz || '';
+    const $ = (s: string) => document.getElementById(s) as any;
+    const trwa = $('narz-trwa'), opis = $('narz-opis'), wrap = $('narz-zegar-wrap'), zg = $('narz-zegar'), wer = $('narz-werdykt'), wynik = $('narz-wynik'),
+      lista = $('narz-lista'), zal = $('narz-zal'), zalL = $('narz-zal-l'), zalB = $('narz-zal-b'), pisz = $('narz-pisz'), kop = $('narz-kop'), kopT = $('narz-kop-t'),
+      rap = $('narz-rap'), wej = f.elements.namedItem('url') as HTMLInputElement, guzik = f.querySelector('button') as HTMLButtonElement;
+    const q = (s: string) => zg.querySelector(s);
+    let poz: any[] = [], tp = '', ost = '';
+    const el = (t: string, c: string, x = '') => { const e = document.createElement(t); e.className = c; e.textContent = x; return e; };
+    const sz = (t: string, m: Record<string, any>) => t.replace(/\{(\w+)\}/g, (_, k) => m[k] ?? '');
+    const dzis = () => new Date().toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    const norm = (r: string): string | null => {
+      let u = r.trim().split(/\s+/)[0] || '';
+      if (!u) return null;
+      if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(u)) u = 'https://' + u.replace(/^\/+/, '');
+      try { const a = new URL(u); return /^https?:$/.test(a.protocol) && /\.[^.]/.test(a.hostname) ? a.href : null; } catch { return null; }
+    };
+
+    // ── źródła ──
+    const serwer = (u: string) => fetch(D.a + '?test=' + D.t + '&url=' + encodeURIComponent(u)).then((r) => r.json()).then((j) => { if (j.blad) throw j.opis; return j.wynik.pozycje as any[]; });
+    const S = D.o ? ['mobile', 'desktop'] : ['mobile'];
+    const psi = (u: string) => K ? Promise.all(S.map((s) => fetch('https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' + encodeURIComponent(u) + '&locale=pl&strategy=' + s +
+      (D.k.length ? D.k : ['performance']).map((c: string) => '&category=' + c).join('') + '&key=' + encodeURIComponent(K)).then((r) => r.json().then((j) => {
+      if (!r.ok) throw r.status === 429 || r.status === 403 ? U.limit : U.psi;
+      return j;
+    })))) : Promise.reject(U.psi);
+
+    // Jedna pozycja z odpowiedzi PSI: kat:<kategoria>, crux[-origin]:<METRYKA> albo id audytu Lighthouse.
+    const zPsi = (j: any, id: string): any => {
+      const L = j.lighthouseResult || {};
+      if (id.startsWith('kat:')) {
+        const c = L.categories && L.categories[id.slice(4)];
+        if (!c || c.score == null) return;
+        const n = Math.round(c.score * 100);
+        return { s: n >= 90 ? 'ok' : n >= 50 ? 'uwaga' : 'blad', w: n + '/100' };
+      }
+      const cv = id.match(/^cwv(-origin)?$/);
+      if (cv) {
+        const M = ((cv[1] ? j.originLoadingExperience : j.loadingExperience) || {}).metrics || {};
+        const t = ['LARGEST_CONTENTFUL_PAINT_MS', 'INTERACTION_TO_NEXT_PAINT', 'CUMULATIVE_LAYOUT_SHIFT_SCORE'].map((k) => M[k]).filter(Boolean);
+        if (t.length < 2) return;
+        return t.every((x: any) => x.category === 'FAST') ? { s: 'ok', w: 'przechodzi' } : { s: t.some((x: any) => x.category === 'SLOW') ? 'blad' : 'uwaga', w: 'nie przechodzi' };
+      }
+      const m = id.match(/^crux(-origin)?:(.+)/);
+      if (m) {
+        const x = ((m[1] ? j.originLoadingExperience : j.loadingExperience) || {}).metrics?.[m[2]];
+        if (!x) return;
+        const p = x.percentile;
+        return { s: ({ FAST: 'ok', AVERAGE: 'uwaga', SLOW: 'blad' } as any)[x.category] || 'info',
+          w: (m[2].includes('SHIFT') ? (p / 100).toFixed(2).replace('.', ',') : p >= 1000 ? (p / 1000).toFixed(1).replace('.', ',') + ' s' : p + ' ms') +
+            (x.distributions ? ' (' + Math.round(x.distributions[0].proportion * 100) + '% dobrych)' : '') };
+      }
+      const a = L.audits && L.audits[id];
+      if (!a) return;
+      return { s: a.score == null ? 'info' : a.score >= 0.9 ? 'ok' : a.score > 0 ? 'uwaga' : 'blad', w: a.displayValue || '' };
+    };
+    const R = ['blad', 'uwaga', 'ok', 'info'];
+    const zJ = (J: any[], id: string): any => {
+      if (id === 'brak-danych') return J.some((j) => (j.loadingExperience || {}).metrics || (j.originLoadingExperience || {}).metrics) ? undefined : { s: 'info', w: 'brak danych' };
+      const r = J.map((j) => zPsi(j, id));
+      const g = r.filter(Boolean);
+      if (!g.length) return;
+      const s = g.map((x) => x.s).sort((a, b) => R.indexOf(a) - R.indexOf(b))[0];
+      return { s, w: J.length > 1 && g.length > 1 && g[0].w !== g[1].w ? U.tel + ' ' + r[0]?.w + ', ' + U.kom + ' ' + r[1]?.w : g[0].w };
+    };
+    // Scalenie: pozycje z JSON w kolejności JSON (wynik serwera ma pierwszeństwo, potem PSI), potem pozycje serwera spoza JSON.
+    const zloz = (sv: any[], J: any[]) => {
+      const out: any[] = [], znane = new Set(D.p.map((p: any[]) => p[0]));
+      D.p.forEach(([id, n, o, z, g]: any[]) => {
+        const s = sv.find((x) => x.id === id), r = s ? { s: s.stan, w: s.wartosc, o: s.opis, z: s.zalecenie } : J.length ? zJ(J, id) : null;
+        if (r) out.push({ n, s: r.s, w: r.w || '', o: r.o || o, z: r.z || z, g });
+      });
+      sv.forEach((x) => znane.has(x.id) || out.push({ n: x.nazwa, s: x.stan, w: x.wartosc, o: x.opis, z: x.zalecenie, g: 1 }));
+      return out;
+    };
+
+    // ── wynik ──
+    const ocena = (): number | null => {
+      let a = 0, b = 0;
+      poz.forEach((p) => { const k = ({ ok: 1, uwaga: 0.5, blad: 0 } as any)[p.s]; if (k != null) { a += p.g * k; b += p.g; } });
+      return b ? Math.round((100 * a) / b) : null;
+    };
+    const zegar = (n: number | null) => {
+      zg.classList.remove('zegar--pracuje');
+      zg.dataset.stan = n == null ? 'brak' : n >= 90 ? 'dobry' : n >= 50 ? 'sredni' : 'zly';
+      (q('.zegar__luk') as any).style.setProperty('--off', String(100 - (n || 0)));
+      (q('.zegar__igla') as any).style.setProperty('--w', String(n || 0));
+      (q('.zegar__liczba') as any).textContent = n == null ? '–' : String(n);
+      n != null && (q('.zegar__svg') as any).setAttribute('aria-valuenow', String(n));
+    };
+    const pokaz = (n: number | null) => {
+      lista.textContent = '';
+      poz.forEach((p) => {
+        const li = el('li', 'poz'), i = el('span', 'poz__ik'), t = el('div', 'poz__tekst');
+        li.dataset.s = p.s;
+        i.setAttribute('role', 'img');
+        i.setAttribute('aria-label', U.stany[p.s]);
+        t.append(el('strong', '', p.n));
+        p.w && t.append(el('span', 'poz__wart', p.w));
+        p.o && t.append(el('p', 'poz__opis', p.o));
+        li.append(i, t);
+        lista.append(li);
+      });
+      const z = poz.filter((p) => (p.s === 'blad' || p.s === 'uwaga') && p.z).sort((a, b) => (b.s === 'blad' ? 2 : 1) * b.g - (a.s === 'blad' ? 2 : 1) * a.g).slice(0, 5);
+      zalL.textContent = '';
+      z.forEach((p) => { const li = document.createElement('li'); li.append(el('strong', '', p.n), el('span', '', p.z)); zalL.append(li); });
+      zalB.textContent = U.brak;
+      zalB.hidden = z.length > 0;
+      zalL.hidden = !z.length;
+      zal.hidden = false;
+      const v = n == null ? null : D.v.find((x: any) => n >= x.od);
+      wer.textContent = v ? v.tekst : '';
+      wer.hidden = !v;
+      tp = sz(D.s, {
+        nazwa: D.n, adres: ost, data: dzis(), ocena: n == null ? 'brak' : n,
+        pozycje: poz.map((p) => '- ' + p.n + ': ' + (p.w || U.stany[p.s])).join('\n'),
+        poprawic: z.length ? z.map((p, i) => i + 1 + '. ' + p.n + ': ' + p.z).join('\n') : U.brak,
+      }).slice(0, 3900);
+      try { sessionStorage.setItem('ep.wynik', JSON.stringify({ narzedzie: D.n, adres: ost, data: dzis(), tekst: tp })); } catch { /* tryb prywatny */ }
+      if (rap) rap.href = sz(D.r, { url: encodeURIComponent(ost) });
+    };
+
+    kop.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(tp);
+        kopT.hidden = true;
+        kop.textContent = U.skopiowano;
+        setTimeout(() => { kop.textContent = U.kopiuj; }, 2000);
+      } catch { kopT.value = tp; kopT.hidden = false; kopT.select(); }
+    });
+
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = norm(wej.value);
+      if (!u) { opis.textContent = U.adres; return; }
+      wej.value = ost = u;
+      opis.textContent = '';
+      wynik.hidden = true; wer.hidden = true; kopT.hidden = true;
+      guzik.disabled = true;
+      trwa.hidden = false;
+      wrap.hidden = false;
+      zg.classList.add('zegar--pracuje');
+      zg.removeAttribute('data-stan');
+      (q('.zegar__igla') as any).style.setProperty('--w', '0');
+      (q('.zegar__liczba') as any).textContent = '…';
+      wej.blur();
+      trwa.scrollIntoView({ block: 'start' });
+      let bl = '';
+      const zb = (e2: any) => { bl = bl || (typeof e2 === 'string' ? e2 : U.siec); return null; };
+      Promise.all([D.m === 'psi' ? null : serwer(u).catch(zb), D.m === 'serwer' ? null : psi(u).catch(zb)]).then(([sv, J]: any[]) => {
+        poz = zloz(sv || [], J || []);
+        if (!poz.length) { wrap.hidden = true; opis.textContent = bl || D.x || U.pusto; return; }
+        const n = ocena();
+        zegar(n);
+        wrap.hidden = n == null; // bez oceny (np. brak danych terenowych) pusty zegar nic nie mówi
+        pokaz(n);
+        wynik.hidden = false;
+        opis.textContent = bl || sz(U.gotowe, { adres: u });
+      }).finally(() => { trwa.hidden = true; guzik.disabled = false; });
+    });
+  })();
+</script>
+
+<style is:global>
+  .narz {
+    --stan-dobry: var(--akcent);
+    --stan-sredni: #b45309;
+    --stan-zly: #b3261e;
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  .narz .okruszki {
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
+  .narz .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .narz .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .narz .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .narz .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .narz .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .narz .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .narz .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .narz__tytul {
+    max-width: none;
+    text-align: center;
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .narz__lead {
+    max-width: none;
+    margin: var(--o-4) 0 0;
+    text-align: center;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .narz .test {
+    margin: var(--o-8) 0 var(--o-12);
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-left: 4px solid var(--akcent);
+    border-radius: var(--promien);
+  }
+
+  .narz .test__tytul {
+    font-size: var(--t-l);
+    margin: 0 0 var(--o-4);
+  }
+
+  .narz .test__formularz label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--o-2);
+  }
+
+  .narz .test__podpowiedz {
+    margin: calc(var(--o-1) * -1) 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .narz .test__wiersz {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3);
+  }
+
+  .narz .test__wiersz input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 var(--o-3);
+    font: inherit;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+  }
+
+  .narz .test__wiersz button {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    font: inherit;
+    font-weight: 600;
+    color: var(--tlo);
+    background: var(--akcent);
+    border: 0;
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .narz .test__wiersz button:hover {
+    background: var(--tekst);
+  }
+
+  .narz .test__wiersz button:disabled {
+    cursor: progress;
+    background: var(--tekst-cichy);
+  }
+
+  .narz .test__wiersz input:focus-visible,
+  .narz .test__wiersz button:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
+  }
+
+  .narz .test__nota {
+    margin: var(--o-3) 0 0;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .narz .test__stan {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .narz .test__stan:not(:empty) {
+    margin-top: var(--o-4);
+  }
+
+  .narz .trwa {
+    display: flex;
+    align-items: center;
+    gap: var(--o-3);
+    margin: var(--o-4) 0 0;
+    padding: var(--o-3) var(--o-4);
+    font-weight: 600;
+    line-height: 1.4;
+    background: var(--tlo);
+    border-radius: var(--promien-maly);
+    scroll-margin-top: 6rem;
+  }
+
+  .narz [hidden] {
+    display: none !important;
+  }
+
+  .narz .trwa::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--akcent);
+    animation: narz-puls 1.1s ease-in-out infinite;
+  }
+
+  @keyframes narz-puls {
+    50% {
+      opacity: 0.25;
+      transform: scale(0.7);
+    }
+  }
+
+  .narz__zegar {
+    margin-top: var(--o-6);
+  }
+
+  .narz .werdykt {
+    margin: var(--o-3) 0 0;
+    text-align: center;
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .narz .wynik {
+    margin-top: var(--o-6);
+    font-size: var(--t-s);
+    line-height: 1.4;
+  }
+
+  /* Pozycje: karty 1 / 2 / 3 w rzędzie; stan niesie ikona, podpis dla czytnika (aria-label) i wartość, nie sam kolor. */
+  .narz .pozycje {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--o-3);
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .narz .pozycje {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .narz .pozycje {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .narz .poz {
+    --stan: var(--tekst-cichy);
+    display: flex;
+    gap: var(--o-3);
+    padding: var(--o-4);
+    background: var(--tlo);
+    border-radius: var(--promien);
+  }
+
+  .narz .poz[data-s='ok'] {
+    --stan: var(--stan-dobry);
+  }
+
+  .narz .poz[data-s='uwaga'] {
+    --stan: var(--stan-sredni);
+  }
+
+  .narz .poz[data-s='blad'] {
+    --stan: var(--stan-zly);
+  }
+
+  .narz .poz__ik {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--tlo);
+    background: var(--stan);
+    border-radius: 50%;
+  }
+
+  .narz .poz[data-s='ok'] .poz__ik::before {
+    content: '✓';
+  }
+
+  .narz .poz[data-s='uwaga'] .poz__ik::before {
+    content: '!';
+  }
+
+  .narz .poz[data-s='blad'] .poz__ik::before {
+    content: '✕';
+  }
+
+  .narz .poz[data-s='info'] .poz__ik::before {
+    content: 'i';
+  }
+
+  .narz .poz__tekst {
+    min-width: 0;
+  }
+
+  .narz .poz__tekst strong {
+    display: block;
+    font-size: var(--t-m);
+  }
+
+  .narz .poz__wart {
+    display: block;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  .narz .poz__opis {
+    margin: var(--o-1) 0 0;
+    color: var(--tekst-cichy);
+  }
+
+  .narz .zalecenia {
+    margin: 0 0 var(--o-6);
+    font-size: var(--t-m);
+    line-height: 1.45;
+  }
+
+  .narz .zalecenia__tytul {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-l);
+  }
+
+  .narz .zalecenia__lista {
+    display: grid;
+    gap: var(--o-3);
+    margin: 0;
+    padding-left: var(--o-6);
+  }
+
+  .narz .zalecenia__lista strong,
+  .narz .zalecenia__lista span {
+    display: block;
+  }
+
+  .narz .zalecenia__brak {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .narz .wezwanie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--o-3) var(--o-4);
+    padding-top: var(--o-4);
+    border-top: 1px solid var(--tekst-cichy);
+  }
+
+  .narz .wezwanie__tekst {
+    flex: 1 1 16rem;
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .narz .wezwanie__guziki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3);
+  }
+
+  .narz .wezwanie__guzik {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    font: inherit;
+    font-weight: 600;
+    color: var(--tlo);
+    background: var(--akcent);
+    border: 2px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .narz .wezwanie__guzik:hover {
+    background: var(--tekst);
+    border-color: var(--tekst);
+  }
+
+  .narz .wezwanie__guzik--drugi {
+    color: var(--akcent);
+    background: transparent;
+  }
+
+  .narz .wezwanie__guzik--drugi:hover {
+    color: var(--tlo);
+  }
+
+  .narz .wezwanie__guzik:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
+  }
+
+  .narz .test__kopia {
+    flex: 1 1 100%;
+    width: 100%;
+    padding: var(--o-3);
+    font: inherit;
+    font-size: var(--t-s);
+    line-height: 1.5;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+  }
+
+  .narz .test__raport {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-s);
+  }
+
+  .narz .test__raport a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 30rem) {
+    .narz .test {
+      padding: var(--o-4);
+    }
+
+    .narz .test__wiersz button,
+    .narz .wezwanie__guziki,
+    .narz .wezwanie__guzik {
+      flex: 1 1 100%;
+    }
+  }
+
+  .narz .tresc {
+    max-width: none;
+  }
+
+  .narz .tresc h2 {
+    font-size: var(--t-xl);
+    line-height: 1.2;
+    margin: var(--o-12) 0 var(--o-3);
+    break-after: avoid;
+  }
+
+  .narz .tresc h2:first-child {
+    margin-top: 0;
+  }
+
+  .narz .tresc p {
+    margin: 0 0 var(--o-4);
+    line-height: 1.6;
+  }
+
+  @media (min-width: 64rem) {
+    .narz .tresc {
+      columns: 2;
+      column-gap: 3rem;
+    }
+
+    .narz .tresc p {
+      break-inside: avoid;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .narz .trwa::before {
+      animation: none;
+    }
+  }
+</style>

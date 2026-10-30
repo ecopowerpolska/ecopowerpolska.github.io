@@ -1,0 +1,115 @@
+{
+  "slug": "poczta-domeny",
+  "nazwa": "Test poczty i zabezpieczeń domeny",
+  "tytulSeo": "Test poczty domeny: SPF, DKIM, DMARC | EcoPower Polska",
+  "opis": "Darmowy test poczty domeny: sprawdza MX, SPF, DKIM i DMARC i mówi po polsku, czy ktoś może podszyć się pod Twoją firmę oraz czy maile trafiają do spamu.",
+  "lead": "Wpisz adres swojej strony. Sprawdzimy rekordy poczty w DNS i powiemy po ludzku, czy Twoje maile mogą trafiać do spamu i czy ktoś może wysłać wiadomość w imieniu Twojej firmy.",
+  "tryb": "serwer",
+  "test": "poczta_domeny",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    {
+      "id": "mx",
+      "nazwa": "Serwery poczty (MX)",
+      "opis": "Rekord MX mówi światu, gdzie dostarczać maile do Twojej domeny.",
+      "zalecenie": "Dodaj rekord MX podany przez dostawcę poczty i usuń rekordy dawnych dostawców.",
+      "waga": 2
+    },
+    {
+      "id": "spf",
+      "nazwa": "SPF (lista uprawnionych nadawców)",
+      "opis": "SPF to lista serwerów, które mogą wysyłać maile z Twojej domeny. Bez niej odbiorcy częściej odrzucają lub chowają Twoje wiadomości.",
+      "zalecenie": "Dodaj rekord TXT z SPF zakończony „-all”.",
+      "waga": 3
+    },
+    {
+      "id": "spf-lookupy",
+      "nazwa": "SPF: liczba zapytań DNS",
+      "opis": "Rekord SPF może wymagać najwyżej 10 zapytań DNS. Po przekroczeniu limitu SPF przestaje działać.",
+      "zalecenie": "Usuń z SPF usługi, z których już nie wysyłasz maili.",
+      "waga": 1
+    },
+    {
+      "id": "dkim",
+      "nazwa": "DKIM (podpis wiadomości)",
+      "opis": "DKIM to cyfrowy podpis, po którym odbiorca poznaje, że wiadomość naprawdę wyszła od Ciebie i nie została zmieniona. Sprawdzamy najczęstsze nazwy kluczy (np. default, google, selector1).",
+      "zalecenie": "Włącz podpis DKIM w panelu poczty i dodaj rekord TXT, który panel poda.",
+      "waga": 2
+    },
+    {
+      "id": "dmarc",
+      "nazwa": "DMARC (polityka wobec podróbek)",
+      "opis": "DMARC mówi odbiorcom, co zrobić z wiadomościami podszywającymi się pod Twoją domenę: zignorować, wysłać do spamu czy odrzucić.",
+      "zalecenie": "Dodaj rekord TXT _dmarc z polityką p=quarantine lub p=reject.",
+      "waga": 3
+    },
+    {
+      "id": "dmarc-raporty",
+      "nazwa": "DMARC: raporty",
+      "opis": "Adres na raporty (rua) pokazuje, kto i skąd wysyła maile w imieniu Twojej domeny.",
+      "zalecenie": "Dopisz do rekordu DMARC adres rua=mailto:… istniejącej skrzynki.",
+      "waga": 1
+    },
+    {
+      "id": "bimi",
+      "nazwa": "BIMI (logo przy wiadomościach)",
+      "opis": "BIMI to opcjonalne logo firmy wyświetlane przy wiadomościach u niektórych odbiorców. Nie wpływa na wynik.",
+      "zalecenie": "",
+      "waga": 1
+    },
+    {
+      "id": "podszycie",
+      "nazwa": "Czy ktoś może podszyć się pod Twoją domenę?",
+      "opis": "Podsumowanie z SPF i DMARC: czy obcy może wysłać maila z Twoim adresem i czy odbiorca to zauważy.",
+      "zalecenie": "Wdróż SPF z „-all” i DMARC z p=quarantine lub reject.",
+      "waga": 1
+    }
+  ],
+  "progi": [
+    {
+      "od": 90,
+      "tekst": "Poczta Twojej domeny jest dobrze zabezpieczona. Podszycie się pod nią jest trudne."
+    },
+    {
+      "od": 50,
+      "tekst": "Zabezpieczenia poczty są niepełne. Część maili może trafiać do spamu, a podszycie jest możliwe."
+    },
+    {
+      "od": 0,
+      "tekst": "Poczta domeny jest prawie bez ochrony. Zacznij od pozycji z błędem."
+    }
+  ],
+  "tekstDoKopiowania": "Test poczty i zabezpieczeń domeny dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": {
+    "tekst": "Nie chcesz sam ustawiać rekordów DNS? Napisz do nas — skonfigurujemy SPF, DKIM i DMARC i sprawdzimy, czy maile dochodzą.",
+    "guzik": "Napisz do nas",
+    "adres": "/kontakt/#formularz"
+  },
+  "pelnyRaport": "",
+  "nota": "Sprawdzamy tylko publiczne rekordy DNS domeny. Nie logujemy się do poczty i nie wysyłamy żadnych wiadomości.",
+  "pusto": "",
+  "tresc": [
+    {
+      "h2": "Dlaczego poczta domeny ma znaczenie",
+      "akapity": [
+        "Kiedy klient nie dostaje Twojej oferty albo odpowiedzi z formularza, zwykle winny jest spam. Skrzynki Gmail, Yahoo i Microsoft sprawdzają, czy wiadomość naprawdę pochodzi z domeny nadawcy. Jeśli rekordy SPF, DKIM i DMARC są źle ustawione albo ich brakuje, Twoje maile lądują w spamie lub nie dochodzą wcale.",
+        "Te same rekordy chronią Twoją markę. Bez nich każdy może wysłać wiadomość z adresem w Twojej domenie, na przykład fałszywą fakturę do Twojego klienta."
+      ]
+    },
+    {
+      "h2": "Co sprawdza to narzędzie",
+      "akapity": [
+        "Odczytujemy z DNS rekordy MX (gdzie trafia poczta), SPF (kto może wysyłać), DKIM (podpis wiadomości) i DMARC (co robić z podróbkami). Liczymy też zapytania DNS w SPF, bo po przekroczeniu limitu 10 rekord przestaje działać.",
+        "Przy każdym problemie dostajesz gotowy rekord do wklejenia w panelu domeny. Nazwy kluczy DKIM bywają dowolne, dlatego sprawdzamy typowe selektory i uczciwie piszemy, gdy żadnego nie znaleźliśmy."
+      ]
+    },
+    {
+      "h2": "Jak czytać wynik",
+      "akapity": [
+        "Zielone pozycje są w porządku. Pomarańczowe da się poprawić, na przykład SPF z „~all” zamiast „-all” albo DMARC w trybie obserwacji (p=none). Czerwone to braki lub błędy, które najbardziej szkodzą dostarczalności i bezpieczeństwu.",
+        "Zmiany w DNS działają zwykle po kilkunastu minutach, a czasem po kilku godzinach. Po wprowadzeniu zaleceń uruchom test ponownie."
+      ]
+    }
+  ]
+}

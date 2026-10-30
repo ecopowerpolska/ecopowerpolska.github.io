@@ -9,6 +9,7 @@
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
+import Zegar from '../components/narzedzia/Zegar.astro';
 import firma from '../data/firma.json';
 import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
@@ -44,35 +45,6 @@ const metryki = [
   ['cumulative-layout-shift', 'Przesunięcie układu (CLS)', '0.1,0.25'],
   ['speed-index', 'Indeks szybkości (SI)', '3400,5800'],
 ];
-
-// Zegar wg wzorca Piotra (2026-10-29): łuk 240° (start 150° po obwodzie SVG = −210°), skala Google 0–100, trzy strefy toru
-// (0–49 czerwona, 50–89 pomarańczowa, 90–100 zielona), podziałka co 2 (cienka), co 10 (średnia), gruba przy 0/50/90/100,
-// liczby co 10 na zewnątrz łuku. Cała podziałka powstaje tu, w buildzie: trzy ścieżki zamiast 50 elementów, zero JS na rysowanie.
-const CX = 150, CY = 145, R = 100;
-const pt = (r: number, v: number): [number, number] => {
-  const a = ((150 + 2.4 * v) * Math.PI) / 180;
-  return [+(CX + r * Math.cos(a)).toFixed(1), +(CY + r * Math.sin(a)).toFixed(1)];
-};
-const luk = (v0: number, v1: number) => {
-  const [ax, ay] = pt(R, v0), [bx, by] = pt(R, v1);
-  return `M${ax} ${ay}A${R} ${R} 0 ${v1 - v0 > 75 ? 1 : 0} 1 ${bx} ${by}`;
-};
-const sciezka = luk(0, 100);
-const strefy = [
-  ['zly', luk(0, 50)],
-  ['sredni', luk(50, 90)],
-  ['dobry', luk(90, 100)],
-];
-const kreskiD = { c: '', s: '', g: '' };
-for (let v = 0; v <= 100; v += 2) {
-  const grube = [0, 50, 90, 100].includes(v), k = grube ? 'g' : v % 10 === 0 ? 's' : 'c';
-  const [ax, ay] = pt(R + 8, v), [bx, by] = pt(R + (grube ? 20 : v % 10 === 0 ? 16 : 12), v);
-  kreskiD[k] += `M${ax} ${ay}L${bx} ${by}`;
-}
-const etykiety = Array.from({ length: 11 }, (_, i) => {
-  const v = i * 10, [x, y] = pt(R + 35, v);
-  return { v, x, y, k: v === 50 || v === 90 ? ' zegar__skala--w' : v % 20 === 10 ? ' zegar__skala--p' : '' };
-});
 
 const daneStrukturalne = {
   '@context': 'https://schema.org',
@@ -161,33 +133,9 @@ const daneStrukturalne = {
 
       <div class="zegary" id="psi-zegary" hidden>
         {strony.map(([s, nazwa]) => (
-          <div class="zegar" data-s={s} data-na={s === 'mobile' ? 'telefonie' : 'komputerze'}>
+          <div class="zegar-kol" data-s={s} data-na={s === 'mobile' ? 'telefonie' : 'komputerze'}>
             <h3 class="zegar__nazwa">{nazwa}</h3>
-            <svg
-              class="zegar__svg"
-              viewBox="0 0 300 240"
-              role="meter"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              aria-label={`Wydajność, ${nazwa.toLowerCase()}`}
-            >
-              {strefy.map(([st, d]) => <path class={`zegar__strefa zegar__strefa--${st}`} d={d} />)}
-              <path class="zegar__luk" d={sciezka} pathLength="100" />
-              <g aria-hidden="true">
-                <path class="zegar__kr zegar__kr--c" d={kreskiD.c} />
-                <path class="zegar__kr zegar__kr--s" d={kreskiD.s} />
-                <path class="zegar__kr zegar__kr--g" d={kreskiD.g} />
-                {etykiety.map((e) => (
-                  <text class={'zegar__skala' + e.k} x={e.x} y={e.y} text-anchor="middle" dominant-baseline="central">{e.v}</text>
-                ))}
-              </g>
-              <g transform={`translate(${CX} ${CY})`} aria-hidden="true">
-                <line class="zegar__igla" x1="0" y1="0" x2="94" y2="0" />
-                <circle class="zegar__os" r="6" />
-              </g>
-              <text class="zegar__liczba" x="150" y="212" text-anchor="middle">0</text>
-              <text class="zegar__jednostka" x="150" y="232" text-anchor="middle">punktów</text>
-            </svg>
+            <Zegar id={`psi-zegar-${s}`} etykieta={`Wydajność, ${nazwa.toLowerCase()}`} />
             <p class="zegar__podpis" data-e={s}></p>
           </div>
         ))}
@@ -347,10 +295,10 @@ const daneStrukturalne = {
     };
 
     // ── zegary ──
-    const zg = (s: string) => zegary.querySelector('.zegar[data-s="' + s + '"]') as HTMLElement;
+    const zg = (s: string) => zegary.querySelector('.zegar-kol[data-s="' + s + '"]') as HTMLElement;
     const czesc = (s: string) => {
-      const z = zg(s), q = (k: string) => z.querySelector(k) as SVGElement;
-      return { z, svg: q('svg'), luk: q('.zegar__luk'), igla: q('.zegar__igla'), liczba: q('.zegar__liczba'), podpis: q('.zegar__podpis') };
+      const k = zg(s), z = k.querySelector('.zegar') as HTMLElement, q = (x: string) => k.querySelector(x) as SVGElement;
+      return { z, na: k.dataset.na, svg: q('svg'), luk: q('.zegar__luk'), igla: q('.zegar__igla'), liczba: q('.zegar__liczba'), podpis: q('.zegar__podpis') as unknown as HTMLElement };
     };
     const licz = (el: Element, w: number) => {
       if (spokoj) { el.textContent = String(w); return; }
@@ -370,7 +318,7 @@ const daneStrukturalne = {
       c.luk.style.setProperty('--off', '100');
       c.igla.style.setProperty('--w', '0');
       c.z.classList.add('zegar--pracuje');
-      c.podpis.textContent = 'Mierzymy na ' + c.z.dataset.na + '…';
+      c.podpis.textContent = 'Mierzymy na ' + c.na + '…';
       const los = () => { const v = 15 + Math.floor(Math.random() * 71); c.liczba.textContent = String(v); c.igla.style.setProperty('--w', String(v)); };
       if (spokoj) c.liczba.textContent = '…';
       else { los(); timery[s] = setInterval(los, 300); }
@@ -798,7 +746,8 @@ const daneStrukturalne = {
     }
   }
 
-  .zegar {
+  .zegar-kol {
+    min-width: 0;
     text-align: center;
   }
 
@@ -808,127 +757,6 @@ const daneStrukturalne = {
     font-weight: 600;
   }
 
-  .zegar__svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin: 0 auto;
-    overflow: visible;
-  }
-
-  .zegar__strefa,
-  .zegar__luk {
-    fill: none;
-    stroke-width: 12;
-  }
-
-  /* Elementy listy zaleceń tworzy skrypt, więc selektory potomków są :global (bez atrybutu zakresu Astro). */
-  /* Strefy toru wg progów Google (0–49 słaby, 50–89 do poprawy, 90–100 dobry): te same kolory co wypełnienie, ale blade. */
-  .zegar__strefa {
-    stroke-opacity: 0.4;
-  }
-
-  .zegar__strefa--zly {
-    stroke: var(--stan-zly);
-  }
-
-  .zegar__strefa--sredni {
-    stroke: var(--stan-sredni);
-  }
-
-  .zegar__strefa--dobry {
-    stroke: var(--stan-dobry);
-  }
-
-  .zegar__luk {
-    stroke: var(--stan-dobry);
-    stroke-dasharray: 100 100;
-    stroke-dashoffset: var(--off, 100);
-    transition: stroke-dashoffset 1.2s ease-out, stroke 0.4s;
-  }
-
-  .zegar[data-stan='sredni'] .zegar__luk {
-    stroke: var(--stan-sredni);
-  }
-
-  .zegar[data-stan='zly'] .zegar__luk {
-    stroke: var(--stan-zly);
-  }
-
-  /* Pomiar trwa: krótki odcinek łuku krąży po skali (cały bieg offsetu: od przed początkiem do za końcem). */
-  .zegar--pracuje .zegar__luk {
-    stroke-dasharray: 12 400;
-    transition: none;
-    animation: krazenie 1.6s ease-in-out infinite;
-  }
-
-  @keyframes krazenie {
-    from {
-      stroke-dashoffset: 12;
-    }
-    to {
-      stroke-dashoffset: -100;
-    }
-  }
-
-  /* Podziałka: kreski o stałej grubości na ekranie (cienka co 2, średnia co 10, gruba przy 0, 50, 90 i 100). */
-  .zegar__kr {
-    fill: none;
-    vector-effect: non-scaling-stroke;
-    stroke: var(--tekst-cichy);
-    stroke-width: 0.75px;
-  }
-
-  .zegar__kr--s {
-    stroke-width: 1.25px;
-  }
-
-  .zegar__kr--g {
-    stroke: var(--tekst);
-    stroke-width: 2.5px;
-  }
-
-  .zegar__skala {
-    fill: var(--tekst-cichy);
-    font-size: 13px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .zegar__skala--w {
-    fill: var(--tekst);
-    font-size: 15px;
-    font-weight: 700;
-  }
-
-  .zegar__igla {
-    stroke: var(--tekst);
-    stroke-width: 2.5px;
-    stroke-linecap: round;
-    transform: rotate(calc(150deg + var(--w, 0) * 2.4deg));
-    transition: transform 1.2s ease-out;
-  }
-
-  .zegar--pracuje .zegar__igla {
-    transition-duration: 0.3s;
-  }
-
-  .zegar__os {
-    fill: var(--tekst);
-  }
-
-  .zegar__liczba {
-    fill: var(--tekst);
-    font-size: 52px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .zegar__jednostka {
-    fill: var(--tekst-cichy);
-    font-size: 14px;
-  }
-
   .zegar__podpis {
     margin: var(--o-1) 0 0;
     font-size: var(--t-s);
@@ -936,42 +764,9 @@ const daneStrukturalne = {
     color: var(--tekst-cichy);
   }
 
-  /* Telefon: zegar ma ok. 45 % szerokości, więc liczby wokół łuku rosną względem rysunku, a pośrednie (10, 30, 70) znikają. */
   @media (max-width: 48rem) {
-    .zegar__skala {
-      font-size: 21px;
-    }
-
-    .zegar__skala--w {
-      font-size: 23px;
-    }
-
-    .zegar__skala--p {
-      display: none;
-    }
-
-    .zegar__liczba {
-      font-size: 64px;
-    }
-
-    .zegar__jednostka {
-      font-size: 19px;
-    }
-
     .zegar__nazwa {
       font-size: var(--t-s);
-    }
-
-    .zegar__kr {
-      stroke-width: 0.5px;
-    }
-
-    .zegar__kr--s {
-      stroke-width: 1px;
-    }
-
-    .zegar__kr--g {
-      stroke-width: 2px;
     }
   }
 
@@ -1233,21 +1028,10 @@ const daneStrukturalne = {
   /* Ruch ograniczony: bez krążenia, migania i przesuwania, łuk i paski ustawiają się od razu. */
   @media (prefers-reduced-motion: reduce) {
     .trwa::before,
-    .zegar--pracuje .zegar__luk,
     .paski__kol--pracuje .pasek {
       animation: none;
     }
 
-    .zegar__igla {
-      transition: none;
-    }
-
-    .zegar--pracuje .zegar__luk {
-      stroke-dasharray: 100 100;
-      stroke-dashoffset: 100;
-    }
-
-    .zegar__luk,
     .pasek > span {
       transition: none;
     }

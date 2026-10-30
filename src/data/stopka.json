@@ -1,6 +1,8 @@
 {
   "etykietaKrs": "KRS",
   "etykietaNip": "NIP",
+  "etykietaSad": "Sąd rejestrowy:",
+  "etykietaKapital": "Kapitał zakładowy:",
   "etykietaRegon": "REGON",
   "etykietaAdresWww": "Adres WWW:",
   "etykietaEmail": "E-mail:",

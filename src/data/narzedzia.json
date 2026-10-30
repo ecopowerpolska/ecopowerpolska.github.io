@@ -1,13 +1,13 @@
 {
-  "tytulKarty": "Darmowe narzędzia dla właścicieli stron: test szybkości, generator regulaminu i polityki | EcoPower Polska",
-  "opisWyszukiwarki": "Bezpłatne narzędzia dla właścicieli stron i sklepów: test szybkości strony w Google PageSpeed oraz generator regulaminu i polityki prywatności na podstawie NIP firmy.",
+  "tytulKarty": "Darmowe narzędzia dla właścicieli stron: 9 testów strony i generatory regulaminu i polityki | EcoPower Polska",
+  "opisWyszukiwarki": "Bezpłatne narzędzia dla właścicieli stron i sklepów: test szybkości, dane z prawdziwych wizyt, gotowość na AI, SEO, dostępność, waga, bezpieczeństwo, poczta, spam i prawo na stronie oraz generator regulaminu i polityki prywatności.",
   "okruszek": "Darmowe narzędzia",
   "naglowek": "Darmowe narzędzia dla właścicieli stron",
   "lead": "Bezpłatne, bez logowania, działają w przeglądarce.",
   "etykietaSiatki": "Lista narzędzi",
   "stanDziala": "Działa",
   "stanWkrotce": "W przygotowaniu",
-  "nota": "Narzędzia są bezpłatne i nie wymagają konta. W teście szybkości adres strony trafia do Google, a nie do nas. W generatorach do naszego skryptu na lh.pl trafia tylko NIP (skrypt pyta o dane firmy rejestry urzędowe), a gotowy dokument powstaje w Twojej przeglądarce i nie jest nigdzie zapisywany (więcej w [polityce prywatności](/polityka-prywatnosci/)).",
+  "nota": "Narzędzia są bezpłatne i nie wymagają konta. Test szybkości, dane z prawdziwych wizyt oraz część sprawdzeń w testach gotowości na AI i dostępności wysyłają adres strony do Google PageSpeed prosto z Twojej przeglądarki, nie do nas. Pozostałe testy przesyłają adres do naszego skryptu na lh.pl, który raz pobiera publicznie dostępną stronę i pyta o jej DNS; wyniku nie zapisujemy, poza pamięcią podręczną na godzinę. W generatorach do skryptu trafia tylko NIP (skrypt pyta o dane firmy rejestry urzędowe), a gotowy dokument powstaje w Twojej przeglądarce i nie jest nigdzie zapisywany (więcej w [polityce prywatności](/polityka-prywatnosci/)).",
   "kafelki": [
     {
       "id": "test-szybkosci",
@@ -16,6 +16,96 @@
       "opis": "Wpisz adres strony, a Google zmierzy ją w PageSpeed Insights. Wynik dla telefonu i komputera zobaczysz od razu, po polsku.",
       "stan": "dziala",
       "adres": "/jak-sprawdzic-szybkosc-strony/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "dane-terenowe-crux",
+      "ikona": "wykres",
+      "nazwa": "Dane z prawdziwych wizyt (Core Web Vitals)",
+      "opis": "Jak szybko Twoja strona działa u prawdziwych odwiedzających i czy zalicza Core Web Vitals Google. Dane z Google, po polsku.",
+      "stan": "dziala",
+      "adres": "/narzedzia/dane-terenowe-crux/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "wyszukiwanie-agentowe-ai",
+      "ikona": "ai",
+      "nazwa": "Wyszukiwanie agentowe i AI",
+      "opis": "Sprawdź, czy ChatGPT, Gemini i Claude mogą przeczytać i zacytować Twoją stronę: llms.txt, katalog zasobów, dostęp botów AI, dane strukturalne.",
+      "stan": "dziala",
+      "adres": "/narzedzia/wyszukiwanie-agentowe-ai/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "seo-techniczne",
+      "ikona": "szukaj",
+      "nazwa": "SEO techniczne",
+      "opis": "Czy wyszukiwarka widzi Twoją stronę: przekierowania, tytuł, opis, mapa strony, noindex i dane strukturalne.",
+      "stan": "dziala",
+      "adres": "/narzedzia/seo-techniczne/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "dostepnosc",
+      "ikona": "dostepnosc",
+      "nazwa": "Test dostępności strony",
+      "opis": "Czy z Twojej strony skorzystają osoby słabowidzące i niewidome? Kontrast, opisy zdjęć, formularze, nagłówki.",
+      "stan": "dziala",
+      "adres": "/narzedzia/dostepnosc/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "waga-i-media",
+      "ikona": "waga",
+      "nazwa": "Waga strony i zdjęcia",
+      "opis": "Ile waży Twoja strona, które zdjęcia ją spowalniają i co zmniejszyć.",
+      "stan": "dziala",
+      "adres": "/narzedzia/waga-i-media/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "bezpieczenstwo-i-zaufanie",
+      "ikona": "tarcza",
+      "nazwa": "Bezpieczeństwo i zaufanie strony",
+      "opis": "Sprawdź HTTPS, certyfikat, nagłówki ochronne, mieszane treści, formularze i ciasteczka. Wynik po polsku, z gotowymi poprawkami.",
+      "stan": "dziala",
+      "adres": "/narzedzia/bezpieczenstwo-i-zaufanie/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "poczta-domeny",
+      "ikona": "poczta",
+      "nazwa": "Test poczty i zabezpieczeń domeny",
+      "opis": "Sprawdza MX, SPF, DKIM i DMARC i mówi po polsku, czy ktoś może podszyć się pod Twoją domenę i czy maile trafiają do spamu.",
+      "stan": "dziala",
+      "adres": "/narzedzia/poczta-domeny/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "ochrona-przed-spamem",
+      "ikona": "spam",
+      "nazwa": "Ochrona przed spamem",
+      "opis": "Czy formularze mają ochronę, czy ktoś może podszyć się pod Twoją pocztę i czy domena jest na czarnych listach spamu.",
+      "stan": "dziala",
+      "adres": "/narzedzia/ochrona-przed-spamem/",
+      "guzik": "Otwórz",
+      "api": ""
+    },
+    {
+      "id": "prawo-na-stronie",
+      "ikona": "prawo",
+      "nazwa": "Prawo na stronie",
+      "opis": "Czy strona ma politykę prywatności, zgodę na cookies, regulamin i dane firmy — i czy analityka nie rusza przed zgodą.",
+      "stan": "dziala",
+      "adres": "/narzedzia/prawo-na-stronie/",
       "guzik": "Otwórz",
       "api": ""
     },

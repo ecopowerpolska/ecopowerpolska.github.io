@@ -2,7 +2,7 @@
 // /regulamin — regulamin świadczenia usług drogą elektroniczną w serwisie (runda 7, 2026-10-30, decyzja Piotra „regulamin”).
 // Podstawa: art. 8 ustawy z 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną (tekst jedn. Dz.U. 2024 poz. 1513):
 // rodzaje i zakres usług, warunki (wymagania techniczne, zakaz treści bezprawnych), zawieranie i rozwiązywanie umów, reklamacje.
-// Treść: src/data/regulamin.json. W tekście: [kotwica](/trasa/) = link, {nazwa} {adres} {nip} {krs} {regon} {email} {telefon} = firma.json.
+// Treść: src/data/regulamin.json. W tekście: [kotwica](/trasa/) = link, {nazwa} {adres} {nip} {krs} {sad} {kapital} {regon} {email} {telefon} = firma.json.
 // Punkt może być zwykłym tekstem albo obiektem { tekst, lista: [...] }. Układ jak /polityka-prywatnosci/: spis części w siatce
 // 4/2/1 kolumn, treść w kolumnach CSS (`columns: 24rem`). 0 kB JS.
 import Bazowy from '../layouts/Bazowy.astro';
@@ -29,6 +29,8 @@ const podstaw = (s: string) =>
     .replaceAll('{adres}', `${firma.adresSiedziby}, ${firma.kodPocztowy} ${firma.miejscowosc}`)
     .replaceAll('{nip}', firma.nip)
     .replaceAll('{krs}', firma.krs)
+    .replaceAll('{sad}', firma.sad)
+    .replaceAll('{kapital}', firma.kapital)
     .replaceAll('{regon}', firma.regon)
     .replaceAll('{email}', mail)
     .replaceAll('{telefon}', telefon);

@@ -1,0 +1,56 @@
+{
+  "slug": "seo-techniczne",
+  "nazwa": "Sprawdzenie SEO technicznego strony",
+  "tytulSeo": "Darmowy test SEO technicznego strony | EcoPower Polska",
+  "opis": "Darmowy test SEO technicznego: tytuł, opis, nagłówek H1, canonical, noindex, robots.txt i mapa strony. Wpisz adres i dostaniesz wynik po polsku.",
+  "lead": "Wpisz adres strony. Sprawdzimy, czy wyszukiwarka ją widzi i czy dobrze rozumie: przekierowania, tytuł, opis, mapę strony i dane strukturalne.",
+  "tryb": "serwer",
+  "test": "seo_techniczne",
+  "kategoriePsi": [],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "kod", "nazwa": "Kod odpowiedzi strony", "opis": "Strona powinna odpowiadać kodem 200, inaczej wyszukiwarka jej nie zaindeksuje.", "zalecenie": "Napraw adres albo serwer, żeby strona odpowiadała kodem 200.", "waga": 3 },
+    { "id": "przekierowania", "nazwa": "Przekierowania (http, https, www)", "opis": "Każda wersja adresu powinna prowadzić do jednego głównego adresu najwyżej jednym skokiem.", "zalecenie": "Ustaw jedno przekierowanie 301 z każdej wersji adresu na główny adres.", "waga": 2 },
+    { "id": "noindex", "nazwa": "Blokada indeksowania (noindex)", "opis": "Dyrektywa noindex zabrania Google pokazywania strony w wynikach wyszukiwania.", "zalecenie": "Usuń noindex, jeśli strona ma być widoczna w Google.", "waga": 3 },
+    { "id": "title", "nazwa": "Tytuł strony (title)", "opis": "Tytuł widać w wynikach Google i na karcie przeglądarki; powinien mieć 30–60 znaków.", "zalecenie": "Napisz tytuł 30–60 znaków: temat strony, miejscowość i nazwa firmy.", "waga": 3 },
+    { "id": "description", "nazwa": "Opis strony (meta description)", "opis": "Opis pojawia się pod tytułem w wynikach Google i zachęca do kliknięcia; powinien mieć 70–155 znaków.", "zalecenie": "Dodaj opis 70–155 znaków z konkretem i zachętą.", "waga": 2 },
+    { "id": "h1", "nazwa": "Nagłówek główny (H1)", "opis": "Strona powinna mieć dokładnie jeden główny nagłówek z jej tematem.", "zalecenie": "Zostaw na stronie jeden nagłówek H1 z głównym tematem.", "waga": 2 },
+    { "id": "canonical", "nazwa": "Adres kanoniczny (canonical)", "opis": "Canonical mówi Google, który adres jest główny; powinien wskazywać adres, na którym strona się kończy.", "zalecenie": "Ustaw canonical na własny, pełny adres strony.", "waga": 2 },
+    { "id": "robots", "nazwa": "Plik robots.txt", "opis": "Plik robots.txt mówi robotom, co wolno przeszukiwać; nie może blokować całej strony i powinien wskazywać mapę strony.", "zalecenie": "Usuń blokadę Disallow: / i dopisz linię Sitemap:.", "waga": 2 },
+    { "id": "sitemap", "nazwa": "Mapa strony (sitemap)", "opis": "Mapa strony to lista adresów dla wyszukiwarki; powinna zawierać sprawdzaną stronę.", "zalecenie": "Wygeneruj mapę strony i wpisz jej adres w robots.txt oraz w Search Console.", "waga": 2 },
+    { "id": "hreflang", "nazwa": "Wersje językowe (hreflang)", "opis": "Znaczniki hreflang wskazują wersje strony w innych językach. Przy jednym języku ich brak jest normalny.", "zalecenie": "", "waga": 1 },
+    { "id": "og", "nazwa": "Podgląd w komunikatorach (Open Graph)", "opis": "Znaczniki og:title i og:image decydują, jak strona wygląda po wklejeniu linku na Facebooku czy w Messengerze.", "zalecenie": "Dodaj og:title i og:image (obrazek min. 1200 × 630 px).", "waga": 1 },
+    { "id": "json-ld", "nazwa": "Dane strukturalne (JSON-LD)", "opis": "Dane strukturalne opisują firmę dla wyszukiwarki: nazwę, adres, telefon, usługi.", "zalecenie": "Dodaj dane typu Organization albo LocalBusiness.", "waga": 1 },
+    { "id": "lang", "nazwa": "Język strony (lang)", "opis": "Deklaracja języka pomaga wyszukiwarkom i czytnikom ekranu.", "zalecenie": "Dodaj do znacznika html atrybut lang=pl.", "waga": 1 },
+    { "id": "linki", "nazwa": "Linki wewnętrzne", "opis": "Linki do własnych podstron prowadzą robota i odwiedzających dalej.", "zalecenie": "Dodaj linki do ważnych podstron.", "waga": 1 },
+    { "id": "nofollow", "nazwa": "Linki z nofollow", "opis": "Link z rel=nofollow nie przekazuje wartości docelowej stronie; informacja bez oceny.", "zalecenie": "", "waga": 1 },
+    { "id": "alt", "nazwa": "Obrazy bez opisu (alt)", "opis": "Obraz bez atrybutu alt jest niezrozumiały dla Google Grafika i czytników ekranu.", "zalecenie": "Dodaj opis alt do każdego obrazu.", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Techniczne podstawy SEO są w porządku. Wyszukiwarka widzi stronę i dobrze ją rozumie." },
+    { "od": 50, "tekst": "Wyszukiwarka widzi stronę, ale kilka rzeczy utrudnia jej pracę. Zacznij od pozycji z ostrzeżeniem lub błędem." },
+    { "od": 0, "tekst": "Są poważne problemy: strona może być niewidoczna dla Google. Zacznij od pozycji z błędem." }
+  ],
+  "tekstDoKopiowania": "{nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Chcesz, żebyśmy to poprawili? Napisz do nas — sprawdzimy stronę i podamy cenę poprawek.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "",
+  "pusto": "",
+  "tresc": [
+    { "h2": "Co sprawdza ten test", "akapity": [
+      "Test pobiera jedną stronę pod podanym adresem i sprawdza to, co czyta wyszukiwarka: kod odpowiedzi, przekierowania między wersjami adresu (http, https, z www i bez), tytuł, opis, nagłówek H1, adres kanoniczny i dyrektywę noindex.",
+      "Sprawdza też pliki, które wyszukiwarka czyta przed stroną: robots.txt i mapę strony (liczbę adresów, datę ostatniej zmiany i to, czy jest w niej sprawdzany adres). Do tego dochodzą dane strukturalne, podgląd w komunikatorach, język, linki i obrazy bez opisu."
+    ] },
+    { "h2": "Dlaczego to ważne", "akapity": [
+      "Najczęstszy powód, dla którego nowa strona nie pojawia się w Google, to zapomniany noindex albo blokada w robots.txt po budowie strony. Drugi to dwie wersje adresu (z www i bez), które działają obok siebie jako osobne strony.",
+      "Tytuł i opis to to, co klient widzi w wynikach przed kliknięciem. Za długie Google ucina, brakujące dobiera samo — zwykle gorzej, niż zrobiłby to właściciel."
+    ] },
+    { "h2": "Jak czytać wynik", "akapity": [
+      "Ocena od 0 do 100 liczy się z wag: największe mają noindex, tytuł i kod odpowiedzi, mniejsze opis, nagłówek H1, canonical, robots.txt, mapa strony i przekierowania. Pozycje oznaczone jako informacja nie wchodzą do oceny.",
+      "Test jest pomocą, nie wyrokiem: ocena 100 nie gwarantuje wysokiej pozycji, bo o niej decyduje też treść strony i konkurencja. Ocena niska pokazuje za to, co naprawić w pierwszej kolejności."
+    ] },
+    { "h2": "Czego test nie robi", "akapity": [
+      "Test czyta tylko stronę, którą podasz, oraz robots.txt, mapę strony i dwie wersje adresu. Nie przechodzi po całym serwisie, więc nie znajdzie zdublowanych tytułów na innych podstronach ani zerwanych linków. Nie loguje się nigdzie i nie zapisuje wyników dłużej niż godzinę."
+    ] }
+  ]
+}

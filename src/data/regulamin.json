@@ -1,6 +1,6 @@
 {
   "tytulKarty": "Regulamin serwisu ecopowerpolska.pl | EcoPower Polska",
-  "opisWyszukiwarki": "Regulamin świadczenia usług drogą elektroniczną w serwisie ecopowerpolska.pl: formularz, kalkulator cen, test szybkości, blog, warunki korzystania i reklamacje.",
+  "opisWyszukiwarki": "Regulamin świadczenia usług drogą elektroniczną w serwisie ecopowerpolska.pl: formularz, kalkulator cen, test szybkości i testy audytu strony, blog, warunki korzystania i reklamacje.",
   "naglowek": "Regulamin serwisu ecopowerpolska.pl",
   "okruszek": "Regulamin",
   "lead": "Ten regulamin mówi, z jakich bezpłatnych usług możesz skorzystać na stronie www.ecopowerpolska.pl, na jakich zasadach i jak złożyć reklamację. Pisaliśmy go tak, żeby dało się go przeczytać w kilka minut.",
@@ -13,7 +13,7 @@
       "naglowek": "Postanowienia ogólne",
       "punkty": [
         "Regulamin określa zasady korzystania ze strony internetowej www.ecopowerpolska.pl (zwanej dalej „Serwisem”) oraz rodzaje, zakres i warunki usług świadczonych w niej drogą elektroniczną. Wydajemy go na podstawie ustawy z 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.",
-        "Usługodawcą i właścicielem Serwisu jest {nazwa} z siedzibą pod adresem {adres}, wpisana do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS {krs}, NIP {nip}, REGON {regon}. W regulaminie piszemy o niej „my” albo „Usługodawca”.",
+        "Usługodawcą i właścicielem Serwisu jest {nazwa} z siedzibą pod adresem {adres}, wpisana do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego, prowadzonego przez {sad}, pod numerem KRS {krs}, NIP {nip}, REGON {regon}, z kapitałem zakładowym {kapital}. W regulaminie piszemy o niej „my” albo „Usługodawca”.",
         "Kontakt z nami: e-mail {email}, telefon {telefon}, adres do korespondencji jak adres siedziby.",
         "Z Serwisu korzysta każdy, kto go odwiedza: osoba prywatna, przedsiębiorca albo instytucja. W regulaminie piszemy o niej „Ty” albo „Użytkownik”.",
         "Regulamin jest dostępny nieodpłatnie na tej podstronie, a link do niego jest w stopce każdej podstrony. Możesz go przeczytać przed skorzystaniem z jakiejkolwiek usługi, zapisać albo wydrukować z przeglądarki. Na prośbę wysłaną na adres {email} prześlemy go też w pliku."
@@ -31,6 +31,7 @@
             "Test szybkości strony ([Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/)): wpisujesz adres strony, a pomiar wykonuje Google PageSpeed Insights. Wpisany adres trafia do Google.",
             "Blog i treści informacyjne ([Blog](/blog/), [FAQ](/faq/), opisy usług i realizacji): możesz je czytać bez żadnych formalności.",
             "Tłumaczenie strony: przełącznik języków GTranslate w stopce. Tłumaczy automatycznie Google, a wersją źródłową jest polska.",
+            "Testy audytu strony ([Darmowe narzędzia](/darmowe-narzedzia/)): gotowość na wyszukiwanie agentowe i AI, dane z prawdziwych wizyt, SEO techniczne, dostępność, waga i media, bezpieczeństwo i zaufanie, poczta domeny, ochrona przed spamem i prawo na stronie. Wpisujesz adres strony, a nasz skrypt na serwerze LH.pl albo Google PageSpeed Insights sprawdza ją i pokazuje wynik po polsku. Testujemy wyłącznie treści dostępne publicznie, a wynik jest informacją, a nie opinią prawną ani gwarancją. Wyniku nie zapisujemy poza pamięcią podręczną na jedną godzinę.",
             "Generator regulaminu serwisu ([Darmowe narzędzia](/darmowe-narzedzia/)): wpisujesz NIP, a my pobieramy dane firmy z rejestrów urzędowych (Ministerstwa Finansów, KRS i CEIDG) przez nasz skrypt na serwerze LH.pl. Z tych danych i Twoich wyborów przeglądarka składa wzór regulaminu, który kopiujesz, pobierasz jako plik HTML albo drukujesz. Wzór jest informacją, a nie poradą prawną.",
             "Generator polityki prywatności (te same [Darmowe narzędzia](/darmowe-narzedzia/)): działa tak samo jak generator regulaminu, ale składa wzór polityki prywatności. Na naszym serwerze nie zapisujemy ani wpisanych przez Ciebie danych, ani gotowego dokumentu; do skryptu trafia tylko NIP."
           ]
@@ -54,7 +55,7 @@
       "punkty": [
         "Korzystasz z Serwisu zgodnie z prawem, regulaminem i dobrymi obyczajami.",
         "Nie wolno dostarczać nam treści o charakterze bezprawnym (art. 8 ust. 3 pkt 2 lit. b ustawy o świadczeniu usług drogą elektroniczną). Dotyczy to zwłaszcza formularza: nie wysyłaj w nim treści naruszających prawo lub prawa osób trzecich, gróźb, obelg ani złośliwego oprogramowania.",
-        "Nie wolno nadużywać Serwisu. Zakazane jest wysyłanie formularza programami i skryptami, rozsyłanie spamu i niezamówionych ofert, omijanie zabezpieczeń (w tym ochrony formularza) i masowe pobieranie treści, które obciąża Serwis. Wiadomości nadużywające formularza możemy usunąć bez odpowiedzi.",
+        "Nie wolno nadużywać Serwisu. Zakazane jest wysyłanie formularza programami i skryptami, rozsyłanie spamu i niezamówionych ofert, omijanie zabezpieczeń (w tym ochrony formularza), masowe pobieranie treści, które obciąża Serwis, i automatyczne uruchamianie testów audytu poza limitem sprawdzeń z jednego adresu IP (20 na godzinę); testów nie wolno kierować na strony, do których nie masz prawa. Wiadomości nadużywające formularza możemy usunąć bez odpowiedzi.",
         "Serwis i jego treści (teksty, grafiki, zrzuty ekranu, układ, kod) są chronione prawem autorskim. © EcoPower Polska. Zdjęcia i zrzuty realizacji należą do Usługodawcy albo do klientów, dla których zrealizowano pokazane projekty.",
         "Możesz cytować fragmenty treści w granicach dozwolonego użytku, podając źródło: nazwę Serwisu i adres podstrony. Kopiowanie w całości, rozpowszechnianie i użycie w celach komercyjnych wymaga naszej zgody."
       ]

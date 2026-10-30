@@ -982,6 +982,8 @@ collections:
           - { name: zamknij, label: "Opis krzyżyka zamykającego (dla czytnika ekranu)", widget: string }
 
       # ---- darmowe narzędzia (/darmowe-narzedzia) ----
+      # Pliki src/data/narzedzia/<slug>.json (dziewięć narzędzi audytu, /narzedzia/<slug>/) są POZA panelem: struktura stała (pozycje z wagami, progi,
+      # tryb, szablon kopiowania), zapis z panelu skasowałby pola. Zmiany w pliku w repo. Kafelki (w tym klucz `ikona` z mapy SVG w darmowe-narzedzia.astro): niżej.
       - name: narzedzia
         label: "Darmowe narzędzia (/darmowe-narzedzia)"
         file: "src/data/narzedzia.json"
@@ -1006,7 +1008,7 @@ collections:
             summary: "{{fields.nazwa}}"
             fields:
               - { name: id, label: "Identyfikator (małe litery, myślniki)", widget: string }
-              - { name: ikona, label: "Ikona", widget: select, options: ["szybkosc", "regulamin", "prywatnosc"], default: "szybkosc", required: false }
+              - { name: ikona, label: "Ikona", widget: select, options: ["szybkosc", "regulamin", "prywatnosc", "ai", "dostepnosc", "tarcza", "poczta", "szukaj", "waga", "prawo", "wykres", "spam"], default: "szybkosc", required: false }
               - { name: nazwa, label: "Nazwa narzędzia", widget: string }
               - { name: opis, label: "Opis", widget: text, required: false }
               - { name: stan, label: "Stan", widget: select, options: ["dziala", "wkrotce"], default: "wkrotce" }
@@ -1041,6 +1043,9 @@ collections:
             widget: string
             required: false
             hint: "Puste pole = wraca napis domyślny: REGON"
+
+          - { name: etykietaSad, label: "Podpis przed sądem rejestrowym", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Sąd rejestrowy:" }
+          - { name: etykietaKapital, label: "Podpis przed kapitałem zakładowym", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Kapitał zakładowy:" }
 
 
           - name: etykietaAdresWww
@@ -1341,7 +1346,7 @@ collections:
         file: "src/data/regulamin.json"
         description: >-
           Regulamin korzystania z usług serwisu (formularz, kalkulator, test szybkości, blog, tłumaczenie).
-          W tekście: [tekst](/trasa/) = odnośnik; {nazwa}, {adres}, {nip}, {krs}, {regon}, {email}, {telefon}
+          W tekście: [tekst](/trasa/) = odnośnik; {nazwa}, {adres}, {nip}, {krs}, {sad}, {kapital}, {regon}, {email}, {telefon}
           wypełnia strona z Danych firmy. Treść punktów (z wyliczeniami a–e) zmienia programista;
           w panelu edytujesz tytuły, opis i nagłówki części. Po zmianie treści zmień też datę w polu „Wersja”.
         fields:
@@ -1390,6 +1395,8 @@ collections:
             hint: "Skrót z formą prawną, np. EcoPower Polska Sp. z o.o. Puste pole = nazwa pełna."
           - { name: rejestr, label: "Rejestr", widget: string }
           - { name: krs, label: "KRS", widget: string }
+          - { name: sad, label: "Sąd rejestrowy", widget: string, required: false, hint: "Do stopki (KSH art. 206 § 1). Odpis KRS sądu nie podaje; wydziału nie wpisujemy bez dokumentu." }
+          - { name: kapital, label: "Kapitał zakładowy", widget: string, required: false, hint: "Do stopki, z odpisu aktualnego KRS, np. 5 000,00 zł." }
           - { name: nip, label: "NIP", widget: string }
           - { name: regon, label: "REGON", widget: string }
           - { name: adresWww, label: "Adres WWW", widget: string }

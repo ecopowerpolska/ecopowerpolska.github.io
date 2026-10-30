@@ -1,0 +1,57 @@
+{
+  "slug": "wyszukiwanie-agentowe-ai",
+  "nazwa": "Wyszukiwanie agentowe i AI",
+  "tytulSeo": "Czy asystenci AI znajdą Twoją stronę? Darmowy test | EcoPower Polska",
+  "opis": "Darmowy test gotowości strony na ChatGPT, Gemini i Claude: plik llms.txt, katalog zasobów, dostęp botów AI i dane strukturalne. Wynik po polsku.",
+  "lead": "Coraz więcej osób szuka firm, pytając asystenta AI, a nie wpisując hasło w Google. Wpisz adres strony i sprawdź, czy asystenci AI mogą ją przeczytać, zrozumieć i zacytować.",
+  "tryb": "oba",
+  "test": "wyszukiwanie_agentowe_ai",
+  "kategoriePsi": ["agentic-browsing"],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "kat:agentic-browsing", "nazwa": "Ocena Google: przeglądanie agentowe", "opis": "Google sprawdza, czy agent AI (program, który sam przegląda strony) poradzi sobie z Twoją stroną.", "zalecenie": "Zacznij od pozycji poniżej oznaczonych jako błąd lub uwaga, to one obniżają ocenę Google.", "waga": 3 },
+    { "id": "agent-accessibility-tree", "nazwa": "Strona czytelna dla agentów AI", "opis": "Agent AI „widzi” stronę jak czytnik ekranu: przyciski i pola muszą mieć nazwy, inaczej nie wie, co kliknąć.", "zalecenie": "Nadaj przyciskom, linkom i polom formularza opisy tekstowe oraz popraw błędy dostępności.", "waga": 1 },
+    { "id": "cumulative-layout-shift", "nazwa": "Stabilność układu strony", "opis": "Gdy elementy skaczą po załadowaniu, agent AI (i człowiek) może kliknąć w niewłaściwe miejsce.", "zalecenie": "Podaj wymiary obrazów i miejsce na reklamy oraz czcionki, żeby układ nie skakał.", "waga": 1 },
+    { "id": "llms-txt", "nazwa": "Poprawność pliku llms.txt (ocena Google)", "opis": "Google sprawdza, czy plik llms.txt ma zalecany układ: nagłówek, opis i listę stron.", "zalecenie": "Ułóż llms.txt według wzoru: nagłówek z nazwą firmy, jedno zdanie opisu, lista stron z krótkimi opisami.", "waga": 1 },
+    { "id": "ard-schema", "nazwa": "Poprawność katalogu ai-catalog.json (ocena Google)", "opis": "Google sprawdza, czy katalog zasobów dla agentów AI ma poprawną budowę.", "zalecenie": "Popraw plik /.well-known/ai-catalog.json tak, by był poprawnym JSON-em z wpisami o adresie i opisie.", "waga": 1 },
+    { "id": "llms-plik", "nazwa": "Plik llms.txt", "opis": "Krótki spis treści dla asystentów AI: kim jesteś i które strony są najważniejsze.", "zalecenie": "Dodaj plik llms.txt z nazwą firmy, opisem i listą najważniejszych stron.", "waga": 2 },
+    { "id": "ard-plik", "nazwa": "Katalog zasobów dla agentów AI", "opis": "Plik w /.well-known/, który podpowiada agentom AI, co oferujesz i gdzie to znaleźć.", "zalecenie": "Dodaj plik /.well-known/ai-catalog.json z listą usług i stron.", "waga": 2 },
+    { "id": "robots-ai", "nazwa": "Dostęp botów AI (robots.txt)", "opis": "Roboty ChatGPT, Claude, Gemini i innych asystentów mogą czytać stronę, tylko jeśli robots.txt ich nie blokuje.", "zalecenie": "Jeśli chcesz być cytowany w odpowiedziach AI, usuń blokady botów AI z robots.txt.", "waga": 1 },
+    { "id": "content-signal", "nazwa": "Zgoda na użycie treści (Content-Signal)", "opis": "Jedna linia w robots.txt, w której mówisz, czy treści mogą służyć do wyszukiwania, odpowiedzi AI i trenowania modeli.", "zalecenie": "Dopisz w robots.txt wiersz „Content-Signal: search=yes, ai-input=yes, ai-train=no”.", "waga": 1 },
+    { "id": "jsonld", "nazwa": "Dane strukturalne (JSON-LD)", "opis": "Ukryty opis firmy dla maszyn: nazwa, adres, telefon, usługi. Dzięki niemu asystent AI nie musi zgadywać.", "zalecenie": "Dodaj blok JSON-LD z typami Organization (albo LocalBusiness) i WebSite.", "waga": 2 },
+    { "id": "noai", "nazwa": "Znaczniki noai / noimageai", "opis": "Prośba o niewykorzystywanie treści do trenowania AI. Nie wpływa na ocenę.", "zalecenie": "", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Bardzo dobrze. Asystenci AI mogą bez problemu przeczytać i zrozumieć tę stronę." },
+    { "od": 50, "tekst": "Strona jest częściowo gotowa na AI. Dopracuj pozycje z ostrzeżeniem, a częściej pojawisz się w odpowiedziach asystentów." },
+    { "od": 0, "tekst": "Asystentom AI trudno znaleźć i zrozumieć tę stronę. Zacznij od pozycji z błędem." }
+  ],
+  "tekstDoKopiowania": "{nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Chcesz, żeby Twoją stronę znajdowali i cytowali asystenci AI? Napisz do nas, ustawimy to za Ciebie i podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "Adres strony trafia do naszego skryptu na lh.pl, który pobiera stronę główną, robots.txt i pliki dla AI, oraz do Google PageSpeed. Wyniku nigdzie nie zapisujemy (poza pamięcią podręczną na godzinę).",
+  "pusto": "Nie udało się odczytać wyniku. Spróbuj ponownie za kilka minut.",
+  "tresc": [
+    {
+      "h2": "Czym jest wyszukiwanie agentowe",
+      "akapity": [
+        "Klient pyta ChatGPT, Gemini albo Claude o „dobrą firmę od stron internetowych w Warszawie” i dostaje gotową odpowiedź z kilkoma nazwami. Jeśli asystent nie potrafi przeczytać Twojej strony, Ciebie w tej odpowiedzi nie będzie, nawet gdy w Google jesteś wysoko.",
+        "Agent AI to program, który sam przegląda strony, porównuje oferty i potrafi wypełnić formularz. Potrzebuje strony, którą da się przeczytać maszynowo: opisanej, uporządkowanej i niezablokowanej."
+      ]
+    },
+    {
+      "h2": "Co sprawdza to narzędzie",
+      "akapity": [
+        "Sprawdzamy plik llms.txt (spis treści dla AI), katalog zasobów w /.well-known/, robots.txt pod kątem ośmiu botów AI i deklaracji Content-Signal oraz dane strukturalne JSON-LD. Do tego dochodzi ocena Google z kategorii przeglądania agentowego w PageSpeed Insights.",
+        "Pobieramy tylko publicznie dostępne pliki, tak jak zrobiłaby to przeglądarka. Nie logujemy się nigdzie i niczego nie zmieniamy na Twojej stronie."
+      ]
+    },
+    {
+      "h2": "Czy blokować boty AI",
+      "akapity": [
+        "To Twoja decyzja. Firma, która chce, żeby polecał ją asystent AI, powinna dać botom wstęp. Wydawca, który nie chce, by jego teksty uczyły modele, może zablokować trenowanie, a zostawić wyszukiwanie.",
+        "Najlepiej ustawić to jawnie w robots.txt i w linii Content-Signal. Brak wpisu oznacza zgodę domyślną, więc o niczym wtedy nie decydujesz."
+      ]
+    }
+  ]
+}

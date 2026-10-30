@@ -1,0 +1,54 @@
+{
+  "slug": "dostepnosc",
+  "nazwa": "Test dostępności strony",
+  "tytulSeo": "Test dostępności strony WWW – darmowy | EcoPower Polska",
+  "opis": "Darmowy test dostępności strony: kontrast, opisy zdjęć, formularze, nagłówki i język. Wynik po polsku, z listą poprawek, bez rejestracji.",
+  "lead": "Sprawdź, czy z Twojej strony skorzystają osoby słabowidzące, niewidome i obsługujące ją klawiaturą. Wpisz adres, a dostaniesz ocenę i listę poprawek.",
+  "tryb": "oba",
+  "test": "dostepnosc",
+  "kategoriePsi": ["accessibility"],
+  "psiOba": false,
+  "pozycje": [
+    { "id": "kat:accessibility", "nazwa": "Ocena dostępności wg Google", "opis": "Ocena Google (Lighthouse) z automatycznych kontroli dostępności strony.", "zalecenie": "Popraw pozycje z błędem poniżej, a ocena wzrośnie.", "waga": 3 },
+    { "id": "color-contrast", "nazwa": "Kontrast tekstu z tłem", "opis": "Jasny tekst na jasnym tle (albo ciemny na ciemnym) jest nieczytelny dla osób słabowidzących i w słońcu na telefonie.", "zalecenie": "Zmień kolor tekstu lub tła tak, by różnica była wyraźna (kontrast co najmniej 4,5 do 1).", "waga": 3 },
+    { "id": "image-alt", "nazwa": "Opisy zdjęć (alt)", "opis": "Osoby niewidome i Google dowiadują się, co jest na zdjęciu, wyłącznie z jego opisu.", "zalecenie": "Dopisz krótki opis do każdego zdjęcia w panelu treści.", "waga": 2 },
+    { "id": "label", "nazwa": "Opisy pól formularza", "opis": "Pole bez podpisu jest dla osoby z czytnikiem ekranu zagadką, co w nim wpisać.", "zalecenie": "Dodaj do każdego pola widoczny podpis (znacznik label).", "waga": 2 },
+    { "id": "link-name", "nazwa": "Linki z opisem", "opis": "Link złożony z samej ikony nie ma nazwy, więc czytnik ekranu mówi tylko „link”.", "zalecenie": "Dodaj do ikon-linków opis (aria-label), np. „Facebook”.", "waga": 2 },
+    { "id": "button-name", "nazwa": "Przyciski z opisem", "opis": "Przycisk z samą ikoną (menu, koszyk, lupa) bez opisu jest dla niewidomych nieznany.", "zalecenie": "Dodaj do przycisków-ikon opis (aria-label), np. „Menu”.", "waga": 2 },
+    { "id": "viewport", "nazwa": "Widok na telefonie i powiększanie", "opis": "Strona musi dopasować się do telefonu i pozwalać powiększać tekst palcami.", "zalecenie": "Ustaw meta viewport z width=device-width i usuń blokadę powiększania.", "waga": 2 },
+    { "id": "html-has-lang", "nazwa": "Język strony", "opis": "Podany język pozwala czytnikowi ekranu czytać tekst z właściwą wymową.", "zalecenie": "Ustaw język strony na pl.", "waga": 1 },
+    { "id": "document-title", "nazwa": "Tytuł strony", "opis": "Tytuł mówi, gdzie użytkownik jest, i pojawia się w Google oraz na karcie przeglądarki.", "zalecenie": "Dodaj tytuł strony z nazwą firmy i tematem.", "waga": 1 },
+    { "id": "h1", "nazwa": "Główny nagłówek (H1)", "opis": "Jeden główny nagłówek mówi czytnikowi ekranu i Google, o czym jest strona.", "zalecenie": "Zostaw jeden nagłówek H1 z tematem strony.", "waga": 1 },
+    { "id": "heading-order", "nazwa": "Kolejność nagłówków", "opis": "Nagłówki idące po kolei (H1, H2, H3) działają jak spis treści dla czytnika ekranu.", "zalecenie": "Nie pomijaj poziomów nagłówków: po H2 następuje H3.", "waga": 1 },
+    { "id": "landmarki", "nazwa": "Obszary strony (main, nawigacja)", "opis": "Wyznaczona treść główna pozwala niewidomym od razu przejść do sedna, z pominięciem menu.", "zalecenie": "Zamknij treść główną w znaczniku main.", "waga": 1 },
+    { "id": "przejdz-do-tresci", "nazwa": "Link „Przejdź do treści”", "opis": "Osoby obsługujące stronę klawiaturą omijają dzięki niemu całe menu jednym naciśnięciem.", "zalecenie": "Dodaj na początku strony link „Przejdź do treści”.", "waga": 1 },
+    { "id": "autoplay", "nazwa": "Samoczynnie odtwarzane wideo i dźwięk", "opis": "Film lub dźwięk włączający się sam przeszkadza i utrudnia korzystanie ze strony.", "zalecenie": "Wyłącz samoczynne odtwarzanie albo dodaj przycisk zatrzymania.", "waga": 1 },
+    { "id": "tabindex", "nazwa": "Własna kolejność klawisza Tab", "opis": "Dodatnie wartości tabindex psują naturalną kolejność przechodzenia po stronie klawiaturą.", "zalecenie": "Usuń dodatnie wartości tabindex.", "waga": 1 },
+    { "id": "tresc-skryptem", "nazwa": "Treść budowana skryptem", "opis": "Strona buduje treść dopiero w przeglądarce, więc część kontroli wykonuje Google.", "zalecenie": "", "waga": 1 },
+    { "id": "ustawa", "nazwa": "Obowiązek prawny dostępności", "opis": "Od 28.06.2025 ustawa o zapewnianiu spełniania wymagań dostępności niektórych produktów i usług obejmuje m.in. sklepy internetowe i usługi online; mikroprzedsiębiorcy świadczący usługi są z niej wyłączeni.", "zalecenie": "", "waga": 1 }
+  ],
+  "progi": [
+    { "od": 90, "tekst": "Dostępność jest na dobrym poziomie. Zostały co najwyżej drobiazgi." },
+    { "od": 50, "tekst": "Część osób będzie miała kłopot ze stroną. Zacznij od pozycji z błędem, zwykle to kwestia kilku opisów i kolorów." },
+    { "od": 0, "tekst": "Strona jest trudna lub niemożliwa do obsługi dla wielu osób. Zacznij od pozycji z błędem." }
+  ],
+  "tekstDoKopiowania": "Wynik: {nazwa} dla {adres} ({data}): {ocena}/100.\n{pozycje}\n\nCo poprawić:\n{poprawic}",
+  "wezwanie": { "tekst": "Chcesz, żebyśmy poprawili dostępność Twojej strony? Napisz do nas — sprawdzimy i podamy cenę.", "guzik": "Napisz do nas", "adres": "/kontakt/#formularz" },
+  "pelnyRaport": "",
+  "nota": "",
+  "pusto": "Nie udało się ocenić dostępności tej strony. Sprawdź adres i spróbuj ponownie.",
+  "tresc": [
+    { "h2": "Co sprawdza test dostępności", "akapity": [
+      "Test pobiera Twoją stronę tak, jak robi to przeglądarka, i sprawdza rzeczy, od których zależy, czy skorzysta z niej osoba niewidoma, słabowidząca albo obsługująca komputer samą klawiaturą: opisy zdjęć, podpisy pól formularza, nazwy linków i przycisków, język strony, nagłówki, możliwość powiększania na telefonie.",
+      "Do tego dochodzi automatyczna ocena Google (Lighthouse) razem z kontrolą kontrastu, czyli różnicy między kolorem tekstu i tła. Wynik to jedna ocena od 0 do 100 i lista poprawek w kolejności od najważniejszych."
+    ] },
+    { "h2": "Dlaczego dostępność ma znaczenie dla firmy", "akapity": [
+      "Z dostępnej strony korzysta więcej osób: seniorzy, ktoś ze zmęczonym wzrokiem, klient przy słońcu na telefonie. Opisy zdjęć, jasne nagłówki i czytelny kontrast pomagają też Google zrozumieć, o czym jest strona, więc dostępność zwykle idzie w parze z pozycją w wyszukiwarce.",
+      "Od 28.06.2025 obowiązuje ustawa o zapewnianiu spełniania wymagań dostępności niektórych produktów i usług, która obejmuje m.in. sklepy internetowe i usługi online. Mikroprzedsiębiorcy świadczący usługi są z niej wyłączeni, ale dostępna strona jest dobrą praktyką niezależnie od obowiązku."
+    ] },
+    { "h2": "Czego ten test nie zastąpi", "akapity": [
+      "Automat wychwytuje tylko część problemów z dostępnością. Nie oceni, czy opis zdjęcia ma sens, czy kolejność treści jest logiczna ani jak strona zachowuje się przy czytniku ekranu. Traktuj wynik jako szybkie sprawdzenie, nie jako certyfikat.",
+      "Jeśli wynik jest niski albo potrzebujesz pełnego audytu, napisz do nas — poprawimy najczęstsze usterki i podamy cenę przed rozpoczęciem pracy."
+    ] }
+  ]
+}

@@ -9,7 +9,11 @@ Strona stoi na GitHub Pages (bez PHP), więc formularz wysyła zwykły POST na l
 |---|---|
 | `wyslij.php` | handler: Origin → honeypot `dodatkowe` → Turnstile `siteverify` → czas `t` → pola → licznik → `mail()` → 303 |
 | `firma.php` | `GET ?nip=` → dane firmy z rejestrów (MF → KRS → CEIDG) jako JSON dla generatorów w `/darmowe-narzedzia/` (kontrakt niżej) |
-| `.htaccess` | z sieci odpowiadają `wyslij.php` i `firma.php` (logi, liczniki, `.json`, `.md`, `.przyklad` zamknięte) |
+| `audyt.php` | `GET ?test=<nazwa>&url=<adres>` → JSON audytu obcej strony dla narzędzi `/narzedzia/<slug>/` (runda 9); wspólne pobranie strony, limit 20/h na IP, pamięć podręczna 1 h; kontrakt modułów: `docs/KONTRAKT-AUDYTU.md` |
+| `testy/_wspolne.php`, `testy/_dns.php` | biblioteki: pobranie z ochroną adresu (SSRF), nagłówki, HEAD, DNS, ocena; `_dns.php` = MX/SPF/DKIM/DMARC/BIMI wspólne dla testów poczty i spamu |
+| `testy/<nazwa>.php` (8) | moduły testów: `wyszukiwanie_agentowe_ai`, `dostepnosc`, `bezpieczenstwo_i_zaufanie`, `poczta_domeny`, `seo_techniczne`, `waga_i_media`, `prawo_na_stronie`, `ochrona_przed_spamem` (dziewiąty, `dane_terenowe_crux`, idzie z PSI w przeglądarce, bez PHP) |
+| `testy/.htaccess` | `Require all denied` (moduły woła tylko `audyt.php`) |
+| `.htaccess` | z sieci odpowiadają `wyslij.php`, `firma.php` i `audyt.php` (logi, liczniki, `.json`, `.md`, `.przyklad` zamknięte) |
 | `konfig/.htaccess`, `stan/.htaccess` | `Require all denied` (`stan/firma/` i `stan/firma-ip/` dziedziczą zakaz) |
 | `konfig.przyklad` | wzór `konfig/ecopowerpolska.pl.php` (na koncie 600; w repo NIGDY wartości); od 2026-10-30 także `ceidg_token`, `sol_ip` |
 

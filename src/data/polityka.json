@@ -33,7 +33,7 @@
       "id": "zakres",
       "naglowek": "Czego dotyczy ta polityka",
       "akapity": [
-        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), [generatorów regulaminu i polityki prywatności](/darmowe-narzedzia/), okna zgody na pliki cookie i przełącznika języków w stopce.",
+        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), [darmowych narzędzi](/darmowe-narzedzia/): testów audytu strony oraz generatorów regulaminu i polityki prywatności, okna zgody na pliki cookie i przełącznika języków w stopce.",
         "Strona nie prowadzi sprzedaży, nie zakłada kont, nie wysyła newslettera i nie pokazuje reklam."
       ]
     },
@@ -116,7 +116,7 @@
           [
             "ep.psi (session storage)",
             "Ta strona",
-            "Wynik testu szybkości (adres sprawdzanej strony, data i tekst raportu), który chcesz dołączyć do zapytania",
+            "Wynik testu szybkości albo innego narzędzia audytu (adres sprawdzanej strony, data i tekst raportu), który chcesz dołączyć do zapytania",
             "Do zamknięcia karty, wysłania zapytania albo kliknięcia „Usuń wynik”",
             "Niezbędny: usługa, o którą prosisz"
           ],
@@ -175,6 +175,18 @@
       ]
     },
     {
+      "id": "narzedzia-audytu",
+      "naglowek": "Darmowe narzędzia audytu: adres strony i nasz skrypt na LH.pl",
+      "akapity": [
+        "W [darmowych narzędziach](/darmowe-narzedzia/) znajdziesz testy strony: gotowość na wyszukiwanie agentowe i AI, dostępność, SEO techniczne, wagę i media, bezpieczeństwo i zaufanie, pocztę domeny, ochronę przed spamem oraz prawo na stronie. Wpisujesz adres strony, a wynik dostajesz po polsku.",
+        "Większość testów działa tak: Twoja przeglądarka wysyła wpisany adres do naszego skryptu na serwerze LH.pl. Skrypt jeden raz pobiera publicznie dostępną stronę główną tak, jak robi to przeglądarka, a do tego sprawdza pliki robots.txt i mapę strony, wysyła kilka zapytań o rozmiar plików (HEAD) i pyta publiczne serwery DNS o rekordy domeny (na przykład poczty). Nie loguje się na żadne konto, nie obchodzi żadnych zabezpieczeń i nie skanuje portów. Oceniamy wyłącznie treści dostępne publicznie.",
+        "W niektórych testach (dostępność, wyszukiwanie agentowe i AI, dane z prawdziwych wizyt) Twoja przeglądarka pyta też Google PageSpeed Insights. Wpisany adres strony i Twój adres IP trafiają wtedy do Google na jego zasadach; my tego zapytania nie widzimy.",
+        "Wyniku testu nie zapisujemy na stałe. Skrypt trzyma gotowy wynik w pamięci podręcznej przez jedną godzinę (plik jest usuwany najpóźniej po dwóch godzinach), żeby ten sam adres nie obciążał sprawdzanej strony wiele razy. Skrypt liczy też sprawdzenia z danego adresu IP, żeby jedna osoba nie przeciążyła usługi: licznik przechowujemy jako skrót z tajną solą, nie jako jawny adres IP, przez około dwie godziny. Dziennik skryptu zawiera tylko czas, nazwę testu i kod wyniku, bez adresu sprawdzanej strony i bez adresu IP, i jest usuwany po 30 dniach. Standardowe logi połączeń serwera hostingu mogą zapisać adres zapytania razem z adresem strony.",
+        "Podstawą jest art. 6 ust. 1 lit. f RODO, czyli nasz prawnie uzasadniony interes w świadczeniu bezpłatnego narzędzia i jego zabezpieczeniu przed nadużyciami. Adres strony firmowej zwykle nie jest daną osobową; jeśli sprawdzasz stronę osoby fizycznej, traktujemy go tak samo ostrożnie.",
+        "Wynik testu możesz skopiować albo dołączyć do zapytania w [formularzu kontaktowym](/kontakt/). Dołączony wynik zostaje w pamięci sesji Twojej przeglądarki do zamknięcia karty albo wysłania zapytania i usuwasz go przyciskiem „Usuń wynik”."
+      ]
+    },
+    {
       "id": "zasoby-zewnetrzne",
       "naglowek": "Czcionki i zasoby zewnętrzne",
       "akapity": [
@@ -188,7 +200,7 @@
       "naglowek": "Hosting i logi serwera",
       "akapity": [
         "Strona działa na GitHub Pages, usłudze GitHub, Inc. z siedzibą w Stanach Zjednoczonych. GitHub zapisuje adres IP odwiedzających stronę w celach bezpieczeństwa.",
-        "Skrypt formularza i generatorów oraz skrzynka pocztowa działają na serwerach LH.pl Sp. z o.o. Ta firma przetwarza dane na zlecenie administratora, jako podmiot przetwarzający. Serwer zapisuje standardowe logi połączeń: adres IP, datę i godzinę, adres pobranego pliku oraz informacje o przeglądarce i błędach.",
+        "Skrypt formularza, generatorów i narzędzi audytu oraz skrzynka pocztowa działają na serwerach LH.pl Sp. z o.o. Ta firma przetwarza dane na zlecenie administratora, jako podmiot przetwarzający. Serwer zapisuje standardowe logi połączeń: adres IP, datę i godzinę, adres pobranego pliku oraz informacje o przeglądarce i błędach.",
         "Logi służą bezpieczeństwu i utrzymaniu serwera. Podstawą jest art. 6 ust. 1 lit. f RODO. Okres przechowywania logów wynika z zasad dostawców hostingu."
       ]
     },
@@ -200,7 +212,7 @@
       ],
       "lista": [
         "GitHub, Inc.: hosting strony (adres IP i informacje techniczne o przeglądarce)",
-        "LH.pl sp. z o.o. (hosting serwera, na którym działa skrypt formularza i narzędzi): NIP wpisany w generatorze oraz poczta, na którą trafiają wiadomości z formularza",
+        "LH.pl sp. z o.o. (hosting serwera, na którym działa skrypt formularza i narzędzi): NIP wpisany w generatorze, adres strony wpisany w narzędziu audytu oraz poczta, na którą trafiają wiadomości z formularza",
         "Ministerstwo Finansów, Krajowy Rejestr Sądowy i CEIDG: rejestry urzędowe, do których nasz skrypt wysyła NIP (i numer KRS, który zwróciła biała lista), żeby pobrać dane firmy dla generatorów",
         "Cloudflare, Inc.: ochrona formularza kontaktowego usługą Turnstile (adres IP i informacje techniczne o przeglądarce)",
         "GTranslate Inc. i Google LLC: przełącznik języków i tłumaczenie strony, gdy z nich korzystasz (adres IP, informacje o przeglądarce i treść tłumaczonej podstrony)",
@@ -210,7 +222,7 @@
       ],
       "akapityPo": [
         "Poza Europejski Obszar Gospodarczy dane trafiają do GitHub, Inc. w USA przy odwiedzinach strony, do Cloudflare, Inc. w USA przy sprawdzeniu Turnstile, a gdy korzystasz z tłumaczenia, także do GTranslate Inc. i Google LLC w USA. Przekazywanie danych do Cloudflare odbywa się na podstawie standardowych klauzul umownych zatwierdzonych przez Komisję Europejską, które są częścią umowy powierzenia przetwarzania danych Cloudflare.",
-        "Google nie jest naszym odbiorcą danych. Dane trafiają do Google tylko wtedy, gdy sam uruchomisz test szybkości strony albo wybierzesz język tłumaczenia."
+        "Google nie jest naszym odbiorcą danych. Dane trafiają do Google tylko wtedy, gdy sam uruchomisz test szybkości, dane z prawdziwych wizyt albo test, który pyta PageSpeed Insights (dostępność, wyszukiwanie agentowe i AI), albo wybierzesz język tłumaczenia."
       ]
     },
     {
@@ -221,6 +233,7 @@
         "wpis w dzienniku nieudanych wysyłek formularza: do obsługi zapytania",
         "dane osób, które zamówiły usługę: przez czas wykonania umowy, okres przedawnienia roszczeń i okres wymagany przepisami podatkowymi",
         "odpowiedź rejestrów dla NIP wpisanego w generatorze: 24 godziny; licznik zapytań z adresu IP (skrót z solą): 2 godziny; dziennik skryptu bez NIP-u i adresu IP: 30 dni",
+        "wynik narzędzia audytu: godzina w pamięci podręcznej skryptu (plik usuwany najpóźniej po dwóch godzinach); licznik sprawdzeń z adresu IP (skrót z solą): około 2 godzin; dziennik bez adresu strony i adresu IP: 30 dni",
         "logi serwera: przez okres wynikający z zasad dostawców hostingu",
         "pamięć sesji przeglądarki: wyliczenia, dane z formularza i wynik testu szybkości do zamknięcia karty albo wysłania zapytania",
         "wybór z okna cookie i wybrany język tłumaczenia: do zmiany albo wyczyszczenia danych strony w przeglądarce"
@@ -272,7 +285,7 @@
       "naglowek": "Zmiany polityki",
       "akapity": [
         "Politykę zmieniamy, gdy zmienia się działanie strony albo przepisy. Aktualna wersja jest zawsze pod tym adresem.",
-        "Ta wersja obowiązuje od 30 października 2026."
+        "Ta wersja obowiązuje od 30 października 2026. W tej wersji dopisaliśmy część o darmowych narzędziach audytu strony."
       ]
     }
   ]

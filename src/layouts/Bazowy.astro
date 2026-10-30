@@ -28,6 +28,9 @@ const linkPomijania = tekst(strona.linkPomijania, 'Przejdź do treści');
 // Kanoniczny adres budujemy z import.meta.env.SITE — dawne globalne pole `site`
 // na obiekcie Astro zostało usunięte w Astro 6 (reguła AG022 walidatora).
 const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
+// Obraz do udostępnień: wpis bloga podaje własny, reszta stron dostaje kartę z logo 1200×630 (public/og-ecopower-polska.png).
+const domyslnyOg = new URL('/og-ecopower-polska.png', import.meta.env.SITE).href;
+const obraz = obrazOg || domyslnyOg;
 ---
 
 <!doctype html>
@@ -46,7 +49,11 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
     <meta property="og:title" content={tytul} />
     <meta property="og:description" content={opis} />
     <meta property="og:url" content={kanoniczny} />
-    {obrazOg && <meta property="og:image" content={obrazOg} />}
+    <meta property="og:image" content={obraz} />
+    {!obrazOg && <meta property="og:image:width" content="1200" />}
+    {!obrazOg && <meta property="og:image:height" content="630" />}
+    {!obrazOg && <meta property="og:image:alt" content={nazwaWitryny} />}
+    <meta name="twitter:card" content="summary_large_image" />
 
     {/* Jeden kolor, bez wariantu ciemnego (D1). Wartość = --tlo z motyw.css. */}
     <meta name="theme-color" content="#f4f5f1" />

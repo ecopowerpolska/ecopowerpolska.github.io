@@ -1,0 +1,232 @@
+---
+// Zegar oceny 0–100 (wzorzec Piotra z 2026-10-29): łuk 240°, trzy strefy Google (0–49 / 50–89 / 90–100), podziałka co 2 i co 10,
+// liczby co 10 (50 i 90 wytłuszczone), igła i duża liczba. Geometria powstaje w buildzie, komponent nie ma JS: skrypt strony ustawia
+// na `.zegar` atrybut data-stan (dobry|sredni|zly|brak), klasę zegar--pracuje, na `.zegar__luk` zmienną --off (100 − ocena),
+// na `.zegar__igla` zmienną --w (ocena), tekst `.zegar__liczba` i aria-valuenow na `.zegar__svg`.
+// Wymaga od przodka zmiennych --stan-dobry, --stan-sredni, --stan-zly (dziś: .narz w StronaNarzedzia, .test w teście szybkości).
+interface Props {
+  id: string;
+  etykieta: string;
+  rozmiar?: string;
+}
+const { id, etykieta, rozmiar = '30rem' } = Astro.props;
+
+const CX = 150, CY = 145, R = 100;
+const pt = (r: number, v: number): [number, number] => {
+  const a = ((150 + 2.4 * v) * Math.PI) / 180;
+  return [+(CX + r * Math.cos(a)).toFixed(1), +(CY + r * Math.sin(a)).toFixed(1)];
+};
+const luk = (v0: number, v1: number) => {
+  const [ax, ay] = pt(R, v0), [bx, by] = pt(R, v1);
+  return `M${ax} ${ay}A${R} ${R} 0 ${v1 - v0 > 75 ? 1 : 0} 1 ${bx} ${by}`;
+};
+const sciezka = luk(0, 100);
+const strefy = [
+  ['zly', luk(0, 50)],
+  ['sredni', luk(50, 90)],
+  ['dobry', luk(90, 100)],
+];
+const kreski = { c: '', s: '', g: '' };
+for (let v = 0; v <= 100; v += 2) {
+  const grube = [0, 50, 90, 100].includes(v), k = grube ? 'g' : v % 10 === 0 ? 's' : 'c';
+  const [ax, ay] = pt(R + 8, v), [bx, by] = pt(R + (grube ? 20 : v % 10 === 0 ? 16 : 12), v);
+  kreski[k as 'c' | 's' | 'g'] += `M${ax} ${ay}L${bx} ${by}`;
+}
+const liczby = Array.from({ length: 11 }, (_, i) => {
+  const v = i * 10, [x, y] = pt(R + 35, v);
+  return { v, x, y, k: v === 50 || v === 90 ? ' zegar__skala--w' : v % 20 === 10 ? ' zegar__skala--p' : '' };
+});
+---
+
+<div class="zegar" id={id} style={`--rozmiar:${rozmiar}`}>
+  <svg class="zegar__svg" viewBox="0 0 300 240" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label={etykieta}>
+    {strefy.map(([st, d]) => <path class={`zegar__strefa zegar__strefa--${st}`} d={d} />)}
+    <path class="zegar__luk" d={sciezka} pathLength="100" />
+    <g aria-hidden="true">
+      <path class="zegar__kr zegar__kr--c" d={kreski.c} />
+      <path class="zegar__kr zegar__kr--s" d={kreski.s} />
+      <path class="zegar__kr zegar__kr--g" d={kreski.g} />
+      {liczby.map((e) => <text class={'zegar__skala' + e.k} x={e.x} y={e.y} text-anchor="middle" dominant-baseline="central">{e.v}</text>)}
+    </g>
+    <g transform={`translate(${CX} ${CY})`} aria-hidden="true">
+      <line class="zegar__igla" x1="0" y1="0" x2="94" y2="0" />
+      <circle class="zegar__os" r="6" />
+    </g>
+    <text class="zegar__liczba" x="150" y="212" text-anchor="middle">0</text>
+    <text class="zegar__jednostka" x="150" y="232" text-anchor="middle">punktów</text>
+  </svg>
+</div>
+
+<style>
+  .zegar {
+    width: 100%;
+    max-width: var(--rozmiar, 30rem);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .zegar__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .zegar__strefa,
+  .zegar__luk {
+    fill: none;
+    stroke-width: 12;
+  }
+
+  .zegar__strefa {
+    stroke-opacity: 0.4;
+  }
+
+  .zegar__strefa--zly {
+    stroke: var(--stan-zly);
+  }
+
+  .zegar__strefa--sredni {
+    stroke: var(--stan-sredni);
+  }
+
+  .zegar__strefa--dobry {
+    stroke: var(--stan-dobry);
+  }
+
+  .zegar__luk {
+    stroke: var(--stan-dobry);
+    stroke-dasharray: 100 100;
+    stroke-dashoffset: var(--off, 100);
+    transition: stroke-dashoffset 1.2s ease-out, stroke 0.4s;
+  }
+
+  .zegar[data-stan='sredni'] .zegar__luk {
+    stroke: var(--stan-sredni);
+  }
+
+  .zegar[data-stan='zly'] .zegar__luk {
+    stroke: var(--stan-zly);
+  }
+
+  /* Pomiar trwa: krótki odcinek łuku krąży po skali. */
+  .zegar--pracuje .zegar__luk {
+    stroke-dasharray: 12 400;
+    transition: none;
+    animation: krazenie 1.6s ease-in-out infinite;
+  }
+
+  @keyframes krazenie {
+    from {
+      stroke-dashoffset: 12;
+    }
+    to {
+      stroke-dashoffset: -100;
+    }
+  }
+
+  .zegar__kr {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    stroke: var(--tekst-cichy);
+    stroke-width: 0.75px;
+  }
+
+  .zegar__kr--s {
+    stroke-width: 1.25px;
+  }
+
+  .zegar__kr--g {
+    stroke: var(--tekst);
+    stroke-width: 2.5px;
+  }
+
+  .zegar__skala {
+    fill: var(--tekst-cichy);
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zegar__skala--w {
+    fill: var(--tekst);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .zegar__igla {
+    stroke: var(--tekst);
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+    transform: rotate(calc(150deg + var(--w, 0) * 2.4deg));
+    transition: transform 1.2s ease-out;
+  }
+
+  .zegar--pracuje .zegar__igla {
+    transition-duration: 0.3s;
+  }
+
+  .zegar__os {
+    fill: var(--tekst);
+  }
+
+  .zegar__liczba {
+    fill: var(--tekst);
+    font-size: 52px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .zegar__jednostka {
+    fill: var(--tekst-cichy);
+    font-size: 14px;
+  }
+
+  /* Telefon: zegar ma ok. połowy szerokości ekranu, więc liczby rosną względem rysunku, a pośrednie (10, 30, 70) znikają. */
+  @media (max-width: 48rem) {
+    .zegar__skala {
+      font-size: 21px;
+    }
+
+    .zegar__skala--w {
+      font-size: 23px;
+    }
+
+    .zegar__skala--p {
+      display: none;
+    }
+
+    .zegar__liczba {
+      font-size: 64px;
+    }
+
+    .zegar__jednostka {
+      font-size: 19px;
+    }
+
+    .zegar__kr {
+      stroke-width: 0.5px;
+    }
+
+    .zegar__kr--s {
+      stroke-width: 1px;
+    }
+
+    .zegar__kr--g {
+      stroke-width: 2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zegar--pracuje .zegar__luk {
+      animation: none;
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 100;
+    }
+
+    .zegar__igla,
+    .zegar__luk {
+      transition: none;
+    }
+  }
+</style>

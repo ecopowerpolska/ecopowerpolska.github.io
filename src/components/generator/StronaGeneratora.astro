@@ -323,7 +323,8 @@ const czesci = (t: string) => kawalki(t);
       const ma = (n: string) => z.has(n) || !!f[n];
       wszystkie<HTMLElement>('[data-f]', dok).forEach((e) => {
         const v = f[e.dataset.f!];
-        e.textContent = v || '[' + B[e.dataset.f!] + ']';
+        // Wartość kończąca się kropką („SP. Z O.O.”), a w szablonie zaraz po niej „.”: jedna kropka, nie dwie.
+        e.textContent = v && /[\p{L}\d]\.$/u.test(v) && e.nextSibling?.textContent?.[0] == '.' ? v.slice(0, -1) : v || '[' + B[e.dataset.f!] + ']';
         e.classList.toggle('brak', !v);
       });
       wszystkie<HTMLElement>('[data-w]', dok).forEach((e) => {

@@ -2,7 +2,7 @@
 """psi-realizacje.py — pomiar PageSpeed Insights każdej realizacji z src/data/serwisy.json.
 
 Wynik: src/data/pomiary.json (adres → data, mobile, desktop, teren), czytany przez
-src/components/Kafelek.astro. Plik NIE jest w panelu CMS — odświeża go tylko ten skrypt.
+src/components/Realizacje.astro. Plik NIE jest w panelu CMS — odświeża go tylko ten skrypt.
 
 Uruchomienie (z katalogu strony; klucz wyłącznie w zmiennej środowiska, nigdy w pliku):
   KEY=$(bash /home/ecopower/projekty/test-claude/potwor/scripts/klucze-dostepne.sh pagespeed-z440) \

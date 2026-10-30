@@ -2,7 +2,7 @@
 tytul: "WooCommerce, PrestaShop czy Shoper: jaki sklep wybrać"
 tytulSeo: "WooCommerce, PrestaShop czy Shoper: jaki sklep wybrać"
 opisSeo: "WooCommerce, PrestaShop, Shoper i IdoSell albo szybki sklep w Astro: dla kogo jest każda droga, kto obsługuje serwer i za co płacisz co miesiąc."
-dataPublikacji: "2026-10-27T21:20:00+01:00"
+dataPublikacji: "2026-10-20T15:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie”, przycisk „Sprawdź cenę kuchni, szafy albo garderoby” i zdjęcie kuchni w drewnie"
 szkic: false

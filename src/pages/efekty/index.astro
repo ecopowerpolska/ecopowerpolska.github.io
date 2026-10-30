@@ -1,8 +1,9 @@
 ---
-// /efekty — „Wybierz efekt”: dodatkowa część portfolio (decyzja Piotra 2026-10-27, runda 4). Każdy efekt ma własną
-// podstronę /efekty/<slug>/ i zdanie o koszcie wydajności. Treść: src/data/efekty.json (panel: Teksty strony → Efekty).
-// Pokazują się tylko efekty ze statusem „gotowy”. Zero JS. Siatka bez sierot: kolumny o stałej szerokości wyśrodkowane,
-// więc 1 karta stoi na środku, a 2–3 nie rozciągają się na całą szerokość.
+// /efekty — „Efekty wizualne możliwe do zaimplementowania na stronę” (runda 4: 2026-10-27; runda 7: 2026-10-30, decyzja Piotra:
+// kafelki otwierające podstrony z pokazami, na pełną szerokość, resztę dokładamy sukcesywnie). Lista kafelków z src/data/efekty.json
+// (panel: Teksty strony → Efekty): nowy efekt = wpis w JSON + plik src/pages/efekty/<slug>.astro na szkielecie SzkieletEfektu.
+// Pokazują się tylko efekty ze statusem „gotowy”; pole `adres` kieruje kafelek na istniejącą stronę zamiast /efekty/<slug>/. Zero JS.
+// Siatka: 3 kafelki w rzędzie od 64 rem, 2 od 48 rem, 1 na telefonie; niepełny ostatni rząd z lewej jak reszta.
 import Bazowy from '../../layouts/Bazowy.astro';
 import PasekMarki from '../../components/PasekMarki.astro';
 import Stopka from '../../components/Stopka.astro';
@@ -25,16 +26,19 @@ const efekty = (Array.isArray(e.efekty) ? (e.efekty as Record<string, unknown>[]
     status: naTekst(w?.status),
     miniatura: naTekst(w?.miniatura),
     alt: naTekst(w?.alt),
+    waga: naTekst(w?.waga),
+    adres: naTekst(w?.adres),
+    naStronie: w?.naStronie === true,
   }))
   .filter((w) => w.nazwa && /^[a-z0-9-]+$/.test(w.slug) && w.status === 'gotowy');
 
-const tytul = napis('tytulKarty', 'Efekty na stronach internetowych: animacja przewijaniem i inne — EcoPower Polska');
+const tytul = napis('tytulKarty', 'Efekty wizualne możliwe do zaimplementowania na stronę — EcoPower Polska');
 const opis = napis(
   'opisWyszukiwarki',
   'Efekty, które dodajemy do stron internetowych. Przy każdym podajemy, ile waży i jak wypada w Google PageSpeed.',
 );
-const naglowek = napis('naglowek', 'Efekty na stronach, które robimy');
-const przycisk = napis('przycisk', 'Zobacz efekt');
+const naglowek = napis('naglowek', 'Efekty wizualne możliwe do zaimplementowania na stronę');
+const przycisk = napis('przycisk', 'Zobacz');
 
 const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
 const adres = new URL('/efekty/', import.meta.env.SITE).href;
@@ -58,7 +62,7 @@ const daneStrukturalne = {
       hasPart: efekty.map((w) => ({
         '@type': 'WebPage',
         name: w.nazwa,
-        url: new URL(`/efekty/${w.slug}/`, import.meta.env.SITE).href,
+        url: new URL(w.adres || `/efekty/${w.slug}/`, import.meta.env.SITE).href,
       })),
     },
     {
@@ -92,19 +96,13 @@ const daneStrukturalne = {
 
     <h1 class="efekty__tytul">{naglowek}</h1>
     {napis('lead', '') && <p class="efekty__lead">{napis('lead', '')}</p>}
-    {napis('wydajnoscZdanie', '') && (
-      <p class="efekty__wydajnosc">
-        {napis('wydajnoscZdanie', '')}{' '}
-        <a href="/jak-sprawdzic-szybkosc-strony/">Jak sprawdzić szybkość strony</a>
-      </p>
-    )}
 
     <section class="wybor" aria-labelledby="wybierz-efekt">
-      <h2 id="wybierz-efekt" class="wybor__naglowek">{napis('wybierzNaglowek', 'Wybierz efekt')}</h2>
+      <h2 id="wybierz-efekt" class="wybor__naglowek">{napis('wybierzNaglowek', 'Wszystkie efekty')}</h2>
       <ul class="karty">
         {efekty.map((w, i) => (
-          <li class="karta">
-            <a class="karta__link" href={`/efekty/${w.slug}/`}>
+          <li class="karta" data-ujawnij={i > 2 ? '' : undefined}>
+            <a class="karta__link" href={w.adres || `/efekty/${w.slug}/`}>
               {w.miniatura && (
                 <span class="karta__obraz">
                   <img
@@ -121,7 +119,12 @@ const daneStrukturalne = {
               <span class="karta__tresc">
                 <span class="karta__nazwa">{w.nazwa}</span>
                 {w.opisKrotki && <span class="karta__opis">{w.opisKrotki}</span>}
-                {w.kosztWzgledny && <span class="karta__koszt">{w.kosztWzgledny}</span>}
+                {(w.waga || w.naStronie) && (
+                  <span class="karta__koszt">
+                    {w.naStronie && <strong class="karta__plakietka">Działa na tej stronie</strong>}
+                    {w.waga}
+                  </span>
+                )}
                 <span class="karta__przycisk">{przycisk}</span>
               </span>
             </a>
@@ -129,6 +132,13 @@ const daneStrukturalne = {
         ))}
       </ul>
     </section>
+
+    {napis('wydajnoscZdanie', '') && (
+      <p class="efekty__wydajnosc">
+        {napis('wydajnoscZdanie', '')}{' '}
+        <a href="/jak-sprawdzic-szybkosc-strony/">Jak sprawdzić szybkość strony</a>
+      </p>
+    )}
   </main>
 
   <Stopka />
@@ -188,22 +198,16 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* D22 (2026-10-30): wąska kolumna 44 rem wyśrodkowana, H1 i wstęp na środku. */
-  .okruszki,
-  .efekty__tytul,
-  .efekty__lead,
-  .efekty__wydajnosc {
-    max-width: 44rem;
-    margin-inline: auto;
-  }
-
+  /* D22 + runda 7: H1 i wstęp na środku, siatka kafelków na pełną szerokość kontenera. */
   .efekty__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
     text-align: center;
+    text-wrap: balance;
   }
 
   .efekty__lead {
-    margin-block: var(--o-4) 0;
+    max-width: 52rem;
+    margin: var(--o-4) auto 0;
     text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
@@ -211,30 +215,46 @@ const daneStrukturalne = {
   }
 
   .efekty__wydajnosc {
-    margin-block: var(--o-4) 0;
+    max-width: 52rem;
+    margin: var(--o-12) auto 0;
     text-align: center;
     color: var(--tekst-cichy);
   }
 
   .wybor {
-    margin-top: var(--o-12);
+    margin-top: var(--o-8);
   }
 
+  /* Nagłówek sekcji dla czytników ekranu i struktury dokumentu; kafelki mówią same za siebie. */
   .wybor__naglowek {
-    font-size: var(--t-xl);
-    margin-bottom: var(--o-6);
-    text-align: center;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
-  /* Kolumny stałej szerokości, wyśrodkowane: przy 1–3 kartach nie ma sierot ani karty na całą szerokość. */
   .karty {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 24rem));
-    justify-content: center;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--o-6);
+  }
+
+  @media (min-width: 48rem) {
+    .karty {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .karty {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   /* Karta jak kafelek Realizacji: wypełnienie zamiast obwódki, promień z motywu. */
@@ -242,6 +262,7 @@ const daneStrukturalne = {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
     background: var(--powierzchnia);
     border-radius: var(--promien);
     color: var(--tekst);
@@ -266,7 +287,6 @@ const daneStrukturalne = {
     display: block;
     aspect-ratio: 3 / 2;
     background: var(--powierzchnia-mocna);
-    border-radius: var(--promien) var(--promien) 0 0;
     overflow: hidden;
   }
 
@@ -274,7 +294,7 @@ const daneStrukturalne = {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
   }
 
   .karta__tresc {
@@ -301,8 +321,16 @@ const daneStrukturalne = {
   }
 
   .karta__koszt {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-1);
     padding-top: var(--o-2);
     border-top: 1px solid var(--linia);
+  }
+
+  .karta__plakietka {
+    color: var(--akcent);
+    font-weight: 600;
   }
 
   /* Wygląd przycisku na elemencie w linku karty (cały kafelek jest jednym celem dotyku). */
@@ -317,6 +345,11 @@ const daneStrukturalne = {
     background: var(--akcent);
     color: var(--tlo);
     font-weight: 600;
+  }
+
+  .karta__link:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 3px;
   }
 
   /* Link w akapicie odróżniony nie tylko kolorem (WCAG 1.4.1; Lighthouse link-in-text-block, PSI 2026-10-27: 96 → 100). */

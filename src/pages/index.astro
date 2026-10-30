@@ -1,6 +1,6 @@
 ---
 // index.astro — strona główna firmy od stron WWW i sklepów (przebudowa 2026-10-23).
-// Układ: nagłówek firmy → oferta → realizacje → ostatnie wpisy → skrót FAQ → kontakt → o spółce.
+// Układ: nagłówek firmy → oferta → realizacje → ostatnie wpisy → skrót FAQ → kontakt. Zdania „o spółce” pod kontaktem nie ma (Piotr 2026-10-30).
 // Napisy z src/data/strona.json i src/data/oferta.json (panel), realizacje z kolekcji
 // `serwisy` (src/data/serwisy.json). Wygląd bez zmian: tokeny motyw.css, PasekMarki, Stopka,
 // kierunek „rejestr" (docs/DECYZJE-WIZUALNE.md). Zero JS na tej trasie poza stopką.
@@ -63,13 +63,6 @@ const lead = tekst(
     <FaqSkrot />
 
     <Oferta czesc="kontakt" />
-
-    {/* Zamknięcie: puste pole w panelu = sekcja znika (D9), więc bez tekst(). */}
-    {strona.zdanieKoncowe?.trim() && (
-      <section id="o-spolce" class="zamkniecie" data-ujawnij aria-label={tekst(strona.etykietaSekcjiZamykajacej, 'O spółce')}>
-        <p>{strona.zdanieKoncowe}</p>
-      </section>
-    )}
   </main>
 
   <Stopka />
@@ -127,23 +120,6 @@ const lead = tekst(
   /* aktywny (wciśnięty) */
   .hero__link:active {
     transform: translateY(1px);
-  }
-
-  .zamkniecie {
-    max-width: var(--szerokosc-tresci);
-    margin: 0 auto;
-    padding: 0 var(--o-6) var(--o-24);
-  }
-
-  .zamkniecie p {
-    max-width: 44rem;
-    margin: 0 auto;
-    text-align: center;
-    padding-top: var(--o-8);
-    border-top: 1px solid var(--linia);
-    font-size: var(--t-m);
-    line-height: 1.5;
-    color: var(--tekst-cichy);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -3,7 +3,8 @@
   "opisWyszukiwarki": "Kto przetwarza dane z formularza strony ecopowerpolska.pl, w jakim celu i jak długo, komu je przekazujemy i jakie masz prawa.",
   "naglowek": "Polityka prywatności",
   "okruszek": "Polityka prywatności",
-  "lead": "Ta polityka opisuje, jakie dane zbiera strona www.ecopowerpolska.pl, po co je zbiera i jak długo je przechowujemy. Strona nie zapisuje ciasteczek i nie ma statystyk odwiedzin ani reklam.",
+  "lead": "Ta polityka opisuje, jakie dane zbiera strona www.ecopowerpolska.pl, po co je zbiera i jak długo je przechowujemy. Strona nie ma statystyk odwiedzin ani reklam. Pliki cookie i pamięć przeglądarki opisujemy w osobnej części, razem ze sposobem zmiany zgody.",
+  "spis": "Spis części",
   "sekcje": [
     {
       "id": "administrator",
@@ -32,7 +33,7 @@
       "id": "zakres",
       "naglowek": "Czego dotyczy ta polityka",
       "akapity": [
-        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/) i testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/).",
+        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), okna zgody na pliki cookie i przełącznika języków w stopce.",
         "Strona nie prowadzi sprzedaży, nie zakłada kont, nie wysyła newslettera i nie pokazuje reklam."
       ]
     },
@@ -76,11 +77,81 @@
     },
     {
       "id": "ciasteczka",
-      "naglowek": "Ciasteczka i pamięć przeglądarki",
+      "naglowek": "Pliki cookie i pamięć przeglądarki",
+      "szeroka": true,
       "akapity": [
-        "Strona nie zapisuje ciasteczek i nie ma statystyk odwiedzin, dlatego nie pokazuje paska zgody.",
-        "Kalkulator w cenniku i formularz korzystają z pamięci sesji przeglądarki (sessionStorage), nie z ciasteczek. Wpis ep.wyceny pamięta do pięciu wyliczeń, które dodajesz do zapytania. Wpis ep.szkic pamięta pola wpisane w formularz, gdy przechodzisz do kalkulatora i wracasz.",
-        "Te dane zostają w Twojej przeglądarce i znikają po zamknięciu karty albo po wysłaniu zapytania. Do nas trafiają dopiero po kliknięciu „Wyślij zapytanie”."
+        "Strona nie stawia własnych plików cookie i nie ma statystyk odwiedzin ani reklam. Zapisuje za to kilka wpisów w pamięci Twojej przeglądarki (sessionStorage i local storage), a dwie usługi zewnętrzne, które działają na stronie, zapisują własne dane. Wszystko, co ustaliliśmy, jest w tabeli.",
+        "Wpisy niezbędne zapisujemy bez pytania o zgodę, bo bez nich formularz i kalkulator, o które prosisz, nie działałyby (art. 399 ust. 3 ustawy Prawo komunikacji elektronicznej: wyjątek dla wpisów koniecznych do usługi, o którą prosisz). Zgody wymaga tłumaczenie strony przez Google (art. 399 ust. 1 tej ustawy; do zgody stosuje się przepisy o ochronie danych osobowych, art. 400). Przy pierwszej wizycie pytamy o to oknem na dole ekranu, w którym obie odpowiedzi, „Tylko niezbędne” i „Zgadzam się na wszystkie”, mają ten sam wygląd i żadna nie jest zaznaczona domyślnie."
+      ],
+      "tabela": {
+        "naglowki": [
+          "Nazwa",
+          "Kto zapisuje",
+          "Cel",
+          "Jak długo",
+          "Podstawa"
+        ],
+        "wiersze": [
+          [
+            "ep.zgoda (local storage)",
+            "Ta strona",
+            "Zapamiętanie Twojego wyboru z okna cookie (tylko niezbędne albo wszystkie) i daty wyboru",
+            "Do zmiany wyboru albo wyczyszczenia danych strony w przeglądarce",
+            "Niezbędny: bez niego okno pytałoby na każdej podstronie"
+          ],
+          [
+            "ep.wyceny (session storage)",
+            "Ta strona",
+            "Do pięciu wyliczeń z kalkulatora, które dodajesz do zapytania",
+            "Do zamknięcia karty albo wysłania zapytania",
+            "Niezbędny: usługa, o którą prosisz"
+          ],
+          [
+            "ep.szkic (session storage)",
+            "Ta strona",
+            "Pola wpisane w formularz, gdy przechodzisz do kalkulatora i wracasz",
+            "Do zamknięcia karty albo wysłania zapytania",
+            "Niezbędny: usługa, o którą prosisz"
+          ],
+          [
+            "ep.psi (session storage)",
+            "Ta strona",
+            "Wynik testu szybkości (adres sprawdzanej strony, data i tekst raportu), który chcesz dołączyć do zapytania",
+            "Do zamknięcia karty, wysłania zapytania albo kliknięcia „Usuń wynik”",
+            "Niezbędny: usługa, o którą prosisz"
+          ],
+          [
+            "Wpisy ramki Turnstile",
+            "Cloudflare, Inc. (ramka challenges.cloudflare.com, tylko podstrona Kontakt)",
+            "Sprawdzenie, że formularz wypełnia człowiek, a nie program rozsyłający spam",
+            "Według zasad Cloudflare; dokładną listę wpisów ustala Cloudflare, nie ta strona",
+            "Niezbędny do ochrony formularza: art. 6 ust. 1 lit. f RODO"
+          ],
+          [
+            "__GT_TRANSLATE_LANGS (local storage)",
+            "GTranslate Inc. (skrypt z cdn.gtranslate.net)",
+            "Zapamiętanie języka, który wybierasz w przełączniku w stopce",
+            "Do zmiany języka na polski albo wyczyszczenia danych strony w przeglądarce",
+            "Zgoda: wybór języka przyciskiem w stopce albo „Zgadzam się na wszystkie” w oknie cookie"
+          ]
+        ]
+      },
+      "akapityPo": [
+        "Pamięć sesji zostaje w Twojej przeglądarce. Do nas trafia dopiero po kliknięciu „Wyślij zapytanie”. Strona zapisuje jeszcze chwilowy wpis ep.proba i od razu go usuwa, żeby sprawdzić, czy pamięć sesji działa.",
+        "Poza wpisem z tabeli przełącznik języków i usługa tłumaczenia Google mogą zapisać własne dane techniczne. Należą do ich dostawców; opisujemy je w części „Tłumaczenie strony: GTranslate i Google”.",
+        "Jak zmienić wybór: kliknij „Ustawienia cookie” w stopce dowolnej podstrony, a okno wróci. Zgodę wycofujesz tak samo łatwo, jak ją dajesz: wystarczy wybrać „Tylko niezbędne”. Zamknięcie okna krzyżykiem albo klawiszem Esc też oznacza „Tylko niezbędne”. Wybór „Tylko niezbędne” nie usuwa języka wybranego wcześniej; żeby go usunąć, wybierz w przełączniku polski albo wyczyść dane strony w przeglądarce.",
+        "Odmowa zgody nie ogranicza działania strony. Przełącznik języków zostaje w stopce i uruchamia się po Twoim kliknięciu.",
+        "Wybór z okna zapisujemy w pamięci przeglądarki (wpis ep.zgoda, razem z datą wyboru). Okno nie wraca, dopóki sam go nie otworzysz."
+      ]
+    },
+    {
+      "id": "tlumaczenie",
+      "naglowek": "Tłumaczenie strony: GTranslate i Google",
+      "akapity": [
+        "W stopce jest przełącznik języków: polski, angielski, niemiecki, ukraiński, rosyjski, francuski, hiszpański i włoski. Pozwala przeczytać stronę w innym języku. Tłumaczenie jest automatyczne i może zawierać błędy; wersją źródłową jest polska.",
+        "Przełącznik pochodzi od GTranslate Inc. z USA. Jego skrypt ładuje się z serwerów GTranslate (cdn.gtranslate.net) po Twoim kliknięciu przycisku języka w stopce, a po wyborze „Zgadzam się na wszystkie” w oknie cookie już wtedy, gdy przewiniesz stronę do stopki. Firma widzi wtedy Twój adres IP i informacje o przeglądarce. Jeśli język wybrano wcześniej, przełącznik ładuje się po wczytaniu strony, żeby strona od razu się przetłumaczyła.",
+        "Do chwili wyboru języka strona zostaje po polsku i Google nie dostaje żadnej treści. Po wyborze języka treść oglądanej podstrony trafia do usługi tłumaczenia Google, która zwraca przekład. My nie widzimy ani nie zapisujemy, co przetłumaczysz.",
+        "Podstawą prawną jest Twoja zgoda, czyli art. 6 ust. 1 lit. a RODO i art. 399 ustawy Prawo komunikacji elektronicznej, wyrażona wybraniem języka albo zgodą na wszystkie w oknie cookie. Zgodę cofniesz, wybierając w przełączniku polski i ustawiając „Tylko niezbędne” w „Ustawieniach cookie” w stopce."
       ]
     },
     {
@@ -96,7 +167,7 @@
       "id": "zasoby-zewnetrzne",
       "naglowek": "Czcionki i zasoby zewnętrzne",
       "akapity": [
-        "Czcionki, zdjęcia i skrypty strony ładują się z jej serwera. Jedynym wyjątkiem jest skrypt Turnstile na podstronie Kontakt, opisany wyżej.",
+        "Czcionki, zdjęcia i skrypty strony ładują się z jej serwera. Wyjątkami są skrypt Turnstile na podstronie Kontakt, opisany wyżej, i przełącznik języków GTranslate w stopce, opisany w części o tłumaczeniu.",
         "Odnośnik „Udostępnij na Facebooku” pod wpisami bloga to zwykły link. Facebook dostaje dane dopiero wtedy, gdy go klikniesz. Strona nie ładuje skryptów Facebooka.",
         "Strona nie osadza map, filmów ani przycisków serwisów społecznościowych."
       ]
@@ -120,13 +191,14 @@
         "GitHub, Inc.: hosting strony (adres IP i informacje techniczne o przeglądarce)",
         "LH.pl Sp. z o.o.: skrypt formularza i poczta, na którą trafiają wiadomości z formularza",
         "Cloudflare, Inc.: ochrona formularza kontaktowego usługą Turnstile (adres IP i informacje techniczne o przeglądarce)",
+        "GTranslate Inc. i Google LLC: przełącznik języków i tłumaczenie strony, gdy z nich korzystasz (adres IP, informacje o przeglądarce i treść tłumaczonej podstrony)",
         "osoby upoważnione przez administratora, które obsługują zapytania",
         "biuro rachunkowe i doradca prawny administratora, gdy dojdzie do umowy, w zakresie potrzebnym do rozliczenia i obrony przed roszczeniami",
         "organy publiczne, gdy wymaga tego przepis prawa"
       ],
       "akapityPo": [
-        "Poza Europejski Obszar Gospodarczy dane trafiają do GitHub, Inc. w USA przy odwiedzinach strony i do Cloudflare, Inc. w USA przy sprawdzeniu Turnstile. Przekazywanie danych do Cloudflare odbywa się na podstawie standardowych klauzul umownych zatwierdzonych przez Komisję Europejską, które są częścią umowy powierzenia przetwarzania danych Cloudflare.",
-        "Google nie jest naszym odbiorcą danych. Dane trafiają do Google tylko wtedy, gdy sam uruchomisz test szybkości strony."
+        "Poza Europejski Obszar Gospodarczy dane trafiają do GitHub, Inc. w USA przy odwiedzinach strony, do Cloudflare, Inc. w USA przy sprawdzeniu Turnstile, a gdy korzystasz z tłumaczenia, także do GTranslate Inc. i Google LLC w USA. Przekazywanie danych do Cloudflare odbywa się na podstawie standardowych klauzul umownych zatwierdzonych przez Komisję Europejską, które są częścią umowy powierzenia przetwarzania danych Cloudflare.",
+        "Google nie jest naszym odbiorcą danych. Dane trafiają do Google tylko wtedy, gdy sam uruchomisz test szybkości strony albo wybierzesz język tłumaczenia."
       ]
     },
     {
@@ -137,7 +209,8 @@
         "wpis w dzienniku nieudanych wysyłek formularza: do obsługi zapytania",
         "dane osób, które zamówiły usługę: przez czas wykonania umowy, okres przedawnienia roszczeń i okres wymagany przepisami podatkowymi",
         "logi serwera: przez okres wynikający z zasad dostawców hostingu",
-        "pamięć sesji przeglądarki: wyliczenia i dane z formularza do zamknięcia karty albo wysłania zapytania"
+        "pamięć sesji przeglądarki: wyliczenia, dane z formularza i wynik testu szybkości do zamknięcia karty albo wysłania zapytania",
+        "wybór z okna cookie i wybrany język tłumaczenia: do zmiany albo wyczyszczenia danych strony w przeglądarce"
       ]
     },
     {
@@ -186,7 +259,7 @@
       "naglowek": "Zmiany polityki",
       "akapity": [
         "Politykę zmieniamy, gdy zmienia się działanie strony albo przepisy. Aktualna wersja jest zawsze pod tym adresem.",
-        "Ta wersja obowiązuje od 27 października 2026."
+        "Ta wersja obowiązuje od 30 października 2026."
       ]
     }
   ]

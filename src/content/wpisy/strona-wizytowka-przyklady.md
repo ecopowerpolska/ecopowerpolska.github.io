@@ -2,7 +2,7 @@
 tytul: "Strona wizytówka: przykłady i co musi zawierać"
 tytulSeo: "Strona wizytówka: przykłady i co musi zawierać"
 opisSeo: "Co musi mieć strona wizytówka firmy: oferta, kontakt, formularz, prawdziwe zdjęcia i dane dla Google. Przykłady z naszych stron i kiedy to za mało."
-dataPublikacji: "2026-10-27T21:20:00+01:00"
+dataPublikacji: "2026-10-27T12:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna szafy-na-wymiar-warszawa.pl: granatowy pas z tytułem „Szafy na wymiar w Warszawie”, mosiężny guzik pomiaru i zdjęcie sypialni z szafą"
 szkic: false

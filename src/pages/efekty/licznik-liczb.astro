@@ -1,0 +1,129 @@
+---
+// /efekty/licznik-liczb/ - liczby narastają od zera, gdy pas wchodzi w okno (IntersectionObserver + requestAnimationFrame).
+// Pomysł: wzorzec „liczniki przy wejściu w ekran" z bibliotek typu countUp.js (github.com/inorganik/countUp.js) - tu własne 12 linii.
+// HTML niesie wartość KOŃCOWĄ: bez JS i przy ograniczonym ruchu widać gotowe liczby. Liczby w pokazie są przykładowe.
+import SzkieletEfektu from '../../components/efekty/SzkieletEfektu.astro';
+
+const pozycje = [
+  { liczba: 1250, opis: 'odwiedzin w miesiącu' },
+  { liczba: 98, opis: 'punktów w teście szybkości' },
+  { liczba: 24, opis: 'godziny na odpowiedź' },
+  { liczba: 15, opis: 'lat doświadczenia' },
+];
+---
+
+<SzkieletEfektu slug="licznik-liczb">
+  <section class="licznik" aria-label="Pokaz: liczniki liczb">
+    <ul class="licznik__lista">
+      {pozycje.map((p) => (
+        <li class="licznik__poz">
+          <span class="licznik__liczba" data-licz={p.liczba}>{p.liczba}</span>
+          <span class="licznik__opis">{p.opis}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="licznik__stopka">
+      Liczby w pokazie są przykładowe.
+      <button type="button" class="licznik__jeszcze" data-jeszcze>Odtwórz jeszcze raz</button>
+    </p>
+  </section>
+</SzkieletEfektu>
+
+<script>
+  const el = [...document.querySelectorAll<HTMLElement>('[data-licz]')];
+  if (el.length && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const graj = (e: HTMLElement) => {
+      const cel = Number(e.dataset.licz);
+      const t0 = performance.now();
+      const krok = (t: number) => {
+        const p = Math.min(1, (t - t0) / 1400);
+        e.textContent = String(Math.round(cel * (1 - (1 - p) ** 3)));
+        if (p < 1) requestAnimationFrame(krok);
+      };
+      requestAnimationFrame(krok);
+    };
+    const obs = new IntersectionObserver((w) => {
+      for (const x of w) if (x.isIntersecting) { graj(x.target as HTMLElement); obs.unobserve(x.target); }
+    }, { threshold: 0.6 });
+    el.forEach((e) => { e.textContent = '0'; obs.observe(e); });
+    document.querySelector('[data-jeszcze]')?.addEventListener('click', () => el.forEach(graj));
+  } else document.querySelector('[data-jeszcze]')?.setAttribute('hidden', '');
+</script>
+
+<style>
+  .licznik {
+    padding: var(--o-12) var(--o-6) var(--o-8);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .licznik__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-8);
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+
+  @media (min-width: 40rem) {
+    .licznik__lista {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .licznik__lista {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .licznik__poz {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+  }
+
+  .licznik__liczba {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, var(--t-display));
+    font-weight: 600;
+    line-height: 1;
+    color: var(--akcent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .licznik__opis {
+    font-size: var(--t-m);
+    color: var(--tekst-cichy);
+  }
+
+  .licznik__stopka {
+    margin: var(--o-8) 0 0;
+    text-align: center;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .licznik__jeszcze {
+    min-height: 44px;
+    margin-left: var(--o-3);
+    padding: 0 var(--o-4);
+    border: 1px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    background: transparent;
+    color: var(--akcent);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .licznik__jeszcze:hover {
+    background: var(--tlo);
+  }
+
+  .licznik__jeszcze[hidden] {
+    display: none;
+  }
+</style>

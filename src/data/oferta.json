@@ -84,7 +84,10 @@
     "Mapę strony zgłoszoną w Google Search Console i przez IndexNow do Bing.",
     "Pomiar PageSpeed Insights po publikacji; studioagat.pl po przepisaniu na Astro ma 98–100 punktów."
   ],
-  "technologiaNaglowek": "Dlaczego Astro i taki hosting",
+  "technologiaNaglowek": "Dlaczego Astro i jaki hosting",
+  "technologiaLead": "Proponujemy Astro i hosting lh.pl albo GitHub Pages, bo takie strony mierzymy i mają w PageSpeed 97–100 punktów. To nasza propozycja, nie przymus: strony i sklepy budujemy i prowadzimy też na innych hostingach i w innych systemach. Ty wybierasz, my doradzamy.",
+  "technologiaKolumnaProponujemy": "Proponujemy",
+  "technologiaKolumnaInne": "Wykonamy też",
   "technologia": [
     {
       "nazwa": "Astro",
@@ -101,6 +104,24 @@
     {
       "nazwa": "Cloudflare",
       "opis": "Strefa DNS domeny i ochrona formularzy (Turnstile). Rekordy poczty przenosimy razem z domeną, więc skrzynki działają bez przerwy."
+    }
+  ],
+  "technologiaInne": [
+    {
+      "nazwa": "WordPress",
+      "opis": "Jeśli wolisz system, który już znasz, zbudujemy stronę w WordPressie i będziemy ją prowadzić: aktualizacje, kopie zapasowe, poprawki."
+    },
+    {
+      "nazwa": "WooCommerce, PrestaShop, Shoper",
+      "opis": "Sklep stawiamy na silniku, który pasuje do asortymentu i sposobu sprzedaży. Wybór omawiamy przed startem, razem z kosztami utrzymania."
+    },
+    {
+      "nazwa": "Twój obecny hosting",
+      "opis": "Strona może stać na hostingu, który już masz, albo na serwerze wskazanym przez Ciebie. Sposób wgrywania dopasowujemy do jego możliwości."
+    },
+    {
+      "nazwa": "Panel do edycji treści",
+      "opis": "Panel dobieramy do wybranego systemu i hostingu, tak żebyś mógł sam zmieniać teksty, zdjęcia i wpisy."
     }
   ],
   "kontaktNaglowek": "Kontakt",

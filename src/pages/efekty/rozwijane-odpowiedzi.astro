@@ -1,0 +1,122 @@
+---
+// /efekty/rozwijane-odpowiedzi/ - akordeon na natywnym <details> (jak FAQ tej witryny): klik otwiera jedną odpowiedź i zamyka drugą,
+// tekst zostaje w HTML (widzą go roboty i wyszukiwanie w stronie), bez JS. Płynne rozwijanie: ::details-content + interpolate-size
+// (przeglądarki bez tej funkcji rozwijają od razu, bez animacji; ograniczony ruch = bez animacji).
+import SzkieletEfektu from '../../components/efekty/SzkieletEfektu.astro';
+
+const pytania = [
+  ['Ile to kosztuje?', 'Cenę liczymy z tego, co ma być na stronie: liczby podstron, formularzy, zdjęć i efektów. Wstępną kwotę zobaczysz w kalkulatorze na stronie Cena.'],
+  ['Czy mogę sam zmieniać teksty?', 'Tak. Do strony dokładamy panel, w którym zmieniasz teksty i zdjęcia bez wiedzy technicznej i bez pisania do nas.'],
+  ['Czy efekt spowolni stronę?', 'Efekty dobieramy tak, żeby się mieściły w budżecie wydajności. Przy każdym podajemy wagę i sprawdzamy wynik w Google PageSpeed.'],
+  ['Co jeśli zechcę coś zmienić później?', 'Strona jest zbudowana z osobnych części, więc dodanie albo zmiana jednego efektu nie rusza reszty.'],
+];
+---
+
+<SzkieletEfektu slug="rozwijane-odpowiedzi">
+  <section class="roz" aria-label="Pokaz: rozwijane odpowiedzi">
+    <div class="roz__siatka">
+      {pytania.map(([p, o]) => (
+        <details class="roz__poz" name="pokaz-rozwijane">
+          <summary class="roz__tytul">{p}</summary>
+          <div class="roz__odp"><p>{o}</p></div>
+        </details>
+      ))}
+    </div>
+    <p class="roz__podpis">Kliknij pytanie. Otwarcie jednego zamyka drugie.</p>
+  </section>
+</SzkieletEfektu>
+
+<style>
+  .roz__siatka {
+    display: grid;
+    align-items: start;
+    column-gap: var(--o-12);
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 1px solid var(--linia);
+  }
+
+  @media (min-width: 48rem) {
+    .roz__siatka {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 0;
+    }
+
+    .roz__poz {
+      border-top: 1px solid var(--linia);
+    }
+  }
+
+  .roz__poz {
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .roz__tytul {
+    display: flex;
+    align-items: center;
+    gap: var(--o-3);
+    min-height: 44px;
+    padding: var(--o-4) 0;
+    font-family: var(--font-display);
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.25;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .roz__tytul::-webkit-details-marker {
+    display: none;
+  }
+
+  .roz__tytul::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.875rem;
+    height: 0.875rem;
+    background:
+      linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat,
+      linear-gradient(var(--akcent), var(--akcent)) center / 2px 100% no-repeat;
+  }
+
+  .roz__poz[open] > .roz__tytul::before {
+    background: linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat;
+  }
+
+  .roz__tytul:hover {
+    color: var(--akcent);
+  }
+
+  .roz__odp {
+    padding: 0 0 var(--o-4) calc(0.875rem + var(--o-3));
+    color: var(--tekst-cichy);
+  }
+
+  .roz__odp p {
+    margin: 0;
+  }
+
+  .roz__podpis {
+    margin: var(--o-6) 0 0;
+    text-align: center;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .roz__siatka {
+      interpolate-size: allow-keywords;
+    }
+
+    .roz__poz::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size 300ms var(--ruch-krzywa),
+        content-visibility 300ms allow-discrete;
+    }
+
+    .roz__poz[open]::details-content {
+      block-size: auto;
+    }
+  }
+</style>

@@ -201,9 +201,9 @@ collections:
                 widget: text
                 required: false
                 pattern:
-                  - "^[\\s\\S]{0,260}$"
-                  - "Najwyżej 260 znaków"
-                hint: "Jedno zdanie o wykonanej pracy, np. Astro, panel treści, hosting lh.pl, Turnstile, blog. Puste = bez akapitu."
+                  - "^[\\s\\S]{0,600}$"
+                  - "Najwyżej 600 znaków"
+                hint: "Każda linia to jeden punkt listy po rozwinięciu „Co zrobiliśmy”, np. Astro, panel treści, hosting lh.pl, Turnstile. Jedna linia = jedno zdanie bez listy. Puste = brak rozwinięcia."
 
               # 🔴 Zamiast dawnego pola `kategoria` (tekst dowolny, w którym literówka
               # tworzyła nową kategorię) — WYBÓR z listy grup zdefiniowanych w pozycji
@@ -536,17 +536,6 @@ collections:
             required: false
             hint: "Jedno zdanie nad kafelkami. Puste pole = bez akapitu, żaden napis domyślny nie wraca."
 
-          - name: zdanieKoncowe
-            label: "Zdanie o spółce na końcu strony"
-            widget: text
-            required: false
-            pattern:
-              - "^[\\s\\S]{0,400}$"
-              - "Najwyżej 400 znaków"
-            hint: >-
-              Zamknięcie strony głównej, pod kontaktem. 🔴 W tym polu puste
-              znaczy pusto: sekcja w ogóle się wtedy nie pokazuje, żaden napis domyślny
-              nie wraca.
 
           - name: napisLicznika
             label: "Napis w pasku licznika"
@@ -583,14 +572,6 @@ collections:
               (og:site_name). Na samej stronie niewidoczna. Puste pole = wraca napis
               domyślny: EcoPower Polska.
 
-          - name: etykietaSekcjiZamykajacej
-            label: "Nazwa sekcji zamykającej (dla czytnika ekranu)"
-            widget: string
-            required: false
-            hint: >-
-              Opis sekcji ze zdaniem pod kafelkami, czytany przez czytnik ekranu osobie
-              niewidomej. Na ekranie niewidoczny. Puste pole = wraca napis domyślny:
-              O spółce.
 
           - name: etykietaSpisuGrup
             label: "Nazwa spisu odnośników do sekcji (dla czytnika ekranu)"
@@ -642,9 +623,18 @@ collections:
               - { name: opis, label: "Opis", widget: text, required: false }
           - { name: dostajeszNaglowek, label: "Nagłówek: co dostajesz", widget: string, required: false }
           - { name: dostajesz, label: "Co dostajesz", widget: list, field: { name: pozycja, label: "Pozycja", widget: text } }
-          - { name: technologiaNaglowek, label: "Nagłówek: technologia", widget: string, required: false }
+          - { name: technologiaNaglowek, label: "Nagłówek: dlaczego Astro i jaki hosting", widget: string, required: false }
+          - { name: technologiaLead, label: "Zdanie pod nagłówkiem (propozycja, nie przymus)", widget: text, required: false }
+          - { name: technologiaKolumnaProponujemy, label: "Nagłówek kolumny: to proponujemy", widget: string, required: false }
           - name: technologia
-            label: "Dlaczego Astro i taki hosting"
+            label: "Proponujemy (Astro i hosting)"
+            widget: list
+            fields:
+              - { name: nazwa, label: "Nazwa", widget: string }
+              - { name: opis, label: "Opis", widget: text, required: false }
+          - { name: technologiaKolumnaInne, label: "Nagłówek kolumny: wykonamy też", widget: string, required: false }
+          - name: technologiaInne
+            label: "Wykonamy też (inne systemy i hostingi)"
             widget: list
             fields:
               - { name: nazwa, label: "Nazwa", widget: string }
@@ -670,8 +660,11 @@ collections:
           - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
           - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
           - { name: zastrzezenie, label: "Ramka: netto, VAT, aktualność cennika", widget: text, required: false }
-          - { name: kolumnaPozycji, label: "Tabela: nagłówek kolumny półki", widget: string, required: false }
+          - { name: kolumnaPozycji, label: "Tabela: nagłówek kolumny nazwy pozycji", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Pozycja" }
+          - { name: kolumnaOpisu, label: "Tabela: nagłówek kolumny zakresu (opisu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Zakres" }
           - { name: kolumnaCeny, label: "Tabela: nagłówek kolumny ceny", widget: string, required: false }
+          - { name: kolumnaJednostki, label: "Tabela: nagłówek kolumny rozliczenia", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Rozliczenie" }
+          - { name: jednostkaWykonania, label: "Napis rozliczenia w tabelach wykonania, gdy wiersz go nie ma", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: jednorazowo" }
           - { name: brakCeny, label: "Napis, gdy cena jest pusta", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: wycena indywidualna" }
           - { name: stronaWykonanieNaglowek, label: "Tabela 1: nagłówek (strona, wykonanie)", widget: string, required: false }
           - { name: stronaWykonanieOpis, label: "Tabela 1: zdanie pod nagłówkiem", widget: text, required: false }
@@ -679,40 +672,40 @@ collections:
             label: "Tabela 1: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
-              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: pozycja, label: "Nazwa pozycji", widget: string }
+              - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
               - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
-              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
+              - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: stronaProwadzenieNaglowek, label: "Tabela 2: nagłówek (strona, prowadzenie)", widget: string, required: false }
           - { name: stronaProwadzenieOpis, label: "Tabela 2: zdanie pod nagłówkiem", widget: text, required: false }
           - name: stronaProwadzenie
             label: "Tabela 2: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
-              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: pozycja, label: "Nazwa pozycji", widget: string }
+              - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
               - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
-              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
+              - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: sklepWykonanieNaglowek, label: "Tabela 3: nagłówek (sklep, uruchomienie)", widget: string, required: false }
           - { name: sklepWykonanieOpis, label: "Tabela 3: zdanie pod nagłówkiem", widget: text, required: false }
           - name: sklepWykonanie
             label: "Tabela 3: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
-              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: pozycja, label: "Nazwa pozycji", widget: string }
+              - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
               - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
-              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
+              - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: sklepProwadzenieNaglowek, label: "Tabela 4: nagłówek (sklep, prowadzenie)", widget: string, required: false }
           - { name: sklepProwadzenieOpis, label: "Tabela 4: zdanie pod nagłówkiem", widget: text, required: false }
           - name: sklepProwadzenie
             label: "Tabela 4: wiersze"
             widget: list
             fields:
-              - { name: pozycja, label: "Półka (nazwa pozycji)", widget: string }
-              - { name: opis, label: "Opis pod nazwą półki", widget: text, required: false }
+              - { name: pozycja, label: "Nazwa pozycji", widget: string }
+              - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
               - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
-              - { name: jednostka, label: "Jednostka (np. miesięcznie, rocznie, za wpis)", widget: string, required: false, hint: "Puste pole = cena jednorazowa, bez dopisku" }
+              - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: ctaNaglowek, label: "Ramka kontaktu: nagłówek", widget: string, required: false }
           - { name: ctaTekst, label: "Ramka kontaktu: zdanie", widget: text, required: false }
           - { name: ctaLink, label: "Ramka kontaktu: napis odnośnika do kontaktu", widget: string, required: false }
@@ -786,6 +779,8 @@ collections:
               - { name: etykieta, label: "Napis na żetonie", widget: string }
           - { name: wiadomoscEtykieta, label: "Etykieta: wiadomość", widget: string, required: false }
           - { name: wiadomoscPodpowiedz, label: "Podpowiedź pod wiadomością", widget: string, required: false }
+          - { name: psiNotka, label: "Notka o dołączonym wyniku testu szybkości ({adres})", widget: text, required: false }
+          - { name: psiUsun, label: "Napis guzika usuwającego wynik testu", widget: string, required: false }
           - { name: zgodaEtykieta, label: "Potwierdzenie zapoznania się z polityką: napis przy polu", widget: text, required: false, hint: "[tekst](/polityka-prywatnosci/) = odnośnik. Pole zostaje wymagane w formularzu." }
           - { name: zgodaInformacja, label: "Potwierdzenie zapoznania się z polityką: informacja o danych", widget: text, required: false, hint: "Wstawki {nazwa}, {adres}, {email} wypełnia strona z danych firmy; [tekst](/polityka-prywatnosci/) = odnośnik" }
           - { name: turnstileCzekaj, label: "Komunikat: czekamy na Turnstile", widget: text, required: false }
@@ -919,6 +914,9 @@ collections:
               - { name: tabela, label: "Tabela cennika", widget: hidden }
               - { name: szukaj, label: "Fragment nazwy pozycji w cenniku", widget: hidden }
               - { name: okres, label: "Okres", widget: hidden }
+              - { name: ilosc, label: "Liczba sztuk", widget: hidden }
+              - { name: maks, label: "Największa liczba", widget: hidden }
+              - { name: formy, label: "Odmiana nazwy", widget: object, required: false, fields: [ { name: jedna, label: "1", widget: string }, { name: kilka, label: "2–4", widget: string }, { name: wiele, label: "5 i więcej", widget: string } ] }
               - { name: dla, label: "Dla grup", widget: hidden }
               - { name: wyklucza, label: "Wyklucza", widget: hidden }
           - name: prowizje
@@ -936,7 +934,7 @@ collections:
         label: "Efekty (/efekty)"
         file: "src/data/efekty.json"
         description: >-
-          Podstrona /efekty: „Wybierz efekt”, dodatkowa część portfolio. Kolejność w panelu = kolejność kart.
+          Podstrona /efekty: „Efekty wizualne możliwe do zaimplementowania na stronę”, kafelki otwierające podstrony z pokazem. Kolejność w panelu = kolejność kafelków. Nowy efekt wymaga także pliku podstrony (programista); sam wpis tutaj nie tworzy adresu.
         fields:
           - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
           - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
@@ -954,12 +952,68 @@ collections:
               - { name: opisKrotki, label: "Opis na karcie", widget: text, required: false }
               - { name: opisDlugi, label: "Podstrona: akapit „Co to daje”", widget: text, required: false }
               - { name: dlaKogo, label: "Podstrona: dla kogo", widget: text, required: false }
+              - { name: lead, label: "Podstrona: zdanie pod nagłówkiem", widget: text, required: false }
               - { name: kosztWzgledny, label: "Karta: koszt wydajności w jednym zdaniu", widget: text, required: false }
               - { name: kosztWydajnosci, label: "Podstrona: akapit „Ile kosztuje wydajności”", widget: text, required: false }
               - { name: status, label: "Status", widget: select, options: ["gotowy", "w przygotowaniu"], default: "gotowy" }
               - { name: miniatura, label: "Miniatura karty (ścieżka w public/)", widget: string, required: false }
               - { name: alt, label: "Opis miniatury dla niewidomych", widget: text, required: false }
+              - { name: waga, label: "Karta i podstrona: waga w kB (np. 0,7 kB)", widget: string, required: false }
+              - { name: naStronie, label: "Efekt działa na tej witrynie (plakietka „Działa na tej stronie”)", widget: boolean, default: false, required: false }
+              - { name: adres, label: "Adres istniejącej strony zamiast /efekty/…/ (np. /jak-sprawdzic-szybkosc-strony/)", widget: string, required: false }
+              - { name: tytulKarty, label: "Podstrona: tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
+              - { name: opisWyszukiwarki, label: "Podstrona: opis dla wyszukiwarek", widget: text, required: false }
+              - { name: inspiracja, label: "Skąd pomysł (tylko dla redakcji, nie pokazujemy)", widget: string, required: false }
 
+
+      # ---- okno zgody na cookie ----
+      - name: zgoda
+        label: "Okno zgody na cookie"
+        file: "src/data/zgoda.json"
+        description: >-
+          Teksty okna na dole strony, które pyta o pliki cookie i pamięć przeglądarki. Opis musi zgadzać się z
+          Polityką prywatności: gdy zmienisz działanie strony (np. dodasz analitykę), popraw oba miejsca.
+        fields:
+          - { name: naglowek, label: "Nagłówek okna", widget: string }
+          - { name: tresc, label: "Treść okna (dwa zdania)", widget: text }
+          - { name: guzikNiezbedne, label: "Guzik: tylko niezbędne", widget: string }
+          - { name: guzikWszystkie, label: "Guzik: zgoda na wszystkie", widget: string }
+          - { name: linkPolityki, label: "Odnośnik do polityki prywatności", widget: string }
+          - { name: zamknij, label: "Opis krzyżyka zamykającego (dla czytnika ekranu)", widget: string }
+
+      # ---- darmowe narzędzia (/darmowe-narzedzia) ----
+      - name: narzedzia
+        label: "Darmowe narzędzia (/darmowe-narzedzia)"
+        file: "src/data/narzedzia.json"
+        description: >-
+          Kafelki darmowych narzędzi. Stan „działa” wymaga adresu narzędzia; „wkrótce” pokazuje nieaktywny guzik
+          i odnośnik „Powiadom mnie”. Uruchomienie nowego narzędzia: zmień stan na „działa” i wpisz adres.
+        fields:
+          - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
+          - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
+          - { name: okruszek, label: "Nazwa w okruszkach", widget: string, required: false }
+          - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
+          - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
+          - { name: etykietaSiatki, label: "Nazwa listy narzędzi (dla czytnika ekranu)", widget: string, required: false }
+          - { name: stanDziala, label: "Podpis stanu: działa", widget: string, required: false }
+          - { name: stanWkrotce, label: "Podpis stanu: w przygotowaniu", widget: string, required: false }
+          - { name: nota, label: "Nota pod kafelkami", widget: text, required: false, hint: "[tekst](/trasa/) = odnośnik. Gdy narzędzie zacznie zapisywać dane, zmień to zdanie razem z Polityką prywatności." }
+          - name: kafelki
+            label: "Kafelki narzędzi"
+            label_singular: "Narzędzie"
+            widget: list
+            summary: "{{fields.nazwa}}"
+            fields:
+              - { name: id, label: "Identyfikator (małe litery, myślniki)", widget: string }
+              - { name: ikona, label: "Ikona", widget: select, options: ["szybkosc", "regulamin", "prywatnosc"], default: "szybkosc", required: false }
+              - { name: nazwa, label: "Nazwa narzędzia", widget: string }
+              - { name: opis, label: "Opis", widget: text, required: false }
+              - { name: stan, label: "Stan", widget: select, options: ["dziala", "wkrotce"], default: "wkrotce" }
+              - { name: adres, label: "Adres narzędzia (wymagany dla stanu „działa”)", widget: string, required: false }
+              - { name: guzik, label: "Napis guzika", widget: string, required: false }
+              - { name: powiadom, label: "Napis odnośnika „Powiadom mnie” (stan: wkrótce)", widget: string, required: false }
+              - { name: powiadomAdres, label: "Adres odnośnika „Powiadom mnie”", widget: string, required: false }
+              - { name: api, label: "Zarezerwowane na adres usługi (dziś puste)", widget: hidden, required: false }
 
       # ---- stopka ----
       - name: stopka
@@ -989,11 +1043,6 @@ collections:
             required: false
             hint: "Puste pole = wraca napis domyślny: REGON"
 
-          - name: etykietaFormaPrawna
-            label: "Podpis przed formą prawną"
-            widget: string
-            required: false
-            hint: "Puste pole = wraca napis domyślny: Forma prawna:"
 
           - name: etykietaAdresWww
             label: "Podpis przed adresem WWW"
@@ -1051,6 +1100,15 @@ collections:
               Odnośnik w menu stopki prowadzi do /polityka-prywatnosci/. Puste pole = wraca
               napis domyślny: Polityka prywatności.
 
+          - { name: linkRegulaminu, label: "Napis odnośnika do regulaminu", widget: string, required: false, hint: "Prowadzi do /regulamin/. Puste pole = wraca napis domyślny: Regulamin" }
+          - { name: linkNarzedzi, label: "Napis odnośnika do darmowych narzędzi", widget: string, required: false, hint: "Prowadzi do /darmowe-narzedzia/. Puste pole = wraca napis domyślny: Darmowe narzędzia" }
+          - { name: ustawieniaCookie, label: "Napis przycisku otwierającego ustawienia cookie", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Ustawienia cookie" }
+          - { name: etykietaUslug, label: "Nagłówek grupy usług w stopce", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Usługi" }
+          - { name: etykietaJezyka, label: "Podpis przełącznika języka (stopka)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Język strony" }
+          - { name: jezykPolski, label: "Napis przycisku języka przed załadowaniem tłumacza", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Polski" }
+          - { name: jezykZmien, label: "Opis przycisku języka dla czytnika ekranu", widget: text, required: false }
+          - { name: prawa, label: "Wiersz praw zastrzeżonych", widget: string, required: false, hint: "Tokeny: {rok} = rok z daty budowania strony, {nazwa} = nazwa spółki w stopce. Puste pole = wraca: © {rok} {nazwa}. Wszelkie prawa zastrzeżone." }
+
       # ---- blog i menu ----
       - name: blog
         label: "Blog i menu"
@@ -1083,6 +1141,13 @@ collections:
           - { name: przyciskMenu, label: "Telefon: napis na przycisku otwierającym menu", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Menu" }
           - { name: etykietaMenuStopki, label: "Nazwa menu w stopce (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Strony witryny" }
           - { name: okruszkiEtykieta, label: "Nazwa ścieżki nad wpisem (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Ścieżka" }
+          - { name: pasekBoczny, label: "Wpis: nazwa paska bocznego (dla czytnika ekranu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Do wpisu" }
+          - { name: spisTytul, label: "Wpis: nagłówek spisu sekcji w pasku bocznym", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: W tym wpisie" }
+          - { name: wezwanieTytul, label: "Wpis: nagłówek wezwania w pasku bocznym", widget: string, required: false }
+          - { name: wezwanieTekst, label: "Wpis: tekst wezwania w pasku bocznym", widget: text, required: false }
+          - { name: wezwanieGuzik, label: "Wpis: guzik wezwania (do kontaktu)", widget: string, required: false }
+          - { name: wezwanieCena, label: "Wpis: drugi guzik wezwania (do cennika)", widget: string, required: false }
+          - { name: czytajTakze, label: "Wpis: nagłówek „Czytaj także”", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Czytaj także" }
           - { name: linkEfektyRealizacje, label: "Strona główna: przycisk pod Realizacjami do zakładki Efekty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Zobacz efekty, które dodajemy do stron" }
 
       # ---- strona błędu 404 ----
@@ -1251,6 +1316,7 @@ collections:
           - { name: naglowek, label: "Nagłówek H1", widget: string }
           - { name: okruszek, label: "Nazwa w okruszkach", widget: string }
           - { name: lead, label: "Wstęp pod nagłówkiem", widget: text, required: false }
+          - { name: spis, label: "Nagłówek spisu części", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Spis części" }
           - name: sekcje
             label: "Sekcje"
             label_singular: "Sekcja"
@@ -1264,6 +1330,41 @@ collections:
               - { name: lista, label: "Lista punktów", widget: list, required: false, field: { name: punkt, label: "Punkt", widget: text } }
               - { name: akapityPo, label: "Akapity pod listą", widget: list, required: false, field: { name: akapit, label: "Akapit", widget: text } }
               - { name: przycisk, label: "Przycisk e-mail (opcjonalnie)", widget: string, required: false, hint: "Napis przycisku otwierającego list na adres z Danych firmy. Puste = bez przycisku." }
+              - { name: szeroka, label: "Sekcja z tabelą na całą szerokość (obie kolumny)", widget: boolean, default: false, required: false }
+              - { name: tabela, label: "Tabela (nagłówki i wiersze) — edytuje programista", widget: hidden, required: false }
+
+  # ── REGULAMIN SERWISU ───────────────────────────────────────────────────────
+  - name: regulamin
+    label: "Regulamin serwisu"
+    files:
+      - name: regulamin
+        label: "Regulamin serwisu (/regulamin/)"
+        file: "src/data/regulamin.json"
+        description: >-
+          Regulamin korzystania z usług serwisu (formularz, kalkulator, test szybkości, blog, tłumaczenie).
+          W tekście: [tekst](/trasa/) = odnośnik; {nazwa}, {adres}, {nip}, {krs}, {regon}, {email}, {telefon}
+          wypełnia strona z Danych firmy. Treść punktów (z wyliczeniami a–e) zmienia programista;
+          w panelu edytujesz tytuły, opis i nagłówki części. Po zmianie treści zmień też datę w polu „Wersja”.
+        fields:
+          - { name: tytulKarty, label: "Tytuł karty (do 60 znaków)", widget: string }
+          - { name: opisWyszukiwarki, label: "Opis w Google (do 155 znaków)", widget: text }
+          - { name: naglowek, label: "Nagłówek H1", widget: string }
+          - { name: okruszek, label: "Nazwa w okruszkach", widget: string }
+          - { name: lead, label: "Wstęp pod nagłówkiem", widget: text, required: false }
+          - { name: wersja, label: "Zdanie o wersji i dacie obowiązywania", widget: string }
+          - { name: spis, label: "Nagłówek spisu części", widget: string, required: false }
+          - { name: paragraf, label: "Znak przed numerem części", widget: string, required: false }
+          - name: sekcje
+            label: "Części regulaminu"
+            label_singular: "Część"
+            widget: list
+            collapsed: true
+            allow_add: false
+            summary: "{{fields.naglowek}}"
+            fields:
+              - { name: id, label: "Kotwica", widget: hidden }
+              - { name: naglowek, label: "Nagłówek części", widget: string }
+              - { name: punkty, label: "Punkty (edytuje programista)", widget: hidden, required: false }
 
   # ── ④ DANE FIRMY ────────────────────────────────────────────────────────────
   - name: firma
@@ -1292,7 +1393,6 @@ collections:
           - { name: krs, label: "KRS", widget: string }
           - { name: nip, label: "NIP", widget: string }
           - { name: regon, label: "REGON", widget: string }
-          - { name: formaPrawna, label: "Forma prawna", widget: string }
           - { name: adresWww, label: "Adres WWW", widget: string }
           - { name: email, label: "E-mail", widget: string }
           - name: adresSiedziby

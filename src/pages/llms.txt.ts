@@ -131,7 +131,9 @@ export const GET: APIRoute = async () => {
     `- [Efekty na stronach](${baza}/efekty/): efekty z wagą w kB i wynikiem PageSpeed.`,
     `- [Animacja sterowana przewijaniem](${baza}/efekty/animacja-przewijaniem/): przykład efektu z wagą skryptu i wynikiem PageSpeed.`,
     `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów — ceny, czas budowy, panel, wybór platformy.`,
-    `- [Polityka prywatności](${baza}/polityka-prywatnosci/): administrator danych, dane z formularza, Cloudflare Turnstile, hosting GitHub Pages i LH.pl, brak ciasteczek i statystyk, prawa osób.`,
+    `- [Polityka prywatności](${baza}/polityka-prywatnosci/): administrator danych, dane z formularza, Cloudflare Turnstile, hosting GitHub Pages i LH.pl, pamięć przeglądarki i tłumaczenie strony po zgodzie, brak statystyk, prawa osób.`,
+    `- [Regulamin](${baza}/regulamin/): zasady korzystania z usług serwisu: formularz, kalkulator, test szybkości, reklamacje.`,
+    `- [Darmowe narzędzia](${baza}/darmowe-narzedzia/): test szybkości strony i kolejne narzędzia dla firm (w przygotowaniu).`,
     '',
   ];
 

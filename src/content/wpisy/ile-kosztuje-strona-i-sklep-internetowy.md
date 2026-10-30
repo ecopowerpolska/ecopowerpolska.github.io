@@ -2,7 +2,7 @@
 tytul: "Ile kosztuje strona i sklep internetowy w 2026 roku i skąd biorą się te ceny"
 tytulSeo: "Ile kosztuje strona internetowa i sklep w 2026? Ceny"
 opisSeo: "Ile kosztuje strona internetowa i sklep w 2026 roku: widełki i mediany z 18 źródeł, co jest w cenie i ile płaci się co miesiąc."
-dataPublikacji: "2026-10-27T12:00:00+01:00"
+dataPublikacji: "2026-10-28T10:30:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna garderoba-na-wymiar-warszawa.pl: nagłówek „Garderoby na wymiar w Warszawie, od pomiaru do montażu” i zdjęcie garderoby z półkami"
 szkic: false

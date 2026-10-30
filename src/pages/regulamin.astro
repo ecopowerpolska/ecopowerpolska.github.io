@@ -1,0 +1,358 @@
+---
+// /regulamin — regulamin świadczenia usług drogą elektroniczną w serwisie (runda 7, 2026-10-30, decyzja Piotra „regulamin”).
+// Podstawa: art. 8 ustawy z 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną (tekst jedn. Dz.U. 2024 poz. 1513):
+// rodzaje i zakres usług, warunki (wymagania techniczne, zakaz treści bezprawnych), zawieranie i rozwiązywanie umów, reklamacje.
+// Treść: src/data/regulamin.json. W tekście: [kotwica](/trasa/) = link, {nazwa} {adres} {nip} {krs} {regon} {email} {telefon} = firma.json.
+// Punkt może być zwykłym tekstem albo obiektem { tekst, lista: [...] }. Układ jak /polityka-prywatnosci/: spis części w siatce
+// 4/2/1 kolumn, treść w kolumnach CSS (`columns: 24rem`). 0 kB JS.
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import firma from '../data/firma.json';
+import blog from '../data/blog.json';
+import dane from '../data/regulamin.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+
+const TRASA = '/regulamin/';
+const d = dane as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+const lista = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+const teksty = (v: unknown): string[] => lista(v).map(naTekst).filter(Boolean);
+
+const mail = firma.email.toLowerCase();
+const cyfry = firma.telefon.replace(/\D/g, '');
+const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : firma.telefon;
+const podstaw = (s: string) =>
+  s
+    .replaceAll('{nazwa}', tekst(firma.nazwaStopka, firma.nazwaPelna))
+    .replaceAll('{adres}', `${firma.adresSiedziby}, ${firma.kodPocztowy} ${firma.miejscowosc}`)
+    .replaceAll('{nip}', firma.nip)
+    .replaceAll('{krs}', firma.krs)
+    .replaceAll('{regon}', firma.regon)
+    .replaceAll('{email}', mail)
+    .replaceAll('{telefon}', telefon);
+const czesci = (t: string) => kawalki(podstaw(t));
+
+const naglowek = tekst(naTekst(d.naglowek), 'Regulamin serwisu ecopowerpolska.pl');
+const tytul = tekst(naTekst(d.tytulKarty), 'Regulamin serwisu ecopowerpolska.pl | EcoPower Polska');
+const opis = tekst(
+  naTekst(d.opisWyszukiwarki),
+  'Regulamin świadczenia usług drogą elektroniczną w serwisie ecopowerpolska.pl: usługi, warunki korzystania i reklamacje.',
+);
+const lead = naTekst(d.lead);
+const wersja = naTekst(d.wersja);
+const spisEtykieta = tekst(naTekst(d.spis), 'Spis części');
+const znak = tekst(naTekst(d.paragraf), '§');
+
+type Punkt = { tekst: string; lista: string[] };
+const sekcje = (lista(d.sekcje) as Record<string, unknown>[])
+  .map((s) => ({
+    id: naTekst(s?.id),
+    naglowek: naTekst(s?.naglowek),
+    punkty: lista(s?.punkty)
+      .map((p): Punkt =>
+        typeof p === 'string'
+          ? { tekst: p.trim(), lista: [] }
+          : { tekst: naTekst((p as Record<string, unknown>)?.tekst), lista: teksty((p as Record<string, unknown>)?.lista) },
+      )
+      .filter((p) => p.tekst),
+  }))
+  .filter((s) => s.naglowek);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(TRASA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: tekst(naTekst(d.okruszek), naglowek), adres: TRASA },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="regulamin">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="regulamin__tytul">{naglowek}</h1>
+    {lead && <p class="regulamin__lead">{podstaw(lead)}</p>}
+    {wersja && <p class="regulamin__wersja">{wersja}</p>}
+
+    <nav class="spis" aria-labelledby="spis-etykieta">
+      <p class="spis__etykieta" id="spis-etykieta">{spisEtykieta}</p>
+      <ul>
+        {sekcje.filter((s) => s.id).map((s, i) => <li><a href={`#${s.id}`}>{znak} {i + 1}. {s.naglowek}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="tresc">
+      {sekcje.map((s, i) => (
+        <section id={s.id || undefined} aria-labelledby={s.id ? `${s.id}-tytul` : undefined}>
+          <h2 id={s.id ? `${s.id}-tytul` : undefined}>{znak} {i + 1}. {s.naglowek}</h2>
+          <ol class="punkty">
+            {s.punkty.map((p) => (
+              <li>
+                {czesci(p.tekst).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}
+                {p.lista.length > 0 && (
+                  <ul>
+                    {p.lista.map((e) => <li>{czesci(e).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</li>)}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+    </div>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .regulamin {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/, /faq/ i /jak-sprawdzic-szybkosc-strony/ (jedna linia, D14). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  /* D22 (2026-10-30): H1 i wstęp na środku (wstęp w mierze 44 rem), a treść na pełną szerokość kontenera — w kolumnach, nie w wąskim pasie. */
+  .regulamin__tytul,
+  .regulamin__lead {
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
+  /* Spis części: odnośniki w siatce 1 / 2 / 4 kolumn, każdy z celem dotyku 44 px. */
+  .spis {
+    margin-top: var(--o-8);
+    padding: var(--o-4) var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .spis__etykieta {
+    margin: 0 0 var(--o-2);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tekst-cichy);
+  }
+
+  .spis ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0 var(--o-6);
+  }
+
+  @media (min-width: 40rem) {
+    .spis ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .spis ul {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .spis a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-s);
+    font-weight: 600;
+  }
+
+  /* Treść: kolumny CSS o szerokości 24 rem — mieszczą się dwie (od ok. 54 rem okna), na telefonie jedna. Wiersz ok. 36 rem = 65–75 znaków. */
+  .tresc {
+    margin-top: var(--o-8);
+    columns: 24rem;
+    column-gap: var(--o-12);
+    column-rule: 1px solid var(--linia);
+  }
+
+  .tresc h2 {
+    break-after: avoid;
+  }
+
+  .tresc p,
+  .tresc li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .regulamin__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
+  }
+
+  .regulamin__lead {
+    margin-block: var(--o-4) 0;
+    text-align: center;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .tresc h2 {
+    font-size: var(--t-l);
+    line-height: 1.2;
+    margin: var(--o-8) 0 var(--o-3);
+  }
+
+  /* Kotwica #sekcja nie chowa nagłówka pod przyklejonym paskiem. */
+  .tresc section {
+    scroll-margin-top: 6rem;
+  }
+
+  .tresc p {
+    margin: 0 0 var(--o-4);
+    line-height: 1.6;
+  }
+
+  .tresc ul,
+  .tresc ol {
+    margin: 0 0 var(--o-4);
+    padding-left: 1.5rem;
+    line-height: 1.6;
+  }
+
+  /* Ustępy paragrafu: 1., 2., 3.; wyliczenie usług i zgłoszenia: a), b), c). */
+  .tresc ol.punkty > li + li {
+    margin-top: var(--o-3);
+  }
+
+  .tresc ol.punkty > li > ul {
+    list-style: lower-alpha;
+    margin: var(--o-2) 0 0;
+  }
+
+  .tresc ol.punkty > li > ul > li + li {
+    margin-top: var(--o-2);
+  }
+
+  .regulamin__wersja {
+    margin: var(--o-3) auto 0;
+    text-align: center;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .tresc li + li {
+    margin-top: var(--o-1);
+  }
+
+  /* Link w zdaniu różni się nie tylko kolorem (PSI link-in-text-block, runda 5). */
+  .tresc a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .regulamin__przycisk a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    color: var(--tlo);
+    background: var(--akcent);
+    border-radius: var(--promien-maly);
+    text-decoration: none;
+  }
+
+  .regulamin__przycisk a:hover {
+    background: var(--tekst);
+  }
+
+  .regulamin__przycisk a:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 2px;
+  }
+</style>

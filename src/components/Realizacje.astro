@@ -1,13 +1,16 @@
 ---
 // Realizacje.astro — sekcja „Realizacje” strony głównej: strony z src/data/serwisy.json (bez ukrytych),
 // w kolejności z pliku (= kolejność przeciągania w panelu, D8). Zero JavaScriptu.
-// Obrazki to zrzuty żywych stron 1440×900 (headless Chrome), więc kafel ma proporcję 16:10.
+// Runda 7 (2026-10-30, decyzja Piotra): małe kafelki po 3 w rzędzie, a opis i wynik PageSpeed w dwóch
+// rozwijanych wierszach <details> pod spodem. Kafelek zwinięty = zrzut + nazwa + adres + jedna linia o firmie
+// + dwa paski. Wiersze rozwijają się niezależnie (to nie FAQ) i nie ruszają sąsiednich kafelków (align-items: start).
+// Obrazki to zrzuty żywych stron 1440×900 (headless Chrome), więc zrzut ma proporcję 16:10 (bez przycinania).
 import { getCollection } from 'astro:content';
-import Kafelek from './Kafelek.astro';
+import { Image } from 'astro:assets';
 import { tekst } from '../lib/tekst';
 import blog from '../data/blog.json';
-// Wyniki PageSpeed Insights pod kafelkami — plik generowany skryptem scripts/psi-realizacje.py
-// (docs/POMIARY.md), nie jest w panelu CMS. Klucz = `adres` z serwisy.json, dosłownie.
+// Wyniki PageSpeed Insights — plik generowany skryptem scripts/psi-realizacje.py (docs/POMIARY.md),
+// nie jest w panelu CMS. Klucz = `adres` z serwisy.json, dosłownie.
 import pomiary from '../data/pomiary.json';
 
 interface Props {
@@ -26,9 +29,95 @@ const { naglowek, wstep, kotwica = 'realizacje', pierwszyEager = false } = Astro
 const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
 const idNaglowka = `${kotwica}-naglowek`;
 const wstepTekst = wstep?.trim() ?? '';
-// Pole `zakres` dochodzi do schematu w content.config.ts; odczyt odporny na jego brak.
-const zakresWpisu = (dane: unknown): string | undefined => (dane as { zakres?: string }).zakres;
-const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<string, unknown>)[adres];
+const nowaKarta = tekst(blog.udostepnijNowaKarta, '(otwiera się w nowej karcie)');
+
+// ── „Co zrobiliśmy” ─────────────────────────────────────────────────────────────────────────────
+// Pole `zakres` (serwisy.json): każda NIEPUSTA LINIA to jeden punkt listy (znak „- ” lub „• ” na początku
+// jest pomijany). Jedna linia = jedno zdanie bez wypunktowania (stary zapis nadal działa).
+const punktyZakresu = (dane: unknown): string[] =>
+  String((dane as { zakres?: string }).zakres ?? '')
+    .split(/\r?\n/)
+    .map((w) => w.replace(/^\s*[-•*]\s+/, '').trim())
+    .filter(Boolean);
+
+// ── Wyniki PageSpeed Insights ───────────────────────────────────────────────────────────────────
+// Kształt wpisu pisze scripts/psi-realizacje.py; strategia z błędem pomiaru bywa `null`.
+interface Wyniki {
+  wydajnosc?: number | null;
+  dostepnosc?: number | null;
+  sprawdzoneMetody?: number | null;
+  seo?: number | null;
+  przegladanieAgentowe?: number | null;
+  agentoweZdane?: number;
+  agentoweWszystkie?: number;
+}
+interface Pomiar {
+  data?: string | null;
+  mobile?: Wyniki | null;
+  desktop?: Wyniki | null;
+  teren?: string;
+}
+const pomiarAdresu = (adres: string): Pomiar | null =>
+  ((pomiary.pomiary as Record<string, unknown>)[adres] ?? null) as Pomiar | null;
+
+const KATEGORIE: { klucz: keyof Wyniki; nazwa: string }[] = [
+  { klucz: 'wydajnosc', nazwa: 'Wydajność' },
+  { klucz: 'dostepnosc', nazwa: 'Ułatwienia dostępu' },
+  { klucz: 'sprawdzoneMetody', nazwa: 'Sprawdzone metody' },
+  { klucz: 'seo', nazwa: 'SEO' },
+  { klucz: 'przegladanieAgentowe', nazwa: 'Przeglądanie agentowe' },
+];
+// Próg jak w PageSpeed Insights: 90–100 = dobry (wypełniona akcentem), poniżej 90 = obrys bez wypełnienia.
+// Liczba jest zawsze widoczna — kolor jej nie zastępuje.
+const klasaWyniku = (w: number) => (w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
+const dataPomiaru = (data?: string | null) => {
+  const m = (data ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : '';
+};
+// Dane terenowe CrUX: `brak` albo FAST/AVERAGE/SLOW, z dopiskiem „(domena)”, gdy to wynik całej domeny.
+const KATEGORIA_TERENU: Record<string, string> = { FAST: 'szybka', AVERAGE: 'do poprawy', SLOW: 'wolna' };
+const zdanieTerenu = (terenSurowy?: string) => {
+  const teren = (terenSurowy ?? 'brak').trim();
+  const kategoria = KATEGORIA_TERENU[teren.split(' ')[0]] ?? '';
+  return kategoria
+    ? `Wrażenia użytkowników (Chrome, ostatnie 28 dni${teren.includes('domena') ? ', cała domena' : ''}): ${kategoria}.`
+    : 'Wrażenia użytkowników: brak danych — strona nowa; Chrome zbiera je od prawdziwych odwiedzin przez 28 dni.';
+};
+
+// Dane kafelka liczone raz na realizację.
+const karty = realizacje.map((wpis, i) => {
+  const { nazwa, adres, opis, obrazek, alt } = wpis.data;
+  let domena = '';
+  try {
+    domena = new URL(adres).hostname.replace(/^www\./i, '');
+  } catch {
+    domena = '';
+  }
+  const slowa = nazwa.trim().split(/\s+/);
+  const inicjaly =
+    slowa.length >= 2 && !nazwa.includes('.')
+      ? (slowa[0][0] + slowa[1][0]).toUpperCase()
+      : nazwa.split('.')[0].slice(0, 2).toUpperCase();
+  const p = pomiarAdresu(adres);
+  return {
+    nazwa,
+    adres,
+    opis,
+    obrazek,
+    alt,
+    domena,
+    pokazDomene: domena !== '' && domena.toLowerCase() !== nazwa.trim().toLowerCase(),
+    inicjaly,
+    // Nazwa bez ostatniego słowa + ostatnie słowo sklejone ze znakiem „nowa karta”: znak nie zostaje sam w wierszu.
+    poczatekNazwy: slowa.length > 1 ? `${slowa.slice(0, -1).join(' ')} ` : '',
+    ostatnieSlowo: slowa[slowa.length - 1] ?? '',
+    punkty: punktyZakresu(wpis.data),
+    p,
+    jestPomiar: !!(p && (p.mobile || p.desktop)),
+    adresPsi: `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(adres)}`,
+    pierwszy: pierwszyEager && i === 0,
+  };
+});
 ---
 
 {
@@ -39,25 +128,126 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
       </h2>
       {wstepTekst && <p class="realizacje__wstep" data-ujawnij>{wstepTekst}</p>}
       <ul class="realizacje__siatka">
-        {realizacje.map((wpis, i) => (
+        {karty.map((k) => (
           <li data-ujawnij>
-            <Kafelek
-              nazwa={wpis.data.nazwa}
-              adres={wpis.data.adres}
-              opis={wpis.data.opis}
-              zakres={zakresWpisu(wpis.data)}
-              obrazek={wpis.data.obrazek}
-              alt={wpis.data.alt}
-              pierwszy={pierwszyEager && i === 0}
-              pomiar={pomiarAdresu(wpis.data.adres)}
-            />
+            <article class="karta">
+              <a class="karta__zrzut" href={k.adres} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+                {k.obrazek ? (
+                  <Image
+                    src={k.obrazek}
+                    alt={k.alt ?? ''}
+                    width={720}
+                    height={450}
+                    format="webp"
+                    densities={[1, 2]}
+                    loading={k.pierwszy ? 'eager' : 'lazy'}
+                    fetchpriority={k.pierwszy ? 'high' : 'auto'}
+                    decoding="async"
+                  />
+                ) : (
+                  <span class="karta__zastepnik">{k.inicjaly}</span>
+                )}
+              </a>
+
+              <div class="karta__glowa">
+                <h3 class="karta__nazwa">
+                  <a href={k.adres} target="_blank" rel="noopener">
+                    {k.poczatekNazwy}
+                    <span class="karta__koniec-nazwy">
+                      {k.ostatnieSlowo}
+                      <svg class="karta__wyjscie" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+                    </span>
+                    <span class="tylko-czytnik"> {k.domena} {nowaKarta}</span>
+                  </a>
+                </h3>
+                {k.domena && <p class="karta__domena">{k.domena}</p>}
+                {k.opis && <p class="karta__opis">{k.opis}</p>}
+              </div>
+
+              {k.punkty.length > 0 && (
+                <details class="karta__rozwin">
+                  <summary>
+                    <span class="karta__etykieta">Co zrobiliśmy</span>
+                    <svg class="karta__strzalka" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                  </summary>
+                  <div class="karta__tresc">
+                    {k.punkty.length > 1 ? (
+                      <ul class="karta__lista">
+                        {k.punkty.map((pkt) => <li>{pkt}</li>)}
+                      </ul>
+                    ) : (
+                      <p class="karta__zdanie">{k.punkty[0]}</p>
+                    )}
+                  </div>
+                </details>
+              )}
+
+              <details class="karta__rozwin">
+                <summary>
+                  <span class="karta__etykieta">
+                    Szybkość i optymalizacja<span class="karta__dopisek"> — zobacz wynik</span>
+                  </span>
+                  <svg class="karta__strzalka" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                </summary>
+                <div class="karta__tresc">
+                  {k.jestPomiar ? (
+                    <>
+                      <table class="pomiar__tabela">
+                        <caption class="pomiar__tytul">Oficjalny pomiar Google PageSpeed Insights, skala 0–100</caption>
+                        <thead>
+                          <tr>
+                            <th scope="col" class="pomiar__rog"><span class="tylko-czytnik">Kategoria</span></th>
+                            <th scope="col">Telefon</th>
+                            <th scope="col">Komputer</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {KATEGORIE.map(({ klucz, nazwa: kategoria }) => (
+                            <tr>
+                              <th scope="row">{kategoria}</th>
+                              {[k.p?.mobile, k.p?.desktop].map((w) => {
+                                const wynik = w?.[klucz];
+                                const agent = klucz === 'przegladanieAgentowe' && w?.agentoweWszystkie;
+                                return (
+                                  <td>
+                                    {typeof wynik === 'number' ? (
+                                      <span class={`pastylka ${klasaWyniku(wynik)}`}>{wynik}</span>
+                                    ) : (
+                                      <span class="pomiar__brak">w toku</span>
+                                    )}
+                                    {agent && typeof wynik === 'number' && (
+                                      <span class="pomiar__ulamek">
+                                        <span class="tylko-czytnik">testów zdanych: </span>
+                                        {w?.agentoweZdane}/{w?.agentoweWszystkie}
+                                      </span>
+                                    )}
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <p class="pomiar__nota">
+                        {dataPomiaru(k.p?.data) && <>Pomiar z {dataPomiaru(k.p?.data)}. </>}
+                        {zdanieTerenu(k.p?.teren)}
+                      </p>
+                    </>
+                  ) : (
+                    <p class="pomiar__nota">Pomiar w toku.</p>
+                  )}
+                  <p class="pomiar__linki">
+                    <a href={k.adresPsi} target="_blank" rel="noopener">
+                      Sprawdź sam<span class="tylko-czytnik"> wyniki {k.domena || k.nazwa} w PageSpeed Insights {nowaKarta}</span>
+                    </a>
+                    <a href="/jak-sprawdzic-szybkosc-strony/">Przetestuj swoją stronę<span aria-hidden="true"> →</span></a>
+                  </p>
+                </div>
+              </details>
+            </article>
           </li>
         ))}
       </ul>
-      <p class="realizacje__pomiar" data-ujawnij>
-        Wyniki pod zrzutami to pomiary PageSpeed Insights.{' '}
-        <a href="/jak-sprawdzic-szybkosc-strony/">Sprawdź szybkość swojej strony tak samo</a>.
-      </p>
       {/* Przycisk drugorzędny do zakładki Efekty (runda 4, 2026-10-27): dodatkowa część portfolio. */}
       <p class="realizacje__dalej" data-ujawnij>
         <a class="realizacje__przycisk" href="/efekty/">
@@ -76,6 +266,7 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
     scroll-margin-top: var(--o-8);
   }
 
+  /* H2 otwiera sekcję z siatką kafelków, więc stoi na środku (D22). */
   .realizacje__naglowek {
     font-size: var(--t-xl);
     margin-bottom: var(--o-4);
@@ -90,11 +281,8 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
     line-height: 1.5;
   }
 
-  /* 3 / 2 / 1 kolumny, kafle równej szerokości, bez kafla samotnego w rzędzie (D14).
-     Siatka 6 ścieżek: kafel zajmuje 2 (trzy w rzędzie) albo 3 (dwa w rzędzie).
-     Trzy w rzędzie i reszta 1 (7 = 3 + 3 + 1): cztery ostatnie kafle stają parami
-     na środku (3 + 2 + 2), ten sam rozmiar. Dwa w rzędzie i reszta 1 (7 = 2 + 2 + 2 + 1):
-     trzy ostatnie kafle w jednym rzędzie (2 + 2 + 3). */
+  /* Siatka: 1 kolumna → 2 (od 48rem) → 3 (od 64rem). Ostatni niepełny rząd stoi przy lewej krawędzi.
+     align-items: start — rozwinięcie wydłuża tylko własny kafelek, sąsiedzi w rzędzie zostają. */
   .realizacje__siatka {
     list-style: none;
     margin: 0;
@@ -102,21 +290,23 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--o-6);
+    align-items: start;
   }
 
   .realizacje__siatka > li {
     min-width: 0;
   }
 
-  .realizacje__pomiar {
-    margin: var(--o-6) auto 0;
-    max-width: 44rem;
-    text-align: center;
+  @media (min-width: 48rem) {
+    .realizacje__siatka {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
-  .realizacje__pomiar a {
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
+  @media (min-width: 64rem) {
+    .realizacje__siatka {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   .realizacje__dalej {
@@ -152,37 +342,320 @@ const pomiarAdresu = (adres: string): unknown => (pomiary.pomiary as Record<stri
     background: var(--powierzchnia-mocna);
   }
 
-  @media (min-width: 36rem) and (max-width: 59.99rem) {
-    .realizacje__siatka {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+  /* ── Kafelek ────────────────────────────────────────────────────────────────────────────────
+     Karta WYPEŁNIONA, bez obwódki — granicę niesie tło (hairline na jasnym tle nie dobija do 3:1).
+     Kontener zapytań: tabela wyniku zwęża się według szerokości KARTY, nie okna. */
+  .karta {
+    container: karta / inline-size;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    overflow: clip;
+  }
+
+  .karta__zrzut {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 16:10 = proporcja zrzutu 1440×900; inne obrazki przycina `cover`. */
+    aspect-ratio: 16 / 10;
+    background: var(--powierzchnia-mocna);
+    overflow: hidden;
+  }
+
+  .karta__zrzut :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  .karta__zastepnik {
+    font-family: var(--font-display);
+    font-size: var(--t-xxl);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--tekst-cichy);
+  }
+
+  .karta__glowa {
+    padding: var(--o-4) var(--o-4) var(--o-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-1);
+  }
+
+  .karta__nazwa {
+    margin: 0;
+    font-family: var(--font-display);
+    /* 1,125 rem: najdłuższa nazwa („Garderoba na wymiar Warszawa”) mieści się w jednym wierszu kafelka 3 w rzędzie, więc kafelki w rzędzie są równe. */
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .karta__nazwa a {
+    color: var(--tekst);
+    text-decoration: none;
+  }
+
+  .karta__nazwa a:hover {
+    color: var(--akcent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .karta__koniec-nazwy {
+    white-space: nowrap;
+  }
+
+  /* Znak „otwiera się w nowej karcie” przy nazwie — sam kształt, słowo niesie czytnik. */
+  .karta__wyjscie {
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: 0.05em;
+    color: var(--tekst-cichy);
+  }
+
+  .karta__domena {
+    margin: 0;
+    font-size: var(--t-xs);
+    color: var(--tekst-cichy);
+  }
+
+  .karta__opis {
+    margin: var(--o-1) 0 0;
+    font-size: var(--t-s);
+    line-height: 1.45;
+    color: var(--tekst-cichy);
+  }
+
+  /* ── Rozwijane wiersze ──────────────────────────────────────────────────────────────────────
+     Każdy <details> działa osobno. Pasek ma cel dotyku 44 px i pełną szerokość karty. */
+  .karta__rozwin {
+    border-top: 1px solid var(--linia);
+    interpolate-size: allow-keywords;
+  }
+
+  .karta__rozwin > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--o-3);
+    min-height: var(--cel-dotyku);
+    padding: var(--o-2) var(--o-4);
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--tekst);
+    cursor: pointer;
+    list-style: none;
+    transition: background-color 160ms ease;
+  }
+
+  .karta__rozwin > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .karta__rozwin > summary:hover {
+    background: var(--powierzchnia-mocna);
+  }
+
+  .karta__rozwin > summary:active {
+    opacity: 0.85;
+  }
+
+  .karta__dopisek {
+    font-weight: 400;
+    color: var(--tekst-cichy);
+  }
+
+  .karta__strzalka {
+    flex: 0 0 auto;
+    color: var(--akcent);
+  }
+
+  .karta__rozwin[open] > summary .karta__strzalka {
+    transform: rotate(180deg);
+  }
+
+  .karta__tresc {
+    padding: var(--o-1) var(--o-4) var(--o-4);
+    font-size: var(--t-s);
+    line-height: 1.5;
+  }
+
+  .karta__lista {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-1);
+  }
+
+  .karta__zdanie {
+    margin: 0;
+  }
+
+  /* Animacja wysokości tylko w CSS: ::details-content przechodzi z 0 do auto (interpolate-size).
+     Przeglądarka bez tych funkcji pokazuje treść od razu — nic się nie psuje. */
+  @media (prefers-reduced-motion: no-preference) {
+    .karta__rozwin::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 260ms var(--ruch-krzywa),
+        content-visibility 260ms allow-discrete;
     }
 
-    .realizacje__siatka > li {
-      grid-column: span 3;
+    .karta__rozwin[open]::details-content {
+      block-size: auto;
     }
 
-    .realizacje__siatka:has(> li:nth-child(2n + 1):last-child) > li:nth-last-child(-n + 3) {
-      grid-column: span 2;
+    .karta__strzalka {
+      transition: transform 200ms ease;
     }
   }
 
-  @media (min-width: 60rem) {
-    .realizacje__siatka {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+  /* ── Wynik PageSpeed ────────────────────────────────────────────────────────────────────────
+     Tabela semantyczna: wiersz = kategoria, kolumny Telefon i Komputer. Pary kolorów (WCAG) na tle
+     karty #e8eae2: #15201a 13,8:1; #4b5a4f 6,02:1; pastylka „dobry” #f4f5f1 na #166653 6,27:1;
+     obrys pastylki „poniżej 90” #166653 na #e8eae2 5,65:1. */
+  .pomiar__tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--t-xs);
+  }
+
+  .pomiar__tytul {
+    padding: 0 0 var(--o-2);
+    text-align: left;
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  .pomiar__tabela th,
+  .pomiar__tabela td {
+    padding: 0.1875rem 0;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .pomiar__tabela thead th {
+    font-weight: 600;
+    color: var(--tekst-cichy);
+    padding-bottom: var(--o-1);
+  }
+
+  .pomiar__tabela tbody th {
+    font-weight: 400;
+    color: var(--tekst);
+    padding-right: var(--o-2);
+  }
+
+  /* Kolumny wyników dopasowane do treści, resztę szerokości bierze nazwa kategorii. */
+  .pomiar__tabela thead th,
+  .pomiar__tabela td {
+    width: 1%;
+    white-space: nowrap;
+    padding-left: var(--o-3);
+  }
+
+  .pomiar__tabela thead .pomiar__rog {
+    width: auto;
+    padding-left: 0;
+  }
+
+  .pastylka {
+    display: inline-block;
+    min-width: 2.5rem;
+    padding: 0.0625rem var(--o-2);
+    border-radius: 999px;
+    font-weight: 600;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pastylka--dobry {
+    background: var(--akcent);
+    color: var(--tlo);
+  }
+
+  .pastylka--ponizej {
+    border: 1px solid var(--akcent);
+    color: var(--tekst);
+  }
+
+  .pomiar__ulamek {
+    margin-left: var(--o-1);
+    color: var(--tekst-cichy);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pomiar__brak {
+    color: var(--tekst-cichy);
+  }
+
+  .pomiar__nota {
+    margin: var(--o-2) 0 0;
+    font-size: var(--t-xs);
+    line-height: 1.4;
+    color: var(--tekst-cichy);
+  }
+
+  /* Dwa linki w jednym wierszu, każdy z celem dotyku min. 24 px (WCAG 2.5.8). */
+  .pomiar__linki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-4);
+    margin: var(--o-2) 0 0;
+    font-size: var(--t-xs);
+  }
+
+  .pomiar__linki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    font-weight: 600;
+  }
+
+  /* Wąska karta (trzy w rzędzie przy 64–72 rem, dwie przy 48–52 rem): ułamek testów pod pastylką,
+     nazwa kategorii może złamać wyraz, żeby tabela nie wystawała poza kartę. */
+  @container karta (max-width: 22rem) {
+    .pomiar__tabela thead th,
+    .pomiar__tabela td {
+      padding-left: var(--o-1);
     }
 
-    .realizacje__siatka > li {
-      grid-column: span 2;
+    .pomiar__tabela td {
+      white-space: normal;
     }
 
-    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(4),
-    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(2) {
-      grid-column: 2 / span 2;
+    .pomiar__tabela tbody th {
+      overflow-wrap: anywhere;
+      padding-right: var(--o-1);
     }
 
-    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(3),
-    .realizacje__siatka:has(> li:nth-child(3n + 1):last-child) > li:nth-last-child(1) {
-      grid-column: 4 / span 2;
+    .pastylka {
+      min-width: 2.25rem;
+      padding-inline: var(--o-1);
     }
+
+    .pomiar__ulamek {
+      display: block;
+      margin-left: 0;
+    }
+  }
+
+  .tylko-czytnik {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 </style>

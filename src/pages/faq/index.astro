@@ -1,6 +1,7 @@
 ---
 // /faq/ — pytania klientów o strony i sklepy (dist/faq/index.html). Treść: src/data/faq.json (panel: Pytania i odpowiedzi).
 // Pytanie = <details name="faq" id="kotwica"> z H2 w <summary> (D14, Piotr 2026-10-27): klik otwiera jedno pytanie i zamyka resztę;
+// układ na całą szerokość kontenera (--szerokosc-tresci), długa odpowiedź w dwóch kolumnach od 64 rem (runda 7, Piotr 2026-10-30);
 // odpowiedź zostaje w HTML (zamknięty <details> nie ukrywa tekstu przed robotem ani przed wyszukiwaniem w stronie).
 // 🔴 Bez FAQPage w JSON-LD: wynik FAQ Google wycofał 2026-05-07, a bramka zatrzymuje publikację blokadą A10
 // (potwor-www §I, precedens pan-stolarz.pl). JSON-LD: WebPage + BreadcrumbList w @graph, jak wpis bloga.
@@ -26,6 +27,7 @@ const naKotwice = (t: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-+|-+$)/g, '')
     .slice(0, 60);
+const DLUGA = 450;
 const zajete = new Set<string>();
 const pytania = (Array.isArray(faq.pytania) ? (faq.pytania as Record<string, unknown>[]) : [])
   .map((p) => ({ pytanie: naTekst(p?.pytanie), odpowiedz: naTekst(p?.odpowiedz), kotwica: naKotwice(naTekst(p?.kotwica)) }))
@@ -35,8 +37,14 @@ const pytania = (Array.isArray(faq.pytania) ? (faq.pytania as Record<string, unk
     if (/^[0-9]/.test(k)) k = `p-${k}`;
     for (let n = 2; zajete.has(k); n++) k = `${p.kotwica || naKotwice(p.pytanie)}-${n}`;
     zajete.add(k);
-    // Pusty wiersz w odpowiedzi = nowy akapit.
-    return { ...p, kotwica: k, akapity: p.odpowiedz.split(/\n\s*\n/).map((a) => a.trim()).filter(Boolean) };
+    // Pusty wiersz w odpowiedzi = nowy akapit. Odpowiedź dłuższa niż DLUGA znaków (przy 76 rem to > 3 linie
+    // po ok. 150 znaków) układa się na komputerze w dwie kolumny — krótsza miara, mniej przewijania (D23).
+    return {
+      ...p,
+      kotwica: k,
+      akapity: p.odpowiedz.split(/\n\s*\n/).map((a) => a.trim()).filter(Boolean),
+      dluga: p.odpowiedz.length > DLUGA,
+    };
   });
 
 const tytul = napis('tytulKarty', 'Pytania o strony i sklepy internetowe — EcoPower Polska');
@@ -110,7 +118,7 @@ const daneStrukturalne = {
       {pytania.map((p) => (
         <details class="pytanie" name="faq" id={p.kotwica}>
           <summary class="pytanie__tytul"><h2>{p.pytanie}</h2></summary>
-          <div class="pytanie__odpowiedz">
+          <div class:list={['pytanie__odpowiedz', { 'pytanie__odpowiedz--dluga': p.dluga }]}>
             {p.akapity.map((a) => <p>{kawalki(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
           </div>
         </details>
@@ -207,16 +215,6 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* Kolumna 42 rem wyśrodkowana, ta sama co wpis bloga (D14). */
-  .okruszki,
-  .faq__tytul,
-  .faq__lead,
-  .lista,
-  .kontakt {
-    max-width: 42rem;
-    margin-inline: auto;
-  }
-
   .faq__tytul,
   .faq__lead {
     text-align: center;
@@ -288,6 +286,20 @@ const daneStrukturalne = {
     padding: 0 0 var(--o-4) calc(0.875rem + var(--o-3));
   }
 
+  /* Długa odpowiedź: dwie kolumny od 64 rem. Akapity i listy nie pękają w połowie, jeśli jest ich kilka;
+     pojedynczy długi akapit płynie przez obie kolumny. */
+  @media (min-width: 64rem) {
+    .pytanie__odpowiedz--dluga {
+      columns: 2;
+      column-gap: var(--o-12);
+    }
+
+    .pytanie__odpowiedz--dluga :is(ul, ol, blockquote),
+    .pytanie__odpowiedz--dluga p:not(:only-child) {
+      break-inside: avoid;
+    }
+  }
+
   .pytanie__odpowiedz p {
     margin: 0 0 var(--o-3);
   }
@@ -300,10 +312,30 @@ const daneStrukturalne = {
 
   .kontakt {
     margin-top: var(--o-16);
-    margin-inline: auto;
     padding: var(--o-6);
     background: var(--powierzchnia);
     border-radius: var(--promien);
+  }
+
+  /* Komputer: nagłówek z tekstem po lewej, dane kontaktowe po prawej — pełna szerokość kontenera. */
+  @media (min-width: 48rem) {
+    .kontakt {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: var(--o-12);
+      align-items: center;
+    }
+
+    .kontakt__tytul,
+    .kontakt p {
+      grid-column: 1;
+    }
+
+    .kontakt__dane {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      flex-direction: column;
+    }
   }
 
   .kontakt__tytul {

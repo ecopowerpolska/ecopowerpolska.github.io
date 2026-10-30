@@ -66,9 +66,9 @@ const daneStrukturalne = {
                     alt=""
                     widths={[360, 540, 720, 1080]}
                     width={1080}
-                    height={675}
+                    height={720}
                     fit="cover"
-                    sizes="(min-width: 60rem) 36rem, calc(100vw - 3rem)"
+                    sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 36rem, calc(100vw - 3rem)"
                     loading={i === 0 ? 'eager' : 'lazy'}
                     fetchpriority={i === 0 ? 'high' : undefined}
                   />
@@ -114,6 +114,7 @@ const daneStrukturalne = {
     color: var(--tekst-cichy);
   }
 
+  /* Siatka na pełną szerokość kontenera (76rem): 1 kolumna na telefonie, 2 od 48rem, 3 od 64rem; niepełny rząd do lewej (D22/D23). */
   .blog__lista {
     list-style: none;
     margin: 0;
@@ -123,16 +124,15 @@ const daneStrukturalne = {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  @media (min-width: 60rem) {
+  @media (min-width: 48rem) {
     .blog__lista {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+  }
 
-    /* Nieparzysta liczba wpisów: ostatni stoi sam na środku, tej samej szerokości co pozostałe (D22). */
-    .blog__lista > li:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
-      justify-self: center;
-      width: calc(50% - var(--o-3));
+  @media (min-width: 64rem) {
+    .blog__lista {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
@@ -163,12 +163,12 @@ const daneStrukturalne = {
     color: var(--akcent);
   }
 
-  /* Kadr 16:10 = proporcja zrzutów stron (bez obcinania menu); miejsce zarezerwowane przed pobraniem, CLS 0. */
+  /* Kadr 3:2 `cover` jednakowy na wszystkich kartach; miejsce zarezerwowane przed pobraniem, CLS 0. */
   .karta__zdjecie {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 3 / 2;
     border-bottom: 1px solid var(--linia);
     object-fit: cover;
   }
@@ -193,6 +193,15 @@ const daneStrukturalne = {
     margin: 0;
     font-size: var(--t-s);
     color: var(--tekst-cichy);
+  }
+
+  /* Zajawka: najwyżej 3 linie, żeby karty w rzędzie były równe. */
+  .karta__zajawka {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
   }
 
   .blog__pusto {

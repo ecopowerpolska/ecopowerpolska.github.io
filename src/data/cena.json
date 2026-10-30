@@ -4,7 +4,7 @@
   "naglowek": "Cennik stron i sklepów internetowych",
   "lead": "Podajemy ceny orientacyjne netto. Ostateczną wycenę przygotowujemy po rozmowie o zakresie: liczbie podstron, funkcjach, tekstach i zdjęciach.",
   "zastrzezenie": "Ceny netto, do faktury doliczamy 23 % VAT. Cennik aktualny na październik 2026.",
-  "kolumnaPozycji": "Półka",
+  "kolumnaPozycji": "Pozycja",
   "kolumnaCeny": "Cena",
   "brakCeny": "wycena indywidualna",
   "stronaWykonanieNaglowek": "Strona internetowa: wykonanie",
@@ -46,13 +46,19 @@
     },
     {
       "pozycja": "Treści: wpis na blogu",
-      "opis": "Artykuł pisany pod SEO.",
-      "cena": "105 zł",
+      "opis": "Artykuł pisany pod wyszukiwarkę: dobór tematu, tekst, zdjęcie i publikacja na Twojej stronie. W abonamencie niżej wpis wychodzi taniej: 400 zł zamiast 450 zł.",
+      "cena": "450 zł",
+      "jednostka": "za wpis"
+    },
+    {
+      "pozycja": "Treści: krótki wpis bez publikacji (do 2 000 znaków)",
+      "opis": "Sam tekst do 2 000 znaków, bez zdjęć, doboru tematu i publikacji: wstawiasz go na stronie samodzielnie.",
+      "cena": "150 zł",
       "jednostka": "za wpis"
     },
     {
       "pozycja": "Treści: prowadzenie bloga firmowego",
-      "opis": "Regularne wpisy na blogu firmy: piszemy je i publikujemy. Obejmuje 4 wpisy miesięcznie (jeden w tygodniu) z doborem tematów pod wyszukiwarkę, zdjęciami i publikacją.",
+      "opis": "Abonament: 4 wpisy miesięcznie (jeden w tygodniu), każdy ze zdjęciem i publikacją, z doborem tematów pod wyszukiwarkę. Płacisz 400 zł za wpis zamiast 450 zł, czyli o 50 zł mniej na wpisie, bo tematy i publikację planujemy z góry (4 × 400 zł = 1 600 zł).",
       "cena": "1 600 zł",
       "jednostka": "miesięcznie"
     }
@@ -119,14 +125,26 @@
       "jednostka": "miesięcznie"
     },
     {
-      "pozycja": "Integracje",
-      "opis": "System płatności 1 200 zł, Allegro 2 500 zł, hurtownia (dropshipping) 3 500 zł.",
+      "pozycja": "Integracja: system płatności",
+      "opis": "Integracja sklepu z systemem płatności; cena za jedną integrację.",
+      "cena": "1 200 zł",
+      "jednostka": "jednorazowo"
+    },
+    {
+      "pozycja": "Integracja: Allegro",
+      "opis": "Integracja sklepu z Allegro; cena za jedną integrację.",
       "cena": "2 500 zł",
-      "jednostka": "jednorazowo, za sztukę"
+      "jednostka": "jednorazowo"
+    },
+    {
+      "pozycja": "Integracja: hurtownia (dropshipping)",
+      "opis": "Integracja sklepu z hurtownią (dropshipping); cena za jedną hurtownię.",
+      "cena": "3 500 zł",
+      "jednostka": "jednorazowo"
     },
     {
       "pozycja": "Prowizje operatora płatności (pobiera operator, nie my)",
-      "opis": "Za każdą opłaconą transakcję. Przykład: Przelewy24 w Shoper Płatności, pakiet Standard; przez pierwsze 3 miesiące 1% + 0,39 zł, aktywacja 49 zł brutto.",
+      "opis": "Za każdą opłaconą transakcję. Przykład: Przelewy24 w Shoper Płatności, pakiet Standard; przez pierwsze 3 miesiące 1% + 0,39 zł, aktywacja 49 zł brutto (ok. 40 zł netto).",
       "cena": "1,58% + 0,39 zł",
       "jednostka": "od transakcji"
     },
@@ -141,5 +159,8 @@
   "ctaTekst": "Napisz, jaki adres ma mieć strona, co ma robić i czy masz już domenę, teksty i zdjęcia. Odpowiemy wyceną dla Twojego zakresu.",
   "ctaLink": "Przejdź do kontaktu",
   "stronaGlowna": "Strona główna",
-  "okruszkiEtykieta": "Ścieżka"
+  "okruszkiEtykieta": "Ścieżka",
+  "kolumnaOpisu": "Zakres",
+  "kolumnaJednostki": "Rozliczenie",
+  "jednostkaWykonania": "jednorazowo"
 }

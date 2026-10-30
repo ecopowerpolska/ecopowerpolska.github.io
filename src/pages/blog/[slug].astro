@@ -15,15 +15,22 @@ import { opublikowane, adresWpisu, dataPoPolsku, plikObrazu } from '../../lib/wp
 
 export async function getStaticPaths() {
   const wpisy = await opublikowane();
-  // „Czytaj także”: dwa inne wpisy, od najnowszego (lista już posortowana w opublikowane()).
+  // „Czytaj także”: trzy inne wpisy, od najnowszego (lista już posortowana w opublikowane()); 3 karty w rzędzie na pełną szerokość.
   return wpisy.map((wpis) => ({
     params: { slug: wpis.id },
     props: {
       wpis,
       inne: wpisy
         .filter((w) => w.id !== wpis.id)
-        .slice(0, 2)
-        .map((w) => ({ tytul: w.data.tytul, adres: adresWpisu(w.id), iso: w.data.dataPublikacji!.toISOString(), data: dataPoPolsku(w.data.dataPublikacji!) })),
+        .slice(0, 3)
+        .map((w) => ({
+          tytul: w.data.tytul,
+          adres: adresWpisu(w.id),
+          zajawka: w.data.opisSeo,
+          iso: w.data.dataPublikacji!.toISOString(),
+          data: dataPoPolsku(w.data.dataPublikacji!),
+          obraz: plikObrazu(w.data.zdjecie),
+        })),
     },
   }));
 }
@@ -31,7 +38,9 @@ export async function getStaticPaths() {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { wpis, inne } = Astro.props as Props;
 const dane = wpis.data;
-const { Content } = await render(wpis);
+const { Content, headings } = await render(wpis);
+// Spis sekcji w pasku bocznym: nagłówki H2 (id nadaje procesor Markdown, to samo `slug`).
+const sekcje = headings.filter((h) => h.depth === 2);
 
 const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
 const adres = `${baza}${adresWpisu(wpis.id)}`;
@@ -126,34 +135,73 @@ const daneStrukturalne = {
           width={1440}
           height={900}
           fit="cover"
-          sizes="(min-width: 56rem) 52rem, calc(100vw - 2rem)"
+          sizes="(min-width: 76rem) 70rem, calc(100vw - 2rem)"
           loading="eager"
           fetchpriority="high"
         />
       )}
 
-      <div class="wpis__tresc">
-        <Content />
-      </div>
+      {/* Od 64rem: treść w lewym torze siatki, pasek boczny (spis sekcji + wezwanie) w prawym; lead (pierwszy akapit) na całą szerokość. */}
+      <div class="wpis__uklad">
+        <div class="wpis__tresc">
+          <Content />
+        </div>
 
-      <p class="wpis__udostepnij">
-        <a class="wpis__facebook" href={udostepnijAdres} target="_blank" rel="noopener noreferrer">
-          {tekst(teksty.udostepnij, 'Udostępnij na Facebooku')}
-          <span class="sr-only"> {tekst(teksty.udostepnijNowaKarta, '(otwiera się w nowej karcie)')}</span>
-        </a>
-      </p>
+        <p class="wpis__udostepnij">
+          <a class="wpis__facebook" href={udostepnijAdres} target="_blank" rel="noopener noreferrer">
+            {tekst(teksty.udostepnij, 'Udostępnij na Facebooku')}
+            <span class="sr-only"> {tekst(teksty.udostepnijNowaKarta, '(otwiera się w nowej karcie)')}</span>
+          </a>
+        </p>
+
+        <aside class="wpis__bok" aria-label={tekst(teksty.pasekBoczny, 'Do wpisu')}>
+          {sekcje.length > 1 && (
+            <nav class="wpis__spis" aria-labelledby="wpis-spis">
+              <p id="wpis-spis" class="wpis__bok-tytul">{tekst(teksty.spisTytul, 'W tym wpisie')}</p>
+              <ol>
+                {sekcje.map((h) => (
+                  <li><a href={`#${h.slug}`}>{h.text}</a></li>
+                ))}
+              </ol>
+            </nav>
+          )}
+          <div class="wpis__wezwanie">
+            <p class="wpis__bok-tytul">{tekst(teksty.wezwanieTytul, 'Planujesz stronę albo sklep?')}</p>
+            <p>{tekst(teksty.wezwanieTekst, 'Opisz w kilku zdaniach, co ma powstać. Orientacyjną cenę policzysz sam w kalkulatorze.')}</p>
+            <a class="wpis__guzik" href="/kontakt/">{tekst(teksty.wezwanieGuzik, 'Zapytaj o stronę')}</a>
+            <a class="wpis__guzik wpis__guzik--cichy" href="/cena/">{tekst(teksty.wezwanieCena, 'Policz cenę')}</a>
+          </div>
+        </aside>
+      </div>
     </article>
 
     <nav class="wpis__dalej" aria-labelledby="czytaj-takze">
       {inne.length > 0 && (
         <>
-          <h2 id="czytaj-takze" class="wpis__dalej-tytul">Czytaj także</h2>
+          <h2 id="czytaj-takze" class="wpis__dalej-tytul">{tekst(teksty.czytajTakze, 'Czytaj także')}</h2>
           <ul class="wpis__dalej-lista">
             {inne.map((w) => (
               <li>
-                <a class="wpis__dalej-karta" href={w.adres}>
-                  <span class="wpis__dalej-nazwa">{w.tytul}</span>
-                  <time class="wpis__dalej-data" datetime={w.iso}>{w.data}</time>
+                <a class="karta" href={w.adres}>
+                  {w.obraz && (
+                    <Image
+                      class="karta__zdjecie"
+                      src={w.obraz}
+                      alt=""
+                      widths={[360, 540, 720]}
+                      width={720}
+                      height={480}
+                      fit="cover"
+                      sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 36rem, calc(100vw - 2rem)"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                  <div class="karta__tresc">
+                    <h3 class="karta__tytul">{w.tytul}</h3>
+                    <time class="karta__data" datetime={w.iso}>{w.data}</time>
+                    {w.zajawka && <p class="karta__zajawka">{w.zajawka}</p>}
+                  </div>
                 </a>
               </li>
             ))}
@@ -168,8 +216,8 @@ const daneStrukturalne = {
 </Bazowy>
 
 <style>
-  /* Wpis = wyśrodkowana kolumna czytania 42 rem (ok. 70 znaków) w kontenerze strony; zdjęcia szersze, do 52 rem.
-     Gutter 16 px na telefonie, 24 px od 48 rem. */
+  /* Wpis = pełna szerokość kontenera (76rem). H1, data i lead na środku; treść od 64rem w dwóch torach siatki:
+     tekst (1fr) + pasek boczny 24rem (spis sekcji, wezwanie). Dlaczego nie kolumny gazetowe: patrz meldunek A (runda 7). */
   .wpis {
     max-width: var(--szerokosc-tresci);
     width: 100%;
@@ -181,16 +229,6 @@ const daneStrukturalne = {
     .wpis {
       padding-inline: var(--o-6);
     }
-  }
-
-  .okruszki,
-  .wpis__tytul,
-  .wpis__data,
-  .wpis__tresc > :global(*),
-  .wpis__udostepnij,
-  .wpis__dalej {
-    max-width: 42rem;
-    margin-inline: auto;
   }
 
   .okruszki ol {
@@ -266,17 +304,70 @@ const daneStrukturalne = {
     color: var(--tekst-cichy);
   }
 
-  /* Zdjęcie otwierające szersze niż tekst; kadr 16:10 = proporcja zrzutów stron, bez obcinania. */
+  /* Zdjęcie otwierające na pełną szerokość kontenera; kadr 21:9 od góry (nagłówek zrzutu zostaje widoczny), 16:10 na telefonie. */
   .wpis__zdjecie {
     display: block;
     width: 100%;
-    max-width: 52rem;
     height: auto;
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    margin: 0 auto var(--o-12);
+    object-position: top;
+    margin: 0 0 var(--o-8);
     border: 1px solid var(--linia);
     border-radius: var(--promien);
+  }
+
+  @media (min-width: 64rem) {
+    .wpis__zdjecie {
+      aspect-ratio: 21 / 9;
+    }
+  }
+
+  /* Układ: telefon i tablet = jedna kolumna czytania (do 44rem, pasek boczny pod tekstem); komputer = siatka dwóch torów. */
+  .wpis__uklad {
+    display: block;
+  }
+
+  .wpis__tresc,
+  .wpis__udostepnij {
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .wpis__uklad {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 24rem;
+      column-gap: var(--o-12);
+      align-items: start;
+    }
+
+    /* Elementy Markdownu stają się wprost komórkami siatki: lead może zająć obie kolumny, reszta lewą. */
+    .wpis__tresc {
+      display: contents;
+      max-width: none;
+    }
+
+    .wpis__tresc > :global(*) {
+      grid-column: 1;
+      min-width: 0;
+    }
+
+    .wpis__udostepnij {
+      grid-column: 1;
+      max-width: none;
+      margin-inline: 0;
+      text-align: left;
+    }
+
+    /* Pasek od drugiego wiersza (pod leadem) przez wszystkie wiersze treści; wiersze puste mają wysokość 0 (row-gap 0). */
+    .wpis__bok {
+      grid-column: 2;
+      grid-row: 2 / span 300;
+      position: sticky;
+      top: 5rem;
+      align-self: start;
+    }
   }
 
   /* Proza z Markdownu: znaczniki bez klas, stąd :global wewnątrz kontenera. */
@@ -285,12 +376,21 @@ const daneStrukturalne = {
     line-height: 1.7;
   }
 
-  /* Pierwszy akapit = lead, stopień większy. */
+  /* Pierwszy akapit = lead, stopień większy, na środku (od 64rem na całą szerokość kontenera). */
   .wpis__tresc > :global(p:first-child) {
     text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst);
+  }
+
+  @media (min-width: 64rem) {
+    .wpis__tresc > :global(p:first-child) {
+      grid-column: 1 / -1;
+      max-width: 56rem;
+      margin-inline: auto;
+      margin-bottom: var(--o-12);
+    }
   }
 
   .wpis__tresc :global(h2) {
@@ -326,11 +426,9 @@ const daneStrukturalne = {
     font-weight: 600;
   }
 
-  /* Zdjęcie w treści z podpisem (wtyczka zdjeciaZPodpisem w astro.config.mjs): szersze niż tekst, wyśrodkowane. */
+  /* Zdjęcie w treści z podpisem (wtyczka zdjeciaZPodpisem w astro.config.mjs): na pełną szerokość kolumny tekstu. */
   .wpis__tresc > :global(figure) {
-    max-width: 52rem;
-    margin-top: var(--o-8);
-    margin-bottom: var(--o-12);
+    margin: var(--o-8) 0 var(--o-12);
   }
 
   .wpis__tresc :global(figure img) {
@@ -342,11 +440,36 @@ const daneStrukturalne = {
   }
 
   .wpis__tresc :global(figcaption) {
-    max-width: 42rem;
-    margin: var(--o-3) auto 0;
+    margin: var(--o-3) 0 0;
     font-size: var(--t-s);
     line-height: 1.5;
     color: var(--tekst-cichy);
+  }
+
+  /* Tabele z Markdownu (wpisy z porównaniami): przewijane w poziomie WEWNĄTRZ tabeli, nie strony; na komputerze w torze tekstu obok paska bocznego. */
+  .wpis__tresc :global(table) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: var(--o-6) 0 var(--o-8);
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--t-s);
+    line-height: 1.45;
+  }
+
+  .wpis__tresc :global(th),
+  .wpis__tresc :global(td) {
+    min-width: 9rem;
+    padding: var(--o-2) var(--o-3);
+    border-bottom: 1px solid var(--linia);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .wpis__tresc :global(th) {
+    background: var(--powierzchnia);
+    font-weight: 700;
   }
 
   .wpis__tresc :global(a) {
@@ -403,23 +526,129 @@ const daneStrukturalne = {
     border: 0;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .wpis__facebook {
-      transition: none;
+  /* Pasek boczny: spis sekcji + wezwanie, wypełnienie zamiast kreski, promień z motywu. Na telefonie tylko wezwanie, pod tekstem. */
+  .wpis__bok {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-6);
+    max-width: 44rem;
+    margin: var(--o-12) auto 0;
+  }
+
+  @media (min-width: 64rem) {
+    .wpis__bok {
+      max-width: none;
+      margin: 0;
     }
   }
 
-  /* „Czytaj także” i powrót: w kolumnie wpisu, karty jak na liście bloga (wypełnienie, promień z motywu). */
+  .wpis__spis {
+    display: none;
+  }
+
+  @media (min-width: 64rem) {
+    .wpis__spis {
+      display: block;
+    }
+  }
+
+  .wpis__spis,
+  .wpis__wezwanie {
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .wpis__bok-tytul {
+    margin: 0 0 var(--o-3);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .wpis__spis ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .wpis__spis a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: var(--o-1);
+    font-size: var(--t-s);
+    line-height: 1.35;
+    color: var(--tekst);
+    text-decoration: none;
+  }
+
+  /* najechanie i fokus: kolor akcentu z podkreśleniem */
+  .wpis__spis a:hover {
+    color: var(--akcent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .wpis__wezwanie p:not(.wpis__bok-tytul) {
+    margin: 0 0 var(--o-4);
+    font-size: var(--t-s);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .wpis__guzik {
+    /* spoczynek */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    border: 2px solid var(--akcent);
+    border-radius: var(--promien);
+    background: var(--akcent);
+    font-weight: 600;
+    color: var(--tlo);
+    text-decoration: none;
+    transition: background-color 120ms ease, color 120ms ease;
+  }
+
+  .wpis__guzik + .wpis__guzik {
+    margin-top: var(--o-3);
+  }
+
+  /* najechanie */
+  .wpis__guzik:hover {
+    background: var(--tlo);
+    color: var(--akcent);
+  }
+
+  /* aktywny (wciśnięty) */
+  .wpis__guzik:active {
+    transform: translateY(1px);
+  }
+
+  .wpis__guzik--cichy {
+    background: transparent;
+    color: var(--akcent);
+  }
+
+  .wpis__guzik--cichy:hover {
+    background: var(--tlo);
+  }
+
+  /* „Czytaj także”: 3 karty w rzędzie na pełną szerokość kontenera (2 od 48rem, 1 na telefonie), karty jak na liście /blog/. */
   .wpis__dalej {
-    margin-top: var(--o-12);
+    margin-top: var(--o-16);
     padding-top: var(--o-8);
     border-top: 1px solid var(--linia);
   }
 
   .wpis__dalej-tytul {
-    margin-bottom: var(--o-4);
+    margin-bottom: var(--o-6);
     text-align: center;
-    font-size: var(--t-l);
+    font-size: var(--t-xl);
   }
 
   .wpis__dalej-lista {
@@ -427,58 +656,86 @@ const daneStrukturalne = {
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--o-4);
+    gap: var(--o-6);
     grid-template-columns: minmax(0, 1fr);
   }
 
-  @media (min-width: 40rem) {
+  @media (min-width: 48rem) {
     .wpis__dalej-lista {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .wpis__dalej-karta {
+  @media (min-width: 64rem) {
+    .wpis__dalej-lista {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .karta {
     /* spoczynek */
     display: flex;
     flex-direction: column;
-    gap: var(--o-2);
     height: 100%;
-    min-height: 44px;
-    padding: var(--o-4) var(--o-6);
+    overflow: hidden;
     background: var(--powierzchnia);
     border-radius: var(--promien);
     color: var(--tekst);
     text-decoration: none;
   }
 
-  /* najechanie */
-  .wpis__dalej-karta:hover {
-    text-decoration: none;
-  }
-
-  .wpis__dalej-karta:hover .wpis__dalej-nazwa {
+  /* najechanie: kolor tytułu (para akcent na powierzchni z motyw.css) */
+  .karta:hover .karta__tytul {
     color: var(--akcent);
   }
 
   /* aktywny (wciśnięty) */
-  .wpis__dalej-karta:active {
+  .karta:active {
     transform: translateY(1px);
   }
 
-  .wpis__dalej-nazwa {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--t-m);
-    line-height: 1.3;
+  .karta__zdjecie {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-bottom: 1px solid var(--linia);
+    object-fit: cover;
   }
 
-  .wpis__dalej-data {
+  .karta__tresc {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    padding: var(--o-6);
+  }
+
+  .karta__tytul {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .karta__data,
+  .karta__zajawka {
+    margin: 0;
     font-size: var(--t-s);
     color: var(--tekst-cichy);
   }
 
+  .karta__zajawka {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+
   .wpis__powrot {
-    margin: var(--o-6) 0 0;
+    margin: var(--o-8) 0 0;
     text-align: center;
   }
 
@@ -492,5 +749,17 @@ const daneStrukturalne = {
 
   .wpis__powrot a:hover {
     color: var(--tekst);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wpis__guzik,
+    .wpis__facebook {
+      transition: none;
+    }
+
+    .karta:active,
+    .wpis__guzik:active {
+      transform: none;
+    }
   }
 </style>

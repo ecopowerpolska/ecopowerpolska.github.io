@@ -2,7 +2,7 @@
 tytul: "Ile trwa budowa strony firmy i co dostajesz?"
 tytulSeo: "Ile trwa budowa strony firmy i co dostajesz?"
 opisSeo: "Od czego zależy termin budowy strony, sześć kroków od ustalenia zakresu do utrzymania i co dostajesz po publikacji: repozytorium, panel, pomiar."
-dataPublikacji: "2026-10-23T12:00:00+02:00"
+dataPublikacji: "2026-10-13T14:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-studioagat.jpg"
 zdjecieAlt: "Strona główna studioagat.pl: nagłówek „Projektant wnętrz Warszawa, architekt wnętrz” nad zdjęciem salonu z szarą sofą"
 szkic: false

@@ -1,6 +1,7 @@
 ---
 // FaqSkrot.astro — 3–4 pytania z src/data/faq.json na stronę główną i odnośnik do /faq/.
 // Wybór: pytania z `naGlownej: true` (panel: Pytania i odpowiedzi), najwyżej 4; żadne nie zaznaczone = pierwsze 4.
+// Styl i szerokość jak /faq/ (pełny kontener, plus/minus z lewej, długa odpowiedź w dwóch kolumnach od 64 rem; runda 7).
 // <details> bez JavaScriptu; cała odpowiedź stoi w HTML (zwinięta), więc robot i czytnik ekranu ją widzą.
 // Bez JSON-LD: dane strukturalne strony głównej niesie DaneStrukturalne.astro, FAQPage jest zablokowany bramką (A10).
 import faqJson from '../data/faq.json';
@@ -22,6 +23,7 @@ const wszystkie = (Array.isArray(faq.pytania) ? (faq.pytania as Record<string, u
   .map((p) => ({
     pytanie: naTekst(p?.pytanie),
     akapity: naTekst(p?.odpowiedz).split(/\n\s*\n/).map((a) => a.trim()).filter(Boolean),
+    dluga: naTekst(p?.odpowiedz).length > 450,
     naGlownej: p?.naGlownej === true || p?.naGlownej === 'true',
   }))
   .filter((p) => p.pytanie && p.akapity.length > 0);
@@ -35,9 +37,9 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
     <h2 id="faq-skrot-tytul" class="faq-skrot__tytul">{napis('skrotNaglowek', 'Najczęstsze pytania')}</h2>
     <div class="faq-skrot__lista">
       {pytania.map((p) => (
-        <details class="pytanie">
+        <details class="pytanie" name="faq-skrot">
           <summary><h3 class="pytanie__tytul">{p.pytanie}</h3></summary>
-          <div class="pytanie__odpowiedz">
+          <div class:list={['pytanie__odpowiedz', { 'pytanie__odpowiedz--dluga': p.dluga }]}>
             {p.akapity.map((a) => <p>{kawalki(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
           </div>
         </details>
@@ -63,8 +65,6 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
   }
 
   .faq-skrot__lista {
-    max-width: 48rem;
-    margin-inline: auto;
     border-top: 1px solid var(--linia);
   }
 
@@ -72,14 +72,13 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
     border-bottom: 1px solid var(--linia);
   }
 
-  /* spoczynek: cały wiersz pytania jest celem dotyku ≥ 44 px, znacznik +/− rysowany CSS-em */
+  /* spoczynek: cały wiersz pytania jest celem dotyku ≥ 44 px, znacznik +/− rysowany CSS-em (jak na /faq/) */
   .pytanie summary {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--o-4);
+    gap: var(--o-3);
     min-height: 44px;
-    padding: var(--o-3) 0;
+    padding: var(--o-4) 0;
     cursor: pointer;
     list-style: none;
   }
@@ -88,16 +87,18 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
     display: none;
   }
 
-  .pytanie summary::after {
-    content: '+';
-    flex: none;
-    font-size: var(--t-l);
-    line-height: 1;
-    color: var(--akcent);
+  .pytanie summary::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.875rem;
+    height: 0.875rem;
+    background:
+      linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat,
+      linear-gradient(var(--akcent), var(--akcent)) center / 2px 100% no-repeat;
   }
 
-  .pytanie[open] summary::after {
-    content: '−';
+  .pytanie[open] > summary::before {
+    background: linear-gradient(var(--akcent), var(--akcent)) center / 100% 2px no-repeat;
   }
 
   /* najechanie */
@@ -111,18 +112,29 @@ const pytania = (zaznaczone.length > 0 ? zaznaczone : wszystkie).slice(0, Math.m
   }
 
   .pytanie__tytul {
-    font-size: var(--t-m);
-    line-height: 1.35;
+    margin: 0;
+    font-size: var(--t-l);
+    line-height: 1.25;
   }
 
   .pytanie__odpowiedz {
-    padding: 0 0 var(--o-4);
-    max-width: var(--miara);
+    padding: 0 0 var(--o-4) calc(0.875rem + var(--o-3));
   }
 
   .pytanie__odpowiedz p {
     margin: 0 0 var(--o-3);
-    color: var(--tekst-cichy);
+  }
+
+  @media (min-width: 64rem) {
+    .pytanie__odpowiedz--dluga {
+      columns: 2;
+      column-gap: var(--o-12);
+    }
+
+    .pytanie__odpowiedz--dluga :is(ul, ol, blockquote),
+    .pytanie__odpowiedz--dluga p:not(:only-child) {
+      break-inside: avoid;
+    }
   }
 
   /* Linki w odpowiedziach podkreślone (Lighthouse link-in-text-block, runda 5). */

@@ -1,0 +1,112 @@
+---
+// /efekty/pasek-postepu-przewijania/ - cienka linia na górze okna, która rośnie wraz z przewijaniem. Na stronie to efekt GLOBALNY
+// (Ujawnianie.astro); pokaz pokazuje to samo w ramce: pasek nad przewijanym tekstem, napędzany osią scroll(self) w CSS.
+// Przeglądarka bez osi przewijania dostaje 5 linii skryptu. Pomysł: wzorzec „reading progress bar" z poradników scroll-driven animations.
+import SzkieletEfektu from '../../components/efekty/SzkieletEfektu.astro';
+
+const akapity = [
+  'Pasek postępu mówi czytelnikowi, ile jeszcze zostało do końca. Przy długim wpisie na blogu, poradniku albo opisie oferty to prosta informacja: warto doczytać, bo koniec jest blisko.',
+  'Linia rośnie od lewej do prawej razem z przewijaniem. Gdy przewijasz w górę, kurczy się tą samą drogą. Nie pyta o zgodę, nie zasłania treści i nie wymaga żadnej interakcji.',
+  'Technicznie to jeden element o wysokości dwóch pikseli. W nowoczesnych przeglądarkach jego długość liczy sam CSS z pozycji przewijania, poza głównym wątkiem, więc nie obciąża strony.',
+  'Na tej witrynie taka linia jest na górze każdej podstrony, nad paskiem z logo. Przewiń ten tekst w ramce, a zobaczysz ten sam efekt w mniejszej skali.',
+  'Przy włączonym w systemie ograniczeniu ruchu pasek nie jest pokazywany, bo ruch nie jest potrzebny do przeczytania treści.',
+  'Pasek najlepiej sprawdza się tam, gdzie tekst jest długi. Na krótkich stronach, które mieszczą się w jednym ekranie, nic nie wnosi i lepiej go nie dodawać.',
+];
+---
+
+<SzkieletEfektu slug="pasek-postepu-przewijania">
+  <section class="postep" aria-label="Pokaz: pasek postępu przewijania">
+    <div class="postep__ramka">
+      <div class="postep__pasek" aria-hidden="true"></div>
+      <div class="postep__tekst" tabindex="0" role="region" aria-label="Przewijany tekst z paskiem postępu">
+        {akapity.map((a) => <p>{a}</p>)}
+      </div>
+    </div>
+    <p class="postep__podpis">Przewijaj tekst w ramce kółkiem myszy, palcem albo klawiszami strzałek (kliknij w ramkę).</p>
+  </section>
+</SzkieletEfektu>
+
+<script>
+  // Zapasowo dla przeglądarek bez osi przewijania w CSS.
+  const t = document.querySelector<HTMLElement>('.postep__tekst');
+  const p = document.querySelector<HTMLElement>('.postep__pasek');
+  if (t && p && !CSS.supports('animation-timeline: scroll()') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const r = () => { p.style.transform = `scaleX(${t.scrollTop / (t.scrollHeight - t.clientHeight || 1)})`; };
+    t.addEventListener('scroll', r, { passive: true });
+    r();
+  }
+</script>
+
+<style>
+  .postep__ramka {
+    position: relative;
+    overflow: hidden;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .postep__pasek {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: 4px;
+    background: var(--akcent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .postep__tekst {
+    height: clamp(14rem, 45svh, 22rem);
+    overflow-y: auto;
+    padding: var(--o-6);
+    scroll-timeline-name: --postep-demo;
+    scroll-timeline-axis: block;
+  }
+
+  .postep__tekst:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: -3px;
+  }
+
+  .postep__tekst p {
+    margin: 0 0 var(--o-4);
+  }
+
+  .postep__podpis {
+    margin: var(--o-4) 0 0;
+    text-align: center;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .postep__ramka {
+        timeline-scope: --postep-demo;
+      }
+
+      .postep__pasek {
+        --os-postepu: --postep-demo;
+        animation-name: postep-demo;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: var(--os-postepu);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .postep__pasek {
+      display: none;
+    }
+  }
+
+  @keyframes postep-demo {
+    to {
+      transform: scaleX(1);
+    }
+  }
+</style>

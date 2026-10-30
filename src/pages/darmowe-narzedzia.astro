@@ -1,0 +1,354 @@
+---
+// /darmowe-narzedzia — wspólna strona darmowych narzędzi (runda 7, 2026-10-30, decyzja Piotra: link wyłącznie w stopce).
+// Treść i stan kafelków: src/data/narzedzia.json (pole `stan`: dziala | wkrotce; `adres` = trasa narzędzia; `api` zarezerwowane
+// dla generatorów, które podłączy Potwór). Bez atrap formularzy NIP: narzędzie „w przygotowaniu” nie udaje działania.
+// Układ: H1 i wstęp na środku, siatka kafelków na pełną szerokość kontenera (3 / 2 / 1 kolumny). 0 kB JS.
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import firma from '../data/firma.json';
+import blog from '../data/blog.json';
+import dane from '../data/narzedzia.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+
+const TRASA = '/darmowe-narzedzia/';
+const d = dane as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+const lista = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+
+const naglowek = tekst(naTekst(d.naglowek), 'Darmowe narzędzia dla właścicieli stron');
+const tytul = tekst(
+  naTekst(d.tytulKarty),
+  'Darmowe narzędzia dla właścicieli stron: test szybkości, generator regulaminu i polityki | EcoPower Polska',
+);
+const opis = tekst(
+  naTekst(d.opisWyszukiwarki),
+  'Bezpłatne narzędzia dla właścicieli stron i sklepów: test szybkości strony w Google PageSpeed oraz, wkrótce, generator regulaminu i polityki prywatności na podstawie NIP firmy.',
+);
+const lead = tekst(naTekst(d.lead), 'Bezpłatne, bez logowania, działają w przeglądarce.');
+const nota = naTekst(d.nota);
+const etykietaSiatki = tekst(naTekst(d.etykietaSiatki), 'Lista narzędzi');
+const stanDziala = tekst(naTekst(d.stanDziala), 'Działa');
+const stanWkrotce = tekst(naTekst(d.stanWkrotce), 'W przygotowaniu');
+
+const kafelki = (lista(d.kafelki) as Record<string, unknown>[])
+  .map((k) => {
+    const stan = naTekst(k?.stan) === 'dziala' && naTekst(k?.adres) ? 'dziala' : 'wkrotce';
+    return {
+      id: naTekst(k?.id),
+      ikona: naTekst(k?.ikona),
+      nazwa: naTekst(k?.nazwa),
+      opis: naTekst(k?.opis),
+      stan,
+      adres: naTekst(k?.adres),
+      guzik: naTekst(k?.guzik) || (stan === 'dziala' ? 'Otwórz' : 'Wkrótce'),
+      powiadom: naTekst(k?.powiadom),
+      powiadomAdres: naTekst(k?.powiadomAdres) || '/kontakt/',
+    };
+  })
+  .filter((k) => k.nazwa);
+
+// Proste ikony liniowe 24×24 (kreska currentColor); klucz `ikona` z JSON, brak klucza = ikona domyślna (klucz).
+const ikony: Record<string, string> = {
+  szybkosc: 'M4 17a8 8 0 1 1 16 0M12 17l4-6M6 17h1.5M16.5 17H18M12 9V7.5',
+  regulamin: 'M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5',
+  prywatnosc: 'M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6zM9.5 12l2 2 3.5-4',
+};
+const ikonaDomyslna = 'M5 5h14v14H5zM9 9h6M9 13h6';
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(TRASA, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: tekst(naTekst(d.okruszek), 'Darmowe narzędzia'), adres: TRASA },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: naglowek,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="narzedzia">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="narzedzia__tytul">{naglowek}</h1>
+    <p class="narzedzia__lead">{lead}</p>
+
+    <ul class="siatka" aria-label={etykietaSiatki}>
+      {kafelki.map((k) => (
+        <li class={`kafel kafel--${k.stan}`}>
+          <svg class="kafel__ikona" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d={ikony[k.ikona] ?? ikonaDomyslna} />
+          </svg>
+          <p class="kafel__stan">{k.stan === 'dziala' ? stanDziala : stanWkrotce}</p>
+          <h2 class="kafel__nazwa" id={k.id ? `${k.id}-nazwa` : undefined}>{k.nazwa}</h2>
+          {k.opis && <p class="kafel__opis">{k.opis}</p>}
+          <div class="kafel__dol">
+            {k.stan === 'dziala' ? (
+              <a class="guzik" href={k.adres} aria-describedby={k.id ? `${k.id}-nazwa` : undefined}>{k.guzik}</a>
+            ) : (
+              <>
+                <button type="button" class="guzik guzik--wkrotce" aria-disabled="true" tabindex="-1">{k.guzik}</button>
+                {k.powiadom && <a class="kafel__powiadom" href={k.powiadomAdres}>{k.powiadom}<span class="kafel__ukryty"> o narzędziu: {k.nazwa}</span></a>}
+              </>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    {nota && (
+      <p class="narzedzia__nota">
+        {kawalki(nota).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}
+      </p>
+    )}
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .narzedzia {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na pozostałych podstronach (jedna linia, D14). */
+  .okruszki {
+    max-width: none;
+  }
+
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  /* D22 (2026-10-30): H1 i wstęp na środku; siatka niżej na pełną szerokość kontenera. */
+  .narzedzia__tytul {
+    max-width: 44rem;
+    margin-inline: auto;
+    text-align: center;
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+  }
+
+  .narzedzia__lead {
+    max-width: 44rem;
+    margin: var(--o-4) auto 0;
+    text-align: center;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  /* Siatka 3 / 2 / 1 kolumny, kafle równe; niepełny ostatni rząd do lewej. */
+  .siatka {
+    list-style: none;
+    margin: var(--o-12) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--o-6);
+  }
+
+  @media (min-width: 48rem) {
+    .siatka {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .siatka {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .kafel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    border-top: 4px solid var(--linia);
+  }
+
+  .kafel--dziala {
+    border-top-color: var(--akcent);
+  }
+
+  .kafel__ikona {
+    flex: none;
+    color: var(--akcent);
+  }
+
+  .kafel--wkrotce .kafel__ikona {
+    color: var(--tekst-cichy);
+  }
+
+  .kafel__stan {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tekst-cichy);
+  }
+
+  .kafel--dziala .kafel__stan {
+    color: var(--akcent);
+  }
+
+  .kafel__nazwa {
+    margin: var(--o-2) 0 0;
+    font-size: var(--t-l);
+  }
+
+  .kafel__opis {
+    margin: var(--o-3) 0 0;
+    color: var(--tekst);
+  }
+
+  .kafel__dol {
+    margin-top: auto;
+    padding-top: var(--o-6);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--o-2) var(--o-4);
+  }
+
+  .guzik {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 var(--o-6);
+    font: inherit;
+    font-weight: 600;
+    color: var(--tlo);
+    background: var(--akcent);
+    border: 0;
+    border-radius: var(--promien-maly);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .guzik:hover {
+    background: var(--tekst);
+    text-decoration: none;
+  }
+
+  /* Guzik „Wkrótce”: obrys zamiast wypełnienia, czytelny (nie przygaszony globalnie do 0,4), bez reakcji na klik. */
+  .guzik--wkrotce,
+  .guzik--wkrotce[aria-disabled='true'] {
+    opacity: 1;
+    color: var(--tekst-cichy);
+    background: none;
+    border: 1.5px dashed var(--tekst-cichy);
+    cursor: not-allowed;
+  }
+
+  .guzik--wkrotce:hover {
+    background: none;
+  }
+
+  .kafel__powiadom {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-s);
+    font-weight: 600;
+  }
+
+  .kafel__ukryty {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .narzedzia__nota {
+    margin: var(--o-8) 0 0;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+</style>

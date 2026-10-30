@@ -1,0 +1,149 @@
+---
+/** Przełącznik języków GTranslate w stopce — mechanizm z pan-stolarz.pl (`src/components/Tlumacz.astro`), tokeny tego motywu (jasna stopka).
+ *  Polski jest językiem źródłowym; do wyboru en, de, uk, ru, fr, es, it (nazwy rodzime, polski pierwszy).
+ *  Zasady (dwf.js: `switcher_horizontal_position: 'inline'` nie buduje pływającego opakowania `fixed`, więc widżet stoi w przepływie stopki
+ *  i nie koliduje z paskiem zgody ani z menu; `detect_browser_language: 0` — autodetekcja przepisuje tekst po pierwszym malowaniu = CLS):
+ *   • skrypt Google/GTranslate (cdn.gtranslate.net) NIE ładuje się, dopóki odwiedzający nie zdecyduje:
+ *       - wybór „wszystkie” w oknie cookie (localStorage `ep.zgoda`) → ładuje się, gdy stopka zbliża się do okna (IntersectionObserver, 600 px zapasu);
+ *       - „tylko niezbędne” albo brak decyzji → ładuje się dopiero po kliknięciu naszego przycisku „Polski” (to żądanie usługi przez użytkownika);
+ *       - odwiedzający, który wcześniej wybrał język (wpis `__GT_TRANSLATE_LANGS` z językiem innym niż polski), dostaje przełącznik po bezczynności,
+ *         żeby strona przetłumaczyła się sama — język wybrał świadomie, klikając;
+ *   • do czasu załadowania w stopce stoi nasz przycisk (44 px, ten sam kształt co widżet); gdy dwf.js wstawi widżet do `.gtranslate_wrapper`,
+ *     CSS (`:not(:empty) + .tlumacz__start`) chowa przycisk bez JS-a — brak skoku układu (miejsce zarezerwowane `min-height`);
+ *   • ustawienia widżetu jadą w atrybucie `data-gt` (HTML), nie w kodzie skryptu — nie wliczają się do budżetu JS (guard:build liczy bajty <script>, nie HTML);
+ *   • kod dwf.js i lib.min.js nie stawia ciasteczek (odczyt na pan-stolarz.pl 2026-10-14); wybrany język zapisuje w localStorage (`__GT_TRANSLATE_LANGS`),
+ *     treść do tłumaczenia wysyła do translate-pa.googleapis.com. Wpisy po stronie Google/GTranslate: NIE USTALONO tutaj — pomiar na żywym widżecie (meldunek H).
+ *  Style widżetu (cudzy DOM) → motyw.css, sekcja „przełącznik języków”. */
+import napisy from '../data/stopka.json';
+import { tekst } from '../lib/tekst';
+
+const etykieta = tekst(napisy.etykietaJezyka, 'Język strony');
+const polski = tekst(napisy.jezykPolski, 'Polski');
+const zmien = tekst(napisy.jezykZmien, 'Zmień język strony, obecnie polski. Przełącznik ładuje się po kliknięciu.');
+
+// Barwy = wartości hex tokenów motywu (widżet przyjmuje tekst do własnego CSS). Pary: tekst #15201a na #f4f5f1 (15,3:1), ramka #4b5a4f (6,7:1 na #f4f5f1),
+// najechanie #dcdfd3 (tekst 12,4:1). Stopka ma tło --powierzchnia (#e8eae2), widżet leży na niej jako jasna pigułka.
+const ustawienia = {
+  default_language: 'pl',
+  languages: ['pl', 'en', 'de', 'uk', 'ru', 'fr', 'es', 'it'],
+  native_language_names: 1,
+  url_structure: 'none',
+  detect_browser_language: 0,
+  flag_style: '2d',
+  flag_size: 24,
+  wrapper_selector: '.gtranslate_wrapper',
+  switcher_open_direction: 'top',
+  switcher_horizontal_position: 'inline',
+  switcher_text_color: '#15201a',
+  switcher_arrow_color: '#4b5a4f',
+  switcher_border_color: '#4b5a4f',
+  switcher_background_color: '#f4f5f1',
+  switcher_background_shadow_color: '#e8eae2',
+  switcher_background_hover_color: '#dcdfd3',
+  dropdown_text_color: '#15201a',
+  dropdown_hover_color: '#dcdfd3',
+  dropdown_background_color: '#f4f5f1',
+};
+---
+
+<div class="tlumacz" role="group" aria-label={etykieta} data-gt={JSON.stringify(ustawienia)}>
+  <span class="tlumacz__etykieta">{etykieta}</span>
+  <div class="gtranslate_wrapper"></div>
+  <button type="button" class="tlumacz__start" aria-label={zmien}>
+    <span>{polski}</span>
+  </button>
+</div>
+
+<style>
+  .tlumacz {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--o-1) var(--o-3);
+    min-height: 44px;
+    margin: 0 0 var(--o-4);
+  }
+
+  .tlumacz__etykieta {
+    font-weight: 600;
+    color: var(--tekst-cichy);
+  }
+
+  /* Przycisk startowy: wygląd widżetu (jasna pigułka, ramka 4b5a4f), cel dotyku 44 px. Znika, gdy widżet wstawi się obok. */
+  .tlumacz__start {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--o-2);
+    min-height: 44px;
+    padding: 0 var(--o-4);
+    font: inherit;
+    font-size: var(--t-s);
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 1px solid var(--tekst-cichy);
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .tlumacz__start:hover {
+    background: var(--powierzchnia-mocna);
+  }
+
+  /* Strzałka z obramowania, bez grafiki i emoji. */
+  .tlumacz__start::after {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-top: -0.2rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  /* Widżet wstawił się do pojemnika: przycisk startowy jest już zbędny. */
+  :global(.gtranslate_wrapper:not(:empty) + .tlumacz__start) {
+    display: none;
+  }
+</style>
+
+<script>
+  const kon = document.querySelector<HTMLElement>('.tlumacz');
+
+  if (kon) {
+    const zaladuj = () => {
+      if (document.getElementById('gtranslate-dwf')) return;
+      // Ustawienia muszą stać w window ZANIM wejdzie dwf.js — skrypt czyta je przy starcie.
+      (window as unknown as Record<string, unknown>).gtranslateSettings = JSON.parse(kon.dataset.gt ?? '{}');
+      const s = document.createElement('script');
+      s.id = 'gtranslate-dwf';
+      s.src = 'https://cdn.gtranslate.net/widgets/latest/dwf.js';
+      s.defer = true;
+      document.body.appendChild(s);
+    };
+
+    const odczyt = (k: string): unknown => {
+      try { return JSON.parse(localStorage.getItem(k) ?? 'null'); } catch { return null; }
+    };
+    const jezyk = (odczyt('__GT_TRANSLATE_LANGS') as { tgtLang?: string } | null)?.tgtLang;
+    const wybranyJezyk = Boolean(jezyk && jezyk !== 'pl');
+
+    // Świadome kliknięcie przycisku = żądanie usługi (działa przy każdym wyborze zgody).
+    kon.querySelector('.tlumacz__start')?.addEventListener('click', zaladuj);
+
+    const poZblizeniu = () => {
+      if (typeof IntersectionObserver !== 'function') return zaladuj();
+      const io = new IntersectionObserver((w) => {
+        if (w.some((x) => x.isIntersecting)) { io.disconnect(); zaladuj(); }
+      }, { rootMargin: '0px 0px 600px 0px' });
+      io.observe(kon);
+    };
+
+    if (wybranyJezyk) setTimeout(zaladuj, 1500);
+    else if ((odczyt('ep.zgoda') as { w?: string } | null)?.w === 'wszystkie') poZblizeniu();
+    // Zgoda udzielona w tej wizycie (okno cookie albo „Ustawienia cookie” w stopce).
+    document.addEventListener('ep:zgoda', (e) => {
+      if ((e as CustomEvent<string>).detail === 'wszystkie') poZblizeniu();
+    });
+  }
+</script>

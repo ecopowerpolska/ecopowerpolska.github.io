@@ -5,6 +5,7 @@
 import '../styles/motyw.css';
 import { Font } from 'astro:assets';
 import Ujawnianie from '../components/Ujawnianie.astro';
+import Zgoda from '../components/Zgoda.astro';
 import strona from '../data/strona.json';
 import { tekst } from '../lib/tekst';
 
@@ -77,6 +78,8 @@ const kanoniczny = new URL(Astro.url.pathname, import.meta.env.SITE);
   </head>
   <body>
     <a class="skip" href="#tresc">{linkPomijania}</a>
+    {/* Okno zgody cookie (2026-10-30) stoi zaraz za linkiem pomijania: Tab dociera do niego pierwszy; nie zabiera fokusu przy wczytaniu. */}
+    <Zgoda />
     <Ujawnianie />
     <slot />
   </body>

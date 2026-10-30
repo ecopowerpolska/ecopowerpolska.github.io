@@ -2,7 +2,7 @@
 tytul: "Core Web Vitals po polsku: LCP, INP i CLS na przykładach"
 tytulSeo: "Core Web Vitals po polsku: LCP, INP i CLS na przykładach"
 opisSeo: "Co mierzą LCP, INP i CLS, jakie wyniki Google uznaje za dobre i jak wyglądają na siedmiu naszych stronach w pomiarze PageSpeed z października 2026."
-dataPublikacji: "2026-10-27T21:20:00+01:00"
+dataPublikacji: "2026-10-29T16:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-panwylewka.jpg"
 zdjecieAlt: "Strona główna panwylewka.pl: logo Pan Wylewka, pomarańczowy guzik z numerem telefonu i napis „Wylewki betonowe Warszawa i okolice” na ciemnym zdjęciu"
 szkic: false

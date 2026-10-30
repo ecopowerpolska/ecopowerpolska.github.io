@@ -63,6 +63,8 @@ utrzymywane razem.
 
 ## D4 — Guziki „skopiuj" w stopce, kosztem reguły zero-JS (2026-09-07)
 
+> 2026-10-30: wiersz „Forma prawna” (z guzikiem kopiowania) usunięty ze stopki na polecenie Piotra; pole `formaPrawna` z `firma.json` i panelu skasowane. Pozostałe guziki (nazwa spółki, KRS, NIP, REGON, www, e-mail, adres, telefon, zbiorczy) bez zmian; D6 (wiersz rejestrowy bez przecinków) bez zmian.
+
 **Rozstrzygnięcie:** każda dana rejestrowa w stopce ma guzik kopiujący ją do schowka, a nad
 nimi stoi jeden guzik „Skopiuj dane spółki" kopiujący komplet jako gotowy blok tekstu.
 
@@ -176,6 +178,8 @@ pomiarem tej konfiguracji.
 ---
 
 ## D9 — Zdanie zamykające pod kafelkami (2026-09-07)
+
+⛔ **UNIEWAŻNIONA 2026-10-30.** Piotr: „Usuń też ten tekst […] Spółka z ograniczoną odpowiedzialnością z siedzibą w Warszawie, wpisana do Rejestru Przedsiębiorców KRS. Pełne dane rejestrowe są w stopce.” Sekcja `#o-spolce`, pola `zdanieKoncowe` i `etykietaSekcjiZamykajacej` usunięte z kodu, `strona.json` i panelu.
 
 Pod listą serwisów stoi krótkie domknięcie treści, **edytowalne w panelu**
 (Teksty strony → Strona główna → „Zdanie pod kafelkami”). Puste pole = sekcja
@@ -322,9 +326,13 @@ przewijania w dół; stopki: „EcoPower Polska Sp. z o.o.”; guzik: „jeżeli
 
 ## D21 — Budżet JS 6 kB dla testu szybkości (2026-10-29)
 
+> Pomiar 2026-10-30 (po rundzie 7, okno zgody + tłumacz na każdej trasie): trasa testu **5,8 kB** JS gzip (limit 6), `/kontakt/` 3,1 kB, `/cena/` 3,0 kB, `/efekty/animacja-przewijaniem/` 2,0 kB, pozostałe ≤ 1,8 kB. Limit zostaje 6; zapas testu ok. 0,2 kB.
+
 **D21 — `guard.config.json` `jsGzipKB`: 3 → 6.** Powód: `/jak-sprawdzic-szybkosc-strony/` dostała zegary wg wzorca Piotra (wskazówka, animacja pomiaru i dojazdu) oraz sekcję „Co poprawić na tej stronie” z modułem `src/lib/psi-zalecenia.ts` (progi Google i audyty Lighthouse). Wersja z zegarami v1 (2026-10-29, 23:0x) zajmowała cały dawny budżet: 3,0 kB. Podziałka zegara powstaje w buildzie (trzy ścieżki SVG), więc nie kosztuje JS; rośnie tylko logika zaleceń. Zmierzone `npm run guard:build` 2026-10-29: trasa testu **5,1 kB** JS gzip (CSS 9,7 kB), pozostałe najcięższe: `/cena/` 2,4 kB, `/kontakt/` 2,1 kB, reszta ≤ 1,5 kB — czyli poza tą jedną trasą budżet 3 kB nadal obowiązuje w praktyce, a zapas trasy testu to 0,9 kB. Zegary na telefonie stoją obok siebie, a sekcja testu ma pełną szerokość kontenera (`--szerokosc-tresci`), nie 44 rem; poradnik pod spodem zostaje w kolumnie 44 rem.
 
 ## D22 — Treść wyśrodkowana na każdej podstronie (2026-10-30)
+
+> Uzupełnienie 2026-10-30 (runda 7, D23): D22 dotyczy H1, leadu i nagłówków nad siatkami; kolumny tekstu 42/44/46 rem dla list, siatek, akordeonów i tabel są UCHYLONE — patrz D23.
 
 Słowa Piotra 2026-10-30 (gniew): „A dlaczego wszystkie te teksty są do lewej strony? Dlaczego to nie jest wypośrodkowane? Strona, która ma robić strony internetowe, ma spieprzony najważniejszy parametr, wypośrodkowanie materiałów na stronie. I to prawie na każdej podstronie.” — „Ma to być naprawione.” Uchyla układ lewostronny z przebudowy 2026-09-06 (to była decyzja sesji, nie Piotra); D14 (FAQ i wpisy wyśrodkowane) bez zmian, reguła obejmuje teraz całą witrynę.
 - **Wąska kolumna tekstu** (44 rem, na wpisach i FAQ 42 rem, na stronach usług 46 rem) stoi na środku kontenera (`margin-inline: auto`); akapity, listy i tabele w kolumnie zostają do lewej (czytelność). Okruszki stoją w tej samej kolumnie.
@@ -332,3 +340,19 @@ Słowa Piotra 2026-10-30 (gniew): „A dlaczego wszystkie te teksty są do lewej
 - **Nagłówki sekcji H2 nad siatkami** (oferta, realizacje, ostatnie wpisy, FAQ-skrót, cena, kalkulator, przykłady na stronach usług) i ich wstępy są wyśrodkowane. H2 nad zwykłym tekstem w kolumnie stoi razem z tekstem.
 - **Siatki kart i ramki** (oferta, realizacje, efekty, cennik, kalkulator, formularz, test szybkości, poradnik w dwóch kolumnach) zajmują całą szerokość kontenera; gdy mają mniej kolumn niż miejsca, stoją na środku (`justify-content: center`, samotny ostatni wpis bloga na środku rzędu).
 - **Nagłówek witryny (logo + menu) i stopka bez zmian.**
+
+## D23 — Runda 7 (2026-10-30): pełna szerokość każdej sekcji, porządek podstron
+
+Słowa Piotra (skrót): „masz zrobić wszystkie strony podstrony na szerokość, tak żeby to było ładne, transparentne. […] Masz skasować z pamięci te zapisy, które ci mówiły, że strony nie mogą być na pełną szerokość strony. To nie były moje zalecenia. […] H2 czasami pasuje na środku, czasami pasuje do lewej. […] Mamy zagospodarować całą stronę. Im mniej przewijania dla klienta, tym więcej zobaczy.”
+
+- **Szerokość:** każda sekcja na komputerze zajmuje cały kontener `--szerokosc-tresci` (76 rem). Wąska kolumna tekstu tylko jako układ wielokolumnowy albo tekst obok obrazu/paska, nie pusta prawa połowa. Telefon: jedna kolumna, bez przewijania poziomego (zmierzone na 10 trasach).
+- **H2 wg kontekstu:** na środku, gdy otwiera siatkę lub kafelki; do lewej, gdy stoi nad akapitem w kolumnie. H1 i lead zawsze na środku (D22).
+- **Blog:** lista 3 / 2 / 1 kolumn (karty 3:2); wpis z paskiem bocznym 24 rem (spis sekcji `sticky`, wezwanie do kontaktu i kalkulatora); „Czytaj także” 3 karty; tabele Markdown przewijane w poziomie wewnątrz tabeli. Każdy wpis ma inną datę (dzień i godzinę), żaden w przyszłości; codzienny cron 07:00 UTC w Actions publikuje wpisy, których data minęła.
+- **FAQ:** lista pełnej szerokości, odpowiedź > 450 znaków w dwóch kolumnach od 64 rem.
+- **Cennik:** tabele w 4 kolumnach (Pozycja · Zakres · Cena · Rozliczenie), na telefonie karty. Ceny (jedno źródło `cena.json`): wpis na blogu **450 zł**, prowadzenie bloga 4 wpisy **1 600 zł/mies.** (= 4 × 400 zł, rabat 11 %), krótki wpis bez publikacji **150 zł**; integracje rozbite: płatności **1 200 zł**, Allegro **2 500 zł**, hurtownia **3 500 zł**; każda liczona w kalkulatorze po swojej cenie.
+- **Realizacje:** kafelki po 3 w rzędzie, niepełny rząd do lewej; „Co zrobiliśmy” (lista punktów) i „Szybkość i optymalizacja” (wynik PageSpeed) rozwijają się `<details>` bez JS, tylko w swoim kafelku.
+- **Efekty:** tytuł „Efekty wizualne możliwe do zaimplementowania na stronę”, kafelki 3 / 2 / 1 otwierają podstrony z działającym pokazem (8 efektów, 3 nowe); nowy efekt = wpis w `efekty.json` + plik na szkielecie `SzkieletEfektu`.
+- **Strona główna:** „Jak pracujemy” i „Co dostajesz” jako kafelki; „Dlaczego Astro i jaki hosting” w dwóch kolumnach „Proponujemy” / „Wykonamy też” (WordPress, WooCommerce, PrestaShop, Shoper, hosting klienta); usunięty tekst o spółce (D9).
+- **Stopka:** „Usługi” jako nagłówek grupy (nie link) z kreską; brak formy prawnej; dwa wiersze menu (strony, potem Regulamin · Polityka prywatności · Ustawienia cookie); przełącznik języka GTranslate; wiersz „© rok EcoPower Polska Sp. z o.o. Wszelkie prawa zastrzeżone.”.
+- **Zgoda na cookie:** dolny pasek, dwa równe przyciski („Tylko niezbędne”, „Zgadzam się na wszystkie”), wybór w `localStorage['ep.zgoda']`; podstawa: art. 399 ust. 1 i 3 oraz art. 400 PKE (nie 398, który dotyczy marketingu).
+- **Nowe strony:** `/regulamin/` (usługi elektroniczne serwisu), `/darmowe-narzedzia/` (test szybkości działa, generatory regulaminu i polityki „wkrótce”), dwa wpisy (Polityka prywatności 2027, Prawne aspekty strony).

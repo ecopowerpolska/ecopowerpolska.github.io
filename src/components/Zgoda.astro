@@ -1,0 +1,227 @@
+---
+/** Okno zgody na pliki cookie i pamięć przeglądarki (2026-10-30; art. 399 i 400 Prawa komunikacji elektronicznej + RODO). Montowane raz w Bazowy.astro,
+ *  ZARAZ za odnośnikiem „Przejdź do treści” — Tab dochodzi do niego pierwszy, a czytnik ekranu zna je od początku dokumentu.
+ *  Co strona naprawdę zapisuje u odwiedzającego → tabela w src/data/polityka.json (sekcja „ciasteczka”) i meldunek H.
+ *  Wybór: pamięć lokalna przeglądarki (local storage), klucz `ep.zgoda` = { w: 'niezbedne' | 'wszystkie', d: 'RRRR-MM-DD' }. Skutki:
+ *   • „tylko niezbędne” (i brak decyzji): skrypt tłumacza (Google/GTranslate) ładuje się dopiero po kliknięciu przycisku języka w stopce (Tlumacz.astro);
+ *   • „wszystkie”: skrypt tłumacza ładuje się, gdy stopka zbliża się do okna. Strona nie ma dziś żadnej analityki ani reklam — nie ma czego więcej włączać.
+ *  Bez ciemnych wzorców: dwa przyciski o IDENTYCZNYM wyglądzie i wadze (ramka, to samo tło, ten sam rozmiar), żadnej zgody domyślnie,
+ *  zamknięcie krzyżykiem albo Esc = „tylko niezbędne”, zmiana zdania jednym kliknięciem „Ustawienia cookie” w stopce.
+ *  Dostępność: `role="dialog"` BEZ `aria-modal` (nie przejmuje strony, nie łapie fokusu), obwoluta `aria-live="polite"`, żadnego autofokusu przy wczytaniu —
+ *  fokus trafia na pierwszy przycisk dopiero po tym, jak odwiedzający sam otworzy okno z stopki; po wyborze wraca na przycisk w stopce.
+ *  Okno jest `position: fixed` (CLS 0), ma do 50 % wysokości okna i przewija się w środku (tekst 200 %), a strona dostaje tyle miejsca pod spodem,
+ *  ile okno ma wysokości (`--wys-zgody`). Zdarzenie `ep:zgoda` (detail = 'niezbedne' | 'wszystkie') na `document`. Panelu /admin/ ten layout nie obejmuje. */
+import zgoda from '../data/zgoda.json';
+import { tekst } from '../lib/tekst';
+
+const naglowek = tekst(zgoda.naglowek, 'Pliki cookie i pamięć przeglądarki');
+const tresc = tekst(zgoda.tresc, 'Używamy niezbędnych plików cookie i pamięci przeglądarki, żeby formularz i kalkulator działały.');
+const guzikNiezbedne = tekst(zgoda.guzikNiezbedne, 'Tylko niezbędne');
+const guzikWszystkie = tekst(zgoda.guzikWszystkie, 'Zgadzam się na wszystkie');
+const linkPolityki = tekst(zgoda.linkPolityki, 'Polityka prywatności');
+const zamknij = tekst(zgoda.zamknij, 'Zamknij i wybierz tylko niezbędne');
+---
+
+<div class="zgoda-strefa" aria-live="polite">
+  <section class="zgoda" id="zgoda" role="dialog" aria-labelledby="zgoda-tytul" hidden>
+    <div class="zgoda__srodek">
+      <div class="zgoda__tekst">
+        <p class="zgoda__tytul" id="zgoda-tytul">{naglowek}</p>
+        <p>{tresc} <a href="/polityka-prywatnosci/#ciasteczka">{linkPolityki}</a></p>
+      </div>
+      <div class="zgoda__guziki">
+        <button type="button" class="zgoda__guzik" data-wybor="niezbedne">{guzikNiezbedne}</button>
+        <button type="button" class="zgoda__guzik" data-wybor="wszystkie">{guzikWszystkie}</button>
+      </div>
+      <button type="button" class="zgoda__zamknij" data-wybor="niezbedne" aria-label={zamknij}>
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Obwoluta jest `fixed`, więc nie zajmuje wiersza siatki <body> (motyw.css: auto 1fr auto) — zwykły blok przesunąłby pasek, treść i stopkę.
+     Nad przyklejonym paskiem (5, z otwartym menu 30) i linią postępu (6); stopka i treść są niżej. */
+  .zgoda-strefa {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 40;
+  }
+
+  .zgoda {
+    max-height: 50vh;
+    max-height: 50dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--o-4) 0 calc(var(--o-4) + env(safe-area-inset-bottom, 0px));
+    font-size: var(--t-s);
+    line-height: 1.5;
+    color: var(--tekst);
+    background: var(--tlo);
+    border-top: 2px solid var(--akcent);
+    box-shadow: 0 -8px 24px rgb(21 32 26 / 14%);
+  }
+
+  .zgoda[hidden] {
+    display: none;
+  }
+
+  /* Ten sam kontener co reszta strony (76 rem): tekst po lewej, dwa przyciski po prawej, krzyżyk w rogu. */
+  .zgoda__srodek {
+    position: relative;
+    max-width: var(--szerokosc-tresci);
+    margin: 0 auto;
+    padding: 0 var(--o-6);
+    display: grid;
+    gap: var(--o-3);
+  }
+
+  .zgoda__tekst p {
+    margin: 0;
+  }
+
+  .zgoda__tytul {
+    font-family: var(--font-display);
+    font-size: var(--t-m);
+    font-weight: 600;
+    padding-right: 3rem;
+    margin-bottom: var(--o-1) !important;
+  }
+
+  .zgoda__tekst a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .zgoda__guziki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-2);
+  }
+
+  /* Dwa przyciski o jednakowym wyglądzie: żaden nie jest „główny”. */
+  .zgoda__guzik {
+    appearance: none;
+    flex: 1 1 11rem;
+    min-height: 44px;
+    padding: 0 var(--o-4);
+    font: inherit;
+    font-weight: 600;
+    color: var(--tekst);
+    background: var(--tlo);
+    border: 2px solid var(--akcent);
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .zgoda__guzik:hover {
+    background: var(--powierzchnia-mocna);
+  }
+
+  .zgoda__guzik:active {
+    transform: translateY(1px);
+  }
+
+  .zgoda__zamknij {
+    appearance: none;
+    position: absolute;
+    top: -0.5rem;
+    right: var(--o-2);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font: inherit;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--tekst-cichy);
+    background: none;
+    border: 0;
+    border-radius: var(--promien-maly);
+    cursor: pointer;
+  }
+
+  .zgoda__zamknij:hover {
+    color: var(--tekst);
+    background: var(--powierzchnia-mocna);
+  }
+
+  @media (min-width: 48rem) {
+    .zgoda__srodek {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--o-8);
+      padding-right: calc(var(--o-6) + 2.5rem);
+    }
+
+    .zgoda__guziki {
+      flex-wrap: nowrap;
+    }
+
+    .zgoda__guzik {
+      flex: 0 0 auto;
+      min-width: 12rem;
+    }
+
+    .zgoda__zamknij {
+      top: 50%;
+      margin-top: -22px;
+    }
+  }
+
+  @media print {
+    .zgoda {
+      display: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Okno zasłania dół okna: strona dostaje pod spodem tyle miejsca, ile ma okno (wysokość z ResizeObserver), a przyklejony pasek kwoty
+     kalkulatora (.kalk__mini, bottom: 0) staje NAD oknem. (1,2,1) bije scoped (0,2,0). */
+  body:has(#zgoda:not([hidden])) {
+    padding-bottom: var(--wys-zgody, 0px);
+  }
+
+  body:has(#zgoda:not([hidden])) .kalk__mini {
+    bottom: var(--wys-zgody, 0px);
+  }
+</style>
+
+<script>
+  const KLUCZ = 'ep.zgoda';
+  const okno = document.getElementById('zgoda');
+
+  if (okno) {
+    const otwieracze = document.querySelectorAll<HTMLElement>('[data-ustawienia-cookie]');
+    let wywolal: HTMLElement | null = null;
+    let wybor: string | undefined;
+    try { wybor = JSON.parse(localStorage.getItem(KLUCZ) ?? 'null')?.w; } catch { /* tryb prywatny: okno przy każdej wizycie */ }
+
+    // Wysokość okna do --wys-zgody (padding pod stopką, pasek kwoty nad oknem).
+    new ResizeObserver(() => document.documentElement.style.setProperty('--wys-zgody', `${okno.offsetHeight}px`)).observe(okno);
+
+    if (wybor !== 'niezbedne' && wybor !== 'wszystkie') okno.hidden = false;
+
+    const wybierz = (w: string) => {
+      try { localStorage.setItem(KLUCZ, JSON.stringify({ w, d: new Date().toISOString().slice(0, 10) })); } catch { /* pamięć niedostępna */ }
+      const zFokusem = okno.contains(document.activeElement);
+      okno.hidden = true;
+      if (zFokusem) wywolal?.focus();
+      wywolal = null;
+      document.dispatchEvent(new CustomEvent('ep:zgoda', { detail: w }));
+    };
+
+    okno.querySelectorAll<HTMLElement>('[data-wybor]').forEach((b) => b.addEventListener('click', () => wybierz(b.dataset.wybor ?? 'niezbedne')));
+    okno.addEventListener('keydown', (e) => { if (e.key === 'Escape') wybierz('niezbedne'); });
+
+    // „Ustawienia cookie” w stopce: okno wraca, fokus na pierwszym przycisku (odwiedzający sam o to poprosił).
+    otwieracze.forEach((o) => o.addEventListener('click', () => {
+      wywolal = o;
+      okno.hidden = false;
+      okno.querySelector<HTMLElement>('[data-wybor]')?.focus();
+    }));
+  }
+</script>

@@ -112,7 +112,7 @@
   --cel-dotyku: 44px;
   --cel-dotyku-panel: 3rem;
 
-  /* Blok PageSpeed w kafelku Realizacji (Kafelek.astro, D17 2026-10-27): osobna karta o stopień
+  /* Blok PageSpeed w kafelku Realizacji (Realizacje.astro, D17 2026-10-27): osobna karta o stopień
      jaśniejsza od karty kafelka (--tlo na --powierzchnia) z cienkim obrysem. Bez nowego koloru:
      tekst w bloku stoi na #f4f5f1 — pary policzone wyżej (#15201a, #4b5a4f, #166653 na #f4f5f1). */
   --pomiar-tlo: var(--tlo);
@@ -231,3 +231,29 @@ a:active {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ── przełącznik języków GTranslate (dwf.js, tryb 'inline'; pojemnik w Tlumacz.astro, wzorzec pan-stolarz.pl) ──
+   Style dotyczą cudzego DOM-u, więc są globalne. ① Pojemnik jest `relative` i ma `z-index: 1`: lista języków (absolute, bottom: 100%)
+   otwiera się W GÓRĘ nad stopką, a 9999 z inline'u widżetu zostaje zamknięte w tym kontekście — lista leży pod nagłówkiem i oknem zgody.
+   ② `static !important` wkleja z powrotem w stopkę opakowanie `fixed`, gdyby dwf.js je zbudował. ③ Pusty pojemnik nie zajmuje miejsca
+   (jego rolę gra przycisk startowy z Tlumacz.astro). Zmiana nazw klas widżetu = reguły nic nie robią, nic się nie psuje.
+   Kolory widżetu jadą w `data-gt` (Tlumacz.astro): tekst #15201a i #4b5a4f na #f4f5f1, najechanie #dcdfd3 — pary policzone wyżej. */
+/* kontrast: #15201a na #dcdfd3 tekst */
+/* kontrast: #4b5a4f na #dcdfd3 tekst */
+/* kontrast: #4b5a4f na #f4f5f1 tekst */
+.gtranslate_wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+.gtranslate_wrapper:empty { display: none; }
+.gtranslate_wrapper .gt_switcher_wrapper,
+.gtranslate_wrapper .gt_float_switcher { position: static !important; }
+.gtranslate_wrapper .gt_option {
+  position: absolute !important;
+  bottom: 100%;
+  left: 0;
+}
+/* Zamknięty przełącznik dwf.js ma ok. 32 px wysokości (WCAG 2.5.8 spełnione, standard 44 px nie). Poprawka (DO POMIARU na żywym DOM, nie nakładana na ślepo):
+   .gtranslate_wrapper .gt_selected a { min-height: 44px; display: flex; align-items: center; box-sizing: border-box; } */

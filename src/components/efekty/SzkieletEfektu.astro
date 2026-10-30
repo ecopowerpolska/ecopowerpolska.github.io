@@ -1,0 +1,239 @@
+---
+// Szkielet podstrony efektu /efekty/<slug>/ (runda 7, 2026-10-30). Wspólny dla efektów nowych: okruszki, H1 na środku,
+// pokaz na pełną szerokość (slot), pod nim trzy krótkie bloki (co to daje / kiedy ma sens / ile waży) i guzik do /kontakt/.
+// Wszystkie teksty bierze z wpisu o tym slugu w src/data/efekty.json - nowy efekt = wpis w JSON + plik w src/pages/efekty/.
+import Bazowy from '../../layouts/Bazowy.astro';
+import PasekMarki from '../PasekMarki.astro';
+import Stopka from '../Stopka.astro';
+import efektyJson from '../../data/efekty.json';
+import firma from '../../data/firma.json';
+import blog from '../../data/blog.json';
+import { tekst } from '../../lib/tekst';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+const lista = (efektyJson as Record<string, unknown>).efekty;
+const wpis = ((Array.isArray(lista) ? lista : []) as Record<string, unknown>[]).find((w) => naTekst(w?.slug) === slug) ?? {};
+const pole = (klucz: string, domyslny = '') => tekst(naTekst(wpis[klucz]), domyslny);
+const menu = blog as Record<string, unknown>;
+
+const nazwa = pole('nazwa', slug);
+const tytul = pole('tytulKarty', `${nazwa} - efekt na stronie internetowej - EcoPower Polska`);
+const opis = pole('opisWyszukiwarki', pole('opisKrotki', nazwa));
+const sciezka = `/efekty/${slug}/`;
+const adresPsi = `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(new URL(sciezka, import.meta.env.SITE).href)}`;
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL(sciezka, import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(naTekst(menu.stronaGlowna), 'Strona główna'), adres: '/' },
+  { nazwa: tekst(naTekst(menu.menuEfekty), 'Efekty'), adres: '/efekty/' },
+  { nazwa, adres: sciezka },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: nazwa,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="efekt">
+    <nav class="okruszki" aria-label="Ścieżka">
+      <ol>
+        {okruszki.map((o, i) => (
+          <li>
+            {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <h1 class="efekt__tytul">{nazwa}</h1>
+    {pole('lead') && <p class="efekt__lead">{pole('lead')}</p>}
+
+    <div class="efekt__pokaz"><slot /></div>
+
+    <section class="efekt__info" aria-label="O tym efekcie">
+      <div>
+        <h2>Co to daje</h2>
+        <p>{pole('opisDlugi')}</p>
+      </div>
+      <div>
+        <h2>Kiedy to ma sens</h2>
+        <p>{pole('dlaKogo')}</p>
+      </div>
+      <div>
+        <h2>Ile waży</h2>
+        <p>{pole('kosztWydajnosci')}</p>
+        <p class="efekt__waga">{pole('waga')}</p>
+        <p>
+          <a href={adresPsi} rel="noopener">Sprawdź tę stronę w PageSpeed</a>
+        </p>
+      </div>
+    </section>
+
+    <p class="efekt__cta"><a class="efekt__guzik" href="/kontakt/">Chcę to na swojej stronie</a></p>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .efekt {
+    max-width: var(--szerokosc-tresci);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--o-8) var(--o-6) var(--o-16);
+  }
+
+  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14: jedna linia, bieżąca strona z wielokropkiem). */
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-6);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .okruszki li:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    contain: inline-size;
+  }
+
+  .okruszki [aria-current] {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 44px;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki a:hover {
+    color: var(--tekst);
+  }
+
+  .efekt__tytul {
+    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .efekt__lead {
+    margin: var(--o-4) auto 0;
+    max-width: 52rem;
+    text-align: center;
+    font-size: var(--t-l);
+    line-height: 1.5;
+    color: var(--tekst-cichy);
+  }
+
+  .efekt__pokaz {
+    margin-top: var(--o-8);
+  }
+
+  /* Trzy bloki pod pokazem na pełną szerokość; na telefonie jedna kolumna. */
+  .efekt__info {
+    display: grid;
+    gap: var(--o-8);
+    margin-top: var(--o-12);
+    padding-top: var(--o-8);
+    border-top: 1px solid var(--linia);
+  }
+
+  @media (min-width: 48rem) {
+    .efekt__info {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .efekt__info h2 {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-l);
+  }
+
+  .efekt__info p {
+    margin: 0 0 var(--o-3);
+    color: var(--tekst-cichy);
+  }
+
+  .efekt__waga {
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  .efekt__info a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .efekt__cta {
+    margin: var(--o-12) 0 0;
+    text-align: center;
+  }
+
+  .efekt__guzik {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 var(--o-8);
+    border-radius: var(--promien-maly);
+    background: var(--akcent);
+    color: var(--tlo);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .efekt__guzik:hover {
+    text-decoration: underline;
+  }
+</style>

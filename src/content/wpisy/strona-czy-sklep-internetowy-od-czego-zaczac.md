@@ -2,7 +2,7 @@
 tytul: "Strona czy sklep internetowy — od czego zacząć?"
 tytulSeo: "Strona czy sklep internetowy — od czego zacząć?"
 opisSeo: "Strona firmowa czy sklep internetowy? Jak ustalamy, co strona ma robić, która z trzech dróg sklepu pasuje do firmy i gdzie stanie strona."
-dataPublikacji: "2026-10-23T09:00:00+02:00"
+dataPublikacji: "2026-10-09T10:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna kuchnia-na-wymiar-warszawa.pl: nagłówek „Kuchnie na wymiar w Warszawie” obok zdjęcia białej kuchni z drewnianym blatem"
 szkic: false

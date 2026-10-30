@@ -1,0 +1,83 @@
+---
+// /efekty/ujawnianie-sekcji/ - ujawnianie sekcji przy przewijaniu w obu kierunkach. To efekt GLOBALNY witryny (Ujawnianie.astro w Bazowy.astro):
+// pokaz tylko oznacza karty atrybutem `data-ujawnij`, całą mechanikę (IntersectionObserver, kierunek przewijania, schodek) robi istniejący komponent,
+// więc ta podstrona nie dokłada ani bajta JS ani CSS ruchu.
+import SzkieletEfektu from '../../components/efekty/SzkieletEfektu.astro';
+
+const karty = [
+  ['1', 'Sekcja czeka za krawędzią', 'Dopóki jej nie widać, jest lekko przesunięta i przezroczysta.'],
+  ['2', 'Wjeżdża, gdy do niej dojedziesz', 'Przewijasz w dół - wchodzi od dołu. Przewijasz w górę - wchodzi od góry.'],
+  ['3', 'Kafelki wchodzą po kolei', 'Karty w jednym rzędzie pojawiają się z krótkim odstępem, jedna za drugą.'],
+  ['4', 'Początek strony stoi w miejscu', 'Co widać od razu po wejściu, nie jest ruszane - nic nie mignie i nie spowolni ładowania.'],
+  ['5', 'Układ się nie przesuwa', 'Zmienia się tylko przezroczystość i położenie, więc tekst nie skacze (CLS 0).'],
+  ['6', 'Ograniczony ruch = bez animacji', 'Przy włączonym w systemie ograniczeniu ruchu wszystko jest od razu widoczne.'],
+];
+---
+
+<SzkieletEfektu slug="ujawnianie-sekcji">
+  <section class="ujawnianie" aria-label="Pokaz: ujawnianie sekcji przy przewijaniu">
+    <p class="ujawnianie__wstep">Przewiń w dół, a potem z powrotem w górę. Poniższe karty ujawniają się tak samo jak sekcje na całej tej witrynie.</p>
+    <ul class="ujawnianie__siatka">
+      {karty.map(([nr, nazwa, opis]) => (
+        <li class="ujawnianie__karta" data-ujawnij>
+          <span class="ujawnianie__nr">{nr}</span>
+          <span class="ujawnianie__nazwa">{nazwa}</span>
+          <span class="ujawnianie__opis">{opis}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</SzkieletEfektu>
+
+<style>
+  .ujawnianie__wstep {
+    margin: 0 0 var(--o-6);
+    text-align: center;
+    color: var(--tekst-cichy);
+  }
+
+  .ujawnianie__siatka {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-6);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 48rem) {
+    .ujawnianie__siatka {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .ujawnianie__karta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    min-height: 11rem;
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .ujawnianie__nr {
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--akcent);
+  }
+
+  .ujawnianie__nazwa {
+    font-family: var(--font-display);
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .ujawnianie__opis {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+</style>

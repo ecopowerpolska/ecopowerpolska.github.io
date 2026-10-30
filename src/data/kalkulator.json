@@ -116,6 +116,20 @@
       }
     },
     {
+      "id": "wpisyKrotkie",
+      "nazwa": "Krótkie wpisy bez publikacji (do 2 000 znaków)",
+      "tabela": "stronaProwadzenie",
+      "szukaj": "krótki wpis",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 200,
+      "formy": {
+        "jedna": "krótki wpis bez publikacji",
+        "kilka": "krótkie wpisy bez publikacji",
+        "wiele": "krótkich wpisów bez publikacji"
+      }
+    },
+    {
       "id": "blog",
       "nazwa": "Prowadzenie bloga firmowego",
       "tabela": "stronaProwadzenie",
@@ -150,20 +164,6 @@
       "tabela": "sklepProwadzenie",
       "szukaj": "Regulamin",
       "okres": "rocznie"
-    },
-    {
-      "id": "integracje",
-      "nazwa": "Integracje (płatności, Allegro, hurtownia)",
-      "tabela": "sklepProwadzenie",
-      "szukaj": "Integracje",
-      "okres": "jednorazowo",
-      "ilosc": true,
-      "maks": 20,
-      "formy": {
-        "jedna": "integracja",
-        "kilka": "integracje",
-        "wiele": "integracji"
-      }
     },
     {
       "id": "godziny",
@@ -231,6 +231,63 @@
         "sklep-astro"
       ],
       "wyklucza": "opiekaSklepu"
+    },
+    {
+      "id": "intPlatnosci",
+      "nazwa": "Integracja: system płatności",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Integracja: system płatności",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 20,
+      "dla": [
+        "sklep-wlasny",
+        "sklep-platforma",
+        "sklep-astro"
+      ],
+      "formy": {
+        "jedna": "integracja z systemem płatności",
+        "kilka": "integracje z systemem płatności",
+        "wiele": "integracji z systemem płatności"
+      }
+    },
+    {
+      "id": "intAllegro",
+      "nazwa": "Integracja: Allegro",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Integracja: Allegro",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 20,
+      "dla": [
+        "sklep-wlasny",
+        "sklep-platforma",
+        "sklep-astro"
+      ],
+      "formy": {
+        "jedna": "integracja z Allegro",
+        "kilka": "integracje z Allegro",
+        "wiele": "integracji z Allegro"
+      }
+    },
+    {
+      "id": "intHurtownia",
+      "nazwa": "Integracja: hurtownia (dropshipping)",
+      "tabela": "sklepProwadzenie",
+      "szukaj": "Integracja: hurtownia",
+      "okres": "jednorazowo",
+      "ilosc": true,
+      "maks": 20,
+      "dla": [
+        "sklep-wlasny",
+        "sklep-platforma",
+        "sklep-astro"
+      ],
+      "formy": {
+        "jedna": "integracja z hurtownią",
+        "kilka": "integracje z hurtowniami",
+        "wiele": "integracji z hurtowniami"
+      }
     }
   ],
   "prowizje": {

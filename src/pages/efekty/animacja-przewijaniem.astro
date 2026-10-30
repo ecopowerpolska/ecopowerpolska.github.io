@@ -171,6 +171,8 @@ const daneStrukturalne = {
         <li>Włącz w systemie ograniczenie ruchu: obie sceny stają w stanie końcowym, bez animacji.</li>
       </ul>
     </section>
+
+    <p class="przyklad__cta"><a class="przyklad__guzik" href="/kontakt/">Chcę to na swojej stronie</a></p>
   </main>
 
   <Stopka />
@@ -308,12 +310,7 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* D22 (2026-10-30): okruszki i opisy w kolumnie 44 rem na środku, H1 i wstęp wyśrodkowane; sceny na pełną szerokość. */
-  .okruszki {
-    max-width: 44rem;
-    margin-inline: auto;
-  }
-
+  /* D22 (2026-10-30): H1 i wstęp wyśrodkowane; runda 7: okruszki, opisy i sceny na pełną szerokość kontenera. */
   .przyklad__tytul {
     font-size: var(--t-xxl);
     margin-bottom: var(--o-4);
@@ -321,7 +318,7 @@ const daneStrukturalne = {
   }
 
   .przyklad__lead {
-    max-width: 44rem;
+    max-width: 52rem;
     margin: 0 auto var(--o-12);
     text-align: center;
     font-size: var(--t-l);
@@ -329,13 +326,52 @@ const daneStrukturalne = {
   }
 
   .opis {
-    max-width: 44rem;
-    margin: var(--o-12) auto var(--o-6);
+    margin: var(--o-12) 0 var(--o-6);
   }
 
   .opis h2 {
     font-size: var(--t-xl);
     margin-bottom: var(--o-3);
+  }
+
+  /* Runda 7 (2026-10-30): opisy na pełną szerokość kontenera - nagłówek z lewej, tekst w szerokiej kolumnie obok (od 48 rem). */
+  @media (min-width: 48rem) {
+    .opis {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      column-gap: var(--o-12);
+      align-items: start;
+    }
+
+    .opis h2 {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+    }
+
+    .opis > :not(h2) {
+      grid-column: 2;
+    }
+  }
+
+  .przyklad__cta {
+    margin: var(--o-12) 0 0;
+    text-align: center;
+  }
+
+  .przyklad__guzik {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 var(--o-8);
+    border-radius: var(--promien-maly);
+    background: var(--akcent);
+    color: var(--tlo);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .przyklad__guzik:hover {
+    text-decoration: underline;
   }
 
   .opis p,

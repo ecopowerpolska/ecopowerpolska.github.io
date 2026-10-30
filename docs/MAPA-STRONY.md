@@ -1,0 +1,56 @@
+# MAPA-STRONY — trasa → plik → komponenty → dane (stan 2026-10-30, po rundzie 7)
+
+Cel: następne zlecenia czytają ten plik zamiast całego repo. Teksty widoczne na stronie idą przez
+`tekst(klucz, 'domyślny')` (`src/lib/tekst.ts`), dane w `src/data/*.json`, edycja w panelu `/admin/`
+(`public/admin/config.yml` jest lustrem tych plików: nowe pole w JSON = nowe pole w configu, inaczej zapis
+z panelu je skasuje). Kontener treści: `--szerokosc-tresci` (76 rem); układ i tokeny: `src/styles/motyw.css`,
+decyzje: `docs/DECYZJE-WIZUALNE.md` (D22, D23).
+
+## Trasy
+
+| Trasa | Plik strony | Komponenty | Dane | Klasy układu / uwagi | JS gzip |
+|---|---|---|---|---|---|
+| `/` | `src/pages/index.astro` | `PasekMarki`, `Oferta` (oferta, jak pracujemy, co dostajesz, Astro i hosting), `Realizacje`, `OstatnieWpisy`, `FaqSkrot`, `Stopka`, `DaneStrukturalne` | `strona.json`, `oferta.json`, `serwisy.json`, `grupy.json`, `pomiary.json`, `faq.json`, `blog.json`, wpisy | sekcje po 76 rem; kafelki 3/2/1 (`.kafle`), kotwice `#oferta` `#jak-pracujemy` `#co-dostajesz` `#astro-i-hosting` `#realizacje` `#kontakt` | ≤ 1,5 kB |
+| `/cena/` | `src/pages/cena.astro` | `Kalkulator`, `PasekMarki`, `Stopka` | `cena.json` (kwoty, JEDNO źródło), `kalkulator.json` (teksty i wiązania z wierszami cennika), `blog.json` | tabele 4 kolumn (26/42/16/16 %), < 48 rem wiersz = karta; kalkulator: formularz + wynik 22 rem; `ep.wyceny` | 3,0 kB |
+| `/kontakt/` | `src/pages/kontakt.astro` | `Formularz` (Turnstile, `ep.szkic`, `ep.wyceny`, `ep.psi`) | `kontakt.json`, `firma.json` | formularz → handler PHP na lh.pl (`kontakt.json` `akcja`) | 3,1 kB |
+| `/dziekujemy/` | `dziekujemy.astro` | — | `kontakt.json` | noindex | 1,6 kB |
+| `/faq/` | `src/pages/faq/index.astro` | — | `faq.json` | lista pełnej szerokości, `<details name="faq">`; odpowiedź > 450 zn. → `.pytanie__odpowiedz--dluga` w 2 kolumnach od 64 rem; JSON-LD bez FAQPage (bramka A10) | 1,7 kB |
+| `/blog/` | `src/pages/blog/index.astro` | — | `blog.json`, `src/content/wpisy/*.md` przez `src/lib/wpisy.ts` | karty 3/2/1, zdjęcie 3:2 | 0 |
+| `/blog/<slug>/` | `src/pages/blog/[slug].astro` | — | `blog.json`, wpis | od 64 rem siatka: tekst + pasek boczny 24 rem (spis H2 `sticky`, wezwanie); „Czytaj także” 3 karty; style tabel Markdown (`overflow-x:auto`) | ≤ 1,5 kB |
+| `/rss.xml`, `/llms.txt` | `rss.xml.ts`, `llms.txt.ts` | — | wpisy, `serwisy.json`, `cena.json`, `pomiary.json`, `faq.json` | nowa trasa = dopisać wiersz w `llms.txt.ts` | — |
+| `/efekty/` | `src/pages/efekty/index.astro` | — | `efekty.json` | kafelki 3/2/1 (`.efekty .karty`), kafelek z polem `adres` otwiera istniejącą stronę | 0 |
+| `/efekty/<slug>/` (6 podstron) | `src/pages/efekty/<slug>.astro` | `src/components/efekty/SzkieletEfektu.astro` | `efekty.json` | pokaz na pełną szerokość + 3 bloki (`.efekt__info`) + guzik do `/kontakt/`; miniatury `public/efekty/<slug>/` | ≤ 2 kB |
+| `/efekty/animacja-przewijaniem/` | `efekty/animacja-przewijaniem.astro` | własny | `efekty.json`, 120 klatek WebP | scrollytelling | 2,0 kB |
+| `/przyklady/scrollytelling/` | `przyklady/scrollytelling.astro` | — | — | meta refresh do powyższej | — |
+| `/jak-sprawdzic-szybkosc-strony/` | `jak-sprawdzic-szybkosc-strony.astro` | zegary, `src/lib/psi-zalecenia.ts` | `PUBLIC_PSI_KLUCZ` (zmienna Actions), `ep.psi` | **budżet 6 kB (D21), dziś 5,8 kB** — nie dokładać JS | 5,8 kB |
+| `/darmowe-narzedzia/` | `darmowe-narzedzia.astro` | — | `narzedzia.json` | kafelki 3/2/1, stan `dziala` / `wkrotce` | 0 |
+| `/regulamin/` | `regulamin.astro` | — | `regulamin.json`, `firma.json` | spis części + treść w kolumnach CSS (24 rem), punkty a)–e) | 0 |
+| `/polityka-prywatnosci/` | `polityka-prywatnosci.astro` | — | `polityka.json` (`sekcje[]`: `akapity`, `lista`, `szeroka`, `tabela`), `firma.json` | spis 4/2/1, treść w kolumnach, tabela cookie `column-span:all`, na telefonie karty | 0 |
+| 4 strony usług | `strony-internetowe-warszawa`, `sklepy-internetowe-warszawa`, `strona-wizytowka`, `prowadzenie-strony-internetowej` `.astro` | — | `src/data/uslugi/<trasa>.json`, `cena.json` (`{od: pozycja}` = klucz nazwy pozycji cennika — nie zmieniać nazw pozycji), `pomiary.json` | szkielet `.usluga__*` (D19) | 0 |
+| `/404.html` | `404.astro` | — | `strona-404.json` | — | 1,5 kB |
+
+Wspólne dla wszystkich tras: `src/layouts/Bazowy.astro` (head, `Zgoda`, `Ujawnianie`, skip-link), `PasekMarki` (logo + menu, sticky,
+8 pozycji, hamburger < 53 rem), `Stopka` (menu 2 wiersze, „Usługi”, `Tlumacz`, dane spółki z guzikami kopiowania, prawa zastrzeżone).
+
+## Mechanizmy wspólne
+
+- **Zgoda na cookie** — `src/components/Zgoda.astro`, teksty `zgoda.json`. `localStorage['ep.zgoda'] = {"w":"niezbedne"|"wszystkie","d":"RRRR-MM-DD"}`,
+  zdarzenie `ep:zgoda` na `document`; ponowne otwarcie: przycisk `[data-ustawienia-cookie]` w stopce; Esc i krzyżyk = tylko niezbędne. Skrypt zewnętrzny
+  (dziś tylko GTranslate) ładuje się po zgodzie albo po kliknięciu użytkownika. Nowa usługa zapisująca dane = zmiana okna, `polityka.json` (tabela cookie) i `regulamin.json`.
+- **GTranslate** — `src/components/Tlumacz.astro` w stopce (pl, en, de, uk, ru, fr, es, it, tryb inline); przycisk „Polski” zastępuje widżet do czasu załadowania `cdn.gtranslate.net`.
+- **`ep.wyceny`** (sessionStorage, do 5 wyliczeń, `src/lib/wyceny.ts`) — kalkulator → `/kontakt/`; **`ep.szkic`** — pola formularza; **`ep.psi`** — wynik testu szybkości do dołączenia do zapytania (notka + „Usuń wynik”).
+- **Ujawnianie sekcji** — `Ujawnianie.astro`: atrybut `data-ujawnij` na sekcji/kafelku, stan nadaje skrypt; przy `prefers-reduced-motion` wszystko widoczne. Do zrzutów pełnych stron: emulować `reduced-motion`.
+- **Pasek postępu przewijania** — ten sam komponent (`.postep-przewijania`), CSS `animation-timeline`, skrypt tylko zapasowy.
+- **Okruszki** — `<nav class="okruszki">` + JSON-LD `BreadcrumbList` w każdej podstronie (kopiowane lokalnie, nie komponent).
+- **`tekst(klucz, 'domyślny')`** — pole puste w panelu = napis domyślny; wyjątki świadome opisane w `src/lib/tekst.ts`.
+- **Wpisy** — `src/lib/wpisy.ts` `opublikowane()`: nie szkic i `dataPublikacji ≤ chwila budowania`; stąd codzienny cron `0 7 * * *` w `.github/workflows/build-i-wdrozenie.yml`.
+- **Bramka i budżety** — `npm run guard`, `npm run guard:build` (JS 6 kB, CSS 30 kB na trasę), `npx astro check`, bramka Potwora `narzedzia/bramka/bramka-przed-publikacja.py dist --motyw src/styles/motyw.css`.
+
+## Jak dodać
+
+- **Wpis bloga** — plik `src/content/wpisy/<slug>.md`: frontmatter `tytul`, `tytulSeo`, `opisSeo`, `dataPublikacji` (ISO ze strefą; **inny dzień niż pozostałe wpisy**, nie w przyszłości, bo build go pominie; w przyszłości = wejdzie przy buildzie po tej dacie, cron codziennie 07:00 UTC), `zdjecie` (`../../assets/serwisy/…`), `zdjecieAlt`, `szkic`. Bez H1 w treści, bez kwot naszych cen. Dopisz wiersz do `docs/ZDJECIA-BLOG.md`, jeśli rejestr istnieje. Zasady: skill `wpisy-bloga`.
+- **Efekt** — wpis w `src/data/efekty.json` (`slug`, `nazwa`, `opisKrotki`, `lead`, `opisDlugi`, `dlaKogo`, `kosztWydajnosci`, `waga`, `naStronie`, `miniatura`, `alt`, `tytulKarty`, `opisWyszukiwarki`; `adres` zamiast podstrony dla istniejącej strony) + plik `src/pages/efekty/<slug>.astro` na `SzkieletEfektu` + `public/efekty/<slug>/miniatura.svg`. Pokaz ≤ 2 kB JS, `prefers-reduced-motion` respektowane.
+- **Narzędzie** — kafel w `src/data/narzedzia.json` `kafelki[]` (`id`, `ikona`, `nazwa`, `opis`, `stan`, `adres`, `guzik`); uruchomienie = `stan: "dziala"` + `adres` strony narzędzia (nowy plik w `src/pages/`), wiersz w `llms.txt.ts`, zmiana noty o danych razem z `polityka.json`.
+- **Pozycja cennika** — wiersz w odpowiedniej tabeli `cena.json` (`pozycja`, `opis`, `cena`, `jednostka`); w kalkulatorze: wpis w `kalkulator.json` (`rodzaje`, `dodatki` albo `dodatkiSklepu`) z `tabela` i fragmentem nazwy `szukaj` (dla liczby sztuk `ilosc`, `maks`, `formy`). Nie zmieniać nazw pozycji używanych przez `{od: …}` w `src/data/uslugi/*.json`.
+- **Realizacja** — wpis w `src/data/serwisy.json` (`nazwa`, `adres`, `opis`, `zakres` = punkty rozdzielone `\n`, `grupa`, `obrazek` z `src/assets/serwisy/`, `alt`); wynik PageSpeed odświeża `scripts/psi-realizacje.py` → `pomiary.json`.
+- **Nowa podstrona** — plik w `src/pages/`, `PasekMarki` + `Stopka`, okruszki + JSON-LD, wiersz w `llms.txt.ts`, odnośnik w stopce (`stopka.json`) lub menu, dane w `src/data/<nazwa>.json` + kolekcja w `public/admin/config.yml`, `npm run build` → guard → bramka → commit → push.

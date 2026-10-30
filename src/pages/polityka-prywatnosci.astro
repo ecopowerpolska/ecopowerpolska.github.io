@@ -1,8 +1,12 @@
 ---
 // /polityka-prywatnosci — polityka prywatności (runda 6, 2026-10-27, D20). Wzór: pan-stolarz.pl (ta sama spółka),
-// fakty tej witryny: GitHub Pages, handler formularza na lh.pl, Turnstile, sessionStorage ep.wyceny/ep.szkic, test PSI.
+// fakty tej witryny: GitHub Pages, handler formularza na lh.pl, Turnstile, pamięć przeglądarki (ep.*), GTranslate, test PSI.
 // Treść: src/data/polityka.json (panel: „Polityka prywatności”). W tekście: [kotwica](/trasa/) = link,
 // {nazwa} {adres} {nip} {krs} {regon} {email} {telefon} = dane z firma.json. 0 kB JS.
+// Układ (runda 7, 2026-10-30, reguła „pełna szerokość”): nad treścią spis części w siatce 4/2/1 kolumn, treść w kolumnach CSS
+// (`columns: 24rem` → dwie kolumny od ok. 54 rem, każda ok. 36 rem = 65–75 znaków w wierszu), sekcja z `szeroka: true`
+// (tabela plików cookie) przechodzi przez obie kolumny (`column-span: all`). Wybrano kolumny, nie „spis z lewej 1/4 + treść 3/4”:
+// treść w 3/4 kontenera (57 rem) to wiersz ok. 110 znaków, a spis z lewej zostawiłby pustą ćwiartkę na telefonie i tablecie.
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
@@ -39,6 +43,7 @@ const opis = tekst(
   'Kto przetwarza dane z formularza strony ecopowerpolska.pl, w jakim celu i jak długo, komu je przekazujemy i jakie masz prawa.',
 );
 const lead = naTekst(d.lead);
+const spisEtykieta = tekst(naTekst(d.spis), 'Spis części');
 const sekcje = (lista(d.sekcje) as Record<string, unknown>[])
   .map((s) => ({
     id: naTekst(s?.id),
@@ -47,6 +52,13 @@ const sekcje = (lista(d.sekcje) as Record<string, unknown>[])
     lista: teksty(s?.lista),
     akapityPo: teksty(s?.akapityPo),
     przycisk: naTekst(s?.przycisk),
+    szeroka: Boolean(s?.szeroka),
+    tabela: s?.tabela
+      ? {
+          naglowki: teksty((s.tabela as Record<string, unknown>).naglowki),
+          wiersze: lista((s.tabela as Record<string, unknown>).wiersze).map(teksty),
+        }
+      : null,
   }))
   .filter((s) => s.naglowek);
 
@@ -102,11 +114,34 @@ const daneStrukturalne = {
     <h1 class="polityka__tytul">{naglowek}</h1>
     {lead && <p class="polityka__lead">{podstaw(lead)}</p>}
 
+    <nav class="spis" aria-labelledby="spis-etykieta">
+      <p class="spis__etykieta" id="spis-etykieta">{spisEtykieta}</p>
+      <ul>
+        {sekcje.filter((s) => s.id).map((s) => <li><a href={`#${s.id}`}>{s.naglowek}</a></li>)}
+      </ul>
+    </nav>
+
     <div class="tresc">
       {sekcje.map((s) => (
-        <section id={s.id || undefined} aria-labelledby={s.id ? `${s.id}-tytul` : undefined}>
+        <section id={s.id || undefined} aria-labelledby={s.id ? `${s.id}-tytul` : undefined} class={s.szeroka ? 'szeroka' : undefined}>
           <h2 id={s.id ? `${s.id}-tytul` : undefined}>{s.naglowek}</h2>
           {s.akapity.map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
+          {s.tabela && s.tabela.wiersze.length > 0 && (
+            <table class="tabela">
+              <thead>
+                <tr>{s.tabela.naglowki.map((h) => <th scope="col">{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {s.tabela.wiersze.map((w) => (
+                  <tr>
+                    {w.map((k, i) => (
+                      <td data-etykieta={s.tabela!.naglowki[i] ?? ''}>{czesci(k).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
           {s.lista.length > 0 && (
             <ul>
               {s.lista.map((p) => <li>{czesci(p).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</li>)}
@@ -180,13 +215,146 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* D22 (2026-10-30): kolumna 44 rem wyśrodkowana, H1 i wstęp na środku, tekst w kolumnie do lewej. */
-  .okruszki,
+  /* D22 (2026-10-30): H1 i wstęp na środku (wstęp w mierze 44 rem), a treść na pełną szerokość kontenera — w kolumnach, nie w wąskim pasie. */
   .polityka__tytul,
-  .polityka__lead,
-  .tresc {
+  .polityka__lead {
     max-width: 44rem;
     margin-inline: auto;
+  }
+
+  /* Spis części: odnośniki w siatce 1 / 2 / 4 kolumn, każdy z celem dotyku 44 px. */
+  .spis {
+    margin-top: var(--o-8);
+    padding: var(--o-4) var(--o-6);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .spis__etykieta {
+    margin: 0 0 var(--o-2);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tekst-cichy);
+  }
+
+  .spis ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0 var(--o-6);
+  }
+
+  @media (min-width: 40rem) {
+    .spis ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .spis ul {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .spis a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-s);
+    font-weight: 600;
+  }
+
+  /* Treść: kolumny CSS o szerokości 24 rem — mieszczą się dwie (od ok. 54 rem okna), na telefonie jedna. Wiersz ok. 36 rem = 65–75 znaków. */
+  .tresc {
+    margin-top: var(--o-8);
+    columns: 24rem;
+    column-gap: var(--o-12);
+    column-rule: 1px solid var(--linia);
+  }
+
+  .tresc h2 {
+    break-after: avoid;
+  }
+
+  .tresc p,
+  .tresc li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Tabela plików cookie przechodzi przez obie kolumny. */
+  .tresc .szeroka {
+    column-span: all;
+  }
+
+  .tabela {
+    width: 100%;
+    margin: 0 0 var(--o-6);
+    border-collapse: collapse;
+    font-size: var(--t-s);
+    line-height: 1.5;
+  }
+
+  .tabela th {
+    padding: var(--o-3) var(--o-4);
+    text-align: left;
+    font-weight: 600;
+    color: var(--tekst);
+    background: var(--powierzchnia);
+  }
+
+  .tabela td {
+    padding: var(--o-3) var(--o-4);
+    vertical-align: top;
+    border-bottom: 1px solid var(--linia);
+  }
+
+  .tabela td:first-child {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  /* Telefon i wąski tablet: wiersz tabeli staje się kartą z etykietami kolumn. */
+  @media (max-width: 47.999rem) {
+    .tabela thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .tabela,
+    .tabela tbody,
+    .tabela tr,
+    .tabela td {
+      display: block;
+    }
+
+    .tabela tr {
+      margin-bottom: var(--o-4);
+      padding: var(--o-2) 0;
+      background: var(--powierzchnia);
+      border-radius: var(--promien);
+    }
+
+    .tabela td {
+      padding: var(--o-1) var(--o-4);
+      border: 0;
+    }
+
+    .tabela td::before {
+      content: attr(data-etykieta);
+      display: block;
+      font-size: var(--t-xs);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tekst-cichy);
+    }
   }
 
   .polityka__tytul {
@@ -203,9 +371,9 @@ const daneStrukturalne = {
   }
 
   .tresc h2 {
-    font-size: var(--t-xl);
+    font-size: var(--t-l);
     line-height: 1.2;
-    margin: var(--o-12) 0 var(--o-3);
+    margin: var(--o-8) 0 var(--o-3);
   }
 
   /* Kotwica #sekcja nie chowa nagłówka pod przyklejonym paskiem. */

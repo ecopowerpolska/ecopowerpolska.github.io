@@ -50,7 +50,7 @@
     },
     {
       "pytanie": "Co z RODO, polityką prywatności i ciasteczkami?",
-      "odpowiedz": "Polityka prywatności opisuje to, co strona robi naprawdę: kto jest administratorem danych, dokąd trafia zgłoszenie z formularza i jakie usługi je przetwarzają, na przykład hosting i Cloudflare. Pasek zgody pokazujemy tylko wtedy, gdy na stronie jest coś, co zgody wymaga, na przykład Google Analytics, które włącza się dopiero po zgodzie. Politykę poprawiamy przy każdej zmianie formularza albo analityki. Tak wygląda [polityka prywatności tej strony](/polityka-prywatnosci/).",
+      "odpowiedz": "Polityka prywatności opisuje to, co strona robi naprawdę: kto jest administratorem danych, dokąd trafia zgłoszenie z formularza i jakie usługi je przetwarzają, na przykład hosting i Cloudflare. Pasek zgody pokazujemy tylko wtedy, gdy na stronie jest coś, co zgody wymaga, na przykład tłumaczenie strony przez Google albo Google Analytics, które włączają się dopiero po zgodzie. Politykę poprawiamy przy każdej zmianie formularza albo analityki. Tak wygląda [polityka prywatności tej strony](/polityka-prywatnosci/).",
       "kotwica": "rodo",
       "naGlownej": false
     },

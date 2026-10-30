@@ -1,0 +1,130 @@
+{
+  "tytulKarty": "Regulamin serwisu ecopowerpolska.pl | EcoPower Polska",
+  "opisWyszukiwarki": "Regulamin świadczenia usług drogą elektroniczną w serwisie ecopowerpolska.pl: formularz, kalkulator cen, test szybkości, blog, warunki korzystania i reklamacje.",
+  "naglowek": "Regulamin serwisu ecopowerpolska.pl",
+  "okruszek": "Regulamin",
+  "lead": "Ten regulamin mówi, z jakich bezpłatnych usług możesz skorzystać na stronie www.ecopowerpolska.pl, na jakich zasadach i jak złożyć reklamację. Pisaliśmy go tak, żeby dało się go przeczytać w kilka minut.",
+  "wersja": "Wersja obowiązująca od 30 października 2026.",
+  "spis": "Spis części",
+  "paragraf": "§",
+  "sekcje": [
+    {
+      "id": "postanowienia-ogolne",
+      "naglowek": "Postanowienia ogólne",
+      "punkty": [
+        "Regulamin określa zasady korzystania ze strony internetowej www.ecopowerpolska.pl (zwanej dalej „Serwisem”) oraz rodzaje, zakres i warunki usług świadczonych w niej drogą elektroniczną. Wydajemy go na podstawie ustawy z 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.",
+        "Usługodawcą i właścicielem Serwisu jest {nazwa} z siedzibą pod adresem {adres}, wpisana do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS {krs}, NIP {nip}, REGON {regon}. W regulaminie piszemy o niej „my” albo „Usługodawca”.",
+        "Kontakt z nami: e-mail {email}, telefon {telefon}, adres do korespondencji jak adres siedziby.",
+        "Z Serwisu korzysta każdy, kto go odwiedza: osoba prywatna, przedsiębiorca albo instytucja. W regulaminie piszemy o niej „Ty” albo „Użytkownik”.",
+        "Regulamin jest dostępny nieodpłatnie na tej podstronie, a link do niego jest w stopce każdej podstrony. Możesz go przeczytać przed skorzystaniem z jakiejkolwiek usługi, zapisać albo wydrukować z przeglądarki. Na prośbę wysłaną na adres {email} prześlemy go też w pliku."
+      ]
+    },
+    {
+      "id": "uslugi",
+      "naglowek": "Rodzaje i zakres usług",
+      "punkty": [
+        {
+          "tekst": "Świadczymy w Serwisie nieodpłatnie następujące usługi drogą elektroniczną:",
+          "lista": [
+            "Formularz kontaktowy i zapytanie o wycenę ([Kontakt i wycena](/kontakt/)): możesz wysłać nam wiadomość z danymi do kontaktu, opisem potrzeb i, jeśli chcesz, wyliczeniami z kalkulatora. Formularz chroni usługa Cloudflare Turnstile.",
+            "Kalkulator cen z koszykiem wycen ([Cena](/cena/)): wyliczasz orientacyjną cenę strony albo sklepu, a do pięciu wyliczeń zostaje w pamięci Twojej przeglądarki, dopóki nie zamkniesz karty ani nie wyślesz zapytania.",
+            "Test szybkości strony ([Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/)): wpisujesz adres strony, a pomiar wykonuje Google PageSpeed Insights. Wpisany adres trafia do Google.",
+            "Blog i treści informacyjne ([Blog](/blog/), [FAQ](/faq/), opisy usług i realizacji): możesz je czytać bez żadnych formalności.",
+            "Tłumaczenie strony: przełącznik języków GTranslate w stopce. Tłumaczy automatycznie Google, a wersją źródłową jest polska."
+          ]
+        },
+        "Serwis nie ma newslettera ani kont użytkowników i nie prowadzi sprzedaży: nie złożysz w nim zamówienia i nie zapłacisz. Wykonanie strony, sklepu albo opieka nad nimi to usługi poza Serwisem, wykonywane na podstawie osobnych umów."
+      ]
+    },
+    {
+      "id": "warunki-techniczne",
+      "naglowek": "Wymagania techniczne i bezpieczeństwo",
+      "punkty": [
+        "Do korzystania z Serwisu potrzebujesz urządzenia z dostępem do internetu i aktualnej przeglądarki, która obsługuje HTML5, CSS i JavaScript.",
+        "Treści czytasz także z wyłączonym JavaScriptem. Bez niego kalkulator, koszyk wycen i test szybkości nie działają w pełni.",
+        "Serwis zapisuje w pamięci Twojej przeglądarki wpisy techniczne, na przykład wyliczenia z kalkulatora, szkic formularza i Twój wybór w oknie zgody. Ich nazwy, cel i czas przechowywania opisuje [Polityka prywatności](/polityka-prywatnosci/). Wybór zmienisz w każdej chwili przyciskiem „Ustawienia cookie” w stopce.",
+        "Korzystanie z internetu wiąże się z zagrożeniami, takimi jak złośliwe oprogramowanie, wyłudzanie danych i podsłuch w publicznych sieciach. Zadbaj o aktualną przeglądarkę i system oraz o program zabezpieczający. Formularz nie prosi o hasła ani dane kart płatniczych, więc nie wpisuj ich w wiadomości."
+      ]
+    },
+    {
+      "id": "zasady-korzystania",
+      "naglowek": "Zasady korzystania z Serwisu",
+      "punkty": [
+        "Korzystasz z Serwisu zgodnie z prawem, regulaminem i dobrymi obyczajami.",
+        "Nie wolno dostarczać nam treści o charakterze bezprawnym (art. 8 ust. 3 pkt 2 lit. b ustawy o świadczeniu usług drogą elektroniczną). Dotyczy to zwłaszcza formularza: nie wysyłaj w nim treści naruszających prawo lub prawa osób trzecich, gróźb, obelg ani złośliwego oprogramowania.",
+        "Nie wolno nadużywać Serwisu. Zakazane jest wysyłanie formularza programami i skryptami, rozsyłanie spamu i niezamówionych ofert, omijanie zabezpieczeń (w tym ochrony formularza) i masowe pobieranie treści, które obciąża Serwis. Wiadomości nadużywające formularza możemy usunąć bez odpowiedzi.",
+        "Serwis i jego treści (teksty, grafiki, zrzuty ekranu, układ, kod) są chronione prawem autorskim. © EcoPower Polska. Zdjęcia i zrzuty realizacji należą do Usługodawcy albo do klientów, dla których zrealizowano pokazane projekty.",
+        "Możesz cytować fragmenty treści w granicach dozwolonego użytku, podając źródło: nazwę Serwisu i adres podstrony. Kopiowanie w całości, rozpowszechnianie i użycie w celach komercyjnych wymaga naszej zgody."
+      ]
+    },
+    {
+      "id": "umowa",
+      "naglowek": "Zawarcie i rozwiązanie umowy o usługę",
+      "punkty": [
+        "Umowa o nieodpłatną usługę drogą elektroniczną zawiera się z chwilą, gdy zaczynasz korzystać z danej usługi, na przykład uruchamiasz kalkulator, wpisujesz adres do testu albo wysyłasz formularz. Nie zakładasz konta.",
+        "Umowa kończy się z chwilą zakończenia korzystania z usługi: gdy opuścisz Serwis, zamkniesz kartę, wyślesz formularz albo usuniesz dane Serwisu z pamięci przeglądarki. Możesz zakończyć w każdej chwili, bez podawania powodu i bez kosztów.",
+        "Możemy odmówić dalszego świadczenia usługi i zablokować dostęp, jeśli naruszasz zasady z części „Zasady korzystania z Serwisu”. Możemy też zmienić zakres usług albo przestać świadczyć którąś z nich z ważnych powodów, takich jak bezpieczeństwo, zmiany techniczne lub przepisy. Usługi są bezpłatne, więc nie wiąże się to z żadnymi rozliczeniami.",
+        "Wysłanie formularza i użycie kalkulatora nie jest zawarciem umowy o wykonanie strony, sklepu ani opiekę nad nimi. Taką umowę zawieramy osobno, po rozmowie o zakresie, na podstawie przygotowanej przez nas pisemnej wyceny i jej przyjęcia."
+      ]
+    },
+    {
+      "id": "wyceny",
+      "naglowek": "Wyceny z kalkulatora i cennik",
+      "punkty": [
+        "Ceny w cenniku i wyliczenia kalkulatora są orientacyjne. Podajemy je w złotych netto, a obok kwotę brutto z 23 % VAT.",
+        "Nie stanowią oferty handlowej i nie zobowiązują żadnej ze stron do zawarcia umowy.",
+        "Wiążąca jest wyłącznie wycena przygotowana na piśmie (e-mailem) po rozmowie o zakresie prac. Ostateczna cena zależy od zakresu: liczby podstron, funkcji, tekstów i zdjęć. Gdy wycena pisemna różni się od wyliczenia z kalkulatora, obowiązuje wycena pisemna.",
+        "Wyliczenia z koszyka wycen zapisują się tylko w pamięci sesji Twojej przeglądarki. Dostajemy je dopiero wtedy, gdy dołączysz je do formularza i klikniesz „Wyślij zapytanie”."
+      ]
+    },
+    {
+      "id": "odpowiedzialnosc",
+      "naglowek": "Odpowiedzialność",
+      "punkty": [
+        "Dbamy o to, żeby Serwis działał, ale nie gwarantujemy jego nieprzerwanej dostępności. Mogą zdarzyć się przerwy techniczne: konserwacja, awaria albo problem u dostawcy hostingu.",
+        "Blog, FAQ i poradniki mają charakter ogólny i informacyjny. Nie zastępują porady prawnej, podatkowej ani indywidualnej wyceny.",
+        "Serwis zawiera odnośniki do stron innych podmiotów, na przykład Google PageSpeed Insights i stron naszych realizacji. Nie odpowiadamy za ich treść ani zasady.",
+        "Wyniki testu szybkości pochodzą od Google PageSpeed Insights. Zależą od chwili pomiaru, sieci i serwera badanej strony, więc kolejne pomiary mogą się różnić. Nie odpowiadamy za ich dokładność ani za decyzje podjęte na ich podstawie.",
+        "Tłumaczenie automatyczne wykonuje Google i może zawierać błędy. W razie wątpliwości obowiązuje wersja polska.",
+        "Za treść wiadomości wysłanej formularzem odpowiadasz Ty.",
+        "Regulamin nie wyłącza ani nie ogranicza odpowiedzialności w zakresie, w jakim przepisy bezwzględnie obowiązujące tego zakazują, w tym wobec konsumentów."
+      ]
+    },
+    {
+      "id": "reklamacje",
+      "naglowek": "Reklamacje",
+      "punkty": [
+        "Reklamację dotyczącą działania usług w Serwisie (na przykład formularz się nie wysyła, kalkulator liczy błędnie albo podstrona nie otwiera się) wyślij na adres {email} albo pocztą na adres {adres}.",
+        {
+          "tekst": "W zgłoszeniu napisz:",
+          "lista": [
+            "imię i nazwisko albo nazwę firmy oraz adres e-mail, na który mamy odpowiedzieć,",
+            "co nie działa, na której podstronie, kiedy i w jakiej przeglądarce lub na jakim urządzeniu,",
+            "czego oczekujesz; jeśli możesz, dołącz zrzut ekranu."
+          ]
+        },
+        "Odpowiadamy w ciągu 14 dni od otrzymania zgłoszenia. Gdy brakuje danych, poprosimy o uzupełnienie i wtedy 14 dni liczymy od otrzymania uzupełnienia.",
+        "Reklamacje dotyczące osobno zawartej umowy o wykonanie strony, sklepu albo opiekę nad nimi rozpatrujemy według zasad z tej umowy."
+      ]
+    },
+    {
+      "id": "dane-osobowe",
+      "naglowek": "Dane osobowe",
+      "punkty": [
+        "Administratorem danych osobowych jest Usługodawca. Kto i po co przetwarza Twoje dane, komu je przekazuje, jak długo je przechowuje, jakie masz prawa i jak działają pliki cookie oraz pamięć przeglądarki, opisuje [Polityka prywatności](/polityka-prywatnosci/).",
+        "Dane w formularzu podajesz dobrowolnie. Imię i adres e-mail są potrzebne, żebyśmy mogli odpowiedzieć."
+      ]
+    },
+    {
+      "id": "postanowienia-koncowe",
+      "naglowek": "Postanowienia końcowe",
+      "punkty": [
+        "Do usług w Serwisie stosuje się prawo polskie. Jeśli jesteś konsumentem, nie pozbawia Cię to ochrony wynikającej z przepisów obowiązujących w kraju Twojego zamieszkania, o ile są dla Ciebie korzystniejsze.",
+        "Zmiany regulaminu publikujemy na tej podstronie, razem z datą, od której obowiązują. Do usługi, z której zaczynasz korzystać, stosujemy wersję obowiązującą w chwili rozpoczęcia korzystania z niej.",
+        "Jeśli jesteś konsumentem i spór z nami nie zakończy się reklamacją, możesz skorzystać z pozasądowych sposobów rozwiązywania sporów konsumenckich. Pomocy udzielają powiatowi i miejscy rzecznicy konsumentów, a informacje o dostępnych sposobach zbiera Urząd Ochrony Konkurencji i Konsumentów (uokik.gov.pl).",
+        "Pozostałe spory rozstrzyga sąd właściwy według przepisów ogólnych.",
+        "Ten regulamin obowiązuje od 30 października 2026."
+      ]
+    }
+  ]
+}

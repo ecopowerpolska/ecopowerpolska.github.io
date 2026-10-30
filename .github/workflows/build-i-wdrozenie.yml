@@ -19,6 +19,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Codzienna przebudowa publikuje wpisy, których data już minęła (filtr opublikowane() liczy „teraz” w chwili budowania).
+  # 07:00 UTC = 08:00 czasu polskiego zimą, 09:00 latem. Job deploy nie zależy od zdarzenia push.
+  schedule:
+    - cron: '0 7 * * *'
   # Panel treści (Sveltia) commituje do `main`, więc zapis wpisu wyzwala `push`
   # i przebudowuje stronę sam. Osobnego wyzwalacza nie potrzeba.
 

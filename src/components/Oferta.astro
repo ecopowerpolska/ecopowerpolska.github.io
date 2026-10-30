@@ -2,7 +2,9 @@
 // Oferta.astro — sekcje oferty firmy z src/data/oferta.json (2026-10-23).
 // `czesc="oferta"`: czym się zajmujemy, jak pracujemy, co dostajesz, dlaczego Astro i hosting.
 // `czesc="kontakt"`: kontakt mailem i telefonem plus adres siedziby z firma.json (odpis KRS).
-// Układ wyśrodkowany (D22, 2026-10-30): nagłówki, wstępy i kontakt na środku, siatka na pełną szerokość; kreski zamiast kart, kolory tylko z motyw.css.
+// Układ wyśrodkowany (D22, 2026-10-30): nagłówki, wstępy i kontakt na środku, siatki na pełną szerokość kontenera.
+// Runda 7 (2026-10-30): „Jak pracujemy” i „Co dostajesz” to te same kafelki (3 w rzędzie, 4 przy czterech krokach),
+// „Dlaczego Astro i jaki hosting” to dwie kolumny „Proponujemy” | „Wykonamy też” na pełną szerokość. Kolory tylko z motyw.css.
 // Zero JS. Każdy napis przez tekst(): wyczyszczone pole w panelu wraca do domyślnego.
 // Runda 5 (2026-10-27): pozycja „Czym się zajmujemy” z polem `link` (adres strony usługi) jest klikalna
 // w całości — odnośnik siedzi w <h3> (nazwa = tekst odnośnika), a jego ::after rozpięty na kafelek.
@@ -35,6 +37,7 @@ const pozycje = (klucz: string): { nazwa: string; opis: string; link: string }[]
 const zakres = pozycje('zakres');
 const proces = pozycje('proces');
 const technologia = pozycje('technologia');
+const technologiaInne = pozycje('technologiaInne');
 const dostajesz = (Array.isArray(o.dostajesz) ? (o.dostajesz as unknown[]) : [])
   .map((t) => (typeof t === 'string' ? t.trim() : ''))
   .filter(Boolean);
@@ -69,7 +72,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
         <section id="jak-pracujemy" class="sekcja" aria-labelledby="proces-naglowek" data-ujawnij>
           <h2 id="proces-naglowek" class="sekcja__naglowek">{napis('procesNaglowek', 'Jak pracujemy')}</h2>
           {/* Lista numerowana, bo to kolejne kroki (numer niesie <ol>, nie ozdoba). */}
-          <ol class="proces">
+          <ol class="kafle proces">
             {proces.map((p) => (
               <li>
                 <h3>{p.nazwa}</h3>
@@ -80,34 +83,52 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
         </section>
       )}
 
-      {(dostajesz.length > 0 || technologia.length > 0) && (
-        <div class="sekcja dwie" data-ujawnij>
-          {dostajesz.length > 0 && (
-            <section aria-labelledby="dostajesz-naglowek">
-              <h2 id="dostajesz-naglowek" class="sekcja__naglowek">{napis('dostajeszNaglowek', 'Co dostajesz')}</h2>
-              <ul class="dostajesz">
-                {dostajesz.map((t) => (
-                  <li>{t}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {technologia.length > 0 && (
-            <section aria-labelledby="technologia-naglowek">
-              <h2 id="technologia-naglowek" class="sekcja__naglowek">
-                {napis('technologiaNaglowek', 'Dlaczego Astro i taki hosting')}
-              </h2>
-              <dl class="technologia">
-                {technologia.map((p) => (
-                  <>
-                    <dt translate="no">{p.nazwa}</dt>
-                    <dd>{p.opis}</dd>
-                  </>
-                ))}
-              </dl>
-            </section>
-          )}
-        </div>
+      {dostajesz.length > 0 && (
+        <section id="co-dostajesz" class="sekcja" aria-labelledby="dostajesz-naglowek" data-ujawnij>
+          <h2 id="dostajesz-naglowek" class="sekcja__naglowek">{napis('dostajeszNaglowek', 'Co dostajesz')}</h2>
+          <ul class="kafle dostajesz">
+            {dostajesz.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {(technologia.length > 0 || technologiaInne.length > 0) && (
+        <section id="astro-i-hosting" class="sekcja" aria-labelledby="technologia-naglowek" data-ujawnij>
+          <h2 id="technologia-naglowek" class="sekcja__naglowek">
+            {napis('technologiaNaglowek', 'Dlaczego Astro i jaki hosting')}
+          </h2>
+          {o.technologiaLead && <p class="sekcja__lead">{String(o.technologiaLead)}</p>}
+          <div class="technologia">
+            {technologia.length > 0 && (
+              <div class="technologia__kolumna">
+                <h3>{napis('technologiaKolumnaProponujemy', 'Proponujemy')}</h3>
+                <dl>
+                  {technologia.map((p) => (
+                    <>
+                      <dt translate="no">{p.nazwa}</dt>
+                      <dd>{p.opis}</dd>
+                    </>
+                  ))}
+                </dl>
+              </div>
+            )}
+            {technologiaInne.length > 0 && (
+              <div class="technologia__kolumna">
+                <h3>{napis('technologiaKolumnaInne', 'Wykonamy też')}</h3>
+                <dl>
+                  {technologiaInne.map((p) => (
+                    <>
+                      <dt translate="no">{p.nazwa}</dt>
+                      <dd>{p.opis}</dd>
+                    </>
+                  ))}
+                </dl>
+              </div>
+            )}
+          </div>
+        </section>
       )}
     </>
   ) : (
@@ -177,9 +198,7 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
   }
 
   /* Zakres: siatka 1/2/3 kolumny, każda pozycja otwarta kreską u góry — bez kart i cieni. */
-  .zakres,
-  .proces,
-  .dostajesz {
+  .zakres {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -249,25 +268,58 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
     }
   }
 
-  /* Proces: prawdziwa sekwencja, więc numer z licznika <ol> w marginesie po lewej. */
-  .proces {
-    counter-reset: krok;
+  /* Kafelki „Jak pracujemy” i „Co dostajesz”: jedna siatka, ten sam wygląd (powierzchnia, kreska akcentu u góry).
+     Telefon 1 kolumna, 40–64rem 2, od 64rem 3; cztery kroki mieszczą się w 4 kolumnach. Ostatni rząd od lewej. */
+  .kafle {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
     gap: var(--o-6);
-    max-width: 48rem;
-    margin-inline: auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kafle li {
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-top: 2px solid var(--akcent);
+    border-radius: var(--promien);
+    line-height: 1.5;
+  }
+
+  .kafle li p {
+    max-width: none;
+  }
+
+  @media (min-width: 40rem) {
+    .kafle {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .kafle {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .proces:has(> li:nth-child(4):last-child) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* Proces: prawdziwa sekwencja, więc numer z licznika <ol> nad tytułem kroku. */
+  .proces {
+    counter-reset: krok;
   }
 
   .proces li {
     counter-increment: krok;
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    column-gap: var(--o-4);
   }
 
   .proces li::before {
     content: counter(krok);
-    grid-row: span 2;
+    display: block;
+    margin-bottom: var(--o-2);
     font-family: var(--font-display);
     font-size: var(--t-xl);
     line-height: 1.1;
@@ -276,42 +328,49 @@ const adres = [firma.adresSiedziby, [firma.kodPocztowy, firma.miejscowosc].filte
   }
 
   .proces h3 {
-    margin-bottom: var(--o-1);
+    margin-bottom: var(--o-2);
   }
 
-  /* Dwie kolumny od szerokiego ekranu: lista „co dostajesz” i krótkie uzasadnienie technologii. */
-  .dwie {
-    display: grid;
-    gap: var(--o-12);
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 60rem) {
-    .dwie {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .dostajesz li {
-    position: relative;
-    padding: var(--o-3) 0 var(--o-3) var(--o-6);
-    border-bottom: 1px solid var(--linia);
-    max-width: var(--miara);
-    line-height: 1.5;
-  }
-
+  /* „Co dostajesz”: krótka kreska akcentu zamiast numeru. */
   .dostajesz li::before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: calc(var(--o-3) + 0.6em);
-    width: 0.6rem;
+    display: block;
+    width: 1.5rem;
     height: 2px;
+    margin-bottom: var(--o-3);
     background: var(--akcent);
   }
 
+  /* Astro i hosting: dwie kolumny na pełną szerokość, na telefonie jedna pod drugą. */
   .technologia {
+    display: grid;
+    gap: var(--o-6);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 48rem) {
+    .technologia {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .technologia__kolumna {
+    padding: var(--o-6);
+    background: var(--powierzchnia);
+    border-top: 2px solid var(--akcent);
+    border-radius: var(--promien);
+  }
+
+  .technologia__kolumna h3 {
+    margin-bottom: var(--o-4);
+  }
+
+  .technologia__kolumna dl {
     margin: 0;
+  }
+
+  .technologia dd {
+    max-width: none;
   }
 
   .technologia dt {

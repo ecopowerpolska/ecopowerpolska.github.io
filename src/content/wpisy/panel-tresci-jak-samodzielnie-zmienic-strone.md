@@ -2,7 +2,7 @@
 tytul: "Panel treści: jak sam zmienisz tekst i zdjęcia na stronie"
 tytulSeo: "Panel treści: jak sam zmienisz tekst i zdjęcia na stronie"
 opisSeo: "Jak działa panel treści pod adresem /admin/: co w nim zmienisz, czym różni się panel Sveltia od panelu w PHP i jak cofnąć zmianę."
-dataPublikacji: "2026-10-23T15:00:00+02:00"
+dataPublikacji: "2026-10-16T11:30:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-nadihome.jpg"
 zdjecieAlt: "Strona główna nadihome.pl: nagłówek „Remonty mieszkań w Warszawie i wykończenia pod klucz” obok zdjęcia układania płytek"
 szkic: false

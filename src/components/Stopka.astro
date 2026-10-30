@@ -6,6 +6,7 @@
 import firma from '../data/firma.json';
 import napisyStopki from '../data/stopka.json';
 import blog from '../data/blog.json';
+import Tlumacz from './Tlumacz.astro';
 import { tekst } from '../lib/tekst';
 
 const mail = firma.email.toLowerCase();
@@ -16,7 +17,6 @@ const mail = firma.email.toLowerCase();
 const etykietaKrs = tekst(napisyStopki.etykietaKrs, 'KRS');
 const etykietaNip = tekst(napisyStopki.etykietaNip, 'NIP');
 const etykietaRegon = tekst(napisyStopki.etykietaRegon, 'REGON');
-const etykietaFormaPrawna = tekst(napisyStopki.etykietaFormaPrawna, 'Forma prawna:');
 const etykietaAdresWww = tekst(napisyStopki.etykietaAdresWww, 'Adres WWW:');
 const etykietaEmail = tekst(napisyStopki.etykietaEmail, 'E-mail:');
 const etykietaAdres = tekst(napisyStopki.etykietaAdres, 'Adres:');
@@ -24,6 +24,13 @@ const etykietaTelefon = tekst(napisyStopki.etykietaTelefon, 'Telefon:');
 const guzikKopiujWszystko = tekst(napisyStopki.guzikKopiujWszystko, 'Skopiuj dane spółki');
 // Odnośnik do /polityka-prywatnosci/ w menu stopki (runda 6, D20).
 const linkPolityki = tekst(napisyStopki.linkPolityki, 'Polityka prywatności');
+// Etykieta grupy nad czterema usługami (runda 7): nagłówek, nie odnośnik.
+const etykietaUslug = tekst(napisyStopki.etykietaUslug, 'Usługi');
+// Link otwierający okno zgody cookie ponownie (Zgoda.astro nasłuchuje na [data-ustawienia-cookie]).
+const ustawieniaCookie = tekst(napisyStopki.ustawieniaCookie, 'Ustawienia cookie');
+// Dwa odnośniki dodane w rundzie 7 (2026-10-30): strona darmowych narzędzi i regulamin serwisu.
+const linkNarzedzi = tekst(napisyStopki.linkNarzedzi, 'Darmowe narzędzia');
+const linkRegulaminu = tekst(napisyStopki.linkRegulaminu, 'Regulamin');
 
 // Nazwa rzeczy kopiowanej guzikiem zbiorczym, do komunikatu dla czytnika ekranu
 // („Skopiowano: dane spółki."). Liczona Z NAPISU Z PANELU, nie wpisana w skrypcie:
@@ -31,6 +38,13 @@ const linkPolityki = tekst(napisyStopki.linkPolityki, 'Polityka prywatności');
 // brzmienie i HTML rozjechałby się z JavaScriptem po cichu (kontrola nadi, K5).
 // Stopka pokazuje skrót „EcoPower Polska Sp. z o.o.” (Piotr 2026-10-27); pełna nazwa zostaje w JSON-LD i llms.txt.
 const nazwaStopki = tekst((firma as Record<string, unknown>).nazwaStopka as string | undefined, firma.nazwaPelna);
+// Wiersz praw zastrzeżonych. Rok = rok BUDOWY strony (czas Warszawy, nie UTC: build 1 stycznia po północy też da nowy rok). Build odpala się
+// przy każdej zmianie treści w repo, więc rok jest bieżący; po 1 stycznia odświeży go najbliższy build. Nazwa bez końcowej kropki,
+// bo szablon z panelu („© {rok} {nazwa}. Wszelkie prawa zastrzeżone.”) dokłada własną — inaczej wyszłoby „o.o..”.
+const rokBudowy = new Intl.DateTimeFormat('pl-PL', { year: 'numeric', timeZone: 'Europe/Warsaw' }).format(new Date());
+const prawaZastrzezone = tekst(napisyStopki.prawa, '© {rok} {nazwa}. Wszelkie prawa zastrzeżone.')
+  .replace('{rok}', rokBudowy)
+  .replace('{nazwa}', nazwaStopki.replace(/\.$/, ''));
 const nazwaZbiorcza = guzikKopiujWszystko.replace(/^skopiuj\s+/i, '');
 const potwierdzenieKopiowania = tekst(napisyStopki.potwierdzenieKopiowania, 'Skopiowano');
 const bladKopiowania = tekst(napisyStopki.bladKopiowania, 'Nie udało się skopiować.');
@@ -49,7 +63,6 @@ const daneSpolki = [
   `${firma.rejestr}, ${etykietaKrs} ${firma.krs}`,
   `${etykietaNip} ${firma.nip}`,
   `${etykietaRegon} ${firma.regon}`,
-  `${etykietaFormaPrawna} ${firma.formaPrawna}`,
   `${etykietaAdresWww} ${firma.adresWww}`,
   `${etykietaEmail} ${firma.email}`,
   firma.adresSiedziby && `${etykietaAdres} ${firma.adresSiedziby}`,
@@ -79,18 +92,27 @@ const daneSpolki = [
         <li><a href="/faq/">{tekst(blog.menuFaq, 'FAQ')}</a></li>
         <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
         <li><a href="/kontakt/">{tekst(blog.menuKontakt, 'Kontakt')}</a></li>
+        <li><a href="/darmowe-narzedzia/">{linkNarzedzi}</a></li>
+      </ul>
+      {/* Drugi wiersz: dokumenty i ustawienia (13 pozycji w jednym wierszu zawijało się z osamotnionym ostatnim przyciskiem). */}
+      <ul>
+        <li><a href="/regulamin/">{linkRegulaminu}</a></li>
         <li><a href="/polityka-prywatnosci/">{linkPolityki}</a></li>
+        <li><button type="button" class="stopka__przycisk-linku" data-ustawienia-cookie>{ustawieniaCookie}</button></li>
       </ul>
     </nav>
 
     <nav class="stopka__uslugi" aria-labelledby="stopka-uslugi">
-      <p id="stopka-uslugi" class="stopka__etykieta">Usługi</p>
+      <p id="stopka-uslugi" class="stopka__etykieta">{etykietaUslug}</p>
       <ul>
         {uslugiStopki.map((u) => (
           <li><a href={u.adres}>{u.nazwa}</a></li>
         ))}
       </ul>
     </nav>
+
+    {/* Przełącznik języków (GTranslate): etykieta, pojemnik widżetu i przycisk startowy w Tlumacz.astro. Miejsce zarezerwowane (44 px), bez skoku układu. */}
+    <Tlumacz />
 
     <p class="stopka__nazwa">
       <span class="dana"
@@ -143,19 +165,6 @@ const daneSpolki = [
     </p>
 
     <dl class="stopka__dane">
-      <dt>{etykietaFormaPrawna}</dt>
-      <dd
-        ><span class="dana"
-          >{firma.formaPrawna}<button
-            class="kopiuj"
-            type="button"
-            hidden
-            data-kopiuj={firma.formaPrawna}
-            aria-label="Skopiuj formę prawną"><span class="kopiuj__znak" aria-hidden="true"></span></button
-          ></span
-        ></dd
-      >
-
       <dt>{etykietaAdresWww}</dt>
       <dd
         ><span class="dana"
@@ -231,6 +240,8 @@ const daneSpolki = [
 
     {/* Potwierdzenie dla czytnika ekranu — zmiana ikony jest dla niego niema. */}
     <p class="stopka__stan" role="status" aria-live="polite"></p>
+
+    <p class="stopka__prawa">{prawaZastrzezone}</p>
   </div>
 </footer>
 
@@ -306,8 +317,11 @@ const daneSpolki = [
     color: var(--tekst-cichy);
   }
 
-  .stopka__menu ul,
-  .stopka__uslugi ul {
+  .stopka__menu ul:has(+ ul) {
+    margin-bottom: 0;
+  }
+
+  .stopka__menu ul {
     list-style: none;
     margin: 0 0 var(--o-4);
     padding: 0;
@@ -316,10 +330,46 @@ const daneSpolki = [
     gap: 0 var(--o-6);
   }
 
+  /* Usługi: etykieta grupy na środku, kreska pod nią na pełną szerokość, cztery usługi w jednym rzędzie.
+     Etykieta to nagłówek, nie odnośnik: kapitaliki, kolor cichy, bez podkreślenia i bez koloru linku. */
+  .stopka__uslugi {
+    margin: 0 0 var(--o-4);
+  }
+
   .stopka__etykieta {
     margin: 0;
+    padding-bottom: var(--o-2);
+    border-bottom: 1px solid var(--linia);
+    text-align: center;
+    font-size: var(--t-xs);
     font-weight: 600;
-    color: var(--tekst);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tekst-cichy);
+    text-decoration: none;
+  }
+
+  .stopka__uslugi ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 var(--o-6);
+  }
+
+  @media (min-width: 48rem) {
+    .stopka__uslugi ul {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .stopka__uslugi li {
+    text-align: center;
+  }
+
+  .stopka__uslugi a {
+    justify-content: center;
   }
 
   .stopka__menu a,
@@ -330,6 +380,28 @@ const daneSpolki = [
     font-size: var(--t-s);
     font-weight: 600;
     color: var(--akcent);
+  }
+
+  /* „Ustawienia cookie”: <button> wyglądający jak odnośnik menu (cofnięcie zgody tak łatwe jak jej udzielenie). */
+  .stopka__przycisk-linku {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    font: inherit;
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--akcent);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .stopka__przycisk-linku:hover {
+    color: var(--tekst);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .stopka__menu a:hover,
@@ -500,6 +572,16 @@ const daneSpolki = [
     margin: var(--o-2) 0 0;
     min-height: 1.6em;
     color: var(--akcent);
+  }
+
+  /* Prawa zastrzeżone: ostatni wiersz, na środku, najmniejszy stopień, kreska od danych rejestrowych. */
+  .stopka__prawa {
+    margin: var(--o-6) 0 0;
+    padding-top: var(--o-4);
+    border-top: 1px solid var(--linia);
+    text-align: center;
+    font-size: var(--t-xs);
+    color: var(--tekst-cichy);
   }
 
   /* Przy 320 px nierozrywalne wartości rozpychały stronę w bok (WCAG 1.4.10, pomiar 2026-10-23). */

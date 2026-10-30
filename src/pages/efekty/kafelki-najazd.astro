@@ -1,0 +1,129 @@
+---
+// /efekty/kafelki-najazd/ - kafelki z efektem najazdu: kafelek unosi się, dostaje cień, a obraz w środku lekko się powiększa.
+// Sam CSS (zero JS). Pomysł: wzorzec „card lift + image zoom" z poradników hover effects (camoa.github.io/dev-guides/css/css-craft/hover-effects-collection/);
+// zasady: tylko tam, gdzie jest najazd myszą ((hover: hover)), te same stany dla fokusu z klawiatury, przy ograniczonym ruchu bez ruchu.
+import SzkieletEfektu from '../../components/efekty/SzkieletEfektu.astro';
+
+const kafle = [
+  { nazwa: 'Kuchnia na wymiar', opis: 'Zabudowa do ostatniego centymetra.', obraz: 'kuchnia', alt: 'Uproszczony rysunek zabudowy kuchennej' },
+  { nazwa: 'Szafa z drzwiami', opis: 'Drzwi przesuwne albo uchylne.', obraz: 'szafa', alt: 'Uproszczony rysunek szafy z drzwiami' },
+  { nazwa: 'Garderoba', opis: 'Półki, drążki i oświetlenie.', obraz: 'garderoba', alt: 'Uproszczony rysunek garderoby z półkami' },
+];
+---
+
+<SzkieletEfektu slug="kafelki-najazd">
+  <section class="najazd" aria-label="Pokaz: kafelki z efektem najazdu">
+    <ul class="najazd__siatka">
+      {kafle.map((k) => (
+        <li class="najazd__kafel">
+          <a class="najazd__link" href="/kontakt/">
+            <span class="najazd__obraz">
+              <img src={`/efekty/kafelki-najazd/${k.obraz}.svg`} width="960" height="640" alt={k.alt} loading="lazy" decoding="async" />
+            </span>
+            <span class="najazd__tresc">
+              <span class="najazd__nazwa">{k.nazwa}</span>
+              <span class="najazd__opis">{k.opis}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="najazd__podpis">Najedź myszą albo przejdź klawiszem Tab - kafelek się unosi. Na telefonie kafelki stoją nieruchomo.</p>
+  </section>
+</SzkieletEfektu>
+
+<style>
+  .najazd__siatka {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-6);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 48rem) {
+    .najazd__siatka {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .najazd__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+    color: var(--tekst);
+    text-decoration: none;
+  }
+
+  .najazd__obraz {
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--powierzchnia-mocna);
+  }
+
+  .najazd__obraz img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .najazd__tresc {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-1);
+    padding: var(--o-4) var(--o-4) var(--o-6);
+  }
+
+  .najazd__nazwa {
+    font-family: var(--font-display);
+    font-size: var(--t-l);
+    font-weight: 600;
+  }
+
+  .najazd__opis {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .najazd__podpis {
+    margin: var(--o-6) 0 0;
+    text-align: center;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .najazd__link:focus-visible {
+    outline: 3px solid var(--akcent);
+    outline-offset: 3px;
+  }
+
+  /* Ruch tylko z myszą i bez ograniczenia ruchu: tylko transform i cień, układ się nie przesuwa. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .najazd__link {
+      transition:
+        transform 220ms var(--ruch-krzywa),
+        box-shadow 220ms var(--ruch-krzywa);
+    }
+
+    .najazd__obraz img {
+      transition: transform 400ms var(--ruch-krzywa);
+    }
+
+    .najazd__link:hover,
+    .najazd__link:focus-visible {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 28px color-mix(in srgb, var(--tekst) 18%, transparent);
+    }
+
+    .najazd__link:hover img,
+    .najazd__link:focus-visible img {
+      transform: scale(1.07);
+    }
+  }
+</style>

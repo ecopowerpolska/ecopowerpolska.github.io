@@ -45,16 +45,20 @@ const linkiTabel: Record<string, { tekst: string; adres: string }[]> = {
   'strona-prowadzenie': [{ tekst: 'co obejmuje prowadzenie strony', adres: '/prowadzenie-strony-internetowej/' }],
   'sklep-wykonanie': [{ tekst: 'jak budujemy sklep internetowy', adres: '/sklepy-internetowe-warszawa/' }],
 };
+// Tabele „wykonanie” nie niosą jednostki w danych: to opłata jednorazowa (tak mówi opis tabeli).
+const jednorazowo = napis('jednostkaWykonania', 'jednorazowo');
 const tabele = [
-  { id: 'strona-wykonanie', naglowek: napis('stronaWykonanieNaglowek', 'Strona internetowa: wykonanie'), opis: napis('stronaWykonanieOpis', ''), wiersze: wiersze('stronaWykonanie') },
-  { id: 'strona-prowadzenie', naglowek: napis('stronaProwadzenieNaglowek', 'Strona internetowa: prowadzenie'), opis: napis('stronaProwadzenieOpis', ''), wiersze: wiersze('stronaProwadzenie') },
-  { id: 'sklep-wykonanie', naglowek: napis('sklepWykonanieNaglowek', 'Sklep internetowy: uruchomienie'), opis: napis('sklepWykonanieOpis', ''), wiersze: wiersze('sklepWykonanie') },
-  { id: 'sklep-prowadzenie', naglowek: napis('sklepProwadzenieNaglowek', 'Sklep internetowy: prowadzenie'), opis: napis('sklepProwadzenieOpis', ''), wiersze: wiersze('sklepProwadzenie') },
+  { id: 'strona-wykonanie', domyslna: jednorazowo, naglowek: napis('stronaWykonanieNaglowek', 'Strona internetowa: wykonanie'), opis: napis('stronaWykonanieOpis', ''), wiersze: wiersze('stronaWykonanie') },
+  { id: 'strona-prowadzenie', domyslna: '', naglowek: napis('stronaProwadzenieNaglowek', 'Strona internetowa: prowadzenie'), opis: napis('stronaProwadzenieOpis', ''), wiersze: wiersze('stronaProwadzenie') },
+  { id: 'sklep-wykonanie', domyslna: jednorazowo, naglowek: napis('sklepWykonanieNaglowek', 'Sklep internetowy: uruchomienie'), opis: napis('sklepWykonanieOpis', ''), wiersze: wiersze('sklepWykonanie') },
+  { id: 'sklep-prowadzenie', domyslna: '', naglowek: napis('sklepProwadzenieNaglowek', 'Sklep internetowy: prowadzenie'), opis: napis('sklepProwadzenieOpis', ''), wiersze: wiersze('sklepProwadzenie') },
 ].filter((t) => t.wiersze.length > 0);
 
 const kolumny = {
-  pozycja: napis('kolumnaPozycji', 'Półka'),
+  pozycja: napis('kolumnaPozycji', 'Pozycja'),
+  opis: napis('kolumnaOpisu', 'Zakres'),
   cena: napis('kolumnaCeny', 'Cena'),
+  jednostka: napis('kolumnaJednostki', 'Rozliczenie'),
 };
 
 const tytul = napis('tytulKarty', 'Cennik stron i sklepów internetowych — EcoPower Polska');
@@ -146,7 +150,9 @@ const daneStrukturalne = {
             <thead role="rowgroup">
               <tr role="row">
                 <th scope="col" role="columnheader">{kolumny.pozycja}</th>
+                <th scope="col" role="columnheader">{kolumny.opis}</th>
                 <th scope="col" role="columnheader">{kolumny.cena}</th>
+                <th scope="col" role="columnheader">{kolumny.jednostka}</th>
               </tr>
             </thead>
             <tbody role="rowgroup">
@@ -154,14 +160,10 @@ const daneStrukturalne = {
                 <tr role="row">
                   <th scope="row" role="rowheader">
                     <span class="pozycja">{w.pozycja}</span>
-                    {w.opis && <span class="uwagi">{w.opis}</span>}
                   </th>
-                  <td class="kwota" role="cell" data-etykieta={kolumny.cena}>
-                    <span class="kwota__wartosc">
-                      <span class="kwota__liczba">{w.cena || brak}</span>
-                      {w.cena && w.jednostka && <span class="kwota__jednostka">{w.jednostka}</span>}
-                    </span>
-                  </td>
+                  <td class="uwagi" role="cell">{w.opis}</td>
+                  <td class="kwota" role="cell" data-etykieta={kolumny.cena}>{w.cena || brak}</td>
+                  <td class="jednostka" role="cell" data-etykieta={kolumny.jednostka}>{w.cena ? w.jednostka || t.domyslna : ''}</td>
                 </tr>
               ))}
             </tbody>
@@ -241,17 +243,7 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* D22 (2026-10-30): wąska kolumna 44 rem wyśrodkowana; H1, wstęp i opisy na środku, tabele 56 rem też na środku. */
-  .okruszki,
-  .cena__tytul,
-  .cena__lead,
-  .cena__zastrzezenie,
-  .spis,
-  .tabela__opis,
-  .kontakt {
-    max-width: 44rem;
-    margin-inline: auto;
-  }
+  /* Runda 7 (2026-10-30): wszystko na pełną szerokość kontenera (--szerokosc-tresci); H1 i wstęp na środku. */
 
   .cena__tytul {
     font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
@@ -277,9 +269,15 @@ const daneStrukturalne = {
     font-weight: 600;
   }
 
+  /* Spis tabel: poziomy pasek odnośników na całą szerokość, zawija się w kolejne wiersze. */
   .spis ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--o-6);
     margin: 0 0 var(--o-12);
-    padding: var(--o-3) 0 var(--o-3) var(--o-6);
+    padding: var(--o-2) var(--o-4);
     border-top: 1px solid var(--linia);
     border-bottom: 1px solid var(--linia);
   }
@@ -312,8 +310,7 @@ const daneStrukturalne = {
   }
 
   .tabela__linki {
-    margin: var(--o-2) auto var(--o-4);
-    max-width: 44rem;
+    margin: var(--o-2) 0 var(--o-4);
     text-align: center;
   }
 
@@ -322,12 +319,10 @@ const daneStrukturalne = {
     text-underline-offset: 0.15em;
   }
 
-  /* Przewijanie poziome jako zapas (od 40 rem w górę tabela mieści się sama, niżej wiersze są kartami); cień przy krawędzi pokazuje, że tabela idzie dalej
+  /* Przewijanie poziome jako zapas (od 48 rem w górę tabela mieści się sama, niżej wiersze są kartami); cień przy krawędzi pokazuje, że tabela idzie dalej
      (tło „local” zasłania cień, gdy dojedziemy do końca). Fokus z klawiatury pozwala przewijać strzałkami. */
-  /* 56 rem: kwota stoi w zasięgu wzroku od nazwy pozycji także na 1440 px (D14). */
+  /* Pełna szerokość kontenera; cztery kolumny: pozycja | zakres | cena | rozliczenie. */
   .przewijanie {
-    max-width: 56rem;
-    margin-inline: auto;
     overflow-x: auto;
     background:
       linear-gradient(to right, var(--tlo) 30%, rgb(244 245 241 / 0%)) left / 2rem 100% no-repeat local,
@@ -339,7 +334,7 @@ const daneStrukturalne = {
   /* Stały układ kolumn: cztery tabele jedna pod drugą mają kolumny w tych samych miejscach. */
   table {
     width: 100%;
-    min-width: 30rem;
+    min-width: 40rem;
     table-layout: fixed;
     border-collapse: collapse;
     font-size: var(--t-s);
@@ -370,9 +365,10 @@ const daneStrukturalne = {
     background: var(--powierzchnia);
   }
 
-  thead th:nth-child(1) {
-    width: 68%;
-  }
+  thead th:nth-child(1) { width: 26%; }
+  thead th:nth-child(2) { width: 42%; }
+  thead th:nth-child(3) { width: 16%; }
+  thead th:nth-child(4) { width: 16%; }
 
   tbody th {
     font-family: var(--font-sans);
@@ -386,33 +382,22 @@ const daneStrukturalne = {
   }
 
   .uwagi {
-    display: block;
-    margin-top: var(--o-1);
     color: var(--tekst-cichy);
   }
 
   .kwota {
     font-variant-numeric: tabular-nums;
-  }
-
-  .kwota__wartosc {
-    display: block;
-  }
-
-  .kwota__liczba {
-    display: block;
     font-weight: 600;
     font-size: var(--t-m);
   }
 
-  .kwota__jednostka {
-    display: block;
+  .jednostka {
     color: var(--tekst-cichy);
   }
 
   /* Telefon: wiersz = karta. Nagłówek wiersza na górze, pod nim para etykieta–cena.
      Role ARIA w znacznikach trzymają semantykę tabeli, gdy CSS zmienia `display` (Safari ją wtedy gubi). */
-  @media (max-width: 40rem) {
+  @media (max-width: 48rem) {
     table {
       min-width: 0;
     }
@@ -458,14 +443,20 @@ const daneStrukturalne = {
       white-space: normal;
     }
 
-    .kwota__wartosc {
-      text-align: right;
+    tbody td.uwagi {
+      display: block;
+      padding: 0 0 var(--o-2);
     }
 
-    tbody td::before {
+    tbody td.jednostka:empty {
+      display: none;
+    }
+
+    tbody td[data-etykieta]::before {
       content: attr(data-etykieta);
       color: var(--tekst-cichy);
       font-weight: 400;
+      font-size: var(--t-s);
     }
   }
 

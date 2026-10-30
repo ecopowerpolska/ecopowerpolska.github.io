@@ -2,7 +2,7 @@
 tytul: "Jak wygląda strona firmy meblowej i studia wnętrz: dwie realizacje krok po kroku"
 tytulSeo: "Strona firmy meblowej i studia wnętrz: dwie realizacje"
 opisSeo: "Dwie nasze realizacje: Pan Stolarz od zera i Studio Agat przeniesione z WordPressa. Co mają, jak powstały i czego potrzebuje firma od mebli lub wnętrz."
-dataPublikacji: "2026-10-26T21:00:00+01:00"
+dataPublikacji: "2026-10-23T09:30:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie i przycisk sprawdzenia ceny"
 szkic: false

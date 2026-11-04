@@ -45,3 +45,31 @@ zmiana w jednym miejscu = zmiana w drugim. Wgranie i test: `docs/FORMULARZ.md`.
 - Pamięć podręczna `stan/firma/<nip>.json` 24 h (trafienie ma `cache:true` i nie zużywa limitu IP); licznik IP `stan/firma-ip/<sha256(sol_ip|ip)>.json`;
   dziennik `stan/firma-RRRRMMDD.log` (data, kod wyniku, źródła — bez NIP-ów i adresów IP). Klucze konfiguracji: `ceidg_token`, `sol_ip`,
   opcjonalnie `firma_limit_na_godz`, `ceidg_limit_na_godz`, `cache_sekundy`, `cache_brak_sekundy`. Timeouty 5 s na źródło, TLS zweryfikowany.
+
+
+## komentarze.php: komentarze pod wpisami ambasadapodroznikow.pl (od 2026-11-04)
+`https://api.ecopowerpolska.pl/komentarze.php`. Strona na GitHub Pages nie zapisuje danych, więc komentarze przyjmuje to zaplecze.
+Origin dozwolony: `https://<strona>` dla każdej strony z `komentarze_strony` (dziś tylko `https://ambasadapodroznikow.pl`).
+- **GET `?strona=<strona>&wpis=<slug>`** → `200 {"wpis":"<slug>","komentarze":[{"id":"<16 hex>","autor","tresc","data":"2026-11-04T12:34:56+01:00"}]}`,
+  tylko opublikowane, od najstarszego. **GET `?strona=<strona>&wszystkie=1`** → `{"wpisy":{"<slug>":[…]}}` (tylko wpisy z komentarzami; dla builda).
+  Nagłówki: `Access-Control-Allow-Origin: https://<strona>`, `Cache-Control: no-store`. GET działa bez Origin (build w Actions). Błędny `strona`/`wpis` → 400 `{"ok":false,"blad":…}`.
+- **POST** (`multipart/form-data`, `x-www-form-urlencoded` albo `application/json`, najwyżej 32 KB): `strona`, `wpis`, `autor` (2–60), `tresc` (3–2000),
+  `email` (opcjonalny, nigdy nie publikowany), `cf-turnstile-response`. Z `Accept: application/json` odpowiedź to JSON:
+  `{"ok":true,"status":"opublikowany"|"czeka","komentarz":{id,autor,tresc,data}}` albo `{"ok":false,"blad":"<kod>"}` (400/403/429/500). Bez niego: 303 na
+  `https://<strona>/blog/<slug>/?komentarz=<status>#komentarze` albo `…?blad=<kod>#komentarze`.
+  Kody: `autor`, `tresc`, `turnstile` (403), `limit` (429), `wpis`, `wysylka` (zarezerwowany: błąd poczty NIE cofa zapisu, trafia do logu), `inny` (obcy lub brak Origin 403, zła `strona`, e-mail, za duże żądanie, brak `turnstile_sekret` 500).
+  Kolejność kontroli: Origin → metoda → `strona` → `wpis` (`^[a-z0-9-]{1,120}$` i HEAD `https://<strona>/blog/<slug>/` = 200; pamięć 24 h dla wpisów istniejących, 10 min dla nieistniejących, bezpiecznik 100 nowych HEAD na godzinę) →
+  Turnstile (`success` i `hostname` z `komentarze_turnstile_hosty`) → limit (5 na 10 min i 20 na dobę na skrót IP, 300 na dobę globalnie, 500 komentarzy na wpis) → pola → zapis → mail.
+  Tekst przechowywany surowo, bez HTML; usuwane są znaki sterujące i znaczniki kierunku tekstu. Więcej niż 2 linki (`https?://…`, `www.…`) → status `czeka` (niewidoczny). Ten sam autor i ta sama treść pod wpisem drugi raz = zwrot istniejącego komentarza bez nowego zapisu i maila.
+  Adres klienta: `REMOTE_ADDR`; `CF-Connecting-IP` tylko gdy `REMOTE_ADDR` leży w zakresach Cloudflare (stała w kodzie, odczyt 2026-11-04).
+- **Moderacja:** mail zawiera linki `komentarze.php?akcja=usun|zatwierdz&strona=…&wpis=…&id=…&podpis=<HMAC-SHA256>` (podpis z `akcja\nstrona\nwpis\nid`, klucz `komentarze_klucz`).
+  GET pokazuje stronę z podglądem (treść ucieczką `htmlspecialchars`) i przyciskiem; akcję wykonuje dopiero POST przycisku (skanery poczty nic nie skasują). Podpis porównuje `hash_equals`.
+- **Mail:** `kontakt@ecopowerpolska.pl` (`komentarze_mail_do`), nadawca jak `wyslij.php` (`od`), temat `[Ambasada] Komentarz: <slug>` albo `[Ambasada] Komentarz czeka: <slug>`.
+- **Dane:** `stan/komentarze/<strona>/<wpis>.json` (lista rekordów `id, autor, tresc, email, data, status`; zapis pod `flock`). **Skrótu IP w rekordzie NIE ma** (polityka prywatności: IP służy tylko limitom).
+  Limity: `stan/komentarze-limity.json` (znaczniki czasu per skrót `sha256(IP + dobowa sól)`; plik zeruje się z nową solą przy pierwszym żądaniu następnego dnia). Pamięć istnienia wpisów: `stan/komentarze-wpisy.json`.
+  Błędy: `stan/komentarze.log` (bez treści komentarzy i adresów IP; po 512 KB przechodzi do `.log.1`). `stan/` i `konfig/` zamykają własne `.htaccess`.
+- **Tryb CLI** (SSH, z katalogu `public_html/api.ecopowerpolska.pl/`): `php komentarze.php lista <strona>` (kolumny: wpis, id, status, data, autor, początek treści),
+  `php komentarze.php usun <strona> <wpis> <id>`, `php komentarze.php zatwierdz <strona> <wpis> <id>`.
+- **Konfiguracja** (`konfig/ecopowerpolska.pl.php`, klucze w `konfig.przyklad`): `turnstile_sekret` (wspólny z `wyslij.php`; widżet musi mieć w hostnames `ambasadapodroznikow.pl`), `komentarze_klucz` (generuje integrator na serwerze), pozostałe mają wartości domyślne.
+  Klucze testowe (`komentarze_poczta_plik`, `komentarze_wpisy_testowe`, `komentarze_siteverify_url`) nie wchodzą na serwer.
+- **Test lokalny:** kopia katalogu, `konfig/ecopowerpolska.pl.php` z sekretem testowym Cloudflare `1x0000000000000000000000000000000AA`, `komentarze_turnstile_hosty => ['example.com']` (siteverify z kluczem testowym zwraca hostname `example.com`), `php -S 127.0.0.1:<port>`.

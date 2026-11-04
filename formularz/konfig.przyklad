@@ -8,6 +8,19 @@ return [
     // 'dozwolone_origin' => ['https://www.ecopowerpolska.pl', 'https://ecopowerpolska.pl'],
     // 'turnstile_hosty'  => ['www.ecopowerpolska.pl', 'ecopowerpolska.pl'],
     // 'limit_na_godzine' => 30,
+    // --- komentarze.php (komentarze pod wpisami ambasadapodroznikow.pl; Turnstile: turnstile_sekret wyżej, widżet musi mieć hostname ambasadapodroznikow.pl) ---
+    // 'komentarze_strony'   => ['ambasadapodroznikow.pl'],   // dozwolone strony; Origin musi być https://<strona>
+    // 'komentarze_klucz'    => '',    // klucz HMAC linków moderacji (długi losowy ciąg, generuje się NA SERWERZE); pusty = linki w mailu wyłączone
+    // 'komentarze_mail_do'  => 'kontakt@ecopowerpolska.pl',
+    // 'komentarze_url'      => 'https://api.ecopowerpolska.pl/komentarze.php',   // baza linków moderacji w mailu
+    // 'komentarze_turnstile_hosty' => ['ambasadapodroznikow.pl'],
+    // 'komentarze_limit_10min' => 5, 'komentarze_limit_doba' => 20, 'komentarze_limit_globalnie' => 300, 'komentarze_maks_na_wpis' => 500,
+    // 'komentarze_head_na_godz' => 100,   // bezpiecznik: ile NOWYCH sprawdzeń istnienia wpisu (HEAD do GitHub Pages) na godzinę
+    // 'komentarze_proxy'    => [],    // dodatkowe zakresy CIDR, którym wierzymy w CF-Connecting-IP (zakresy Cloudflare są w kodzie)
+    // --- wyłącznie testy lokalne, NIGDY na serwerze produkcyjnym ---
+    // 'komentarze_poczta_plik'   => '/ścieżka/poczta.txt',   // zamiast mail() dopisuje list do pliku
+    // 'komentarze_wpisy_testowe' => ['wpis-a', 'wpis-b'],    // zamiast HEAD wpisu: lista istniejących slugów
+    // 'komentarze_siteverify_url' => '',                     // inny adres siteverify Turnstile
     // --- firma.php (dane firmy po NIP, generatory w /darmowe-narzedzia/) ---
     'ceidg_token'      => '',   // token CEIDG API v3 z sejfu Z440 (~/.sekrety/ceidg-token); pusty = źródło CEIDG pominięte
     'sol_ip'           => '',   // dowolny długi losowy ciąg: sól skrótu adresu IP w stan/firma-ip/ (pusty = sól zapasowa, słabsza)

@@ -15,7 +15,7 @@ To trzy różne rzeczy, każda z własnymi zaleceniami. Pliki i manifesty dla ag
 
 ## Agent wykonuje zadanie, zamiast pokazywać listę linków
 
-W zwykłym wyszukiwaniu dostajesz listę stron i sam klikasz. Agent dostaje zadanie, na przykład „znajdź stolik na czwartek na 19:00”, sam przechodzi przez strony i wraca z wynikiem albo formularzem do zatwierdzenia.
+W zwykłym wyszukiwaniu dostajesz listę stron i sam klikasz. Agent dostaje zadanie, na przykład „znajdź stolik na czwartek na 19:00”, sam przechodzi przez strony i wraca z wynikiem albo formularzem do zatwierdzenia. Hasło [Wyszukiwanie agentowe](https://pl.wikipedia.org/wiki/Wyszukiwanie_agentowe) w polskiej Wikipedii napisaliśmy i dodaliśmy sami, 5 listopada 2026, jako krótkie wyjaśnienie tego pojęcia.
 
 Najdalej zaszedł Google AI Mode:
 

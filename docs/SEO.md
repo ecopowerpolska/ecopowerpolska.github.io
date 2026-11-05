@@ -8,7 +8,7 @@ wpisy wcześniejsze opisuje plan SEO.
 
 | strona | zapytanie główne (wyszukań/mies.) | odmiany w treści | title |
 |---|---|---|---|
-| `/blog/wyszukiwanie-agentowe-strony-i-sklepy` (wpis 2026-11-05, informacyjna) | wyszukiwanie agentowe (NIE ZMIERZONO — Planer/Ads API nie pytane) | agent AI na stronie, przeglądanie agentowe PageSpeed, llms.txt, Content-Signal, agentic commerce / UCP / ACP | Wyszukiwanie agentowe a strony i sklepy internetowe |
+| `/blog/wyszukiwanie-agentowe-strony-i-sklepy` (wpis 2026-11-05, informacyjna; aktualizacja 2026-11-05: trzy cele, metodologia, korekty po recenzji) | wyszukiwanie agentowe (NIE ZMIERZONO — Planer/Ads API nie pytane) | agent AI na stronie, przeglądanie agentowe PageSpeed, llms.txt, Content-Signal, agentic commerce / UCP / ACP | Wyszukiwanie agentowe a strony i sklepy internetowe |
 
 ## 2. Briefy
 

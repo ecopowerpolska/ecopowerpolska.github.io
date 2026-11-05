@@ -218,9 +218,11 @@ const daneStrukturalne = {
 <style>
   /* Wpis = pełna szerokość kontenera (76rem). H1, data i lead na środku; treść od 64rem w dwóch torach siatki:
      tekst (1fr) + pasek boczny 24rem (spis sekcji, wezwanie). Dlaczego nie kolumny gazetowe: patrz meldunek A (runda 7). */
+  /* min-width: 0 — main jest komórką siatki body; bez tego szeroki <pre> albo tabela rozpychały stronę na telefonie (390 px → 736 px, 2026-11-05). */
   .wpis {
     max-width: var(--szerokosc-tresci);
     width: 100%;
+    min-width: 0;
     margin: 0 auto;
     padding: var(--o-8) var(--o-4) var(--o-16);
   }
@@ -437,6 +439,12 @@ const daneStrukturalne = {
     height: auto;
     border: 1px solid var(--linia);
     border-radius: var(--promien);
+  }
+
+  /* Zdjęcie autora (plik src/assets/blog/autor-*.jpg) pod podpisem: małe, nie na całą kolumnę. */
+  .wpis__tresc > :global(figure:has(img[src*='/autor-'])) {
+    max-width: 12rem;
+    margin-top: var(--o-4);
   }
 
   .wpis__tresc :global(figcaption) {

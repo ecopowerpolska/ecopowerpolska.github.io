@@ -85,7 +85,9 @@ const daneStrukturalne = {
       inLanguage: 'pl-PL',
       mainEntityOfPage: adres,
       image: obrazAdres,
-      author: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      author: dane.autor
+        ? { '@type': 'Person', name: dane.autor, url: `${baza}/` }
+        : { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
       publisher: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
       isPartOf: { '@type': 'Blog', '@id': `${baza}/blog/#blog` },
     },

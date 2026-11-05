@@ -5,6 +5,7 @@ opisSeo: "Czym jest wyszukiwanie agentowe, jak agent AI czyta stronę i sklep, c
 dataPublikacji: "2026-11-05T12:45:00+01:00"
 zdjecie: "../../assets/blog/wyszukiwanie-agentowe-asystent-ai.jpg"
 zdjecieAlt: "Osoba trzyma telefon z otwartym asystentem AI, na ekranie widać napis „AI”"
+autor: "Piotr Czwarnowski"
 szkic: false
 ---
 
@@ -207,7 +208,7 @@ Nie. Google wymaga od stron w funkcjach AI tego samego co w zwykłych wynikach: 
 
 ## Od czego zacząć
 
-Zacznij od tego, co pomaga ludziom i agentom naraz: drzewa dostępności i formularzy bez blokady skryptem. Potem dane strukturalne, llms.txt i decyzja o botach w robots.txt. Na koniec zmierz stronę w PageSpeed Insights, na przykład [naszym testem szybkości strony](/jak-sprawdzic-szybkosc-strony/). WebMCP i protokoły zakupowe obserwuj, ale nie przebudowuj pod nie strony już dziś. Wyniki pomiarów wszystkich naszych stron są w sekcji [nasze realizacje](/#realizacje).
+Zacznij od tego, co pomaga ludziom i agentom naraz: drzewa dostępności i formularzy bez blokady skryptem. Potem dane strukturalne, llms.txt i decyzja o botach w robots.txt. Na koniec zmierz stronę w PageSpeed Insights, na przykład [naszym testem szybkości strony](/jak-sprawdzic-szybkosc-strony/). Sygnały dla agentów, czyli llms.txt, robots.txt, manifest ARD i dane strukturalne, sprawdzisz naszym darmowym [audytem AI i wyszukiwania agentowego](/narzedzia/wyszukiwanie-agentowe-ai/). WebMCP i protokoły zakupowe obserwuj, ale nie przebudowuj pod nie strony już dziś. Wyniki pomiarów wszystkich naszych stron są w sekcji [nasze realizacje](/#realizacje).
 
 **Piotr Czwarnowski**, EcoPower Polska Sp. z o.o. Budujemy i prowadzimy strony oraz sklepy internetowe dla firm. [Napisz do nas](/kontakt/).
 

@@ -319,6 +319,12 @@ collections:
         required: false
         hint: "Opisz, co widać na zdjęciu."
 
+      - name: autor
+        label: "Autor (osoba)"
+        widget: string
+        required: false
+        hint: "Imię i nazwisko autora wpisu. Puste = autorem jest firma."
+
       - name: szkic
         label: "Szkic (zapisany, niewidoczny na stronie)"
         widget: boolean

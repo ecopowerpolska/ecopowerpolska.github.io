@@ -212,6 +212,8 @@ const wpisy = defineCollection({
         dataPublikacji: dataWpisu(d.dataPublikacji),
         zdjecie: naTekst(d.zdjecie)?.trim() ?? '',
         zdjecieAlt: naTekst(d.zdjecieAlt)?.trim() ?? '',
+        // Autor-osoba (opcjonalnie): gdy jest, BlogPosting.author = Person; pusty = firma jak dotąd.
+        autor: naTekst(d.autor)?.trim() || undefined,
         szkic: d.szkic === true || d.szkic === 'true',
       };
     },
@@ -222,6 +224,7 @@ const wpisy = defineCollection({
       dataPublikacji: z.date().nullable(),
       zdjecie: z.string(),
       zdjecieAlt: z.string(),
+      autor: z.string().optional(),
       szkic: z.boolean(),
     }),
   ),

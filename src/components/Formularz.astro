@@ -137,7 +137,7 @@ const b = k.bledy as Record<string, string>;
     </div>
   )}
 
-  <button class="wyslij" type="submit">{tekst(k.wyslij, 'Wyślij zapytanie')}</button>
+  <button class="guzik wyslij" type="submit">{tekst(k.wyslij, 'Wyślij zapytanie')}</button>
 </form>
 
 {sitekey && (
@@ -213,12 +213,8 @@ const b = k.bledy as Record<string, string>;
   /* Widżet `flexible` ma 65 px: miejsce zarezerwowane, render przy przewinięciu nie przesuwa przycisku (CLS). */
   #formularz-turnstile { min-height: 65px; max-width: 30rem; }
 
-  .wyslij {
-    justify-self: start; min-height: 48px; padding: var(--o-3) var(--o-8); font: inherit; font-weight: 600;
-    color: #fff; background: var(--akcent); border: 0; border-radius: var(--promien-maly); cursor: pointer;
-  }
-  .wyslij:hover { background: var(--tekst); }
-  .wyslij:focus-visible { outline: 3px solid var(--tekst); outline-offset: 3px; }
+  /* Wygląd przycisku z klasy .guzik (motyw.css); tu tylko położenie i odstęp. */
+  .wyslij { justify-self: start; padding-inline: var(--o-8); }
   .wyslij[aria-busy='true'] { opacity: 0.7; cursor: progress; }
 
   .formularz__blad {

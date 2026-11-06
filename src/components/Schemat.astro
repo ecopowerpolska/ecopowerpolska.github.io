@@ -1,0 +1,111 @@
+---
+// Schemat przepływu we wpisie: karta z paskiem tytułu i kroki jako <ol> ze strzałkami CSS.
+// Komputer: kroki w rzędzie, strzałka w prawo; telefon (< 48rem): kroki w pionie, strzałka w dół. Bez JS i obrazków.
+interface Props {
+  tytul: string;
+  kroki: string[];
+}
+const { tytul, kroki } = Astro.props as Props;
+---
+
+<figure class="schemat">
+  <figcaption class="schemat__tytul">{tytul}</figcaption>
+  <ol class="schemat__kroki">
+    {kroki.map((k: string) => <li class="schemat__krok">{k}</li>)}
+  </ol>
+</figure>
+
+<!-- Style globalne z prefiksem klasy: ten sam HTML pisany ręcznie w Markdownie wpisu dostaje ten wygląd. -->
+<style is:global>
+  /* Selektory z nazwą znacznika: w treści wpisu wygrywają z regułami prozy (figure, figcaption, ol, li + li). */
+  figure.schemat {
+    container-type: inline-size;
+    margin: var(--o-8) 0 var(--o-12);
+    font-family: var(--font-sans);
+    background: #fff;
+    border: var(--obrys-karty, 1px solid var(--linia));
+    border-radius: var(--promien-karty, var(--promien));
+    box-shadow: var(--cien-karty, none);
+    overflow: hidden;
+  }
+
+  /* kontrast: #f4f5f1 na #10231b = 15,0:1 */
+  figure.schemat > figcaption.schemat__tytul {
+    margin: 0;
+    padding: var(--o-3) var(--o-6);
+    background: var(--tlo-ciemne, #10231b);
+    color: var(--na-ciemnym, #f4f5f1);
+    font-size: var(--t-s);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  figure.schemat > ol.schemat__kroki {
+    list-style: none;
+    margin: 0;
+    padding: var(--o-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-8);
+    counter-reset: krok;
+  }
+
+  ol.schemat__kroki > li.schemat__krok {
+    font-family: var(--font-sans);
+    position: relative;
+    margin: 0;
+    padding: var(--o-3) var(--o-4);
+    background: var(--powierzchnia);
+    border-left: 3px solid var(--akcent-jasny, #1f8a6c);
+    border-radius: var(--promien);
+    font-size: var(--t-s);
+    font-weight: 600;
+    line-height: 1.35;
+    counter-increment: krok;
+  }
+
+  .schemat__krok::before {
+    content: counter(krok, decimal-leading-zero) ' ';
+    color: var(--akcent);
+  }
+
+  /* strzałka w dół (telefon) */
+  .schemat__krok:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: calc(-1 * var(--o-8) + var(--o-2));
+    width: 0;
+    height: 0;
+    border: 0.5rem solid transparent;
+    border-top: 0.6rem solid var(--akcent-jasny, #1f8a6c);
+    border-bottom: 0;
+    transform: translateX(-50%);
+  }
+
+  /* Rząd dopiero, gdy karta ma ≥ 52rem (5 kroków bez łamania słów); węższa kolumna wpisu = pion. */
+  @container (min-width: 52rem) {
+    figure.schemat > ol.schemat__kroki {
+      flex-direction: row;
+      align-items: stretch;
+      gap: var(--o-6);
+    }
+
+    ol.schemat__kroki > li.schemat__krok {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    /* strzałka w prawo (komputer) */
+    .schemat__krok:not(:last-child)::after {
+      left: auto;
+      right: calc(-1 * var(--o-6) + 0.2rem);
+      top: 50%;
+      bottom: auto;
+      border: 0.45rem solid transparent;
+      border-left: 0.55rem solid var(--akcent-jasny, #1f8a6c);
+      border-right: 0;
+      transform: translateY(-50%);
+    }
+  }
+</style>

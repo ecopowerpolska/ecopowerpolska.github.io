@@ -150,7 +150,7 @@ const daneStrukturalne = {
           {s.akapityPo.map((a) => <p>{czesci(a).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>)}
           {s.przycisk && (
             <p class="polityka__przycisk">
-              <a href={`mailto:${mail}`}>{s.przycisk}</a>
+              <a class="guzik" href={`mailto:${mail}`}>{s.przycisk}</a>
             </p>
           )}
         </section>
@@ -215,12 +215,7 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  /* D22 (2026-10-30): H1 i wstęp na środku (wstęp w mierze 44 rem), a treść na pełną szerokość kontenera — w kolumnach, nie w wąskim pasie. */
-  .polityka__tytul,
-  .polityka__lead {
-    max-width: 44rem;
-    margin-inline: auto;
-  }
+  /* D22 (2026-10-30): H1 i wstęp na środku, treść na pełną szerokość kontenera — w kolumnach, nie w wąskim pasie. */
 
   /* Spis części: odnośniki w siatce 1 / 2 / 4 kolumn, każdy z celem dotyku 44 px. */
   .spis {
@@ -357,8 +352,8 @@ const daneStrukturalne = {
     }
   }
 
+  /* Rozmiar H1 z motywu (--t-display, D30). */
   .polityka__tytul {
-    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
     text-align: center;
   }
 
@@ -367,7 +362,6 @@ const daneStrukturalne = {
     text-align: center;
     font-size: var(--t-l);
     line-height: 1.5;
-    color: var(--tekst-cichy);
   }
 
   .tresc h2 {
@@ -403,23 +397,4 @@ const daneStrukturalne = {
     text-underline-offset: 0.15em;
   }
 
-  .polityka__przycisk a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
-    padding: 0 var(--o-6);
-    color: var(--tlo);
-    background: var(--akcent);
-    border-radius: var(--promien-maly);
-    text-decoration: none;
-  }
-
-  .polityka__przycisk a:hover {
-    background: var(--tekst);
-  }
-
-  .polityka__przycisk a:focus-visible {
-    outline: 3px solid var(--akcent);
-    outline-offset: 2px;
-  }
 </style>

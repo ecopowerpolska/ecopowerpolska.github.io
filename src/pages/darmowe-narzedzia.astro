@@ -2,7 +2,9 @@
 // /darmowe-narzedzia — wspólna strona darmowych narzędzi (runda 7, 2026-10-30, decyzja Piotra: link wyłącznie w stopce).
 // Treść i stan kafelków: src/data/narzedzia.json (pole `stan`: dziala | wkrotce; `adres` = trasa narzędzia; `api` = adres skryptu
 // generatorów). 12 kafelków (runda 9): test szybkości, 9 testów audytu `/narzedzia/<slug>/` i dwa generatory. Klucz `ikona` → mapa niżej.
-// Układ: H1 i wstęp na środku, siatka kafelków na pełną szerokość kontenera (3 / 2 / 1 kolumny). 0 kB JS.
+// Układ: H1 i wstęp na środku, etykieta + H2-teza na środku nad siatką, kafelki = karty-linki (3 / 2 / 1 kolumny). 0 kB JS.
+// Faza 2 (2026-11-06): bez etykiety „Działa” na każdym kafelku; etykieta zostaje tylko przy stanie „wkrotce”.
+import LicznikNarzedzi from '../components/zywe/LicznikNarzedzi.astro';
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
@@ -29,7 +31,8 @@ const opis = tekst(
 const lead = tekst(naTekst(d.lead), 'Bezpłatne, bez logowania, działają w przeglądarce.');
 const nota = naTekst(d.nota);
 const etykietaSiatki = tekst(naTekst(d.etykietaSiatki), 'Lista narzędzi');
-const stanDziala = tekst(naTekst(d.stanDziala), 'Działa');
+const sekcjaEtykieta = naTekst(d.sekcjaEtykieta);
+const sekcjaNaglowek = tekst(naTekst(d.sekcjaNaglowek), 'Sprawdź swoją stronę, zanim do nas napiszesz');
 const stanWkrotce = tekst(naTekst(d.stanWkrotce), 'W przygotowaniu');
 
 const kafelki = (lista(d.kafelki) as Record<string, unknown>[])
@@ -118,28 +121,40 @@ const daneStrukturalne = {
     <h1 class="narzedzia__tytul">{naglowek}</h1>
     <p class="narzedzia__lead">{lead}</p>
 
-    <ul class="siatka" aria-label={etykietaSiatki}>
-      {kafelki.map((k) => (
-        <li class={`kafel kafel--${k.stan}`}>
-          <svg class="kafel__ikona" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <path d={ikony[k.ikona] ?? ikonaDomyslna} />
-          </svg>
-          <p class="kafel__stan">{k.stan === 'dziala' ? stanDziala : stanWkrotce}</p>
-          <h2 class="kafel__nazwa" id={k.id ? `${k.id}-nazwa` : undefined}>{k.nazwa}</h2>
-          {k.opis && <p class="kafel__opis">{k.opis}</p>}
-          <div class="kafel__dol">
+    <LicznikNarzedzi />
+
+    <section class="zestaw" aria-labelledby="zestaw-tytul">
+      {sekcjaEtykieta && <p class="etykieta zestaw__etykieta">{sekcjaEtykieta}</p>}
+      <h2 id="zestaw-tytul" class="zestaw__tytul">{sekcjaNaglowek}</h2>
+      <ul class="siatka" aria-label={etykietaSiatki}>
+        {kafelki.map((k) => (
+          <li class="siatka__el">
             {k.stan === 'dziala' ? (
-              <a class="guzik" href={k.adres} aria-describedby={k.id ? `${k.id}-nazwa` : undefined}>{k.guzik}</a>
+              <a class="karta karta--link kafel" href={k.adres}>
+                <svg class="kafel__ikona" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d={ikony[k.ikona] ?? ikonaDomyslna} />
+                </svg>
+                <h3 class="kafel__nazwa">{k.nazwa}</h3>
+                {k.opis && <p class="kafel__opis">{k.opis}</p>}
+                <span class="kafel__dalej" aria-hidden="true">{k.guzik} →</span>
+              </a>
             ) : (
-              <>
-                <button type="button" class="guzik guzik--wkrotce" aria-disabled="true" tabindex="-1">{k.guzik}</button>
-                {k.powiadom && <a class="kafel__powiadom" href={k.powiadomAdres}>{k.powiadom}<span class="kafel__ukryty"> o narzędziu: {k.nazwa}</span></a>}
-              </>
+              <div class="karta kafel kafel--wkrotce">
+                <svg class="kafel__ikona" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d={ikony[k.ikona] ?? ikonaDomyslna} />
+                </svg>
+                <p class="etykieta kafel__stan">{stanWkrotce}</p>
+                <h3 class="kafel__nazwa">{k.nazwa}</h3>
+                {k.opis && <p class="kafel__opis">{k.opis}</p>}
+                {k.powiadom && (
+                  <a class="kafel__powiadom" href={k.powiadomAdres}>{k.powiadom}<span class="kafel__ukryty"> o narzędziu: {k.nazwa}</span></a>
+                )}
+              </div>
             )}
-          </div>
-        </li>
-      ))}
-    </ul>
+          </li>
+        ))}
+      </ul>
+    </section>
 
     {nota && (
       <p class="narzedzia__nota">
@@ -226,14 +241,29 @@ const daneStrukturalne = {
     color: var(--tekst-cichy);
   }
 
+  /* Etykieta i H2-teza na środku nad siatką (reguła Piotra: H2 na środku nad siatką). */
+  .zestaw {
+    margin-top: var(--o-12);
+    text-align: center;
+  }
+
+  .zestaw__tytul {
+    max-width: 44rem;
+    margin: var(--o-2) auto 0;
+    font-size: var(--t-xl);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
   /* Siatka 3 / 2 / 1 kolumny, kafle równe; niepełny ostatni rząd do lewej. */
   .siatka {
     list-style: none;
-    margin: var(--o-12) 0 0;
+    margin: var(--o-8) 0 0;
     padding: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--o-6);
+    text-align: left;
   }
 
   @media (min-width: 48rem) {
@@ -248,18 +278,24 @@ const daneStrukturalne = {
     }
   }
 
+  .siatka__el {
+    display: flex;
+  }
+
+  /* Tło, obrys, cień, promień i ruch przy najechaniu: .karta / .karta--link z motyw.css (kontrakt fazy 2).
+     Cała karta jest jednym linkiem (jeden cel dotyku); „Otwórz →” to napis, nie drugi link. */
   .kafel {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: var(--o-6);
-    background: var(--powierzchnia);
-    border-radius: var(--promien);
-    border-top: 4px solid var(--linia);
+    color: var(--tekst);
+    text-decoration: none;
   }
 
-  .kafel--dziala {
-    border-top-color: var(--akcent);
+  .kafel:hover {
+    text-decoration: none;
   }
 
   .kafel__ikona {
@@ -273,20 +309,21 @@ const daneStrukturalne = {
 
   .kafel__stan {
     margin: var(--o-4) 0 0;
-    font-size: var(--t-xs);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
     color: var(--tekst-cichy);
   }
 
-  .kafel--dziala .kafel__stan {
-    color: var(--akcent);
+  .kafel__nazwa {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-l);
+    line-height: 1.25;
   }
 
-  .kafel__nazwa {
-    margin: var(--o-2) 0 0;
-    font-size: var(--t-l);
+  .kafel--wkrotce .kafel__nazwa {
+    margin-top: var(--o-2);
+  }
+
+  .kafel:hover .kafel__nazwa {
+    color: var(--akcent);
   }
 
   .kafel__opis {
@@ -294,54 +331,24 @@ const daneStrukturalne = {
     color: var(--tekst);
   }
 
-  .kafel__dol {
+  .kafel__dalej {
     margin-top: auto;
     padding-top: var(--o-6);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--o-2) var(--o-4);
-  }
-
-  .guzik {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0 var(--o-6);
-    font: inherit;
     font-weight: 600;
-    color: var(--tlo);
-    background: var(--akcent);
-    border: 0;
-    border-radius: var(--promien-maly);
-    text-decoration: none;
-    cursor: pointer;
+    color: var(--akcent);
   }
 
-  .guzik:hover {
-    background: var(--tekst);
-    text-decoration: none;
-  }
-
-  /* Guzik „Wkrótce”: obrys zamiast wypełnienia, czytelny (nie przygaszony globalnie do 0,4), bez reakcji na klik. */
-  .guzik--wkrotce,
-  .guzik--wkrotce[aria-disabled='true'] {
-    opacity: 1;
-    color: var(--tekst-cichy);
-    background: none;
-    border: 1.5px dashed var(--tekst-cichy);
-    cursor: not-allowed;
-  }
-
-  .guzik--wkrotce:hover {
-    background: none;
+  .kafel:hover .kafel__dalej {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .kafel__powiadom {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+    margin-top: auto;
+    padding-top: var(--o-4);
     font-size: var(--t-s);
     font-weight: 600;
   }

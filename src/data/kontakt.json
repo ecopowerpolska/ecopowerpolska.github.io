@@ -2,7 +2,41 @@
   "tytulKarty": "Wycena strony lub sklepu internetowego — EcoPower Polska",
   "opisWyszukiwarki": "Zapytaj o wycenę strony albo sklepu internetowego: zaznacz zakres i platformę, dołącz wyliczenie z kalkulatora. Odpowiadamy z wyceną.",
   "naglowek": "Kontakt i wycena",
-  "lead": "Zaznacz, czego potrzebujesz, a odpiszemy z wyceną i pytaniami. Jeśli policzyłeś cenę w kalkulatorze, wyliczenie dołączy się samo.",
+  "lead": "Zaznacz, czego potrzebujesz, a odpiszemy z wyceną albo pytaniami. Jeśli policzyłeś cenę w kalkulatorze, wyliczenie dołączy się samo.",
+  "pierwszaNaglowek": "Co napisać w pierwszej wiadomości",
+  "pierwszaTekst": "Wystarczy kilka zdań:",
+  "pierwszaLista": [
+    "adres obecnej strony, jeśli ją masz,",
+    "czym zajmuje się Twoja firma,",
+    "czego oczekujesz: więcej zapytań, sprzedaży w sklepie albo nowego wyglądu."
+  ],
+  "pierwszaUwaga": "Haseł do paneli, poczty i hostingu nie wysyłaj w pierwszej wiadomości. Dostępy ustalimy osobno, gdy zaczniemy pracę.",
+  "podpis": "Piotr Czwarnowski, EcoPower Polska",
+  "podpisAdres": "/autor/piotr-czwarnowski/",
+  "pasujemyNaglowek": "Pasujemy, gdy…",
+  "pasujemyTakEtykieta": "Tak",
+  "pasujemyTak": [
+    "prowadzisz firmę usługową i chcesz, żeby strona zbierała zapytania od klientów,",
+    "chcesz sam zmieniać teksty, zdjęcia i wpisy w panelu, bez czekania na nas,",
+    "przenosisz starą stronę, na przykład z WordPressa, i chcesz zachować pozycje w Google i pocztę."
+  ],
+  "pasujemyNieEtykieta": "Raczej nie",
+  "pasujemyNie": "gdy strona ma pokazywać zdjęcia wygenerowane przez AI zamiast prawdziwych. Wstawiamy wyłącznie prawdziwe fotografie: Twoje albo z banku zdjęć.",
+  "poNaglowek": "Co dzieje się po wysłaniu",
+  "poKroki": [
+    {
+      "tytul": "Czytamy zapytanie",
+      "tekst": "Odpisujemy na podany adres e-mail z wyceną albo z pytaniami, jeśli czegoś do wyceny brakuje."
+    },
+    {
+      "tytul": "Krótka rozmowa",
+      "tekst": "Dzwonimy w porze zaznaczonej w formularzu: 8–12, 12–16 albo 16–20. Bez telefonu ustalamy wszystko mailem."
+    },
+    {
+      "tytul": "Oferta na piśmie",
+      "tekst": "Dostajesz ofertę z zakresem, ceną i terminem. Stronę budujemy pod adresem roboczym, obok obecnej."
+    }
+  ],
   "akcja": "https://api.ecopowerpolska.pl/wyslij.php",
   "turnstileSitekey": "0x4AAAAAAFocIUKeGUjpJcZ3",
   "daneNaglowek": "Wolisz zadzwonić albo napisać?",

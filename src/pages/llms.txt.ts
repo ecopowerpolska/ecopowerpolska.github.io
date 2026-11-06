@@ -1,6 +1,6 @@
 // /llms.txt — streszczenie strony dla asystentów AI (wzorzec llmstxt.org).
 // Treść = plan analizy/seo-ecopowerpolska-2026-10-27.md §6.4 (runda 5, 2026-10-27): oferta z czterema stronami usług,
-// fakty, realizacje, strony witryny, kontakt. Liczby PageSpeed („97–100”, „4/4”, liczba realizacji, data) liczy kod
+// fakty, realizacje, strony witryny, kontakt. 2026-11-06: sekcja „Kto prowadzi firmę” i trasy autora, słownika, pomiaru, prawa. Liczby PageSpeed („97–100”, „4/4”, liczba realizacji, data) liczy kod
 // z src/data/pomiary.json, liczbę pytań — z faq.json, listę wpisów — z kolekcji (te same filtry co /blog/).
 // Audyt Lighthouse `llms-txt` wymaga: wiersza `# Tytuł`, co najmniej jednego linku Markdown i ≥ 50 znaków.
 // llms.txt NIE wpływa na widoczność w Google (Search Central 2026-06-15) — służy botom AI i audytowi PSI.
@@ -76,6 +76,10 @@ export const GET: APIRoute = async () => {
     '',
     `${nazwaSpolki} to warszawska firma z Gocławia. Projektujemy, piszemy i wdrażamy strony i sklepy dla małych i średnich firm usługowych — od wizytówki po sklep z płatnością online. Ceny orientacyjne netto są w [cenniku](${baza}/cena/), a [kalkulator](${baza}/cena/#kalkulator) liczy wycenę od razu.`,
     '',
+    '## Kto prowadzi firmę',
+    '',
+    `Firmę prowadzi Piotr Czwarnowski. Projektuje i buduje nasze strony i sklepy, a na blogu opisuje, jak je mierzymy. Kim jest i jakie strony zbudował, opisuje [strona autora](${baza}/autor/piotr-czwarnowski/).`,
+    '',
     '## Co robimy',
     '',
     `- [Strony internetowe dla firm](${baza}/strony-internetowe-warszawa/): Strona z ofertą, realizacjami, blogiem i formularzem, zbudowana w Astro jako gotowe pliki HTML. Otwiera się szybko nawet na słabym telefonie, bo przy wejściu nie odpytuje bazy danych i nie ładuje zbędnych skryptów.`,
@@ -131,6 +135,10 @@ export const GET: APIRoute = async () => {
     `- [Efekty na stronach](${baza}/efekty/): efekty z wagą w kB i wynikiem PageSpeed.`,
     `- [Animacja sterowana przewijaniem](${baza}/efekty/animacja-przewijaniem/): przykład efektu z wagą skryptu i wynikiem PageSpeed.`,
     `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów — ceny, czas budowy, panel, wybór platformy.`,
+    `- [Piotr Czwarnowski](${baza}/autor/piotr-czwarnowski/): kto prowadzi firmę, jak pracuje i jakie strony zbudował.`,
+    `- [Słownik](${baza}/slownik/): pojęcia o stronach, sklepach, szybkości i widoczności w Google objaśnione krótko.`,
+    `- [Jak mierzymy](${baza}/jak-mierzymy/): czym i kiedy mierzymy szybkość i jakość stron, które pokazujemy.`,
+    `- [Prawo a strona internetowa](${baza}/prawo-strony-internetowej/): obowiązki prawne strony i sklepu firmy: dane firmy, polityka prywatności, cookies, regulamin.`,
     `- [Polityka prywatności](${baza}/polityka-prywatnosci/): administrator danych, dane z formularza, Cloudflare Turnstile, hosting GitHub Pages i LH.pl, pamięć przeglądarki i tłumaczenie strony po zgodzie, brak statystyk, prawa osób.`,
     `- [Regulamin](${baza}/regulamin/): zasady korzystania z usług serwisu: formularz, kalkulator, test szybkości, reklamacje.`,
     `- [Darmowe narzędzia](${baza}/darmowe-narzedzia/): test szybkości, dziewięć osobnych testów audytu strony oraz generatory regulaminu i polityki prywatności na podstawie NIP firmy.`,

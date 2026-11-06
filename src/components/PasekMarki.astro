@@ -19,19 +19,24 @@ interface Props {
 
 const { liczbaSerwisow } = Astro.props;
 
-// Menu główne: osiem pozycji (2026-10-27 runda 4: Efekty, Test szybkości, Kontakt jako podstrona). Oferta i Realizacje to
-// kotwice strony głównej (bez aria-current — to sekcje, nie strony); reszta to podstrony. Logo prowadzi na stronę główną.
+// Menu główne: osiem pozycji (D35, 2026-11-06): Oferta i Realizacje to kotwice strony głównej (bez aria-current),
+// „Darmowe testy” zastępuje „Test szybkości” (test jest pierwszym z 12 kafli), ostatnia pozycja „Wycena” to przycisk.
 const sciezka = Astro.url.pathname;
+const testy = ['/darmowe-narzedzia', '/narzedzia/', '/jak-sprawdzic-szybkosc-strony'].some((t) => sciezka.startsWith(t));
 const menu = [
   { adres: '/#oferta', napis: tekst(blog.menuOferta, 'Oferta'), biezaca: false },
   { adres: '/#realizacje', napis: tekst(blog.menuRealizacje, 'Realizacje'), biezaca: false },
-  { adres: '/efekty/', napis: tekst(blog.menuEfekty, 'Efekty'), biezaca: sciezka.startsWith('/efekty') },
+  { adres: '/darmowe-narzedzia/', napis: tekst((blog as Record<string, unknown>).menuTesty as string | undefined, 'Darmowe testy'), biezaca: testy },
   { adres: '/cena/', napis: tekst(blog.menuCena, 'Cena'), biezaca: sciezka.startsWith('/cena') },
-  { adres: '/faq/', napis: tekst(blog.menuFaq, 'FAQ'), biezaca: sciezka.startsWith('/faq') },
   { adres: '/blog/', napis: tekst(blog.menuBlog, 'Blog'), biezaca: sciezka.startsWith('/blog') },
-  { adres: '/jak-sprawdzic-szybkosc-strony/', napis: tekst(blog.menuTest, 'Test szybkości'), biezaca: sciezka.startsWith('/jak-sprawdzic-szybkosc-strony') },
-  { adres: '/kontakt/', napis: tekst(blog.menuKontakt, 'Kontakt'), biezaca: sciezka.startsWith('/kontakt') },
+  { adres: '/faq/', napis: tekst(blog.menuFaq, 'FAQ'), biezaca: sciezka.startsWith('/faq') },
+  { adres: '/efekty/', napis: tekst(blog.menuEfekty, 'Efekty'), biezaca: sciezka.startsWith('/efekty') },
 ];
+const wycena = {
+  adres: '/kontakt/',
+  napis: tekst((blog as Record<string, unknown>).menuWycena as string | undefined, 'Wycena'),
+  biezaca: sciezka.startsWith('/kontakt'),
+};
 
 // Dopisek licznika z panelu („3 serwisy w sieci").
 const napisLicznika = tekst(strona.napisLicznika, 'w sieci');
@@ -82,6 +87,9 @@ function odmiana(n: number): string {
               <a href={m.adres} aria-current={m.biezaca ? 'page' : undefined}>{m.napis}</a>
             </li>
           ))}
+          <li class="menu__ostatnia">
+            <a class="guzik menu__wycena" href={wycena.adres} aria-current={wycena.biezaca ? 'page' : undefined}>{wycena.napis}</a>
+          </li>
         </ul>
       </nav>
       {/* Bez JS przełącznik znika, a menu staje pod paskiem zawinięte (cel 44 px zostaje). */}
@@ -207,6 +215,24 @@ function odmiana(n: number): string {
     color: var(--akcent);
   }
 
+  /* „Wycena”: przycisk z motywu (.guzik) — reguły wyżej (.menu a) mają wyższą szczegółowość, więc kolor
+     i ramkę przywracamy tu. Tekst #f4f5f1 na #166653 6,27:1, najechanie na #0f4f40 8,67:1 (motyw.css). */
+  .menu a.menu__wycena,
+  .menu a.menu__wycena[aria-current='page'] {
+    min-height: var(--cel-dotyku);
+    padding: 0 var(--o-4);
+    color: var(--tlo);
+    background: var(--akcent);
+    border: 2px solid var(--akcent);
+    text-decoration: none;
+  }
+
+  .menu a.menu__wycena:hover {
+    color: var(--tlo);
+    background: var(--akcent-mocny);
+    border-color: var(--akcent-mocny);
+  }
+
   /* Przełącznik „Menu”: napis widoczny obok ikony (słowo czytelniejsze od samego znaku ☰).
      Obrys --tekst-cichy na --tlo 6,67:1 (próg 3:1 elementu nietekstowego z zapasem). */
   .pasek__przelacznik {
@@ -250,7 +276,8 @@ function odmiana(n: number): string {
   }
 
   /* ── poniżej progu: menu w panelu pod paskiem, na całą resztę ekranu ──────────────────────
-     Próg 53 rem = treść paska w jednym wierszu, zmierzona CDP 2026-10-27 przy oknie 896 px: marginesy 48 + logo 180
+     Próg 53 rem = treść paska w jednym wierszu; 2026-11-06 (menu D35 z przyciskiem „Wycena”) zrzut przy 848 px mieści się w jednym
+     wierszu, pasek 69 px. Pomiar 2026-10-27 przy oknie 896 px: marginesy 48 + logo 180
      + przerwa 24 + osiem pozycji 566 px (przerwy 0,75 rem) = 818 px = 51,1 rem, plus ~2 rem zapasu (w górę).
      Licznik serwisów (prop liczbaSerwisow) dziś nie jest przekazywany nigdzie — gdy wróci, próg trzeba zmierzyć od nowa.
      768 px (tablet pionowo) = panel; 1024 px = jeden wiersz. */
@@ -285,6 +312,15 @@ function odmiana(n: number): string {
       text-decoration-thickness: 2px;
       text-underline-offset: 6px;
     }
+
+    .menu__ostatnia {
+      margin-top: var(--o-4);
+    }
+
+    .menu a.menu__wycena {
+      width: 100%;
+      min-height: var(--cel-dotyku-panel);
+    }
   }
 
   /* ── od progu: osiem pozycji w jednym wierszu, pasek ≤ 80 px ──────────────────────────────── */
@@ -299,6 +335,7 @@ function odmiana(n: number): string {
 
     .menu ul {
       display: flex;
+      align-items: center;
       gap: 0 var(--o-3);
     }
 
@@ -314,6 +351,10 @@ function odmiana(n: number): string {
 
     .menu a[aria-current='page'] {
       border-bottom-color: var(--akcent);
+    }
+
+    .menu__ostatnia {
+      margin-left: var(--o-2);
     }
   }
 

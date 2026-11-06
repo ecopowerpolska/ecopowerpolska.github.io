@@ -3,12 +3,12 @@
   "opisWyszukiwarki": "Budujemy sklepy internetowe dla firm z Warszawy: WooCommerce, PrestaShop, platforma abonamentowa albo szybki sklep w Astro z płatnością online.",
   "naglowek": "Tworzenie sklepów internetowych dla firm w Warszawie",
   "okruszek": "Sklepy internetowe",
-  "lead": "Budujemy sklepy internetowe dla firm z Warszawy na jednej z czterech dróg: WooCommerce, PrestaShop, platforma abonamentowa albo szybki sklep w Astro z płatnością online. Drogę dobieramy do liczby produktów i do tego, kto obsługuje zamówienia. Strony, które zbudowaliśmy, mają w PageSpeed Insights na telefonie od 97 do 100 punktów wydajności.",
+  "lead": "Dostajesz sklep internetowy z koszykiem, płatnością online, dostawami i regulaminem, na silniku dobranym do liczby produktów: WooCommerce, PrestaShop, platformie abonamentowej albo w Astro. Budujemy go dla firm z Warszawy, które sprzedają od kilkunastu do tysięcy produktów.",
   "uslugaNazwa": "Tworzenie sklepów internetowych dla firm w Warszawie",
   "uslugaTyp": "Tworzenie sklepów internetowych",
   "uslugaOpis": "Sklep na WooCommerce, PrestaShop, platformie abonamentowej albo w Astro z płatnością online: katalog, koszyk, płatności, dostawy, regulamin i pomiar szybkości.",
   "cenaOdPozycja": "Sklep WooCommerce",
-  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajeszNaglowek": "Dostajesz sklep gotowy do pierwszego zamówienia.",
   "coDostajesz": [
     "Dobór drogi sklepu do liczby produktów, wariantów i sposobu obsługi zamówień, zanim zaczniemy pracę.",
     "Katalog produktów z kategoriami, zdjęciami i opisami.",
@@ -24,7 +24,7 @@
       "id": "ktory-sklep",
       "naglowek": "Który sklep internetowy pasuje do Twojej firmy",
       "akapity": [
-        "Najpierw pytamy, ile masz produktów i kto będzie obsługiwał zamówienia. Od tych dwóch odpowiedzi zależy wybór drogi. Każda pasuje do innej skali sprzedaży i każda ma swoje koszty po starcie."
+        "Sklep internetowy dobieramy do dwóch odpowiedzi: ile masz produktów i kto będzie obsługiwał zamówienia. Każda pasuje do innej skali sprzedaży i każda ma swoje koszty po starcie."
       ],
       "tabela": {
         "podpis": "Cztery drogi do sklepu internetowego: dla kogo, mocne strony i ograniczenia",
@@ -115,7 +115,7 @@
       "id": "szybkosc",
       "naglowek": "Szybkość sklepu a sprzedaż",
       "akapity": [
-        "Każda sekunda czekania na stronę produktu to okazja, żeby klient wrócił do wyników wyszukiwania. Dlatego sklep mierzymy tak samo jak każdą naszą stronę: w PageSpeed Insights, osobno na telefonie i na komputerze.",
+        "Szybkość sklepu internetowego przekłada się na sprzedaż: każda sekunda czekania na stronę produktu to okazja, żeby klient wrócił do wyników wyszukiwania. Dlatego sklep mierzymy tak samo jak każdą naszą stronę: w PageSpeed Insights, osobno na telefonie i na komputerze.",
         "Google ocenia wygodę stron wskaźnikami Core Web Vitals: czasem pokazania największego elementu, reakcją na dotknięcie i przesunięciami układu. W sklepie psują je najczęściej ciężkie zdjęcia produktów, nadmiar wtyczek i skrypty ładowane przed zgodą użytkownika.",
         "Zdjęcia produktów przygotowujemy w kilku rozmiarach, analitykę włączamy dopiero po zgodzie, a wtyczki ograniczamy do potrzebnych. Obecny sklep sprawdzisz sam w minutę: [darmowy test szybkości strony](/jak-sprawdzic-szybkosc-strony/)."
       ]
@@ -134,31 +134,37 @@
     }
   ],
   "procesNaglowek": "Jak budujemy sklep internetowy krok po kroku",
-  "procesLead": "Sklep przechodzi przez te same etapy co strona, a do tego przez test zamówienia przed startem.",
+  "procesLead": "Budowa sklepu internetowego przechodzi u nas przez sześć etapów. Przy każdym piszemy, co robimy my, a co Ty.",
   "proces": [
     {
       "nazwa": "Zakres i wybór drogi",
-      "opis": "Ustalamy liczbę produktów, warianty, sposób obsługi zamówień i operatora płatności. Z tego wynika droga sklepu, wycena i termin."
+      "opis": "Ustalamy liczbę produktów, warianty, sposób obsługi zamówień i operatora płatności. Z tego wynika droga sklepu, wycena i termin.",
+      "ty": "Mówisz, co sprzedajesz, ile masz produktów i kto będzie wysyłał paczki."
     },
     {
       "nazwa": "Katalog produktów",
-      "opis": "Zakładamy kategorie i produkty ze zdjęciami i opisami. Opisy i zdjęcia dostajemy od Ciebie; na stronę trafiają prawdziwe zdjęcia produktów."
+      "opis": "Zakładamy kategorie i produkty ze zdjęciami i opisami. Opisy i zdjęcia dostajemy od Ciebie; na stronę trafiają prawdziwe zdjęcia produktów.",
+      "ty": "Przekazujesz listę produktów z cenami, opisy i zdjęcia albo plik z obecnego sklepu."
     },
     {
       "nazwa": "Płatności i dostawy",
-      "opis": "Podłączamy operatora płatności i przewoźnika, ustawiamy koszty dostawy i maile z potwierdzeniem zamówienia."
+      "opis": "Podłączamy operatora płatności i przewoźnika, ustawiamy koszty dostawy i maile z potwierdzeniem zamówienia.",
+      "ty": "Zakładasz konto u operatora płatności i przewoźnika; pomagamy przejść weryfikację."
     },
     {
       "nazwa": "Regulamin i dane firmy",
-      "opis": "Na stronie pojawiają się dane firmy, regulamin, zasady zwrotów i polityka prywatności, których wymaga operator płatności."
+      "opis": "Na stronie pojawiają się dane firmy, regulamin, zasady zwrotów i polityka prywatności, których wymaga operator płatności.",
+      "ty": "Podajesz dane firmy i zasady zwrotów. Zatwierdzasz treść regulaminu i polityki prywatności."
     },
     {
       "nazwa": "Test zamówienia",
-      "opis": "Składamy zamówienie testowe: koszyk, płatność w trybie testowym, potwierdzenie i zapis zamówienia. Sklep z błędem nie startuje."
+      "opis": "Składamy zamówienie testowe: koszyk, płatność w trybie testowym, potwierdzenie i zapis zamówienia. Sklep z błędem nie startuje.",
+      "ty": "Składasz własne zamówienie testowe i sprawdzasz maile, które dostanie klient."
     },
     {
       "nazwa": "Start i opieka",
-      "opis": "Publikujemy sklep, zgłaszamy go w Search Console i mierzymy szybkość. Po starcie pilnujemy aktualizacji, kopii i płatności."
+      "opis": "Publikujemy sklep, zgłaszamy go w Search Console i mierzymy szybkość. Po starcie pilnujemy aktualizacji, kopii i płatności.",
+      "ty": "Obsługujesz zamówienia w panelu sklepu. Decydujesz, czy opiekę po starcie bierzesz od nas."
     }
   ],
   "wideo": "",
@@ -211,5 +217,55 @@
       "adres": "/faq/",
       "tekst": "Pytania o strony i sklepy internetowe"
     }
-  ]
+  ],
+  "faktCenaPodpis": "netto za sklep WooCommerce",
+  "faktTrzeci": {
+    "liczba": "BLIK",
+    "podpis": "szybki przelew i karta przez operatora płatności"
+  },
+  "coDostajeszEtykieta": "W cenie",
+  "gotowoscAi": {
+    "naglowek": "Czy Twoja strona jest gotowa na asystentów AI: 5 pytań",
+    "akapity": [
+      "Gotowość strony na asystentów AI sprawdzisz pięcioma pytaniami. Przy czterech z nich jest link do naszego darmowego testu."
+    ],
+    "pytania": [
+      {
+        "pytanie": "Czy strona ma jeden adres i odpowiada kodem 200?",
+        "opis": "Wersje z www i bez, z ukośnikiem na końcu i bez, mają prowadzić jednym przekierowaniem na ten sam adres kanoniczny. Asystent, który trafi na pętlę przekierowań albo błąd, odpuszcza stronę.",
+        "narzedzie": "seo-techniczne"
+      },
+      {
+        "pytanie": "Czy tekst da się przeczytać bez skryptów?",
+        "opis": "Część robotów pobiera sam HTML i nie uruchamia JavaScriptu. Oferta, ceny i dane kontaktowe muszą być w kodzie strony od razu, a nie doładowywane skryptem.",
+        "narzedzie": "wyszukiwanie-agentowe-ai"
+      },
+      {
+        "pytanie": "Czy nazwa, adres i telefon w danych strukturalnych zgadzają się z wizytówką Google?",
+        "opis": "Te same dane firmy w danych strukturalnych, w stopce i w Profilu Firmy w Google pozwalają połączyć stronę z firmą bez zgadywania.",
+        "narzedzie": "seo-techniczne"
+      },
+      {
+        "pytanie": "Czy każda sekcja zaczyna się od odpowiedzi?",
+        "opis": "Pierwsze zdanie pod nagłówkiem ma odpowiadać na pytanie z nagłówka i nazywać rzecz pełną nazwą. Taki fragment da się wyjąć ze strony i zacytować bez reszty tekstu."
+      },
+      {
+        "pytanie": "Czy formularz da się wypełnić z klawiatury i ma etykiety pól?",
+        "opis": "Agent w przeglądarce, tak jak osoba z czytnikiem ekranu, rozpoznaje pole po etykiecie i przechodzi po formularzu klawiszem Tab. Pole bez etykiety jest dla niego puste.",
+        "narzedzie": "dostepnosc"
+      }
+    ],
+    "akapityPo": [
+      "Co z tego naprawdę działa, a co jest tylko zapowiedzią, opisujemy we wpisie [wyszukiwanie agentowe: co zmienia w stronach i sklepach](/blog/wyszukiwanie-agentowe-strony-i-sklepy/)."
+    ]
+  },
+  "nieObiecujemy": {
+    "etykieta": "Uczciwie",
+    "naglowek": "Nie obiecujemy miejsca w Google. Obiecujemy to, co da się zmierzyć.",
+    "akapity": [
+      "Czego nie obiecujemy: miejsca w wynikach Google ani w odpowiedziach ChatGPT, bo o nich decyduje wyszukiwarka i asystent, a nie wykonawca strony. Nie podajemy też „wyniku widoczności w AI”, dopóki nie ma metody, którą każdy może powtórzyć.",
+      "Na stronach nie używamy zdjęć wygenerowanych przez AI. Obiecujemy to, co sprawdzisz sam: szybkość w PageSpeed Insights, dostępność dla osób z czytnikiem ekranu i poprawne dane strukturalne."
+    ]
+  },
+  "procesEtykieta": "Krok po kroku"
 }

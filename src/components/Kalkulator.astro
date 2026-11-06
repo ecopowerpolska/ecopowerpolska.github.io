@@ -1,5 +1,5 @@
 ---
-// Kalkulator ceny strony i sklepu na /cena/ (runda 4, 2026-10-27). Kwoty WYŁĄCZNIE z src/data/cena.json, czytane przy
+// Kalkulator ceny strony i sklepu na /cena/ (runda 4, 2026-10-27; faza 2: guziki w klasach .guzik z motywu, logika bez zmian). Kwoty WYŁĄCZNIE z src/data/cena.json, czytane przy
 // buildzie: pozycję wskazuje para tabela + fragment nazwy ("szukaj") z src/data/kalkulator.json, który niesie tylko teksty.
 // Pozycja, której build nie znajdzie albo nie odczyta z niej kwoty, znika z kalkulatora (ostrzeżenie w logu buildu).
 // Bez JS: formularz GET z cenami przy każdej pozycji + zdanie w <noscript>; tabele cennika stoją niżej na stronie.
@@ -169,7 +169,7 @@ const teksty = {
       ))}
 
       {t('indywidualnie') && <p class="kalk__indywidualnie">{t('indywidualnie')}</p>}
-      <p class="kalk__policz"><button type="submit" class="kalk__guzik kalk__guzik--drugi">{t('policz', 'Policz')}</button></p>
+      <p class="kalk__policz"><button type="submit" class="guzik guzik--drugi kalk__guzik">{t('policz', 'Policz')}</button></p>
       {/* Telefon i tablet: wynik stoi pod długim formularzem, więc suma jedzie przyklejona do dołu ekranu, dopóki widać formularz.
           Ukryta w HTML-u (bez JS nic nie liczy); skrypt ją pokazuje. aria-hidden: czytnik dostaje sumy z #kalk-stan. */}
       <p class="kalk__mini" id="kalk-mini" aria-hidden="true" hidden>
@@ -201,8 +201,8 @@ const teksty = {
       <p class="kalk__pomoc">{t('zastrzezenie')}</p>
       <div class="kalk__akcje" id="kalk-akcje" hidden>
         <p class="kalk__guziki">
-          <button type="button" class="kalk__guzik" id="kalk-dodaj">{t('dodaj', 'Dodaj do formularza')}</button>
-          <button type="button" class="kalk__guzik kalk__guzik--drugi" id="kalk-kolejne">{t('kolejne', 'Dodaj kolejne wyliczenie')}</button>
+          <button type="button" class="guzik kalk__guzik" id="kalk-dodaj">{t('dodaj', 'Dodaj do formularza')}</button>
+          <button type="button" class="guzik guzik--drugi kalk__guzik" id="kalk-kolejne">{t('kolejne', 'Dodaj kolejne wyliczenie')}</button>
         </p>
         <p class="kalk__komunikat" id="kalk-komunikat" role="status" aria-live="polite"></p>
         <p class="kalk__pasek" id="kalk-pasek" hidden>
@@ -732,41 +732,14 @@ const teksty = {
     margin: var(--o-4) 0 var(--o-2);
   }
 
+  /* Wygląd guzików: .guzik / .guzik--drugi z motyw.css (kontrakt fazy 2); tu tylko krój i szerokość w panelu wyniku. */
   .kalk__guzik {
-    min-height: 48px;
-    padding: 0 var(--o-4);
     font: inherit;
     font-weight: 600;
-    color: var(--tlo);
-    background: var(--akcent);
-    border: 1px solid var(--akcent);
-    border-radius: var(--promien-maly);
-    cursor: pointer;
   }
 
   .kalk__guziki .kalk__guzik {
     flex: 1 1 100%;
-  }
-
-  .kalk__guzik:hover {
-    background: var(--tekst);
-    border-color: var(--tekst);
-  }
-
-  .kalk__guzik--drugi {
-    color: var(--akcent);
-    background: transparent;
-  }
-
-  .kalk__guzik--drugi:hover {
-    color: var(--akcent);
-    background: var(--powierzchnia-mocna);
-    border-color: var(--akcent);
-  }
-
-  .kalk__guzik:focus-visible {
-    outline: 3px solid var(--akcent);
-    outline-offset: 2px;
   }
 
   .kalk__komunikat {

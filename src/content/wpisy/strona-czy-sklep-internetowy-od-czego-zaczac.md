@@ -5,6 +5,7 @@ opisSeo: "Strona firmowa czy sklep internetowy? Jak ustalamy, co strona ma robi�
 dataPublikacji: "2026-10-09T10:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna kuchnia-na-wymiar-warszawa.pl: nagłówek „Kuchnie na wymiar w Warszawie” obok zdjęcia białej kuchni z drewnianym blatem"
+autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

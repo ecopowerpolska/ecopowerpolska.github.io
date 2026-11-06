@@ -1,0 +1,99 @@
+---
+// Ż6 PasRynku — 3–4 liczby rynku (HTTP Archive / CrUX) z datą i źródłem, z src/data/rynek.json. Zero JS.
+import rynek from '../../data/rynek.json';
+
+const data = (iso: string) => {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : iso;
+};
+const pozycje = rynek.pozycje.filter((p) => p.nazwa && Number.isFinite(p.wartosc)).slice(0, 4);
+---
+
+{
+  pozycje.length > 0 && (
+    <section class="pas pas--ciemny rynek" aria-labelledby="rynek-naglowek">
+      <div class="pas__tresc">
+        <h2 id="rynek-naglowek" class="rynek__naglowek">{rynek.naglowek}</h2>
+        {rynek.wstep && <p class="rynek__wstep">{rynek.wstep}</p>}
+        <ul class="rynek__lista">
+          {pozycje.map((p) => (
+            <li class="rynek__pozycja">
+              <span class="liczba">{p.wartosc} %</span>
+              <span class="liczba__podpis">{p.nazwa}</span>
+              <span class="rynek__slupek" aria-hidden="true">
+                <span style={`--w:${Math.max(0, Math.min(100, p.wartosc))}%`} />
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p class="rynek__zrodlo">
+          Źródło: <a href={rynek.zrodloAdres} target="_blank" rel="noopener">{rynek.zrodlo}</a>, odczyt {data(rynek.odczyt)}.
+          {rynek.dopisek && <> {rynek.dopisek}</>}
+        </p>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .rynek__naglowek {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-h2, var(--t-xl));
+    text-align: center;
+  }
+
+  .rynek__wstep {
+    max-width: 44rem;
+    margin: 0 auto var(--o-8);
+    text-align: center;
+    color: var(--na-ciemnym-cichy, #b9c4bd);
+  }
+
+  /* Siatka po 3 (4 pozycje = 3 + 1 do lewej), 1 kolumna na wąskim. */
+  .rynek__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--o-8);
+  }
+
+  @media (min-width: 40rem) {
+    .rynek__lista {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .rynek__pozycja {
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-1);
+  }
+
+  /* kontrast: #1f8a6c (słupek) na #10231b = 3,84:1 (element graficzny ≥ 3:1) */
+  .rynek__slupek {
+    display: block;
+    height: 0.5rem;
+    margin-top: var(--o-2);
+    border-radius: 999px;
+    background: rgb(244 245 241 / 12%);
+    overflow: hidden;
+  }
+
+  .rynek__slupek > span {
+    display: block;
+    width: var(--w);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--akcent-jasny, #1f8a6c);
+  }
+
+  /* kontrast: #b9c4bd na #10231b = 9,15:1 */
+  .rynek__zrodlo {
+    margin: var(--o-8) 0 0;
+    font-size: var(--t-xs);
+    color: var(--na-ciemnym-cichy, #b9c4bd);
+    text-align: center;
+  }
+</style>

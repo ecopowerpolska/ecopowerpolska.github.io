@@ -1,0 +1,439 @@
+---
+// /jak-mierzymy/ — metoda pomiaru naszych stron (dane src/data/jak-mierzymy.json, panel: Jak mierzymy).
+// Tabela wyników = realizacje z serwisy.json (bez ukrytych) × ostatni pomiar z pomiary.json (plik generowany
+// scripts/psi-realizacje.py, poza panelem). Brak pomiaru = „pomiar w toku”, nic nie zatrzymuje builda.
+// Uczy, jak MY mierzymy; jak klient sprawdza swoją stronę — /jak-sprawdzic-szybkosc-strony/ (linki w obie strony).
+import WykresPsi from '../components/zywe/WykresPsi.astro';
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import dane from '../data/jak-mierzymy.json';
+import serwisyJson from '../data/serwisy.json';
+import pomiaryJson from '../data/pomiary.json';
+import blog from '../data/blog.json';
+import firma from '../data/firma.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+
+const d = dane as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (k: string, dom: string) => tekst(naTekst(d[k]), dom);
+const lista = (k: string) =>
+  (Array.isArray(d[k]) ? (d[k] as Record<string, unknown>[]) : []).map((x) => ({
+    tytul: naTekst(x?.tytul),
+    tekst: naTekst(x?.tekst),
+    rodzaj: naTekst(x?.rodzaj),
+    etykieta: naTekst(x?.etykieta),
+  }));
+const metoda = lista('metoda').filter((x) => x.tytul && x.tekst);
+const RODZAJE = new Set(['dokumentacja', 'badanie', 'pomiar', 'ocena']);
+const klasy = lista('klasy').filter((x) => x.tytul && x.tekst);
+const nie = lista('nie').filter((x) => x.tytul && x.tekst);
+
+// Pomiar strony: tolerancyjnie wobec formatu pliku (pola mobile/desktop, data przy strategii albo przy adresie).
+type Strategia = Record<string, unknown> | undefined;
+const pomiary = ((pomiaryJson as Record<string, unknown>).pomiary ?? {}) as Record<string, Record<string, unknown>>;
+const liczba = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+const dzien = (iso: string) => {
+  const t = Date.parse(`${iso}T12:00:00Z`);
+  return Number.isNaN(t)
+    ? ''
+    : new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Warsaw' }).format(t);
+};
+const sekundy = (ms: number | null) => (ms == null ? '–' : `${(ms / 1000).toFixed(1).replace('.', ',')} s`);
+const cls = (v: number | null) => (v == null ? '–' : String(Math.round(v * 1000) / 1000).replace('.', ','));
+
+const wiersze = ((serwisyJson as { serwisy?: Record<string, unknown>[] }).serwisy ?? [])
+  .filter((s) => s && s.ukryty !== true && naTekst(s.adres))
+  .map((s) => {
+    const adres = naTekst(s.adres);
+    const p = pomiary[adres];
+    const m = p?.mobile as Strategia;
+    const k = p?.desktop as Strategia;
+    const data = naTekst(m?.data) || naTekst(p?.data);
+    const zdane = liczba(m?.agentoweZdane);
+    const wszystkie = liczba(m?.agentoweWszystkie);
+    return {
+      nazwa: naTekst(s.nazwa) || adres,
+      adres,
+      domena: adres.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+      jest: Boolean(m && k),
+      telefon: liczba(m?.wydajnosc),
+      komputer: liczba(k?.wydajnosc),
+      dostepnosc: liczba(m?.dostepnosc),
+      agentowe: zdane != null && wszystkie ? `${zdane}/${wszystkie}` : '–',
+      lcp: sekundy(liczba(m?.lcp)),
+      cls: cls(liczba(m?.cls)),
+      teren: naTekst(p?.teren),
+      data,
+    };
+  });
+
+const tytul = napis('tytulKarty', 'Jak mierzymy szybkość naszych stron — EcoPower Polska');
+const opis = napis('opisWyszukiwarki', 'Metoda pomiaru stron EcoPower Polska: PageSpeed Insights na telefonie i komputerze, z datą.');
+const naglowek = napis('naglowek', 'Jak mierzymy nasze strony');
+const dalejLinki = naTekst(d.dalejLinki);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adresStrony = new URL('/jak-mierzymy/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: napis('okruszek', 'Jak mierzymy'), adres: '/jak-mierzymy/' },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adresStrony}#strona`,
+      url: adresStrony,
+      name: tytul,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="mierzymy">
+    <section class="pas pas--jasny" aria-labelledby="mierzymy-tytul">
+      <div class="pas__tresc naglowek-strony">
+        <nav class="okruszki" aria-label={tekst(blog.okruszkiEtykieta, 'Ścieżka')}>
+          <ol>
+            {okruszki.map((o, i) => (
+              <li>
+                {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+        <p class="etykieta">{napis('etykieta', 'Metoda')}</p>
+        <h1 id="mierzymy-tytul">{naglowek}</h1>
+        <p class="naglowek-strony__lead">{kawalki(napis('lead', 'Każdą stronę mierzymy tym samym narzędziem i podajemy wynik z datą.')).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+      </div>
+    </section>
+
+    {metoda.length > 0 && (
+      <section class="pas pas--powierzchnia" aria-labelledby="mierzymy-metoda">
+        <div class="pas__tresc">
+          <h2 id="mierzymy-metoda" class="srodek">{napis('metodaNaglowek', 'Metoda pomiaru')}</h2>
+          {naTekst(d.metodaLead) && <p class="srodek lead-sekcji">{naTekst(d.metodaLead)}</p>}
+          <ol class="siatka-3">
+            {metoda.map((m, i) => (
+              <li class="karta karta-tresc">
+                <span class="numer-kroku" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{m.tytul}</h3>
+                <p>{kawalki(m.tekst).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )}
+
+    {klasy.length > 0 && (
+      <section class="pas pas--jasny" aria-labelledby="mierzymy-klasy">
+        <div class="pas__tresc">
+          <h2 id="mierzymy-klasy" class="srodek">{napis('klasyNaglowek', 'Trzy rodzaje zdań')}</h2>
+          {naTekst(d.klasyLead) && <p class="srodek lead-sekcji">{naTekst(d.klasyLead)}</p>}
+          <ul class="siatka-3">
+            {klasy.map((k) => (
+              <li class="karta karta-tresc">
+                <span class:list={['dowod', RODZAJE.has(k.rodzaj) && `dowod--${k.rodzaj}`]}>{k.etykieta || k.tytul}</span>
+                <h3>{k.tytul}</h3>
+                <p>{kawalki(k.tekst).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {wiersze.length > 0 && (
+      <section class="pas pas--powierzchnia" id="wyniki" aria-labelledby="mierzymy-wyniki">
+        <div class="pas__tresc">
+          <h2 id="mierzymy-wyniki" class="srodek">{napis('wynikiNaglowek', 'Wyniki naszych realizacji')}</h2>
+          {naTekst(d.wynikiLead) && <p class="srodek lead-sekcji">{naTekst(d.wynikiLead)}</p>}
+
+          <WykresPsi osadzony />
+
+          <div class="tabela-ramka">
+            <table class="tabela-karty wyniki">
+              <caption class="ukryte">{napis('wynikiNaglowek', 'Wyniki naszych realizacji')}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{napis('kolumnaStrona', 'Strona')}</th>
+                  <th scope="col">{napis('kolumnaTelefon', 'Wydajność, telefon')}</th>
+                  <th scope="col">{napis('kolumnaKomputer', 'Wydajność, komputer')}</th>
+                  <th scope="col">{napis('kolumnaDostepnosc', 'Ułatwienia dostępu')}</th>
+                  <th scope="col">{napis('kolumnaAgentowe', 'Przeglądanie agentowe')}</th>
+                  <th scope="col">{napis('kolumnaLcp', 'LCP, telefon')}</th>
+                  <th scope="col">{napis('kolumnaCls', 'CLS, telefon')}</th>
+                  <th scope="col">{napis('kolumnaTeren', 'Dane z wizyt (CrUX)')}</th>
+                  <th scope="col">{napis('kolumnaData', 'Dzień pomiaru')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {wiersze.map((w) =>
+                  w.jest ? (
+                    <tr>
+                      <th scope="row" data-label={napis('kolumnaStrona', 'Strona')}>
+                        <a href={w.adres} target="_blank" rel="noopener">{w.domena}</a>
+                      </th>
+                      <td data-label={napis('kolumnaTelefon', 'Wydajność, telefon')} class="wynik">{w.telefon ?? '–'}</td>
+                      <td data-label={napis('kolumnaKomputer', 'Wydajność, komputer')} class="wynik">{w.komputer ?? '–'}</td>
+                      <td data-label={napis('kolumnaDostepnosc', 'Ułatwienia dostępu')}>{w.dostepnosc ?? '–'}</td>
+                      <td data-label={napis('kolumnaAgentowe', 'Przeglądanie agentowe')}>{w.agentowe}</td>
+                      <td data-label={napis('kolumnaLcp', 'LCP, telefon')}>{w.lcp}</td>
+                      <td data-label={napis('kolumnaCls', 'CLS, telefon')}>{w.cls}</td>
+                      <td data-label={napis('kolumnaTeren', 'Dane z wizyt (CrUX)')}>
+                        {w.teren && w.teren !== 'brak' ? napis('terenJest', 'są') : napis('terenBrak', 'jeszcze brak')}
+                      </td>
+                      <td data-label={napis('kolumnaData', 'Dzień pomiaru')}>
+                        {w.data ? <time datetime={w.data}>{dzien(w.data)}</time> : '–'}
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <th scope="row" data-label={napis('kolumnaStrona', 'Strona')}>{w.domena}</th>
+                      <td colspan="8">{napis('brakPomiaru', 'pomiar w toku')}</td>
+                    </tr>
+                  ),
+                )}
+              </tbody>
+            </table>
+          </div>
+          {naTekst(d.wynikiNota) && (
+            <p class="ramka-w-skrocie nota">
+              <span class="dowod dowod--pomiar">{napis('klasaPomiarEtykieta', 'Nasz pomiar')}</span> {kawalki(naTekst(d.wynikiNota)).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}
+            </p>
+          )}
+        </div>
+      </section>
+    )}
+
+    {nie.length > 0 && (
+      <section class="pas pas--jasny" aria-labelledby="mierzymy-nie">
+        <div class="pas__tresc">
+          <h2 id="mierzymy-nie" class="srodek">{napis('nieNaglowek', 'Czego nie mierzymy i nie obiecujemy')}</h2>
+          <ul class="siatka-3">
+            {nie.map((n) => (
+              <li class="karta karta-tresc">
+                <h3>{n.tytul}</h3>
+                <p>{kawalki(n.tekst).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    <section class="pas pas--powierzchnia" aria-labelledby="mierzymy-dalej">
+      <div class="pas__tresc dalej">
+        <h2 id="mierzymy-dalej">{napis('dalejNaglowek', 'Zmierz swoją stronę tak samo')}</h2>
+        {naTekst(d.dalejTekst) && <p>{kawalki(naTekst(d.dalejTekst)).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>}
+        <p class="dalej__guziki">
+          <a class="guzik" href={napis('dalejGuzikAdres', '/jak-sprawdzic-szybkosc-strony/')}>{napis('dalejGuzik', 'Sprawdź szybkość strony')}</a>
+          <a class="guzik guzik--drugi" href={napis('dalejDrugiAdres', '/darmowe-narzedzia/')}>{napis('dalejDrugi', 'Wszystkie darmowe testy')}</a>
+        </p>
+        {dalejLinki && <p class="dalej__linki">{kawalki(dalejLinki).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>}
+      </div>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .naglowek-strony {
+    text-align: center;
+  }
+
+  .naglowek-strony h1 {
+    font-size: clamp(2.25rem, 3vw + 1.25rem, 3.25rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .naglowek-strony__lead {
+    max-width: 46rem;
+    margin: var(--o-4) auto 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--t-h2, var(--t-xl));
+    text-wrap: balance;
+  }
+
+  .srodek {
+    text-align: center;
+  }
+
+  .lead-sekcji {
+    max-width: 46rem;
+    margin: var(--o-3) auto 0;
+  }
+
+  .siatka-3 {
+    margin-top: var(--o-8);
+  }
+
+  .karta-tresc {
+    padding: var(--o-6);
+  }
+
+  .karta-tresc h3 {
+    margin: var(--o-3) 0 var(--o-2);
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .karta-tresc p {
+    margin: 0;
+  }
+
+  .karta-tresc a,
+  .nota a,
+  .dalej a:not(.guzik),
+  .naglowek-strony__lead a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* Tabela: na komputerze w karcie z przewijaniem w bok (9 kolumn), na telefonie wiersz = karta (.tabela-karty). */
+  .tabela-ramka {
+    margin-top: var(--o-8);
+    overflow-x: auto;
+    background: var(--karta, #fff);
+    border: var(--obrys-karty, 1px solid var(--linia));
+    border-radius: var(--promien-karty, var(--promien));
+    box-shadow: var(--cien-karty, none);
+  }
+
+  .wyniki {
+    font-size: var(--t-s);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .wyniki thead th {
+    font-weight: 700;
+    vertical-align: bottom;
+    background: var(--powierzchnia);
+  }
+
+  .wyniki tbody th {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .wyniki .wynik {
+    font-weight: 700;
+    color: var(--akcent);
+  }
+
+  .wyniki tbody tr:last-child :is(th, td) {
+    border-bottom: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .tabela-ramka {
+      overflow: visible;
+      background: none;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .wyniki tbody th {
+      display: block;
+      padding: 0 0 var(--o-2);
+      font-size: var(--t-m);
+      border-bottom: 1px solid var(--linia);
+    }
+
+    .wyniki tbody th::before {
+      content: none;
+    }
+  }
+
+  .ukryte {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .nota {
+    margin: var(--o-6) 0 0;
+    padding: var(--o-4);
+    font-size: var(--t-s);
+  }
+
+  .dalej p {
+    max-width: 46rem;
+    margin: var(--o-3) 0 0;
+  }
+
+  .dalej__guziki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--o-3);
+    margin-top: var(--o-6) !important;
+  }
+
+  .okruszki {
+    text-align: start;
+  }
+
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-4);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki [aria-current] {
+    line-height: 44px;
+  }
+</style>

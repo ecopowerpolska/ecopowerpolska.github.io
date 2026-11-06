@@ -304,13 +304,13 @@ przewijania w dół; stopki: „EcoPower Polska Sp. z o.o.”; guzik: „jeżeli
   44px` na każdej pozycji (zawinięty tytuł stał 44 px niżej). `/przyklady/scrollytelling/` nietknięte.
 - **Bez sierot** — Realizacje i „Czym się zajmujemy” na siatce 6 ścieżek: przy 3 kolumnach i reszcie 1 cztery ostatnie
   kafle stają parami na środku (3 + 2 + 2), przy 2 kolumnach i reszcie 1 trzy ostatnie w jednym rzędzie.
-- **Cennik** — tabela do 56 rem (kwota w zasięgu wzroku na 1440 px). **Krój zapasowy nagłówków** liczony względem
-  Times New Roman (`fallbacks: ['serif']`), nie Ariala.
-- **D15 (2026-10-27)** — `/jak-sprawdzic-szybkosc-strony/`: poradnik + formularz GET do oficjalnego raportu pagespeed.web.dev (działa bez JS); wynik na miejscu z PSI API tylko z kluczem przeglądarkowym `PUBLIC_PSI_KLUCZ` (bez klucza Google daje limit 0, 429); w menu NIE (7. pozycja łamie pasek na 390 px na 2 rzędy), link w stopce, FAQ i llms.txt.
+- **Cennik** — tabela do 56 rem (kwota w zasięgu wzroku na 1440 px). Krój zapasowy szeryfu (od D30 tylko akapity wpisu)
+  liczony względem Times New Roman (`fallbacks: ['serif']`), nie Ariala.
+- **D15 (2026-10-27)** — `/jak-sprawdzic-szybkosc-strony/`: poradnik + formularz GET do oficjalnego raportu pagespeed.web.dev (działa bez JS); wynik na miejscu z PSI API tylko z kluczem przeglądarkowym `PUBLIC_PSI_KLUCZ` (bez klucza Google daje limit 0, 429); w menu przez pozycję „Darmowe testy” (D35), link w stopce, FAQ i llms.txt.
 
 ## D16–D18 (2026-10-27, runda 4)
 
-**D16 — Menu: 8 pozycji, hamburger na telefonie i tablecie (2026-10-27).** Pozycje: Oferta · Realizacje · Efekty · Cena · FAQ · Blog · Test szybkości · Kontakt. Od 53 rem szerokości paska (zapytanie kontenera, próg przesuwa się z powiększeniem pisma) wszystkie stoją w jednej linii przyklejonego paska 69 px. Poniżej przycisk „Menu” otwiera panel na resztę ekranu z pozycjami po 48 px; treść i stopka dostają `inert`, Esc zamyka i oddaje fokus przełącznikowi; bez JS menu zawija się pod logo. Próg zmierzony CDP: 818 px treści paska.
+**D16 — Menu:** zastąpione przez D35 (2026-11-06); mechanizm zostaje: próg 53 rem liczony zapytaniem kontenera, panel z przyciskiem „Menu” poniżej progu.
 
 **D17 — Blok PageSpeed jako osobna karta „oficjalne narzędzie Google” (2026-10-27).** Wyniki pod kafelkiem Realizacji stoją we własnej karcie: cienki obrys, tło o stopień jaśniejsze od kafelka, nagłówek „Oficjalny pomiar Google PageSpeed Insights” z własną ikoną prędkościomierza (nie logo Google), zdanie, że pomiar robi narzędzie Google, i dwa linki: „Sprawdź sam” (nowa karta) oraz „Jak czytać wynik →”. Strony klientów i PageSpeed otwierają się w nowej karcie z dopiskiem dla czytnika ekranu (Piotr 17:45). W wąskiej karcie blok się zwęża (kontener kafelka ≤ 20 rem).
 
@@ -352,8 +352,8 @@ Słowa Piotra (skrót): „masz zrobić wszystkie strony podstrony na szerokoś�
 - **Cennik:** tabele w 4 kolumnach (Pozycja · Zakres · Cena · Rozliczenie), na telefonie karty. Ceny (jedno źródło `cena.json`): wpis na blogu **450 zł**, prowadzenie bloga 4 wpisy **1 600 zł/mies.** (= 4 × 400 zł, rabat 11 %), krótki wpis bez publikacji **150 zł**; integracje rozbite: płatności **1 200 zł**, Allegro **2 500 zł**, hurtownia **3 500 zł**; każda liczona w kalkulatorze po swojej cenie.
 - **Realizacje:** kafelki po 3 w rzędzie, niepełny rząd do lewej; „Co zrobiliśmy” (lista punktów) i „Szybkość i optymalizacja” (wynik PageSpeed) rozwijają się `<details>` bez JS, tylko w swoim kafelku.
 - **Efekty:** tytuł „Efekty wizualne możliwe do zaimplementowania na stronę”, kafelki 3 / 2 / 1 otwierają podstrony z działającym pokazem (8 efektów, 3 nowe); nowy efekt = wpis w `efekty.json` + plik na szkielecie `SzkieletEfektu`.
-- **Strona główna:** „Jak pracujemy” i „Co dostajesz” jako kafelki; „Dlaczego Astro i jaki hosting” w dwóch kolumnach „Proponujemy” / „Wykonamy też” (WordPress, WooCommerce, PrestaShop, Shoper, hosting klienta); usunięty tekst o spółce (D9).
-- **Stopka:** „Usługi” jako nagłówek grupy (nie link) z kreską; brak formy prawnej; dwa wiersze menu (strony, potem Regulamin · Polityka prywatności · Ustawienia cookie); przełącznik języka GTranslate; wiersz „© rok EcoPower Polska Sp. z o.o. Wszelkie prawa zastrzeżone.”.
+- **Strona główna:** zastąpione przez D27 (kolejność sekcji 2026-11-06); usunięty tekst o spółce (D9) zostaje.
+- **Stopka:** zastąpione przez D36 (2026-11-06); wiersz „© rok EcoPower Polska Sp. z o.o. Wszelkie prawa zastrzeżone.” i przełącznik GTranslate zostają.
 - **Zgoda na cookie:** dolny pasek, dwa równe przyciski („Tylko niezbędne”, „Zgadzam się na wszystkie”), wybór w `localStorage['ep.zgoda']`; podstawa: art. 399 ust. 1 i 3 oraz art. 400 PKE (nie 398, który dotyczy marketingu).
 - **Nowe strony:** `/regulamin/` (usługi elektroniczne serwisu), `/darmowe-narzedzia/` (test szybkości działa, generatory regulaminu i polityki „wkrótce”), dwa wpisy (Polityka prywatności 2027, Prawne aspekty strony).
 
@@ -362,6 +362,48 @@ Słowa Piotra (skrót): „masz zrobić wszystkie strony podstrony na szerokoś�
 Słowa Piotra 2026-10-30: „Nie łączyłbym tych różnych rzeczy. Zrobiłbym tych narzędzi więcej. Cóż z tego, że będą pochodziły z tego samego API? […] łączenie sprawia, że produkujemy bardzo długi raport i tego nikt nie będzie czytał.” — „Nie ma 9 narzędzi w zakładce darmowe narzędzia. Dlaczego?” — „Tylko błagam, nie rób śmietnika, rzeczy zbędne usuwamy.” (Numer D25 wg zlecenia; D24 nie ma w tym pliku.)
 - **Dziewięć narzędzi, każde osobno** pod `/narzedzia/<slug>/`: gotowość na wyszukiwanie agentowe i AI, dostępność, bezpieczeństwo i zaufanie, poczta domeny, SEO techniczne, waga i media, prawo na stronie, dane z prawdziwych wizyt (CrUX), ochrona przed spamem. Jeden krótki raport na narzędzie zamiast jednego długiego: zegar oceny 0–100, lista pozycji, „Co poprawić” (do 5), „Skopiuj wyniki”, „Napisz do nas”.
 - **Jeden wzorzec, wspólny kod:** `StronaNarzedzia.astro` + `Zegar.astro` (ten sam zegar co w teście szybkości; duplikat SVG i CSS usunięty), dane w `src/data/narzedzia/<slug>.json`, jedna trasa dynamiczna; dla użytkownika to dziewięć osobnych stron. Jedno zaplecze PHP (`audyt.php` + moduły). Wynik trafia do formularza w `sessionStorage['ep.wynik']`.
-- **`/darmowe-narzedzia/`:** 12 kafelków w 4 rzędach po 3: test szybkości, dane terenowe, AI, SEO, dostępność, waga, bezpieczeństwo, poczta, spam, prawo, generator regulaminu, generator polityki. Ikony liniowe 24 px z mapy SVG w pliku strony, kolor z tokenów. Wejście wyłącznie ze stopki (D22/D23), menu bez zmian.
+- **`/darmowe-narzedzia/`:** 12 kafelków w 4 rzędach po 3: test szybkości, dane terenowe, AI, SEO, dostępność, waga, bezpieczeństwo, poczta, spam, prawo, generator regulaminu, generator polityki. Ikony liniowe 24 px z mapy SVG w pliku strony, kolor z tokenów. Wejście z menu „Darmowe testy” (D35) i ze stopki.
 - **Adres zaplecza w jednym miejscu:** `src/data/api.json`; docelowo `https://api.ecopowerpolska.pl`.
 - **Strona sama przechodzi własne testy:** `og:image` (karta 1200×630 z logo, `public/og-ecopower-polska.png`) na każdej stronie oraz sąd rejestrowy i kapitał zakładowy w stopce (KSH art. 206 § 1) — braki wykryte przez narzędzie „Prawo na stronie” i SEO.
+
+## D26–D37 — Faza 2: „zacięcie i energia” (2026-11-06)
+
+Słowa Piotra 2026-11-06 10:58: „nasza strona wygląda jak strona sprzedaży kwiatków co najwyżej albo koła gospodyń. Nie ma
+tam zacięcia, nie ma tam energii. Jest takie wszystko przymulone.” — 12:2x: „Zrób twój plan do 18 punktu oraz te, które
+teraz wymieniłeś. 6 punktów. z podziałem na agentów.” Rozstrzygnięcia niżej podjęła sesja główna z tego upoważnienia,
+na podstawie audytu `analizy/ekosystem-wa-2026-11-06/H-ecopowerpolska-audyt.md` (paleta 1,11:1 między kartą a tłem,
+70 % tekstu w kolorze cichym, H1 = H2 = 30 px na telefonie). NOWE ZASTĘPUJE STARE: D14 (krój nagłówków), D15 (menu),
+D16 (pozycje menu), D23 (strona główna, stopka) i D25 (wejście do narzędzi) są poprawione wyżej odsyłaczem tutaj.
+
+- **D26 — Hero:** tekst, dwa przyciski (wypełniony `.guzik` i `.guzik--drugi`) i pasek liczb z repo; bez obrazu, LCP zostaje tekstem H1.
+- **D27 — Kolejność strony głównej:** hero → pasek liczb → Realizacje → „Czym się zajmujemy” (4 karty usług + lista) → Jak
+  pracujemy (01–06) → Darmowe testy (3 kafle + „wszystkie 12”) → Kto robi Twoją stronę → Z bloga → FAQ → pas zamykający →
+  Kontakt (dane spółki skrócone) → stopka. „Co dostajesz” i „Dlaczego Astro i jaki hosting” przechodzą na `/strony-internetowe-warszawa/`.
+- **D28 — Licznik liczb w pasku dowodu:** raz, ok. 1 s, przy `prefers-reduced-motion` od razu wartość; ≤ 0,6 kB JS.
+- **D29 — Własne firmy** pokazujemy jako realizacje, własności nie ujawniamy; na stronie autora „strony, które zbudowałem”.
+- **D30 — Krój i skala nagłówków:** H1–H3 w IBM Plex Sans 700 (`--font-display` w `motyw.css` = alias `--font-sans`);
+  Source Serif 4 (`--font-szeryf`, wagi 400/600, bez preloadu) wyłącznie w akapitach i listach treści wpisu
+  (`.wpis__tresc :is(p, li, blockquote)`). H1 `--t-display: clamp(2.75rem, 1.6rem + 4.6vw, 6rem)`, `-0.03em`, `line-height 1.02`;
+  H2 `--t-h2: clamp(1.75rem, 1rem + 2vw, 2.5rem)`, `-0.02em`, `1.1`; liczby `--t-liczba: clamp(2.25rem, 1.5rem + 2.5vw, 3.5rem)`.
+  Preload: IBM Plex Sans jest krojem zmiennym — 2 pliki (latin, latin-ext) niosą wagi 400/600/700.
+- **D31 — Ciemne pasy:** pas liczb pod hero, pas zamykający i stopka na `--tlo-ciemne #10231b` z tekstem `#f4f5f1` (15,0:1);
+  reszta jasna, co druga jasna sekcja na `--powierzchnia` pełną szerokością okna (`.pas`, `.pas--powierzchnia`, `.pas--ciemny`).
+  Kreski między sekcjami znikają. To pasy, nie ciemny motyw — D1 zostaje.
+- **D32 — Drugi akcent:** `--akcent-jasny #1f8a6c` do wypełnień, słupków i dużych liczb (na ciemnym 3,84:1 — tylko tekst duży i
+  elementy nietekstowe); `--akcent #166653` do tekstu i przycisków na jasnym. Drobny tekst w kolorze na ciemnym: `--akcent-na-ciemnym #3cbf96`
+  (7,11:1). Bez ciepłego koloru.
+- **D33 — Stopka „Strony, które prowadzimy”:** 4 odnośniki, anchor = sama domena (studioagat.pl, pan-stolarz.pl, nadihome.pl,
+  panwylewka.pl), bez opisów, bez „Polecamy”, bez `nofollow`; lista w `stopka.json` → `stronyProwadzone`.
+- **D34 — Poświata hero:** klasa `.hero--poswiata`, `radial-gradient` z `--akcent-jasny` przy kryciu 12 % w prawym górnym rogu,
+  stała, bez ruchu, sam CSS (mieszanka z tłem `#dae8e1`, tekst 13,25:1).
+- **D35 — Menu:** Oferta · Realizacje · Darmowe testy (`/darmowe-narzedzia/`) · Cena · Blog · FAQ · Efekty · „Wycena” jako wypełniony
+  przycisk → `/kontakt/`. Przyklejony pasek w jednej linii ≤ 80 px (zrzut 2026-11-06: 69 px przy 848, 1280 i 1440 px); poniżej 53 rem panel „Menu” bez zmian.
+- **D36 — Stopka:** ciemna (D31), kolumny Oferta | Narzędzia i blog | Strony, które prowadzimy | Dane spółki; dolny wiersz Strona główna ·
+  Regulamin · Polityka prywatności · Ustawienia cookie · Język strony; telefon „537 318 316” z odstępami w widoku, w schowku bez odstępów,
+  e-mail i adres www małymi literami; guziki „skopiuj” zostają (D4). Nazwa „EcoPower Polska Sp. z o.o.” (D14).
+- **D37 — Hub prawny** `/prawo-strony-internetowej/` powstaje (razem ze `/slownik/`, `/jak-mierzymy/` i stroną autora `/autor/piotr-czwarnowski/`).
+
+Kontrakt klas wspólnych (`motyw.css`, jedyne miejsce definicji): `.guzik`, `.guzik--drugi`, `.guzik--na-ciemnym` (tekst `#030c08`,
+4,63:1 — `#06130d` dawał 4,44:1), `.karta`, `.karta--link` (uniesienie 2 px + cień, 150 ms, wyłączone przy ograniczeniu ruchu),
+`.etykieta`, `.pas` + `.pas__tresc`, `.liczba`, `.liczba__podpis`, `.numer-kroku`, `.ramka-w-skrocie`, `.dowod--*`, `.tabela-karty`, `.siatka-3`.
+

@@ -5,6 +5,7 @@ opisSeo: "Digital Omnibus, ciasteczka, AI Act, dostępność i NIS2: co już obo
 dataPublikacji: "2026-10-30T00:30:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: menu z numerem telefonu, nagłówek „Meble na wymiar w Warszawie” i zdjęcie kuchni w drewnie obok dwóch guzików"
+autor: "Piotr Czwarnowski"
 szkic: false
 ---
 
@@ -70,7 +71,7 @@ Przy stronach, które prowadzimy, przejdziemy przez politykę prywatności jeszc
 6. **Dostępność.** Mierzymy ją w PageSpeed i poprawiamy to, co wychodzi, ze szczególną uwagą przy sklepach.
 7. **Obserwacja Digital Omnibus.** Gdy Parlament ustali stanowisko, a teksty się zejdą, wprowadzamy zmiany, które będą już obowiązywać, nie wcześniej.
 
-Taka kontrola należy do [prowadzenia strony internetowej](/prowadzenie-strony-internetowej/): politykę poprawiamy przy każdej zmianie formularza albo analityki, a jak wygląda gotowa, zobaczysz w [polityce prywatności tej strony](/polityka-prywatnosci/).
+Taka kontrola należy do [prowadzenia strony internetowej](/prowadzenie-strony-internetowej/): politykę poprawiamy przy każdej zmianie formularza albo analityki, a jak wygląda gotowa, zobaczysz w [polityce prywatności tej strony](/polityka-prywatnosci/). Pierwszą wersję dla swojej strony przygotujesz w darmowym [generatorze polityki prywatności](/generator-polityki-prywatnosci/), a regulamin w [generatorze regulaminu](/generator-regulaminu/).
 
 ## Źródła, odczyt 30.10.2026
 

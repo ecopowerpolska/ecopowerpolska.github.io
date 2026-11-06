@@ -1,0 +1,241 @@
+---
+// /slownik/ — słownik stron internetowych i sklepów (dane src/data/slownik.json, panel: Słownik).
+// Hasła sortowane alfabetycznie kodem (kolejność w panelu nie ma znaczenia), kotwica = pole `kotwica` albo nazwa.
+// JSON-LD: WebPage + DefinedTermSet (#slownik) + DefinedTerm z własnym @id #termin-<kotwica>, osobnym od adresu
+// hasła (#<kotwica>), żeby węzeł terminu nie skleił się ze stroną. Bez FAQPage (bramka A10).
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import Slownik, { type Haslo } from '../components/Slownik.astro';
+import dane from '../data/slownik.json';
+import blog from '../data/blog.json';
+import firma from '../data/firma.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+
+const s = dane as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (k: string, d: string) => tekst(naTekst(s[k]), d);
+
+const PL: Record<string, string> = { ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z' };
+const naKotwice = (t: string) =>
+  t
+    .toLowerCase()
+    .replace(/[ąćęłńóśźż]/g, (z) => PL[z] ?? z)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-+|-+$)/g, '')
+    .slice(0, 60);
+
+// Kotwica unikalna, nie zaczyna się cyfrą i nie zderza się z id stałych elementów strony.
+const zajete = new Set<string>(['tresc', 'slownik']);
+const hasla: Haslo[] = (Array.isArray(s.hasla) ? (s.hasla as Record<string, unknown>[]) : [])
+  .map((h) => ({
+    nazwa: naTekst(h?.nazwa),
+    kotwica: naKotwice(naTekst(h?.kotwica)),
+    wJednymZdaniu: naTekst(h?.wJednymZdaniu),
+    opis: naTekst(h?.opis),
+    nieMyl: naTekst(h?.nieMyl),
+    sprawdz: naTekst(h?.sprawdz),
+    link: naTekst(h?.link),
+    linkTekst: naTekst(h?.linkTekst),
+  }))
+  .filter((h) => h.nazwa && h.wJednymZdaniu)
+  .sort((a, b) => a.nazwa.localeCompare(b.nazwa, 'pl', { sensitivity: 'base' }))
+  .map((h, i) => {
+    let k = h.kotwica || naKotwice(h.nazwa) || `haslo-${i + 1}`;
+    if (/^[0-9]/.test(k)) k = `h-${k}`;
+    const rdzen = k;
+    for (let n = 2; zajete.has(k); n++) k = `${rdzen}-${n}`;
+    zajete.add(k);
+    return { ...h, kotwica: k, litera: h.nazwa.charAt(0).toLocaleUpperCase('pl') };
+  });
+
+const tytul = napis('tytulKarty', 'Słownik stron internetowych i sklepów — EcoPower Polska');
+const opis = napis(
+  'opisWyszukiwarki',
+  'Pojęcia ze świata stron i sklepów internetowych prostym językiem, z testem do sprawdzenia u siebie.',
+);
+const naglowek = napis('naglowek', 'Słownik stron internetowych i sklepów');
+const zakonczenie = naTekst(s.zakonczenieTekst);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/slownik/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: napis('okruszek', 'Słownik'), adres: '/slownik/' },
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: tytul,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      mainEntity: { '@id': `${adres}#slownik` },
+    },
+    {
+      '@type': 'DefinedTermSet',
+      '@id': `${adres}#slownik`,
+      name: naglowek,
+      url: adres,
+      inLanguage: 'pl-PL',
+      publisher: { '@id': `${baza}/#organizacja` },
+      hasDefinedTerm: hasla.map((h) => ({
+        '@type': 'DefinedTerm',
+        '@id': `${adres}#termin-${h.kotwica}`,
+        name: h.nazwa,
+        description: h.wJednymZdaniu,
+        url: `${adres}#${h.kotwica}`,
+        inDefinedTermSet: { '@id': `${adres}#slownik` },
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="slownik">
+    <section class="pas pas--jasny" aria-labelledby="slownik-tytul">
+      <div class="pas__tresc naglowek-strony">
+        <nav class="okruszki" aria-label={tekst(blog.okruszkiEtykieta, 'Ścieżka')}>
+          <ol>
+            {okruszki.map((o, i) => (
+              <li>
+                {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+        <p class="etykieta">{napis('etykieta', 'Słownik')}</p>
+        <h1 id="slownik-tytul">{naglowek}</h1>
+        <p class="naglowek-strony__lead">{napis('lead', 'Pojęcia ze świata stron i sklepów prostym językiem.')}</p>
+        <p class="naglowek-strony__liczba">
+          <span class="liczba">{hasla.length}</span> <span class="liczba__podpis">{`pojęć od ${hasla[0]?.litera ?? 'A'} do ${hasla.at(-1)?.litera ?? 'Z'}`}</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="pas pas--powierzchnia" aria-label={napis('indeksEtykieta', 'Hasła według liter')}>
+      <div class="pas__tresc">
+        <Slownik
+          hasla={hasla}
+          etykiety={{
+            indeks: napis('indeksEtykieta', 'Hasła według liter'),
+            wJednymZdaniu: napis('etykietaWJednymZdaniu', 'W jednym zdaniu'),
+            nieMyl: napis('etykietaNieMyl', 'Nie myl z'),
+            sprawdz: napis('etykietaSprawdz', 'Sprawdź u siebie'),
+            wiecej: napis('etykietaWiecej', 'Więcej'),
+          }}
+        />
+      </div>
+    </section>
+
+    {zakonczenie && (
+      <section class="pas pas--jasny" aria-labelledby="slownik-dalej">
+        <div class="pas__tresc zakonczenie">
+          <h2 id="slownik-dalej">{napis('zakonczenieNaglowek', 'Nie ma tu pojęcia, którego szukasz?')}</h2>
+          <p>{kawalki(zakonczenie).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+        </div>
+      </section>
+    )}
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .naglowek-strony {
+    text-align: center;
+  }
+
+  .naglowek-strony h1 {
+    font-size: clamp(2.25rem, 3vw + 1.25rem, 3.25rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .naglowek-strony__lead {
+    max-width: 46rem;
+    margin: var(--o-4) auto 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+  }
+
+  .naglowek-strony__liczba {
+    margin: var(--o-6) 0 0;
+  }
+
+  .naglowek-strony__liczba .liczba__podpis {
+    display: block;
+  }
+
+  .zakonczenie h2 {
+    font-size: var(--t-h2, var(--t-xl));
+  }
+
+  .zakonczenie p {
+    max-width: 46rem;
+    margin: var(--o-3) 0 0;
+  }
+
+  .zakonczenie a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* Okruszki: ten sam wygląd co na /faq/ i nad wpisem; do lewej, jedna linia. */
+  .okruszki {
+    text-align: start;
+  }
+
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-4);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki [aria-current] {
+    line-height: 44px;
+  }
+</style>

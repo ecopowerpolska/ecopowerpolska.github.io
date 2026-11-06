@@ -10,6 +10,7 @@ declare(strict_types=1);
  * poza pamięcią podręczną 1 h (klucz = skrót), dziennik niesie tylko czas, test i kod.
  */
 define('AUDYT_EP', true);
+require_once __DIR__ . '/licznik.php'; // licznik_zlicz(): "Dziś sprawdzono N stron"
 
 const DOMENA_KONFIGURACJI = 'ecopowerpolska.pl';
 
@@ -138,6 +139,7 @@ if (is_array($zCache) && isset($zCache['t'], $zCache['dane']) && is_array($zCach
     $odp = $zCache['dane'];
     $odp['cache'] = true;
     dziennik($katStan, 'test=' . $nazwa . ' ok cache');
+    licznik_zlicz($katStan);
     odpowiedz(200, $odp, $originDozwolony);
 }
 
@@ -223,4 +225,5 @@ $odp = [
 @file_put_contents($plikCache, json_encode(['t' => time(), 'dane' => $odp], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR), LOCK_EX);
 @chmod($plikCache, 0600);
 dziennik($katStan, 'test=' . $nazwa . ' ok kod=' . $r['kod']);
+licznik_zlicz($katStan);
 odpowiedz(200, $odp, $originDozwolony);

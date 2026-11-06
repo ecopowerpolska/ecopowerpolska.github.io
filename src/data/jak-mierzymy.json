@@ -1,0 +1,96 @@
+{
+  "tytulKarty": "Jak mierzymy szybkość naszych stron — EcoPower Polska",
+  "opisWyszukiwarki": "Metoda pomiaru stron EcoPower Polska: PageSpeed Insights na telefonie i komputerze, data przy każdym wyniku, przeglądanie agentowe i przesunięcia układu. Co mierzymy, a czego nie obiecujemy.",
+  "okruszek": "Jak mierzymy",
+  "etykieta": "Metoda",
+  "naglowek": "Jak mierzymy nasze strony",
+  "lead": "Każdą stronę, którą budujemy, mierzymy tym samym narzędziem Google i w ten sam sposób. Wynik podajemy zawsze z datą, a przy każdym zdaniu mówimy, czy to dokumentacja Google, nasz pomiar, czy nasz wniosek.",
+  "metodaNaglowek": "Metoda pomiaru",
+  "metodaLead": "Sześć zasad, których trzymamy się przy każdym pomiarze.",
+  "metoda": [
+    {
+      "tytul": "PageSpeed Insights przez API",
+      "tekst": "Mierzymy interfejsem PageSpeed Insights w wersji 5, czyli tym samym testem Lighthouse, który Google uruchamia na swoich serwerach. Zapisujemy wersję Lighthouse przy każdym wyniku."
+    },
+    {
+      "tytul": "Telefon i komputer osobno",
+      "tekst": "Każdy adres mierzymy dwa razy: na symulowanym telefonie z wolniejszą siecią i na komputerze. Na stronie podajemy oba wyniki, bo telefon jest zawsze trudniejszy."
+    },
+    {
+      "tytul": "Adres taki, jaki widzi klient",
+      "tekst": "Mierzymy zwykły adres strony, bez dopisków omijających pamięć podręczną. Wynik ma opisywać stronę, którą dostaje odwiedzający, a nie świeżo przebudowaną kopię."
+    },
+    {
+      "tytul": "W dniu publikacji i potem",
+      "tekst": "Pierwszy pomiar robimy w dniu publikacji, kolejne po każdej większej zmianie. Gdy wynik odbiega od poprzedniego, powtarzamy pomiar trzy razy i bierzemy środkowy wynik."
+    },
+    {
+      "tytul": "Przeglądanie agentowe",
+      "tekst": "Mierzymy też kategorię przeglądania agentowego: cztery testy techniczne, które sprawdzają, czy asystent AI poradzi sobie ze stroną. Wynik podajemy jako liczbę zdanych testów, na przykład 4/4."
+    },
+    {
+      "tytul": "Przesunięcia układu we własnym teście",
+      "tekst": "CLS sprawdzamy dodatkowo sami, w Chrome sterowanym przez protokół narzędzi deweloperskich. Pięć przebiegów, każdy w nowym, pustym profilu, na emulowanym telefonie z takim samym spowolnieniem jak w Lighthouse."
+    }
+  ],
+  "klasyNaglowek": "Trzy rodzaje zdań",
+  "klasyLead": "W naszych tekstach rozdzielamy to, co wiemy z dokumentacji, od tego, co zmierzyliśmy, i od tego, co sami uważamy.",
+  "klasy": [
+    {
+      "rodzaj": "dokumentacja",
+      "etykieta": "Dokumentacja",
+      "tytul": "Co pisze Google",
+      "tekst": "Progi wyników, znaczenie wskaźników i zasady wyszukiwarki podajemy z przypisem do dokumentacji Google albo tekstu źródłowego. Bez przypisu nie piszemy, że coś jest regułą Google."
+    },
+    {
+      "rodzaj": "pomiar",
+      "etykieta": "Nasz pomiar",
+      "tytul": "Co zmierzyliśmy",
+      "tekst": "Przy każdym wyniku stoi narzędzie, urządzenie i dzień pomiaru. Surowe dane trzymamy, więc pomiar da się powtórzyć i porównać."
+    },
+    {
+      "rodzaj": "ocena",
+      "etykieta": "Nasz wniosek",
+      "tytul": "Co z tego wynika",
+      "tekst": "Gdy piszemy, co zalecamy albo czego się spodziewamy, nazywamy to naszym wnioskiem. To doświadczenie z budowy stron, a nie reguła wyszukiwarki."
+    }
+  ],
+  "wynikiNaglowek": "Wyniki naszych realizacji",
+  "wynikiLead": "Ostatni pomiar każdej strony, którą zbudowaliśmy i prowadzimy. Wydajność od 0 do 100, dane z PageSpeed Insights.",
+  "kolumnaStrona": "Strona",
+  "kolumnaTelefon": "Wydajność, telefon",
+  "kolumnaKomputer": "Wydajność, komputer",
+  "kolumnaDostepnosc": "Ułatwienia dostępu",
+  "kolumnaAgentowe": "Przeglądanie agentowe",
+  "kolumnaLcp": "LCP, telefon",
+  "kolumnaCls": "CLS, telefon",
+  "kolumnaTeren": "Dane z wizyt (CrUX)",
+  "kolumnaData": "Dzień pomiaru",
+  "terenBrak": "jeszcze brak",
+  "terenJest": "są",
+  "brakPomiaru": "pomiar w toku",
+  "wynikiNota": "Wyniki laboratoryjne zmieniają się o kilka punktów między przebiegami. W tej samej minucie studioagat.pl dostał 98 punktów na telefonie przez API i 100 w raporcie w przeglądarce, dlatego liczy się trend, a nie pojedynczy punkt.",
+  "nieNaglowek": "Czego nie mierzymy i nie obiecujemy",
+  "nie": [
+    {
+      "tytul": "INP bez danych z prawdziwych wizyt",
+      "tekst": "INP, czyli szybkość reakcji na kliknięcie, liczy się tylko z prawdziwych wizyt w Chrome. Nasze realizacje nie mają jeszcze danych w raporcie CrUX, więc wyniku INP nie podajemy i go nie zgadujemy."
+    },
+    {
+      "tytul": "Pozycje w odpowiedziach AI",
+      "tekst": "Wynik 4/4 w przeglądaniu agentowym to audyt techniczny. Nie mierzy, czy ChatGPT, Gemini albo AI Overviews pokażą stronę w odpowiedzi, i nie obiecujemy, że pokażą."
+    },
+    {
+      "tytul": "Miejsce w Google",
+      "tekst": "Wynik 100 znaczy, że strona nie ma przeszkód technicznych. Nie znaczy, że będzie pierwsza w wynikach, dlatego pozycji w określonym terminie nie obiecujemy."
+    }
+  ],
+  "dalejNaglowek": "Zmierz swoją stronę tak samo",
+  "dalejTekst": "Ten sam test PageSpeed Insights uruchomisz za darmo u nas, a wynik dostaniesz po polsku. Dane z prawdziwych wizyt sprawdzisz w osobnym teście.",
+  "dalejGuzik": "Sprawdź szybkość strony",
+  "dalejGuzikAdres": "/jak-sprawdzic-szybkosc-strony/",
+  "dalejDrugi": "Wszystkie darmowe testy",
+  "dalejDrugiAdres": "/darmowe-narzedzia/",
+  "dalejLinki": "Więcej o wskaźnikach: [Core Web Vitals po polsku](/blog/core-web-vitals-po-polsku/), [dane z prawdziwych wizyt](/narzedzia/dane-terenowe-crux/) i [słownik pojęć](/slownik/#pagespeed-insights).",
+  "klasaPomiarEtykieta": "Nasz pomiar"
+}

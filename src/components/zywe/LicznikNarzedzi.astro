@@ -1,0 +1,22 @@
+---
+// Ż4 LicznikNarzedzi — "Dziś sprawdzono N stron" z api.ecopowerpolska.pl/licznik.php (zlicza audyt.php).
+// Bez JS, przy błędzie albo przy zerze zostaje "Darmowe i bez logowania".
+---
+
+<p class="licznik" data-licznik>
+  <span class="licznik__tekst"><span data-licznik-tekst>Darmowe i bez logowania</span><span data-licznik-razem></span>.</span>
+</p>
+<script is:inline src="/zywe/licznik.js" defer></script>
+<!-- is:inline: plik z public/ (stały adres), defer. -->
+
+<style>
+  .licznik {
+    min-height: 1.75rem;
+    margin: var(--o-2) 0 0;
+    text-align: center;
+    font-size: var(--t-s);
+    font-weight: 600;
+    color: var(--akcent);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

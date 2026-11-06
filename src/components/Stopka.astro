@@ -7,9 +7,16 @@ import firma from '../data/firma.json';
 import napisyStopki from '../data/stopka.json';
 import blog from '../data/blog.json';
 import Tlumacz from './Tlumacz.astro';
+import ZegarStrony from './zywe/ZegarStrony.astro';
+import OstatniaPublikacja from './zywe/OstatniaPublikacja.astro';
+import CzytaTeraz from './zywe/CzytaTeraz.astro';
 import { tekst } from '../lib/tekst';
 
+// E-mail i adres www małymi literami, telefon z odstępami w widoku, bez odstępów w schowku (D36, 2026-11-06).
 const mail = firma.email.toLowerCase();
+const www = firma.adresWww.toLowerCase();
+const telefonCyfry = firma.telefon.replace(/\D/g, '');
+const telefonWidok = telefonCyfry.replace(/(\d{3})(?=\d)/g, '$1 ');
 
 // Etykiety i napisy z panelu; `tekst()` przywraca wartość domyślną po wyczyszczeniu pola.
 // Skróty rejestrowe też są edytowalne — pięć sąsiednich etykiet było, te trzy nie były,
@@ -27,13 +34,24 @@ const etykietaTelefon = tekst(napisyStopki.etykietaTelefon, 'Telefon:');
 const guzikKopiujWszystko = tekst(napisyStopki.guzikKopiujWszystko, 'Skopiuj dane spółki');
 // Odnośnik do /polityka-prywatnosci/ w menu stopki (runda 6, D20).
 const linkPolityki = tekst(napisyStopki.linkPolityki, 'Polityka prywatności');
-// Etykieta grupy nad czterema usługami (runda 7): nagłówek, nie odnośnik.
-const etykietaUslug = tekst(napisyStopki.etykietaUslug, 'Usługi');
+// Nagłówki czterech kolumn stopki (D36): nagłówki grup, nie odnośniki.
+const napisy = napisyStopki as Record<string, unknown>;
+const etykietaUslug = tekst(napisyStopki.etykietaUslug, 'Oferta');
+const etykietaNarzedzi = tekst(napisy.etykietaNarzedzi as string | undefined, 'Narzędzia i blog');
+const etykietaStron = tekst(napisy.etykietaStron as string | undefined, 'Strony, które prowadzimy');
+const etykietaDanych = tekst(napisy.etykietaDanych as string | undefined, 'Dane spółki');
+// „Strony, które prowadzimy” (D33): anchor = sama domena, bez opisu i bez nofollow.
+const stronyProwadzone = (Array.isArray(napisy.stronyProwadzone) ? (napisy.stronyProwadzone as unknown[]) : [])
+  .map((d) => String(d ?? '').trim().replace(/^https?:\/\//, '').replace(/\/$/, ''))
+  .filter(Boolean);
 // Link otwierający okno zgody cookie ponownie (Zgoda.astro nasłuchuje na [data-ustawienia-cookie]).
 const ustawieniaCookie = tekst(napisyStopki.ustawieniaCookie, 'Ustawienia cookie');
 // Dwa odnośniki dodane w rundzie 7 (2026-10-30): strona darmowych narzędzi i regulamin serwisu.
 const linkNarzedzi = tekst(napisyStopki.linkNarzedzi, 'Darmowe narzędzia');
 const linkRegulaminu = tekst(napisyStopki.linkRegulaminu, 'Regulamin');
+// Żywe elementy (Ż1 zegar nad stopką, Ż3 i Ż5 w stopce) na każdej stronie; `zywe={false}` wyłącza je na trasie,
+// której własny skrypt zajmuje budżet JS 6 kB (/jak-sprawdzic-szybkosc-strony/, 2026-11-06).
+const { zywe = true } = Astro.props as { zywe?: boolean };
 
 // Nazwa rzeczy kopiowanej guzikiem zbiorczym, do komunikatu dla czytnika ekranu
 // („Skopiowano: dane spółki."). Liczona Z NAPISU Z PANELU, nie wpisana w skrypcie:
@@ -68,10 +86,10 @@ const daneSpolki = [
   firma.kapital && `${etykietaKapital} ${firma.kapital}`,
   `${etykietaNip} ${firma.nip}`,
   `${etykietaRegon} ${firma.regon}`,
-  `${etykietaAdresWww} ${firma.adresWww}`,
-  `${etykietaEmail} ${firma.email}`,
+  `${etykietaAdresWww} ${www}`,
+  `${etykietaEmail} ${mail}`,
   firma.adresSiedziby && `${etykietaAdres} ${firma.adresSiedziby}`,
-  firma.telefon && `${etykietaTelefon} ${firma.telefon}`,
+  telefonCyfry && `${etykietaTelefon} ${telefonCyfry}`,
 ]
   .filter(Boolean)
   .join('\n');
@@ -79,6 +97,8 @@ const daneSpolki = [
 
 {/* Trzy napisy dla skryptu klienckiego jadą atrybutami data-* — skrypt NIE WIDZI
     zmiennych z frontmatteru, a te napisy pochodzą z panelu (KONTRAKT-CMS §5). */}
+{zywe && <ZegarStrony />}
+
 <footer
   class="stopka"
   data-potwierdzenie={potwierdzenieKopiowania}
@@ -86,172 +106,202 @@ const daneSpolki = [
   data-guzik={guzikKopiujWszystko}
 >
   <div class="stopka__srodek">
-    <nav class="stopka__menu" aria-label={tekst(blog.etykietaMenuStopki, 'Strony witryny')}>
-      <ul>
-        <li><a href="/">{tekst(blog.stronaGlowna, 'Strona główna')}</a></li>
-        <li><a href="/#oferta">{tekst(blog.menuOferta, 'Oferta')}</a></li>
-        <li><a href="/#realizacje">{tekst(blog.menuRealizacje, 'Realizacje')}</a></li>
-        <li><a href="/efekty/">{tekst(blog.menuEfekty, 'Efekty')}</a></li>
-        <li><a href="/cena/">{tekst(blog.menuCena, 'Cena')}</a></li>
-        <li><a href="/jak-sprawdzic-szybkosc-strony/">{tekst(blog.menuSzybkosc, 'Szybkość')}</a></li>
-        <li><a href="/faq/">{tekst(blog.menuFaq, 'FAQ')}</a></li>
-        <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
-        <li><a href="/kontakt/">{tekst(blog.menuKontakt, 'Kontakt')}</a></li>
-        <li><a href="/darmowe-narzedzia/">{linkNarzedzi}</a></li>
-      </ul>
-      {/* Drugi wiersz: dokumenty i ustawienia (13 pozycji w jednym wierszu zawijało się z osamotnionym ostatnim przyciskiem). */}
-      <ul>
-        <li><a href="/regulamin/">{linkRegulaminu}</a></li>
-        <li><a href="/polityka-prywatnosci/">{linkPolityki}</a></li>
-        <li><button type="button" class="stopka__przycisk-linku" data-ustawienia-cookie>{ustawieniaCookie}</button></li>
-      </ul>
-    </nav>
+    <div class="stopka__kolumny">
+      <nav class="stopka__kolumna" aria-labelledby="stopka-oferta">
+        <p id="stopka-oferta" class="stopka__etykieta">{etykietaUslug}</p>
+        <ul>
+          {uslugiStopki.map((u) => (
+            <li><a href={u.adres}>{u.nazwa}</a></li>
+          ))}
+          <li><a href="/#realizacje">{tekst(blog.menuRealizacje, 'Realizacje')}</a></li>
+          <li><a href="/cena/">{tekst(blog.menuCena, 'Cena')}</a></li>
+          <li><a href="/kontakt/">{tekst(blog.menuKontakt, 'Kontakt')}</a></li>
+        </ul>
+      </nav>
 
-    <nav class="stopka__uslugi" aria-labelledby="stopka-uslugi">
-      <p id="stopka-uslugi" class="stopka__etykieta">{etykietaUslug}</p>
-      <ul>
-        {uslugiStopki.map((u) => (
-          <li><a href={u.adres}>{u.nazwa}</a></li>
-        ))}
-      </ul>
-    </nav>
+      <nav class="stopka__kolumna" aria-labelledby="stopka-narzedzia">
+        <p id="stopka-narzedzia" class="stopka__etykieta">{etykietaNarzedzi}</p>
+        <ul>
+          <li><a href="/darmowe-narzedzia/">{linkNarzedzi}</a></li>
+          <li><a href="/jak-sprawdzic-szybkosc-strony/">{tekst(blog.menuSzybkosc, 'Szybkość')}</a></li>
+          <li><a href="/efekty/">{tekst(blog.menuEfekty, 'Efekty')}</a></li>
+          <li><a href="/blog/">{tekst(blog.menuBlog, 'Blog')}</a></li>
+          <li><a href="/faq/">{tekst(blog.menuFaq, 'FAQ')}</a></li>
+          <li><a href="/slownik/">Słownik</a></li>
+          <li><a href="/jak-mierzymy/">Jak mierzymy</a></li>
+          <li><a href="/prawo-strony-internetowej/">Prawo strony</a></li>
+        </ul>
+      </nav>
 
-    {/* Przełącznik języków (GTranslate): etykieta, pojemnik widżetu i przycisk startowy w Tlumacz.astro. Miejsce zarezerwowane (44 px), bez skoku układu. */}
-    <Tlumacz />
+      {stronyProwadzone.length > 0 && (
+        <nav class="stopka__kolumna" aria-labelledby="stopka-strony">
+          <p id="stopka-strony" class="stopka__etykieta">{etykietaStron}</p>
+          <ul>
+            {stronyProwadzone.map((d) => (
+              <li><a href={`https://${d}/`}>{d}</a></li>
+            ))}
+          </ul>
+        </nav>
+      )}
 
-    <p class="stopka__nazwa">
-      <span class="dana"
-        >{nazwaStopki}<button
-          class="kopiuj"
-          type="button"
-          hidden
-          data-kopiuj={nazwaStopki}
-          aria-label="Skopiuj nazwę spółki"><span class="kopiuj__znak" aria-hidden="true"></span></button
-        ></span
-      >
-    </p>
+      <section class="stopka__kolumna stopka__spolka" aria-labelledby="stopka-dane">
+        <p id="stopka-dane" class="stopka__etykieta">{etykietaDanych}</p>
+        <p class="stopka__nazwa">
+          <span class="dana"
+            >{nazwaStopki}<button
+              class="kopiuj"
+              type="button"
+              hidden
+              data-kopiuj={nazwaStopki}
+              aria-label="Skopiuj nazwę spółki"><span class="kopiuj__znak" aria-hidden="true"></span></button
+            ></span
+          >
+        </p>
 
-    {/* Jeden wiersz, BEZ przecinków — granicę niesie odstęp (D6). */}
-    <p class="stopka__rejestr">
-      <span class="pozycja">{firma.rejestr}</span>
-      <span class="pozycja"
-        >{etykietaKrs} <span class="dana"
-          >{firma.krs}<button
-            class="kopiuj"
+        {/* Pozycje rejestru BEZ przecinków — granicę niesie odstęp (D6). */}
+        <p class="stopka__rejestr">
+          <span class="pozycja">{firma.rejestr}</span>
+          <span class="pozycja"
+            >{etykietaKrs} <span class="dana"
+              >{firma.krs}<button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={firma.krs}
+                aria-label="Skopiuj numer KRS"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></span
+          >
+          <span class="pozycja"
+            >{etykietaNip} <span class="dana"
+              >{firma.nip}<button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={firma.nip}
+                aria-label="Skopiuj numer NIP"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></span
+          >
+          <span class="pozycja"
+            >{etykietaRegon} <span class="dana"
+              >{firma.regon}<button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={firma.regon}
+                aria-label="Skopiuj numer REGON"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></span
+          >
+        </p>
+
+        {(firma.sad || firma.kapital) && (
+          <p class="stopka__rejestr">
+            {firma.sad && <span class="pozycja">{etykietaSad} {firma.sad}</span>}
+            {firma.kapital && <span class="pozycja">{etykietaKapital} {firma.kapital}</span>}
+          </p>
+        )}
+
+        <dl class="stopka__dane">
+          <dt>{etykietaAdresWww}</dt>
+          <dd
+            ><span class="dana"
+              >{www}<button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={www}
+                aria-label="Skopiuj adres WWW"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></dd
+          >
+
+          <dt>{etykietaEmail}</dt>
+          <dd
+            ><span class="dana"
+              ><a href={`mailto:${mail}`}>{mail}</a><button
+                class="kopiuj"
+                type="button"
+                hidden
+                data-kopiuj={mail}
+                aria-label="Skopiuj adres e-mail"><span class="kopiuj__znak" aria-hidden="true"></span></button
+              ></span
+            ></dd
+          >
+
+          {firma.adresSiedziby && (
+            <>
+              <dt>{etykietaAdres}</dt>
+              <dd
+                ><span class="dana"
+                  >{firma.adresSiedziby}<button
+                    class="kopiuj"
+                    type="button"
+                    hidden
+                    data-kopiuj={firma.adresSiedziby}
+                    aria-label="Skopiuj adres siedziby"><span class="kopiuj__znak" aria-hidden="true"></span></button
+                  ></span
+                ></dd
+              >
+            </>
+          )}
+
+          {telefonCyfry && (
+            <>
+              <dt>{etykietaTelefon}</dt>
+              <dd
+                ><span class="dana"
+                  ><a href={`tel:+48${telefonCyfry}`}>{telefonWidok}</a><button
+                    class="kopiuj"
+                    type="button"
+                    hidden
+                    data-kopiuj={telefonCyfry}
+                    aria-label="Skopiuj numer telefonu"><span class="kopiuj__znak" aria-hidden="true"></span></button
+                  ></span
+                ></dd
+              >
+            </>
+          )}
+        </dl>
+
+        <p class="stopka__zbiorczy">
+          <button
+            class="kopiuj-wszystko"
             type="button"
             hidden
-            data-kopiuj={firma.krs}
-            aria-label="Skopiuj numer KRS"><span class="kopiuj__znak" aria-hidden="true"></span></button
-          ></span
-        ></span
-      >
-      <span class="pozycja"
-        >{etykietaNip} <span class="dana"
-          >{firma.nip}<button
-            class="kopiuj"
-            type="button"
-            hidden
-            data-kopiuj={firma.nip}
-            aria-label="Skopiuj numer NIP"><span class="kopiuj__znak" aria-hidden="true"></span></button
-          ></span
-        ></span
-      >
-      <span class="pozycja"
-        >{etykietaRegon} <span class="dana"
-          >{firma.regon}<button
-            class="kopiuj"
-            type="button"
-            hidden
-            data-kopiuj={firma.regon}
-            aria-label="Skopiuj numer REGON"><span class="kopiuj__znak" aria-hidden="true"></span></button
-          ></span
-        ></span
-      >
-    </p>
+            data-kopiuj={daneSpolki}
+            data-nazwa={nazwaZbiorcza}
+          >
+            {guzikKopiujWszystko}
+          </button>
+        </p>
 
-    {(firma.sad || firma.kapital) && (
-      <p class="stopka__rejestr">
-        {firma.sad && <span class="pozycja">{etykietaSad} {firma.sad}</span>}
-        {firma.kapital && <span class="pozycja">{etykietaKapital} {firma.kapital}</span>}
-      </p>
+        {/* Potwierdzenie dla czytnika ekranu — zmiana ikony jest dla niego niema. */}
+        <p class="stopka__stan" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+
+    <div class="stopka__dol">
+      <nav class="stopka__menu" aria-label={tekst(blog.etykietaMenuStopki, 'Strony witryny')}>
+        <ul>
+          <li><a href="/">{tekst(blog.stronaGlowna, 'Strona główna')}</a></li>
+          <li><a href="/regulamin/">{linkRegulaminu}</a></li>
+          <li><a href="/polityka-prywatnosci/">{linkPolityki}</a></li>
+          <li><button type="button" class="stopka__przycisk-linku" data-ustawienia-cookie>{ustawieniaCookie}</button></li>
+        </ul>
+      </nav>
+      {/* Przełącznik języków (GTranslate): etykieta, pojemnik widżetu i przycisk startowy w Tlumacz.astro. Miejsce zarezerwowane (44 px), bez skoku układu. */}
+      <Tlumacz />
+    </div>
+
+    {/* Żywe elementy Ż3 i Ż5: czas ostatniej publikacji i liczba czytających. */}
+    {zywe && (
+      <div class="stopka__zywe">
+        <OstatniaPublikacja />
+        <CzytaTeraz />
+      </div>
     )}
-
-    <dl class="stopka__dane">
-      <dt>{etykietaAdresWww}</dt>
-      <dd
-        ><span class="dana"
-          >{firma.adresWww}<button
-            class="kopiuj"
-            type="button"
-            hidden
-            data-kopiuj={firma.adresWww}
-            aria-label="Skopiuj adres WWW"><span class="kopiuj__znak" aria-hidden="true"></span></button
-          ></span
-        ></dd
-      >
-
-      <dt>{etykietaEmail}</dt>
-      <dd
-        ><span class="dana"
-          ><a href={`mailto:${mail}`}>{firma.email}</a><button
-            class="kopiuj"
-            type="button"
-            hidden
-            data-kopiuj={firma.email}
-            aria-label="Skopiuj adres e-mail"><span class="kopiuj__znak" aria-hidden="true"></span></button
-          ></span
-        ></dd
-      >
-
-      {firma.adresSiedziby && (
-        <>
-          <dt>{etykietaAdres}</dt>
-          <dd
-            ><span class="dana"
-              >{firma.adresSiedziby}<button
-                class="kopiuj"
-                type="button"
-                hidden
-                data-kopiuj={firma.adresSiedziby}
-                aria-label="Skopiuj adres siedziby"><span class="kopiuj__znak" aria-hidden="true"></span></button
-              ></span
-            ></dd
-          >
-        </>
-      )}
-
-      {firma.telefon && (
-        <>
-          <dt>{etykietaTelefon}</dt>
-          <dd
-            ><span class="dana"
-              >{firma.telefon}<button
-                class="kopiuj"
-                type="button"
-                hidden
-                data-kopiuj={firma.telefon}
-                aria-label="Skopiuj numer telefonu"><span class="kopiuj__znak" aria-hidden="true"></span></button
-              ></span
-            ></dd
-          >
-        </>
-      )}
-    </dl>
-
-    <p class="stopka__zbiorczy">
-      <button
-        class="kopiuj-wszystko"
-        type="button"
-        hidden
-        data-kopiuj={daneSpolki}
-        data-nazwa={nazwaZbiorcza}
-      >
-        {guzikKopiujWszystko}
-      </button>
-    </p>
-
-    {/* Potwierdzenie dla czytnika ekranu — zmiana ikony jest dla niego niema. */}
-    <p class="stopka__stan" role="status" aria-live="polite"></p>
 
     <p class="stopka__prawa">{prawaZastrzezone}</p>
   </div>
@@ -314,122 +364,89 @@ const daneSpolki = [
 </script>
 
 <style>
-  /* Stopka na wypełnieniu, bez kreski — tak samo jak kafelki. Do dołu dociska ją
-     wiersz `1fr` siatki na <body> (motyw.css), nie margines. */
+  /* Stopka na ciemnym pasie (D31, 2026-11-06). Pary kolorów w motyw.css: #f4f5f1 i #b9c4bd na #10231b,
+     #3cbf96 na #10231b (najechanie, potwierdzenie), obrys #5f7d6e (nietekst). Do dołu dociska ją wiersz `1fr` na <body>. */
   .stopka {
-    background: var(--powierzchnia);
+    background: var(--tlo-ciemne);
+    color: var(--na-ciemnym-cichy);
   }
 
   .stopka__srodek {
     max-width: var(--szerokosc-tresci);
     margin: 0 auto;
-    padding: var(--o-8) var(--o-6);
-    font-size: var(--t-xs);
+    padding: var(--o-16) var(--o-6) var(--o-8);
+    font-size: var(--t-s);
     line-height: 1.6;
-    color: var(--tekst-cichy);
   }
 
-  .stopka__menu ul:has(+ ul) {
-    margin-bottom: 0;
-  }
-
-  .stopka__menu ul {
-    list-style: none;
-    margin: 0 0 var(--o-4);
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--o-6);
-  }
-
-  /* Usługi: etykieta grupy na środku, kreska pod nią na pełną szerokość, cztery usługi w jednym rzędzie.
-     Etykieta to nagłówek, nie odnośnik: kapitaliki, kolor cichy, bez podkreślenia i bez koloru linku. */
-  .stopka__uslugi {
-    margin: 0 0 var(--o-4);
-  }
-
-  .stopka__etykieta {
-    margin: 0;
-    padding-bottom: var(--o-2);
-    border-bottom: 1px solid var(--linia);
-    text-align: center;
-    font-size: var(--t-xs);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--tekst-cichy);
-    text-decoration: none;
-  }
-
-  .stopka__uslugi ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  /* Cztery kolumny od 64 rem, dwie od 40 rem, jedna niżej; dane spółki szersze. */
+  .stopka__kolumny {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 var(--o-6);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--o-8) var(--o-8);
   }
 
-  @media (min-width: 48rem) {
-    .stopka__uslugi ul {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+  @media (min-width: 40rem) {
+    .stopka__kolumny {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .stopka__uslugi li {
-    text-align: center;
+  @media (min-width: 64rem) {
+    .stopka__kolumny {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr) minmax(0, 0.9fr) minmax(0, 1.6fr);
+    }
   }
 
-  .stopka__uslugi a {
-    justify-content: center;
+  .stopka__etykieta {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--na-ciemnym);
   }
 
-  .stopka__menu a,
-  .stopka__uslugi a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: var(--t-s);
-    font-weight: 600;
-    color: var(--akcent);
-  }
-
-  /* „Ustawienia cookie”: <button> wyglądający jak odnośnik menu (cofnięcie zgody tak łatwe jak jej udzielenie). */
-  .stopka__przycisk-linku {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
+  .stopka__kolumna ul,
+  .stopka__menu ul {
+    list-style: none;
+    margin: 0;
     padding: 0;
-    font: inherit;
-    font-size: var(--t-s);
-    font-weight: 600;
-    color: var(--akcent);
-    background: none;
-    border: 0;
-    cursor: pointer;
   }
 
-  .stopka__przycisk-linku:hover {
-    color: var(--tekst);
+  /* Odnośniki: cel dotyku 44 px, jasny tekst; najechanie = kolor --akcent-na-ciemnym + podkreślenie. */
+  .stopka a {
+    color: var(--na-ciemnym);
+    text-decoration: none;
+  }
+
+  .stopka__kolumna li a,
+  .stopka__menu a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .stopka a:hover {
+    color: var(--akcent-na-ciemnym);
     text-decoration: underline;
+    text-decoration-color: var(--akcent-jasny);
     text-underline-offset: 3px;
-  }
-
-  .stopka__menu a:hover,
-  .stopka__uslugi a:hover {
-    color: var(--tekst);
   }
 
   .stopka__nazwa {
     margin: 0 0 var(--o-2);
-    color: var(--tekst);
+    color: var(--na-ciemnym);
     font-weight: 600;
-    letter-spacing: -0.01em;
   }
 
+  /* Pozycje rejestru w wierszu z zawijaniem; długi „Sąd rejestrowy” łamie się w środku kolumny. */
   .stopka__rejestr {
-    margin: 0 0 var(--o-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-4);
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-xs);
   }
 
   .stopka__dane {
@@ -441,19 +458,11 @@ const daneSpolki = [
 
   .stopka__dane dt {
     font-weight: 600;
-    color: var(--tekst);
+    color: var(--na-ciemnym);
   }
 
   .stopka__dane dd {
     margin: 0;
-  }
-
-  .stopka__dane a {
-    color: var(--akcent);
-  }
-
-  .stopka__dane a:hover {
-    color: var(--tekst);
   }
 
   /* Wartość i jej guzik łamią się razem albo wcale. */
@@ -461,25 +470,17 @@ const daneSpolki = [
     white-space: nowrap;
   }
 
-  /* Odstęp zamiast przecinka — jedyna granica między pozycjami (D6). */
+  /* Odstęp (gap) zamiast przecinka — jedyna granica między pozycjami (D6). */
   .pozycja {
-    white-space: nowrap;
-    margin-right: var(--o-4);
+    white-space: normal;
   }
 
-  .pozycja:last-child {
-    margin-right: 0;
-  }
-
-  /* Guzik przy danej — celowo cichy; kolory to pary policzone w motyw.css. */
+  /* Guzik przy danej — celowo cichy. */
   .kopiuj {
     /* spoczynek */
     appearance: none;
-    /* Ujemny prawy margines: guzik jest szerszy od ikony (pole kliknięcia) i bez
-       tego pusty pas odsuwał od wartości to, co stoi za nią. */
-    /* 24×24 px = minimum WCAG 2.5.8 (D14). Ujemne marginesy pionowe: większy guzik
-       nie podnosi wysokości wiersza. */
-    margin: -0.25rem -0.35rem -0.25rem 0;
+    /* 24×24 px = minimum WCAG 2.5.8 (D14). Ujemne marginesy: guzik nie podnosi wiersza ani nie odsuwa wartości. */
+    margin: -0.25rem -0.35rem -0.25rem 0.15rem;
     padding: 0;
     width: 24px;
     height: 24px;
@@ -489,14 +490,14 @@ const daneSpolki = [
     background: none;
     border: 0;
     border-radius: var(--promien-maly);
-    color: var(--tekst-cichy);
+    color: var(--na-ciemnym-cichy);
     cursor: pointer;
   }
 
-  /* najechanie */
+  /* najechanie: tło #1a3a2d, ikona #f4f5f1 */
   .kopiuj:hover {
-    color: var(--akcent);
-    background: var(--powierzchnia-mocna);
+    color: var(--na-ciemnym);
+    background: #1a3a2d;
   }
 
   /* aktywny (wciśnięty) */
@@ -528,7 +529,7 @@ const daneSpolki = [
 
   /* Ta sama ramka zamienia się w ptaszka — bez zmiany szerokości guzika. */
   .kopiuj[data-ok] {
-    color: var(--akcent);
+    color: var(--akcent-na-ciemnym);
   }
 
   .kopiuj[data-ok] .kopiuj__znak {
@@ -547,17 +548,18 @@ const daneSpolki = [
 
   /* Guzik zbiorczy: ramka, nie wypełnienie — to narzędzie, nie CTA. */
   .stopka__zbiorczy {
-    margin: var(--o-6) 0 0;
+    margin: var(--o-4) 0 0;
   }
 
   .kopiuj-wszystko {
     /* spoczynek */
     appearance: none;
-    padding: var(--o-2) var(--o-4);
+    min-height: 44px;
+    padding: 0 var(--o-4);
     background: none;
-    border: 1px solid var(--linia);
+    border: 1px solid var(--linia-na-ciemnym);
     border-radius: var(--promien-maly);
-    color: var(--tekst);
+    color: var(--na-ciemnym);
     font: inherit;
     font-weight: 600;
     cursor: pointer;
@@ -565,8 +567,8 @@ const daneSpolki = [
 
   /* najechanie */
   .kopiuj-wszystko:hover {
-    border-color: var(--akcent);
-    color: var(--akcent);
+    border-color: var(--akcent-na-ciemnym);
+    color: var(--akcent-na-ciemnym);
   }
 
   /* aktywny (wciśnięty) */
@@ -575,29 +577,84 @@ const daneSpolki = [
   }
 
   .kopiuj-wszystko[data-ok] {
-    border-color: var(--akcent);
-    color: var(--akcent);
+    border-color: var(--akcent-na-ciemnym);
+    color: var(--akcent-na-ciemnym);
   }
 
   /* Wysokość trzymana zawsze, żeby komunikat nie przesuwał stopki. */
   .stopka__stan {
     margin: var(--o-2) 0 0;
     min-height: 1.6em;
-    color: var(--akcent);
+    color: var(--akcent-na-ciemnym);
   }
 
-  /* Prawa zastrzeżone: ostatni wiersz, na środku, najmniejszy stopień, kreska od danych rejestrowych. */
-  .stopka__prawa {
-    margin: var(--o-6) 0 0;
+  /* Dolny wiersz: dokumenty, ustawienia cookie i język; kreska od kolumn. */
+  .stopka__dol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--o-2) var(--o-6);
+    margin-top: var(--o-8);
     padding-top: var(--o-4);
-    border-top: 1px solid var(--linia);
-    text-align: center;
+    border-top: 1px solid var(--linia-na-ciemnym);
+  }
+
+  .stopka__menu ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--o-6);
+  }
+
+  /* „Ustawienia cookie”: <button> wyglądający jak odnośnik (cofnięcie zgody tak łatwe jak jej udzielenie). */
+  .stopka__przycisk-linku {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    font: inherit;
+    color: var(--na-ciemnym);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .stopka__przycisk-linku:hover {
+    color: var(--akcent-na-ciemnym);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .stopka__dol :global(.tlumacz) {
+    margin: 0;
+  }
+
+  .stopka__zywe {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--o-2) var(--o-6);
+    margin-top: var(--o-4);
     font-size: var(--t-xs);
-    color: var(--tekst-cichy);
+  }
+
+  .stopka__zywe :global(p) {
+    margin: 0;
+  }
+
+  .stopka__prawa {
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-xs);
+    text-align: center;
   }
 
   /* Przy 320 px nierozrywalne wartości rozpychały stronę w bok (WCAG 1.4.10, pomiar 2026-10-23). */
   @media (max-width: 26rem) {
+    .stopka__srodek {
+      padding-inline: var(--o-4);
+    }
+
     .dana,
     .pozycja {
       white-space: normal;

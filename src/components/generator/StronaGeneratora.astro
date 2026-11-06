@@ -217,17 +217,9 @@ const czesci = (t: string) => kawalki(t);
   .gen .wers { margin-top: var(--o-4); }
   .gen .wers .podpowiedz { margin-top: var(--o-2); }
 
-  .gen .guzik {
-    display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--o-6);
-    font: inherit; font-weight: 600; color: #fff; background: var(--akcent); border: 0; border-radius: var(--promien-maly);
-    text-decoration: none; cursor: pointer;
-  }
-  .gen .guzik:hover { background: var(--tekst); }
-  .gen .guzik:focus-visible, .wezwanie .guzik:focus-visible { outline: 3px solid var(--tekst); outline-offset: 3px; }
+  /* Wygląd guzików: .guzik / .guzik--drugi z motyw.css (kontrakt fazy 2); tu tylko stany używane przez skrypt. */
   .gen .guzik[hidden] { display: none; }
   .gen .guzik[aria-busy='true'] { opacity: 0.7; cursor: progress; }
-  .gen .guzik--drugi { color: var(--tekst); background: transparent; border: 1.5px solid var(--tekst-cichy); }
-  .gen .guzik--drugi:hover { color: #fff; }
   .gen .narzedzia-dok { display: flex; flex-wrap: wrap; gap: var(--o-3); }
   .gen .narzedzia-dok[hidden] { display: none; }
 
@@ -270,13 +262,8 @@ const czesci = (t: string) => kawalki(t);
   .blok__nota { margin-top: var(--o-3); font-size: var(--t-s); color: var(--tekst-cichy); }
 
   .wezwanie { margin-top: var(--o-12); padding: var(--o-8) var(--o-6); text-align: center; background: var(--powierzchnia); border-radius: var(--promien); }
-  .wezwanie h2 { margin: 0; font-size: var(--t-l); }
+  .wezwanie h2 { margin: 0; font-size: var(--t-xl); line-height: 1.15; }
   .wezwanie p { max-width: 36rem; margin: var(--o-3) auto var(--o-6); }
-  .wezwanie .guzik {
-    display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--o-6); font-weight: 600; color: #fff;
-    background: var(--akcent); border-radius: var(--promien-maly); text-decoration: none;
-  }
-  .wezwanie .guzik:hover { background: var(--tekst); }
 
   /* Wydruk i „zapisz jako PDF”: zostaje sam dokument (ścieżka body > main > .gen > .krok--dok > .dok). */
   @media print {

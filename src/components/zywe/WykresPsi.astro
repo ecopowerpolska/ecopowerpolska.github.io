@@ -1,0 +1,264 @@
+---
+// Ż2 WykresPsi — "Wynik na telefonie: nasze realizacje": słupek CSS na realizację (wydajność mobile z PSI),
+// wynik na komputerze obok i ostatnie pomiary z `historia`. Dane: src/data/pomiary.json (cron Z440 05:30,
+// scripts/psi-realizacje.py), kolejność i nazwy z serwisy.json (bez ukrytych). Zero JS.
+import serwisy from '../../data/serwisy.json';
+import pomiary from '../../data/pomiary.json';
+
+interface Historia {
+  data: string;
+  telefon: number | null;
+  komputer: number | null;
+}
+interface Wpis {
+  data?: string | null;
+  mobile?: { wydajnosc?: number | null } | null;
+  desktop?: { wydajnosc?: number | null } | null;
+  historia?: Historia[];
+}
+interface Props {
+  // Tło pasa na stronie (przemienność jasny/powierzchnia); `osadzony` = bez własnego pasa i z H3 (wewnątrz sekcji innej strony).
+  tlo?: 'jasny' | 'powierzchnia';
+  osadzony?: boolean;
+}
+const { tlo = 'jasny', osadzony = false } = Astro.props;
+const Naglowek = osadzony ? 'h3' : 'h2';
+const Opakowanie = osadzony ? 'div' : 'section';
+const klasaOpakowania = osadzony ? 'wykres wykres--osadzony' : `pas pas--${tlo} wykres`;
+const klasaTresci = osadzony ? '' : 'pas__tresc';
+const mapa = pomiary.pomiary as Record<string, Wpis>;
+const dataPl = (iso?: string | null) => {
+  const m = (iso ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : '';
+};
+
+const wiersze = serwisy.serwisy
+  .filter((s) => !s.ukryty && s.adres)
+  .map((s) => {
+    const p = mapa[s.adres] ?? {};
+    const telefon = p.mobile?.wydajnosc;
+    const komputer = p.desktop?.wydajnosc;
+    const historia = (p.historia ?? []).filter((h) => typeof h.telefon === 'number').slice(-7);
+    return {
+      nazwa: s.nazwa,
+      telefon: typeof telefon === 'number' ? telefon : null,
+      komputer: typeof komputer === 'number' ? komputer : null,
+      historia,
+      data: p.data ?? '',
+      adresPsi: `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(s.adres)}&form_factor=mobile`,
+    };
+  })
+  .filter((w) => w.telefon !== null);
+
+const najnowsza = wiersze.map((w) => w.data).sort().at(-1) ?? '';
+const srednia = wiersze.length
+  ? Math.round(wiersze.reduce((a, w) => a + (w.telefon ?? 0), 0) / wiersze.length)
+  : null;
+// Mini-wykres: skala 80–100, żeby różnica 96 i 100 była widoczna; wartość niesie tekst dla czytnika.
+const wysokosc = (v: number) => `${Math.max(4, Math.min(100, (v - 80) * 5))}%`;
+---
+
+{
+  wiersze.length > 0 && (
+    <Opakowanie class={klasaOpakowania} aria-labelledby="wykres-psi-naglowek">
+      <div class={klasaTresci}>
+        {!osadzony && <p class="etykieta wykres__etykieta">Pomiar Google PageSpeed Insights</p>}
+        <Naglowek id="wykres-psi-naglowek" class="wykres__naglowek">Wynik na telefonie: nasze realizacje</Naglowek>
+        <p class="wykres__srednia">
+          <span class="liczba">{srednia}</span>
+          <span class="liczba__podpis">
+            średnia wydajność {wiersze.length} stron na telefonie, skala 0–100{najnowsza && <>, pomiar z {dataPl(najnowsza)}</>}
+          </span>
+        </p>
+        <ol class="wykres__lista">
+          {wiersze.map((w) => (
+            <li class="wykres__wiersz">
+              <a class="wykres__nazwa" href={w.adresPsi} target="_blank" rel="noopener">
+                {w.nazwa}
+                <span class="tylko-czytnik"> — wynik w PageSpeed Insights (otwiera się w nowej karcie)</span>
+              </a>
+              <span class="wykres__slupek" aria-hidden="true">
+                <span style={`--w:${w.telefon}%`} />
+              </span>
+              <span class="wykres__wynik">
+                <span class="tylko-czytnik">telefon: </span>
+                {w.telefon}
+                <span class="tylko-czytnik"> na 100</span>
+              </span>
+              <span class="wykres__komputer">
+                komputer {w.komputer ?? '–'}
+              </span>
+              {w.historia.length >= 2 && (
+                <span class="wykres__historia">
+                  <span class="tylko-czytnik">
+                    Ostatnie pomiary na telefonie: {w.historia.map((h) => `${dataPl(h.data)} ${h.telefon}`).join(', ')}.
+                  </span>
+                  <span class="wykres__iskry" aria-hidden="true" title={`ostatnie ${w.historia.length} pomiarów, skala 80–100`}>
+                    {w.historia.map((h) => (
+                      <span style={`--h:${wysokosc(h.telefon as number)}`} />
+                    ))}
+                  </span>
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p class="wykres__nota">
+          Mierzymy każdą stronę codziennie rano. Wynik sprawdzisz sam na{' '}
+          <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">pagespeed.web.dev<span class="tylko-czytnik"> (otwiera się w nowej karcie)</span></a>.
+        </p>
+      </div>
+    </Opakowanie>
+  )
+}
+
+<style>
+  .wykres__etykieta,
+  .wykres__naglowek {
+    text-align: center;
+  }
+
+  .wykres__naglowek {
+    margin: var(--o-2) 0 var(--o-6);
+    font-size: var(--t-h2, var(--t-xl));
+  }
+
+  .wykres--osadzony {
+    margin: 0 0 var(--o-8);
+  }
+
+  .wykres--osadzony .wykres__naglowek {
+    font-size: var(--t-xl);
+  }
+
+  .wykres__srednia {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--o-2) var(--o-3);
+    margin: 0 0 var(--o-8);
+    text-align: center;
+  }
+
+  .wykres__srednia .liczba {
+    color: var(--akcent);
+  }
+
+  .wykres__lista {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 56rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-3);
+  }
+
+  /* Wiersz: nazwa | słupek | wynik | komputer | mini-wykres. Na wąskim: nazwa i wynik w linii, słupek pod nimi. */
+  .wykres__wiersz {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'nazwa wynik' 'slupek slupek' 'komputer historia';
+    align-items: center;
+    gap: var(--o-1) var(--o-3);
+    padding-block: var(--o-2);
+    border-bottom: var(--obrys-karty, 1px solid var(--linia));
+  }
+
+  @media (min-width: 48rem) {
+    .wykres__wiersz {
+      grid-template-columns: 17rem minmax(0, 1fr) 3rem 6.5rem 4.5rem;
+      grid-template-areas: 'nazwa slupek wynik komputer historia';
+      border-bottom: 0;
+      padding-block: 0;
+    }
+  }
+
+  .wykres__nazwa {
+    grid-area: nazwa;
+    font-weight: 600;
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* kontrast: #1f8a6c (słupek) na #e8eae2 = 3,52:1, na #f4f5f1 = 3,91:1 (element graficzny ≥ 3:1) */
+  .wykres__slupek {
+    grid-area: slupek;
+    display: block;
+    height: 0.75rem;
+    border-radius: 999px;
+    background: var(--powierzchnia);
+    overflow: hidden;
+  }
+
+  /* Na pasie --powierzchnia tor słupka jasny, inaczej zlewa się z tłem. */
+  .pas--powierzchnia .wykres__slupek {
+    background: var(--tlo);
+  }
+
+  .wykres__slupek > span {
+    display: block;
+    width: var(--w);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--akcent-jasny, #1f8a6c);
+  }
+
+  /* kontrast: #166653 na #f4f5f1 = 6,27:1 */
+  .wykres__wynik {
+    grid-area: wynik;
+    font-weight: 700;
+    font-size: var(--t-l, 1.375rem);
+    font-variant-numeric: tabular-nums;
+    color: var(--akcent);
+    text-align: right;
+  }
+
+  .wykres__komputer {
+    grid-area: komputer;
+    font-size: var(--t-xs);
+    color: var(--tekst-cichy);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .wykres__historia {
+    grid-area: historia;
+    justify-self: end;
+  }
+
+  .wykres__iskry {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 1.5rem;
+  }
+
+  .wykres__iskry > span {
+    display: block;
+    width: 0.375rem;
+    height: var(--h);
+    border-radius: 1px;
+    background: var(--akcent-jasny, #1f8a6c);
+  }
+
+  .wykres__nota {
+    margin: var(--o-8) 0 0;
+    text-align: center;
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .tylko-czytnik {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

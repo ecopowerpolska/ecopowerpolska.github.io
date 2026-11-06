@@ -6,12 +6,19 @@ dataPublikacji: "2026-11-05T12:45:00+01:00"
 zdjecie: "../../assets/blog/wyszukiwanie-agentowe-asystent-ai.jpg"
 zdjecieAlt: "Osoba trzyma telefon z otwartym asystentem AI, na ekranie widać napis „AI”"
 autor: "Piotr Czwarnowski"
+wJednymZdaniu: "Na start wystarczą zwykłe SEO, dostępny HTML i dane strukturalne zgodne z treścią, a pliki dla agentów i protokoły zakupowe wdrażasz dopiero wtedy, gdy masz konkretny powód."
+dataAktualizacji: "2026-11-06"
+wTwojejFirmie:
+  pytanie: "Czy Twoja strona przechodzi pierwszy próg?"
+  odpowiedz: "Sprawdź trzy rzeczy: czy strona otwiera się bez błędu, czy tekst jest w HTML bez uruchamiania skryptów i czy każde pole formularza ma etykietę. Nasz darmowy audyt dokłada do tego robots.txt, llms.txt, manifest ARD i dane strukturalne."
+  krok: "Uruchom darmowy audyt AI i wyszukiwania agentowego"
+  krokAdres: "/narzedzia/wyszukiwanie-agentowe-ai/"
 szkic: false
 ---
 
 Wyszukiwanie agentowe to wyszukiwanie, w którym asystent AI sam wykonuje zadanie: szuka terminu, porównuje oferty, wypełnia formularz. Dla strony i sklepu oznacza to trzy osobne sprawy. Czy AI Search Twoją stronę znajdzie i pokaże. Czy agent w przeglądarce ją obsłuży. Czy sklep sprzeda przez protokół zakupowy. Pierwszą załatwia zwykłe SEO, drugą dostępny HTML, a trzecia na razie dotyczy głównie USA.
 
-To trzy różne rzeczy, każda z własnymi zaleceniami. Pliki i manifesty dla agentów, takie jak llms.txt czy manifest ARD, nie podnoszą pozycji w odpowiedziach AI. Google pisze, że do AI Overviews i AI Mode nie trzeba tworzyć nowych plików maszynowych, plików tekstowych dla AI ani znaczników (11).
+<span class="dowod dowod--dokumentacja">Dokumentacja</span> To trzy różne rzeczy, każda z własnymi zaleceniami. Pliki i manifesty dla agentów, takie jak llms.txt czy manifest ARD, nie podnoszą pozycji w odpowiedziach AI. Google pisze, że do AI Overviews i AI Mode nie trzeba tworzyć nowych plików maszynowych, plików tekstowych dla AI ani znaczników (11).
 
 ## Agent wykonuje zadanie, zamiast pokazywać listę linków
 
@@ -41,7 +48,23 @@ TechCrunch ocenia działanie agentów w realnym świecie jako kruche (4).
 
 Pierwszy cel to obecność w odpowiedziach: w AI Overviews i AI Mode Google oraz w ChatGPT Search. Google podaje wprost, że funkcje AI w wyszukiwarce nie mają dodatkowych wymagań technicznych. Strona ma być zindeksowana i kwalifikować się do fragmentu w wynikach, a dane strukturalne mają zgadzać się z widocznym tekstem (11).
 
-Nasze strony wysyłają gotowy HTML z Astro, więc tekst jest w kodzie od razu. Praca o GEO, czyli optymalizacji pod silniki generatywne, pokazała do 40 % większą widoczność w ich odpowiedziach (17). To wynik badania, nie gwarancja dla Twojej strony. Skuteczność metod zależała tam od dziedziny (17).
+Nasze strony wysyłają gotowy HTML z Astro, więc tekst jest w kodzie od razu. <span class="dowod dowod--badanie">Badanie</span> Praca o GEO, czyli optymalizacji pod silniki generatywne, pokazała do 40 % większą widoczność w ich odpowiedziach (17). To wynik badania, nie gwarancja dla Twojej strony. Skuteczność metod zależała tam od dziedziny (17).
+
+### Znaleźć, wybrać, zacytować: trzy progi, które strona przechodzi osobno
+
+<span class="dowod dowod--ocena">Ocena autora</span> Asystent AI najpierw zbiera strony, które pasują do pytania. Potem wybiera z nich fragmenty, na których oprze odpowiedź. Na końcu decyduje, które źródła pokaże jako link. Strona może przejść pierwszy próg i odpaść na drugim.
+
+<figure class="lejek"><figcaption class="lejek__tytul">Trzy progi strony w odpowiedzi asystenta AI</figcaption><ol class="lejek__progi"><li class="lejek__prog"><span class="lejek__nazwa">Znaleziona</span><span class="lejek__opis">trafia do zbioru stron pasujących do pytania</span></li><li class="lejek__prog"><span class="lejek__nazwa">Wybrana</span><span class="lejek__opis">jej fragment staje się podstawą odpowiedzi</span></li><li class="lejek__prog"><span class="lejek__nazwa">Zacytowana</span><span class="lejek__opis">asystent pokazuje ją jako link</span></li></ol></figure>
+
+Na pierwszy próg wpływasz technicznie: strona otwiera się bez błędu, robot czyta tekst bez uruchamiania skryptów, a dane firmy stoją w danych strukturalnych. Drugi zależy od treści: czy akapit sam odpowiada na pytanie i czy jego pierwsze zdanie nazywa rzecz pełną nazwą. Trzeciego nie kontroluje nikt poza dostawcą asystenta. Nasze strony mierzę na pierwszym progu, bo tylko ten da się sprawdzić powtarzalnie: w PageSpeed Insights i w kategorii przeglądania agentowego Lighthouse.
+
+### Asystent zadaje kilka pytań naraz
+
+<span class="dowod dowod--dokumentacja">Dokumentacja</span> AI Overviews i AI Mode mogą rozbić pytanie na kilka węższych wyszukiwań, po podtematach, i z ich wyników złożyć jedną odpowiedź. Google nazywa tę technikę „query fan-out” (11).
+
+<figure class="schemat"><figcaption class="schemat__tytul">Jak asystent AI składa odpowiedź</figcaption><ol class="schemat__kroki"><li class="schemat__krok">Pytanie klienta</li><li class="schemat__krok">Zapytania pomocnicze</li><li class="schemat__krok">Pasujące strony</li><li class="schemat__krok">Wybrane fragmenty</li><li class="schemat__krok">Odpowiedź z linkami</li></ol></figure>
+
+<span class="dowod dowod--ocena">Ocena autora</span> Kto pyta o stronę dla stolarza w Warszawie, ten pośrednio pyta też o cenę, czas budowy, hosting i panel do zmian. Strona, która odpowiada na każde z tych pytań w osobnej, jasno nazwanej sekcji, ma więcej okazji, żeby trafić do odpowiedzi. Dlatego nasze strony usług mają osobne sekcje o cenie, czasie, hostingu i panelu. Nie robimy dziesięciu cienkich podstron pod odmiany jednej frazy.
 
 ### Dane strukturalne mają trzy poziomy pewności
 
@@ -86,7 +109,7 @@ Szkic Web Bot Auth Thibaulta Meuniera (Cloudflare) i Sandora Majora (Google) pro
 
 ### Boty AI pobierają dużo, a odsyłają mało
 
-Cloudflare Radar policzył ruch od 1 stycznia do 2 grudnia 2025 (9). Boty AI dały średnio 4,2 % żądań o strony HTML. Googlebot dał 4,5 %, a ludzie 47 % (9).
+<span class="dowod dowod--badanie">Badanie</span> Cloudflare Radar policzył ruch od 1 stycznia do 2 grudnia 2025 (9). Boty AI dały średnio 4,2 % żądań o strony HTML. Googlebot dał 4,5 %, a ludzie 47 % (9).
 
 Na jedno kliknięcie, które wraca do witryny, bot Anthropic pobierał do 500 000 stron, bot OpenAI najwyżej 3 700, Perplexity od września 2025 poniżej 200 (9).
 
@@ -107,7 +130,7 @@ Drzewo dostępności to uproszczona mapa strony, którą buduje przeglądarka. K
 
 ### Stabilny układ znaczy CLS do 0,1, nie zero
 
-Lighthouse liczy do tej kategorii Cumulative Layout Shift, czyli przesunięcia elementów podczas ładowania (10). Dobry wynik według web.dev to CLS 0,1 lub mniej. Mierzy się go na 75. percentylu wczytań strony, osobno na telefonach i komputerach (28). Próg dotyczy danych terenowych od użytkowników. Nasze CLS równe 0 to pomiar laboratoryjny z jednego przebiegu, nie wymóg.
+<span class="dowod dowod--dokumentacja">Dokumentacja</span> Lighthouse liczy do tej kategorii Cumulative Layout Shift, czyli przesunięcia elementów podczas ładowania (10). Dobry wynik według web.dev to CLS 0,1 lub mniej. Mierzy się go na 75. percentylu wczytań strony, osobno na telefonach i komputerach (28). Próg dotyczy danych terenowych od użytkowników. Nasze CLS równe 0 to pomiar laboratoryjny z jednego przebiegu, nie wymóg.
 
 ### Formularz ma być dostępny i działać, z JavaScriptem czy bez
 
@@ -117,7 +140,7 @@ Skrypty strony wykonują się więc także dla agenta i formularz nie musi dzia�
 
 Prompt injection to ukryte polecenie na stronie, które próbuje przejąć agenta. Semantyczny HTML pomaga agentowi działać, ale nie chroni go przed przejęciem.
 
-Anthropic sprawdził swoje rozszerzenie na 123 przypadkach w 29 scenariuszach ataku. Bez zabezpieczeń atak udawał się w 23,6 % prób, po zabezpieczeniach, w trybie autonomicznym, w 11,2 %. W czterech atakach typowych dla przeglądarki skuteczność spadła z 35,7 % do 0 % (6). Te zabezpieczenia dodał twórca agenta, nie autorzy stron. OpenAI z tego samego powodu wyłączyło pamięć swojemu agentowi (4).
+<span class="dowod dowod--badanie">Badanie</span> Anthropic sprawdził swoje rozszerzenie na 123 przypadkach w 29 scenariuszach ataku. Bez zabezpieczeń atak udawał się w 23,6 % prób, po zabezpieczeniach, w trybie autonomicznym, w 11,2 %. W czterech atakach typowych dla przeglądarki skuteczność spadła z 35,7 % do 0 % (6). Te zabezpieczenia dodał twórca agenta, nie autorzy stron. OpenAI z tego samego powodu wyłączyło pamięć swojemu agentowi (4).
 
 ### Zalecenia dla agenta w przeglądarce
 
@@ -181,7 +204,7 @@ Surowe pliki JSON z API publikuję w repozytorium [ecopowerpolska/wyszukiwanie-a
 
 ### Studio Agat: dwie wersje jednej strony
 
-14 października 2026 strona studioagat.pl działała jeszcze na WordPressie. Dwa dni później przenieśliśmy ją na Astro. To porównanie dwóch wersji jednej strony, nie dwóch technologii. Zmieniła się platforma, ale też budowa strony, zasoby i ich optymalizacja. Wolno z niego wyciągnąć tylko tyle, że ta migracja poprawiła wyniki tej strony.
+<span class="dowod dowod--pomiar">Nasz pomiar</span> 14 października 2026 strona studioagat.pl działała jeszcze na WordPressie. Dwa dni później przenieśliśmy ją na Astro. To porównanie dwóch wersji jednej strony, nie dwóch technologii. Zmieniła się platforma, ale też budowa strony, zasoby i ich optymalizacja. Wolno z niego wyciągnąć tylko tyle, że ta migracja poprawiła wyniki tej strony.
 
 | Wynik testu na telefonie | 14 października 2026, wersja na WordPressie | 5 listopada 2026, wersja w Astro |
 |---|---|---|
@@ -199,7 +222,7 @@ Surowe pliki JSON z API publikuję w repozytorium [ecopowerpolska/wyszukiwanie-a
 
 ![Raport PageSpeed Insights strony studioagat.pl na telefonie: cztery wyniki po 100 i przeglądanie agentowe 4/4, LCP 1,4 s](../../assets/blog/wyszukiwanie-agentowe-psi-studioagat-po-2026-11-05.png "Raport PageSpeed Insights z 5 listopada 2026: studioagat.pl w Astro, cztery wyniki po 100 i przeglądanie agentowe 4/4.")
 
-Wiersza „Przeglądanie agentowe” nie da się porównać. W październiku kategoria miała trzy punktowane audyty, dziś ma cztery. Google ją rozbudował, więc 2/3 i 4/4 to dwie różne skale. Zrzut z października nie pokazuje, który audyt wtedy nie przeszedł.
+<span class="dowod dowod--ocena">Ocena autora</span> Wiersza „Przeglądanie agentowe” nie da się porównać. W październiku kategoria miała trzy punktowane audyty, dziś ma cztery. Google ją rozbudował, więc 2/3 i 4/4 to dwie różne skale. Zrzut z października nie pokazuje, który audyt wtedy nie przeszedł.
 
 ### Cztery strony w jednym pomiarze
 
@@ -210,7 +233,7 @@ Wiersza „Przeglądanie agentowe” nie da się porównać. W październiku kat
 | pan-stolarz.pl | 99 | 100 | 100 | 100 | 100 | 4/4 |
 | nadihome.pl | 99 | 100 | 100 | 100 | 100 | 4/4 |
 
-Na telefonie LCP wyniósł 1,0 s na trzech stronach i 1,4 s na studioagat.pl. TBT wyniósł 0 ms wszędzie poza pan-stolarz.pl na telefonie (10 ms). CLS wyniósł 0, poza nadihome.pl na komputerze (0,001).
+<span class="dowod dowod--pomiar">Nasz pomiar</span> Na telefonie LCP wyniósł 1,0 s na trzech stronach i 1,4 s na studioagat.pl. TBT wyniósł 0 ms wszędzie poza pan-stolarz.pl na telefonie (10 ms). CLS wyniósł 0, poza nadihome.pl na komputerze (0,001).
 
 ### Wynik 4/4 to audyt techniczny, nie widoczność w AI
 
@@ -248,7 +271,7 @@ curl -s -o /dev/null -w '%{content_type}\n' -H 'Accept: text/markdown' https://s
 | Markdown na `Accept: text/markdown` | nie | nie | nie | nie |
 | JSON-LD na stronie głównej | Organization, LocalBusiness, 11 usług z ofertą | LocalBusiness, 5 usług z ofertą | LocalBusiness, 4 usługi z ofertą | LocalBusiness, bez usług |
 
-Dwie rzeczy wypadają słabo. Pełną treść w llms-full.txt ma tylko nadihome.pl, pozostałe trzy strony zwracają 404. Negocjacji Markdown nie ma żadna z czterech stron: na `Accept: text/markdown` każda oddaje HTML. W badaniu Cloudflare jesteśmy więc po stronie większości, nie w tych 3,9 % (7).
+<span class="dowod dowod--pomiar">Nasz pomiar</span> Dwie rzeczy wypadają słabo. Pełną treść w llms-full.txt ma tylko nadihome.pl, pozostałe trzy strony zwracają 404. Negocjacji Markdown nie ma żadna z czterech stron: na `Accept: text/markdown` każda oddaje HTML. W badaniu Cloudflare jesteśmy więc po stronie większości, nie w tych 3,9 % (7).
 
 ## Co mierzyć po wdrożeniu: wyświetlenia, ruch i wykonane zadania
 
@@ -265,10 +288,6 @@ Wynik 4/4 mówi o kryteriach technicznych. Efekt dla firmy pokazują inne liczby
 Zacznij od indeksowania, treści w HTML, etykiet w formularzach i danych strukturalnych zgodnych ze stroną, a w sklepie od feedu w Merchant Center. llms.txt, ARD, WebMCP i protokoły zakupowe wdrażaj, gdy masz konkretny powód.
 
 Stronę zmierzysz w PageSpeed Insights, na przykład [naszym testem szybkości strony](/jak-sprawdzic-szybkosc-strony/). Sygnały dla agentów, czyli llms.txt, robots.txt, manifest ARD i dane strukturalne, sprawdzisz naszym darmowym [audytem AI i wyszukiwania agentowego](/narzedzia/wyszukiwanie-agentowe-ai/). Wyniki pomiarów wszystkich naszych stron są w sekcji [nasze realizacje](/#realizacje).
-
-**Piotr Czwarnowski**, EcoPower Polska Sp. z o.o. Budujemy i prowadzimy strony oraz sklepy internetowe dla firm. [Napisz do nas](/kontakt/).
-
-![Piotr Czwarnowski, autor wpisu, w lupie nagłownej z podświetleniem, uśmiechnięty, w zielonoszarej koszulce](../../assets/blog/autor-piotr-czwarnowski.jpg "Piotr Czwarnowski, EcoPower Polska Sp. z o.o.")
 
 ## Źródła
 

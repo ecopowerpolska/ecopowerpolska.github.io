@@ -3,7 +3,7 @@
   "opisWyszukiwarki": "Kto przetwarza dane z formularza strony ecopowerpolska.pl, w jakim celu i jak długo, komu je przekazujemy i jakie masz prawa.",
   "naglowek": "Polityka prywatności",
   "okruszek": "Polityka prywatności",
-  "lead": "Ta polityka opisuje, jakie dane zbiera strona www.ecopowerpolska.pl, po co je zbiera i jak długo je przechowujemy. Strona nie ma statystyk odwiedzin ani reklam. Pliki cookie i pamięć przeglądarki opisujemy w osobnej części, razem ze sposobem zmiany zgody.",
+  "lead": "Ta polityka opisuje, jakie dane zbiera strona www.ecopowerpolska.pl, po co je zbiera i jak długo je przechowujemy. Strona nie ma reklam ani statystyk, które śledziłyby Cię między wizytami: pokazuje tylko, ile osób czyta ją w tej chwili i ile stron sprawdzono dziś w darmowych narzędziach. Pliki cookie i pamięć przeglądarki opisujemy w osobnej części, razem ze sposobem zmiany zgody.",
   "spis": "Spis części",
   "sekcje": [
     {
@@ -33,7 +33,7 @@
       "id": "zakres",
       "naglowek": "Czego dotyczy ta polityka",
       "akapity": [
-        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), [darmowych narzędzi](/darmowe-narzedzia/): testów audytu strony oraz generatorów regulaminu i polityki prywatności, okna zgody na pliki cookie i przełącznika języków w stopce.",
+        "Polityka dotyczy strony www.ecopowerpolska.pl, formularza na podstronie [Kontakt i wycena](/kontakt/), kalkulatora w [cenniku](/cena/), testu szybkości na podstronie [Jak sprawdzić szybkość strony](/jak-sprawdzic-szybkosc-strony/), [darmowych narzędzi](/darmowe-narzedzia/): testów audytu strony oraz generatorów regulaminu i polityki prywatności, okna zgody na pliki cookie, przełącznika języków w stopce oraz liczników i pomiaru szybkości pokazywanych na stronie.",
         "Strona nie prowadzi sprzedaży, nie zakłada kont, nie wysyła newslettera i nie pokazuje reklam."
       ]
     },
@@ -80,7 +80,7 @@
       "naglowek": "Pliki cookie i pamięć przeglądarki",
       "szeroka": true,
       "akapity": [
-        "Strona nie stawia własnych plików cookie i nie ma statystyk odwiedzin ani reklam. Zapisuje za to kilka wpisów w pamięci Twojej przeglądarki (sessionStorage i local storage), a dwie usługi zewnętrzne, które działają na stronie, zapisują własne dane. Wszystko, co ustaliliśmy, jest w tabeli.",
+        "Strona nie stawia własnych plików cookie i nie ma reklam ani statystyk śledzących odwiedziny. Liczniki opisane w części „Liczniki na stronie” nie zapisują niczego w Twojej przeglądarce. Zapisuje za to kilka wpisów w pamięci Twojej przeglądarki (sessionStorage i local storage), a dwie usługi zewnętrzne, które działają na stronie, zapisują własne dane. Wszystko, co ustaliliśmy, jest w tabeli.",
         "Wpisy niezbędne zapisujemy bez pytania o zgodę, bo bez nich formularz i kalkulator, o które prosisz, nie działałyby (art. 399 ust. 3 ustawy Prawo komunikacji elektronicznej: wyjątek dla wpisów koniecznych do usługi, o którą prosisz). Zgody wymaga tłumaczenie strony przez Google (art. 399 ust. 1 tej ustawy; do zgody stosuje się przepisy o ochronie danych osobowych, art. 400). Przy pierwszej wizycie pytamy o to oknem na dole ekranu, w którym obie odpowiedzi, „Tylko niezbędne” i „Zgadzam się na wszystkie”, mają ten sam wygląd i żadna nie jest zaznaczona domyślnie."
       ],
       "tabela": {
@@ -187,6 +187,18 @@
       ]
     },
     {
+      "id": "liczniki",
+      "naglowek": "Liczniki na stronie i pomiar szybkości w Twojej przeglądarce",
+      "akapity": [
+        "Na stronie pokazujemy, ile osób czyta ją w tej chwili. Przy otwarciu podstrony Twoja przeglądarka losuje identyfikator, który istnieje tylko w pamięci tej karty: nie zapisujemy go w pliku cookie ani w pamięci przeglądarki i znika po zamknięciu karty. Co minutę, gdy karta jest widoczna, przeglądarka wysyła ten identyfikator do naszego skryptu na serwerze LH.pl (api.ecopowerpolska.pl), a przy zamknięciu karty wysyła informację o wyjściu.",
+        "Skrypt zapisuje tylko skrót identyfikatora i czas ostatniego sygnału. Nie zapisuje adresu IP, adresu oglądanej podstrony ani informacji o przeglądarce, a wpis znika po 5 minutach bez sygnału. Na stronie pokazujemy wyłącznie liczbę osób. Standardowe logi połączeń serwera opisujemy w części o hostingu.",
+        "Przy [darmowych narzędziach](/darmowe-narzedzia/) pokazujemy, ile stron sprawdzono dziś i od początku. Skrypt narzędzi dolicza wtedy jedno sprawdzenie do licznika dnia i licznika łącznego, bez adresu sprawdzanej strony, bez nazwy testu i bez adresu IP. Liczniki dzienne usuwamy po 400 dniach.",
+        "Część podstron pokazuje, kiedy ostatnio opublikowaliśmy zmianę na stronie. Twoja przeglądarka pyta o to publiczne API GitHub (api.github.com), więc GitHub, Inc. widzi wtedy Twój adres IP i informacje o przeglądarce, tak jak przy samych odwiedzinach strony na GitHub Pages.",
+        "Na niektórych podstronach pokazujemy też, jak szybko ta strona działa u Ciebie: czas wczytania największego elementu, przesunięcia układu i czas reakcji na kliknięcie. Mierzy to skrypt web-vitals, który ładuje się z serwera tej strony. Wynik zostaje na Twoim ekranie; skrypt niczego nie wysyła i niczego nie zapisuje.",
+        "Podstawą jest art. 6 ust. 1 lit. f RODO, czyli nasz prawnie uzasadniony interes w pokazaniu na stronie prawdziwych, bieżących liczb, w zakresie, w jakim te sygnały w ogóle są danymi osobowymi."
+      ]
+    },
+    {
       "id": "zasoby-zewnetrzne",
       "naglowek": "Czcionki i zasoby zewnętrzne",
       "akapity": [
@@ -211,7 +223,7 @@
         "Danych nie sprzedajemy i nie przekazujemy w celach marketingowych. Trafiają wyłącznie do odbiorców wymienionych niżej."
       ],
       "lista": [
-        "GitHub, Inc.: hosting strony (adres IP i informacje techniczne o przeglądarce)",
+        "GitHub, Inc.: hosting strony i odczyt daty ostatniej publikacji (adres IP i informacje techniczne o przeglądarce)",
         "LH.pl sp. z o.o. (hosting serwera, na którym działa skrypt formularza i narzędzi): NIP wpisany w generatorze, adres strony wpisany w narzędziu audytu oraz poczta, na którą trafiają wiadomości z formularza",
         "Ministerstwo Finansów, Krajowy Rejestr Sądowy i CEIDG: rejestry urzędowe, do których nasz skrypt wysyła NIP (i numer KRS, który zwróciła biała lista), żeby pobrać dane firmy dla generatorów",
         "Cloudflare, Inc.: ochrona formularza kontaktowego usługą Turnstile (adres IP i informacje techniczne o przeglądarce)",
@@ -234,6 +246,7 @@
         "dane osób, które zamówiły usługę: przez czas wykonania umowy, okres przedawnienia roszczeń i okres wymagany przepisami podatkowymi",
         "odpowiedź rejestrów dla NIP wpisanego w generatorze: 24 godziny; licznik zapytań z adresu IP (skrót z solą): 2 godziny; dziennik skryptu bez NIP-u i adresu IP: 30 dni",
         "wynik narzędzia audytu: godzina w pamięci podręcznej skryptu (plik usuwany najpóźniej po dwóch godzinach); licznik sprawdzeń z adresu IP (skrót z solą): około 2 godzin; dziennik bez adresu strony i adresu IP: 30 dni",
+        "licznik czytających: skrót losowego identyfikatora karty do 5 minut od ostatniego sygnału; licznik sprawdzeń w darmowych narzędziach: liczby bez danych o osobach, liczniki dzienne do 400 dni",
         "logi serwera: przez okres wynikający z zasad dostawców hostingu",
         "pamięć sesji przeglądarki: wyliczenia, dane z formularza i wynik testu szybkości do zamknięcia karty albo wysłania zapytania",
         "wybór z okna cookie i wybrany język tłumaczenia: do zmiany albo wyczyszczenia danych strony w przeglądarce"
@@ -285,7 +298,7 @@
       "naglowek": "Zmiany polityki",
       "akapity": [
         "Politykę zmieniamy, gdy zmienia się działanie strony albo przepisy. Aktualna wersja jest zawsze pod tym adresem.",
-        "Ta wersja obowiązuje od 30 października 2026. W tej wersji dopisaliśmy część o darmowych narzędziach audytu strony."
+        "Ta wersja obowiązuje od 6 listopada 2026. W tej wersji dopisaliśmy część o licznikach na stronie i pomiarze szybkości w przeglądarce."
       ]
     }
   ]

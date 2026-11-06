@@ -7,16 +7,28 @@
       "naGlownej": false
     },
     {
+      "pytanie": "Czym różni się wizytówka od strony firmowej?",
+      "odpowiedz": "Strona wizytówka to jedna strona albo 2–3 podstrony z danymi firmy, krótką ofertą i formularzem kontaktowym. Strona firmowa ma zwykle 5–10 podstron, panel do edycji treści, formularz i podstawowe SEO, więc każda usługa może dostać własną podstronę i własną frazę w Google; ceny obu są w [cenniku](/cena/). Nie myl strony wizytówki z wizytówką Google, czyli Profilem Firmy w Mapach: to osobna usługa, którą prowadzimy [w opiece nad stroną](/prowadzenie-strony-internetowej/).",
+      "kotwica": "wizytowka-a-strona-firmowa",
+      "naGlownej": false
+    },
+    {
       "pytanie": "Co muszę przygotować przed rozpoczęciem pracy?",
       "odpowiedz": "Dane firmy (pełna nazwa, NIP, adres, telefon, e-mail), opis usług własnymi słowami, logo i zdjęcia oraz dostęp do domeny u rejestratora albo w panelu DNS. Teksty możemy napisać na podstawie Twoich informacji. Na stronę wstawiamy wyłącznie prawdziwe fotografie, Twoje albo z banku zdjęć, a nie obrazy wygenerowane przez AI.",
       "kotwica": "co-przygotowac",
-      "naGlownej": false
+      "naGlownej": true
     },
     {
       "pytanie": "Czy sam zmienię treść na stronie?",
       "odpowiedz": "Tak. Strona dostaje panel treści pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy. Panel Sveltia zapisuje zmiany w repozytorium strony, a strona przebudowuje się sama w ciągu kilku minut. Jeśli nie chcesz zakładać konta na GitHubie, robimy panel w PHP na hostingu, do którego logujesz się hasłem. Wyczyszczone pole przywraca napis domyślny, więc strona nie zostanie bez nagłówka.",
       "kotwica": "edycja-tresci",
-      "naGlownej": true
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Czym różni się panel treści od konta na GitHubie?",
+      "odpowiedz": "Panel treści to miejsce, w którym zmieniasz teksty i zdjęcia, a konto na GitHubie to tylko jeden ze sposobów logowania do niego. Panel Sveltia loguje przez GitHub i zapisuje każdą zmianę w repozytorium strony, więc każdą da się cofnąć. Na studioagat.pl treść zmienia się w panelu w PHP, logowaniem na hasło, bez żadnego konta na GitHubie.",
+      "kotwica": "panel-a-github",
+      "naGlownej": false
     },
     {
       "pytanie": "Gdzie stoi strona?",
@@ -28,7 +40,7 @@
       "pytanie": "Mam już domenę i starą stronę. Co z nimi?",
       "odpowiedz": "Domena zostaje u Twojego rejestratora, a do nowej strony podpinamy ją rekordami DNS. Treści i zdjęcia ze starej strony przenosimy, a stare adresy przekierowujemy na odpowiadające im nowe przekierowaniem 301 po stronie serwera. Dzięki temu działają dawne linki, a Google dostaje jasny sygnał, gdzie jest nowa wersja każdej podstrony. Po przełączeniu zgłaszamy nową mapę strony w Search Console.",
       "kotwica": "domena-i-stara-strona",
-      "naGlownej": false
+      "naGlownej": true
     },
     {
       "pytanie": "Czy przy przepięciu domeny stracę pocztę?",
@@ -37,16 +49,22 @@
       "naGlownej": true
     },
     {
+      "pytanie": "Czym różni się domena od hostingu i skrzynki pocztowej?",
+      "odpowiedz": "Domena to adres, na przykład ecopowerpolska.pl, wykupiony u rejestratora. Hosting to serwer z plikami strony, a skrzynka pocztowa odbiera listy na adres w tej domenie, i każde z nich może być u innej firmy: ta strona stoi na GitHub Pages, a skrzynka kontakt@ecopowerpolska.pl działa na serwerze LH.pl. Rekordy DNS domeny wskazują osobno stronę i osobno pocztę, dlatego przy przenoszeniu strony zmieniamy tylko rekordy strony, a rekordów poczty nie ruszamy.",
+      "kotwica": "domena-hosting-poczta",
+      "naGlownej": false
+    },
+    {
       "pytanie": "Czy strona będzie szybka na telefonie?",
       "odpowiedz": "Tak. Strony budujemy w Astro: do przeglądarki trafia gotowy HTML, bez składania strony z bazy danych przy każdym wejściu i bez zbędnego JavaScriptu. Zdjęcia są przygotowane w kilku rozmiarach, więc telefon pobiera mniejszy plik niż monitor. Wynik sprawdzamy pomiarem PageSpeed Insights po publikacji: kuchnia-na-wymiar-warszawa.pl i garderoba-na-wymiar-warszawa.pl dostały w nim na telefonie od 99 do 100 punktów.",
       "kotwica": "szybkosc",
-      "naGlownej": true
+      "naGlownej": false
     },
     {
       "pytanie": "Jaki sklep internetowy możecie zrobić?",
       "odpowiedz": "Najczęściej proponujemy trzy drogi. WooCommerce albo PrestaShop na hostingu, gdy sam prowadzisz sklep: dodajesz produkty, obsługujesz zamówienia i magazyn. Katalog w Astro z płatnością przez Stripe Checkout, gdy produktów jest kilkanaście lub kilkadziesiąt i nie potrzebujesz panelu sklepu. Albo katalog w Astro z własnym koszykiem w PHP i polskim operatorem płatności z BLIK-iem. Drogę wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.\n\nJest też czwarta droga: platforma abonamentowa, na przykład Shoper albo IdoSell. Plusy i ograniczenia każdej z nich porównujemy na stronie [cztery drogi do sklepu internetowego](/sklepy-internetowe-warszawa/).\n\nCenę swojej strony albo sklepu policzysz sam w kalkulatorze na stronie [Cena](/cena/#kalkulator), a wyliczenie dodasz jednym przyciskiem do [formularza kontaktowego](/kontakt/).",
       "kotwica": "sklep",
-      "naGlownej": true
+      "naGlownej": false
     },
     {
       "pytanie": "Co z RODO, polityką prywatności i ciasteczkami?",
@@ -64,18 +82,12 @@
       "pytanie": "Gdzie jest kod mojej strony i co z kopiami zapasowymi?",
       "odpowiedz": "Każda strona ma własne repozytorium git na GitHubie, osobne dla każdego klienta, z pełną historią zmian. Każda zmiana, także z panelu, jest w niej osobnym wpisem, który da się cofnąć, a całą stronę można odbudować z repozytorium. Hosting lh.pl robi dodatkowo codzienną kopię plików i baz danych, przechowywaną 30 dni. Przy sklepie bazę zamówień kopiujemy także poza hosting.",
       "kotwica": "kod-i-kopie",
-      "naGlownej": false
+      "naGlownej": true
     },
     {
       "pytanie": "Czy strona może mieć blog?",
       "odpowiedz": "Tak. Każdy wpis jest osobną podstroną z datą publikacji, a strona ma listę wpisów i kanał RSS. Wpisy dodajesz w panelu albo zlecasz nam: temat dobieramy z danych Search Console i Planera słów kluczowych, tekst piszemy z faktów Twojej firmy, a zdjęcia są prawdziwe. Wpis z datą w przyszłości pojawi się sam przy pierwszej przebudowie strony po tej dacie.",
       "kotwica": "blog",
-      "naGlownej": false
-    },
-    {
-      "pytanie": "Czy zajmiecie się wizytówką firmy w Google?",
-      "odpowiedz": "Tak. Uzupełniamy Profil Firmy w Google: kategorie, usługi, obszar działania, godziny, opis, zdjęcia i wpisy z linkiem do strony, a także odpowiedzi na opinie. Nazwę, adres i telefon prowadzimy w wizytówce i na stronie jednakowo. Weryfikację profilu przechodzi właściciel firmy; Google może poprosić o krótki film z miejsca działalności.\n\nProfil prowadzimy razem ze stroną. Szczegóły: [wizytówka Google w opiece nad stroną](/prowadzenie-strony-internetowej/).",
-      "kotwica": "wizytowka-google",
       "naGlownej": false
     },
     {
@@ -115,30 +127,19 @@
       "odpowiedz": "Sekcja „Dowiedz się, jakie są wrażenia użytkowników” pokazuje dane z prawdziwych wizyt użytkowników Chrome (raport CrUX) z ostatnich 28 dni. Google włącza do niego tylko strony z wystarczającą liczbą odwiedzin i nie podaje dokładnego progu. Strona nowa albo rzadko odwiedzana jeszcze takiej próbki nie ma, więc PageSpeed pokazuje „Brak danych”. Według dokumentacji Google brak danych dotyczy stron opublikowanych niedawno albo z małą liczbą próbek od użytkowników.\n\nTo nie jest błąd strony. Dane pojawią się same, gdy strona zbierze ruch. Do tego czasu o szybkości mówi pomiar laboratoryjny niżej na tej samej stronie wyników: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe."
     },
     {
-      "pytanie": "Czy poprowadzicie Facebooka i Instagram firmy?",
-      "kotwica": "facebook-instagram",
-      "naGlownej": false,
-      "odpowiedz": "Tak. Możemy połączyć stronę z firmowym Facebookiem i Instagramem oraz prowadzić oba konta: przygotować posty ze zdjęciami realizacji i odpowiadać na komentarze w ustalonym zakresie. Stronę możemy też ustawić tak, żeby nowy wpis na blogu trafiał na Facebooka jako post z linkiem, bez ręcznego przepisywania.\n\nPotrzebujemy roli administratora strony na Facebooku i konta firmowego Instagram połączonego z tą stroną. Treść postów przed publikacją zatwierdzasz Ty, a częstotliwość ustalamy razem."
-    },
-    {
-      "pytanie": "Jak łączycie wizytówkę Google ze stroną?",
-      "kotwica": "wizytowka-i-strona",
-      "naGlownej": false,
-      "odpowiedz": "Profil Firmy w Google i strona mają się wzajemnie potwierdzać. W profilu ustawiamy adres strony, a na stronie te same dane: nazwę, adres i telefon, w stopce, na stronie kontaktu i w danych strukturalnych z odnośnikiem do mapy Google. Wpisy w profilu prowadzą do wpisów na blogu i podstron usług, więc klient z Map trafia od razu na właściwą ofertę.\n\nPotrzebujemy roli menedżera w Twoim profilu. Właścicielem profilu zostajesz Ty."
-    },
-    {
-      "pytanie": "Czy będziecie sprawdzać ruch na stronie i wysyłać raporty?",
-      "kotwica": "monitoring-i-raporty",
-      "naGlownej": false,
-      "odpowiedz": "Tak. Sprawdzamy stronę w Google Search Console (wyświetlenia, kliknięcia, frazy i błędy indeksowania), ruch w Google Analytics, pozycje wybranych fraz w Google oraz wyniki PageSpeed. Z tych danych przygotowujemy raport w rytmie ustalonym z klientem, na przykład co miesiąc, z listą tego, co poprawiamy na stronie.\n\nPotrzebujemy dostępu do Search Console i Google Analytics Twojej strony albo zakładamy je na Twoim koncie. Google Analytics włącza się na stronie dopiero po zgodzie odwiedzającego, więc pokazuje część ruchu; Search Console liczy wejścia z Google bez ciasteczek."
+      "pytanie": "Czym różni się wynik PageSpeed od danych użytkowników (CrUX)?",
+      "odpowiedz": "Wynik PageSpeed od 0 do 100 to test laboratoryjny: Google otwiera stronę raz, na symulowanym telefonie i wolniejszej sieci. Dane użytkowników z raportu CrUX to czasy zmierzone u prawdziwych odwiedzających w Chrome przez ostatnie 28 dni i pojawiają się dopiero przy wystarczającym ruchu. 27 października 2026 siedem naszych realizacji miało w teście na telefonie od 97 do 100 punktów, a w części z danymi użytkowników każda z nich pokazywała „Brak danych”.",
+      "kotwica": "psi-a-crux",
+      "naGlownej": false
     }
   ],
   "naglowek": "Pytania o strony i sklepy internetowe",
-  "lead": "Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe: czas, treść, hosting, domena, poczta, bezpieczeństwo, widoczność w Google, wyniki PageSpeed i media społecznościowe.",
+  "lead": "Krótkie odpowiedzi o tym, jak robimy strony i sklepy internetowe: czas, treść, hosting, domena, poczta, bezpieczeństwo, widoczność w Google i wyniki PageSpeed, a także różnice między pojęciami, które łatwo pomylić.",
   "tytulKarty": "Pytania o strony i sklepy internetowe — EcoPower Polska",
   "opisWyszukiwarki": "Ile trwa zrobienie strony, czy sam zmienisz treść, co z domeną, pocztą i hostingiem, jaki sklep internetowy wybrać. Odpowiedzi EcoPower Polska.",
   "kontaktNaglowek": "Nie ma tu Twojego pytania?",
   "kontaktTekst": "Napisz albo zadzwoń. Odpowiemy na pytanie o Twoją stronę lub sklep.",
+  "kontaktGuzik": "Napisz do nas",
   "skrotNaglowek": "Najczęstsze pytania",
   "skrotLink": "Wszystkie pytania i odpowiedzi",
   "stronaGlowna": "Strona główna",

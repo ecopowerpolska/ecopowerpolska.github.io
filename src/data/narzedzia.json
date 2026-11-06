@@ -5,7 +5,8 @@
   "naglowek": "Darmowe narzędzia dla właścicieli stron",
   "lead": "Bezpłatne, bez logowania, działają w przeglądarce.",
   "etykietaSiatki": "Lista narzędzi",
-  "stanDziala": "Działa",
+  "sekcjaEtykieta": "Testy strony i generatory",
+  "sekcjaNaglowek": "Sprawdź swoją stronę, zanim do nas napiszesz",
   "stanWkrotce": "W przygotowaniu",
   "nota": "Narzędzia są bezpłatne i nie wymagają konta. Test szybkości, dane z prawdziwych wizyt oraz część sprawdzeń w testach gotowości na AI i dostępności wysyłają adres strony do Google PageSpeed prosto z Twojej przeglądarki, nie do nas. Pozostałe testy przesyłają adres do naszego skryptu na lh.pl, który raz pobiera publicznie dostępną stronę i pyta o jej DNS; wyniku nie zapisujemy, poza pamięcią podręczną na godzinę. W generatorach do skryptu trafia tylko NIP (skrypt pyta o dane firmy rejestry urzędowe), a gotowy dokument powstaje w Twojej przeglądarce i nie jest nigdzie zapisywany (więcej w [polityce prywatności](/polityka-prywatnosci/)).",
   "kafelki": [

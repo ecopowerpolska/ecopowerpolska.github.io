@@ -1,0 +1,166 @@
+---
+// Słownik: indeks liter + hasła w siatce 2 kolumn od 56 rem (/slownik/, dane src/data/slownik.json).
+// Hasło = <article id="kotwica"> z H2; litera to znacznik nad grupą, nie nagłówek (nagłówkiem jest hasło).
+// Zero JS: indeks to zwykłe kotwice, przewijanie robi przeglądarka (scroll-padding-top w motywie).
+import { kawalki } from '../lib/odnosniki';
+
+export type Haslo = {
+  nazwa: string;
+  kotwica: string;
+  litera: string;
+  wJednymZdaniu: string;
+  opis: string;
+  nieMyl: string;
+  sprawdz: string;
+  link: string;
+  linkTekst: string;
+};
+
+interface Props {
+  hasla: Haslo[];
+  etykiety: { indeks: string; wJednymZdaniu: string; nieMyl: string; sprawdz: string; wiecej: string };
+}
+
+const { hasla, etykiety } = Astro.props;
+
+// Id litery bez polskich znaków (Ł → l), żeby kotwica działała w każdym adresie.
+const PL: Record<string, string> = { ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z' };
+const idLitery = (l: string) => `litera-${l.toLowerCase().replace(/[ąćęłńóśźż]/g, (z) => PL[z] ?? z)}`;
+const litery = [...new Set(hasla.map((h) => h.litera))];
+// Link wewnętrzny (/…) albo nic — adresy z zewnątrz nie wchodzą do słownika (D15).
+const wewnetrzny = (a: string) => a.startsWith('/') && !a.startsWith('//');
+---
+
+<nav class="indeks" aria-label={etykiety.indeks}>
+  <ul>
+    {litery.map((l) => (
+      <li>
+        <a href={`#${idLitery(l)}`}>{l}</a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<div class="hasla">
+  {hasla.map((h, i) => (
+    <>
+      {(i === 0 || hasla[i - 1].litera !== h.litera) && (
+        <p class="hasla__litera" id={idLitery(h.litera)}>
+          {h.litera}
+        </p>
+      )}
+      <article class="haslo karta" id={h.kotwica} aria-labelledby={`${h.kotwica}-nazwa`}>
+        <h2 id={`${h.kotwica}-nazwa`}>{h.nazwa}</h2>
+        <p class="ramka-w-skrocie">
+          <strong>{etykiety.wJednymZdaniu}:</strong> {h.wJednymZdaniu}
+        </p>
+        {h.opis && <p>{kawalki(h.opis).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>}
+        {h.nieMyl && (
+          <p>
+            <strong>{etykiety.nieMyl}</strong> {h.nieMyl}
+          </p>
+        )}
+        {h.sprawdz && (
+          <p class="haslo__test">
+            <strong>{etykiety.sprawdz}:</strong> {h.sprawdz}
+          </p>
+        )}
+        {h.link && wewnetrzny(h.link) && (
+          <p class="haslo__wiecej">
+            {etykiety.wiecej}: <a href={h.link}>{h.linkTekst || h.link}</a>
+          </p>
+        )}
+      </article>
+    </>
+  ))}
+</div>
+
+<style>
+  /* Indeks liter: jeden rząd kafli 44 px (cel dotyku), zawija się na telefonie. */
+  .indeks ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--o-2);
+  }
+
+  .indeks a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--cel-dotyku);
+    min-height: var(--cel-dotyku);
+    border: var(--obrys-karty, 1px solid var(--linia));
+    border-radius: var(--promien);
+    background: #fff;
+    font-weight: 700;
+    font-size: var(--t-l);
+  }
+
+  .indeks a:hover {
+    border-color: var(--akcent);
+    text-decoration: none;
+  }
+
+  /* Hasła: 1 kolumna, od 56 rem dwie. Litera zajmuje cały wiersz siatki, hasła płyną parami. */
+  .hasla {
+    display: grid;
+    gap: var(--o-6);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .hasla {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .hasla__litera {
+    grid-column: 1 / -1;
+    margin: var(--o-6) 0 0;
+    padding-bottom: var(--o-2);
+    border-bottom: 2px solid var(--akcent);
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--akcent);
+  }
+
+  .haslo {
+    padding: var(--o-6);
+    scroll-margin-top: 5rem;
+  }
+
+  .haslo h2 {
+    margin-bottom: var(--o-3);
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .haslo p {
+    margin: 0 0 var(--o-3);
+  }
+
+  .haslo .ramka-w-skrocie {
+    padding: var(--o-3) var(--o-4);
+  }
+
+  .haslo__wiecej {
+    margin-bottom: 0;
+  }
+
+  .haslo a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* Hasło otwarte z kotwicy: obrys akcentu, żeby oko od razu je znalazło. */
+  .haslo:target {
+    outline: 2px solid var(--akcent);
+    outline-offset: 2px;
+  }
+</style>

@@ -3,13 +3,13 @@
   "opisWyszukiwarki": "Prowadzimy strony i sklepy firm: zmiany treści, pomiar PageSpeed, Search Console, wizytówka Google, Facebook i raport w ustalonym rytmie.",
   "naglowek": "Prowadzenie strony internetowej i opieka po publikacji",
   "okruszek": "Prowadzenie strony",
-  "lead": "Strona po publikacji potrzebuje kogoś, kto wprowadza zmiany, pilnuje szybkości i patrzy w dane z Google. Prowadzimy strony i sklepy firm: hosting, kopie, zmiany treści, wpisy na blogu, Search Console, wizytówkę Google i Facebooka. Strony, które prowadzimy, mają w PageSpeed Insights 97–100 punktów na telefonie i 100 na komputerze (pomiar z 27 października 2026).",
+  "lead": "Prowadzenie strony internetowej to stała opieka po publikacji: hosting, kopie, zmiany treści, wpisy na blogu, Search Console, wizytówka Google i Facebook. Dla firm, które chcą mieć szybką i aktualną stronę, a nie mają czasu, żeby same jej pilnować.",
   "uslugaNazwa": "Prowadzenie strony internetowej i opieka po publikacji",
   "uslugaTyp": "Prowadzenie strony internetowej",
   "uslugaOpis": "Hosting, kopie zapasowe, aktualizacje, zmiany treści, wpisy na blogu, pomiar PageSpeed Insights, Google Search Console, wizytówka Google, Facebook i Instagram oraz raport w ustalonym rytmie.",
   "cenaOdPozycja": "Opieka techniczna i aktualizacje",
   "cenaJednostkaKod": "MON",
-  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajeszNaglowek": "Dostajesz opiekę, która kończy się raportem z danymi.",
   "coDostajesz": [
     "Hosting, odnowienie domeny i certyfikat SSL pod jedną opieką.",
     "Kopie zapasowe: pełną historię zmian w repozytorium strony i codzienną kopię hostingu lh.pl przechowywaną 30 dni.",
@@ -41,7 +41,7 @@
       "id": "zmiany-tresci",
       "naglowek": "Zmiany treści i nowe podstrony",
       "akapity": [
-        "Drobne zmiany możesz robić sam. Strona ma panel treści pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy. Jak działa panel, opisaliśmy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/).",
+        "Drobne zmiany treści możesz robić sam. Strona ma panel treści pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy. Jak działa panel, opisaliśmy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/).",
         "Gdy nie masz na to czasu albo zmiana jest większa, robimy ją my: nowa podstrona usługi, nowa sekcja, cennik, galeria albo formularz. Każdą zmianę publikujemy w tym samym przebiegu, w którym ją wprowadzamy, i sprawdzamy na żywej stronie.",
         "Przed każdą publikacją stronę sprawdza automatyczna bramka: tytuły, opisy, mapa strony, dostępność i waga plików. Zmiana, która psuje któryś z tych punktów, nie trafia na stronę. Każda zmiana jest osobnym wpisem w historii repozytorium, więc da się ją cofnąć.",
         "Wpisy na blogu piszemy z faktów Twojej firmy. Temat dobieramy z danych Search Console i Planera słów kluczowych Google, a zdjęcia są prawdziwe: Twoje albo z banku zdjęć."
@@ -73,7 +73,7 @@
       "id": "raport",
       "naglowek": "Raport: co sprawdzamy i jak często",
       "akapity": [
-        "Rytm raportu ustalamy z Tobą, na przykład co miesiąc. W raporcie są dane i wnioski, a nie same wykresy:"
+        "Raport z prowadzenia strony wysyłamy w rytmie ustalonym z Tobą, na przykład co miesiąc. W raporcie są dane i wnioski, a nie same wykresy:"
       ],
       "lista": [
         "Search Console: wyświetlenia, kliknięcia, najważniejsze frazy i błędy indeksowania.",
@@ -97,7 +97,7 @@
       "id": "audyt",
       "naglowek": "Audyt strony przed przejęciem opieki",
       "akapity": [
-        "Zanim przejmiemy stronę, którą zrobił ktoś inny, sprawdzamy ją. Chodzi o to, żeby obie strony wiedziały, w jakim stanie jest strona w dniu przejęcia i co trzeba naprawić najpierw.",
+        "Audyt strony robimy, zanim przejmiemy stronę, którą zrobił ktoś inny. Chodzi o to, żeby obie strony wiedziały, w jakim stanie jest strona w dniu przejęcia i co trzeba naprawić najpierw.",
         "Jeśli strona jest wolna albo trudna w utrzymaniu, proponujemy przeniesienie jej na szybką stronę w Astro. Tak przenieśliśmy z WordPressa studioagat.pl, nadihome.pl i panwylewka.pl: treść i zdjęcia przeszły na nową stronę, a stare adresy przekierowaliśmy na nowe, żeby wyniki w Google nie prowadziły w próżnię."
       ],
       "lista": [
@@ -111,7 +111,7 @@
     }
   ],
   "przykladyNaglowek": "Strony, które prowadzimy",
-  "przykladyLead": "Te strony zbudowaliśmy i prowadzimy dalej: wprowadzamy zmiany, mierzymy je i pilnujemy Search Console. Wynik to pomiar PageSpeed Insights z 27 października 2026.",
+  "przykladyLead": "Te strony zbudowaliśmy i prowadzimy dalej: wprowadzamy zmiany, mierzymy je i pilnujemy Search Console. Wynik to pomiar PageSpeed Insights, z datą przy każdej stronie.",
   "przyklady": [
     {
       "adres": "https://studioagat.pl/",
@@ -126,27 +126,32 @@
       "zdanie": "Meble na wymiar w Warszawie. Nowe wpisy na blogu trafiają same na Facebooka jako post z linkiem."
     }
   ],
-  "procesNaglowek": "Jak pracujemy",
+  "procesNaglowek": "Jak przejmujemy i prowadzimy stronę krok po kroku",
   "proces": [
     {
       "nazwa": "Przegląd i dostępy",
-      "opis": "Sprawdzamy stronę jak przy audycie i zbieramy dostępy: domena, hosting, Search Console, Google Analytics, Profil Firmy w Google, Facebook."
+      "opis": "Sprawdzamy stronę jak przy audycie i zbieramy dostępy: domena, hosting, Search Console, Google Analytics, Profil Firmy w Google, Facebook.",
+      "ty": "Dajesz nam dostępy: role menedżera albo użytkownika, nie swoje hasła. Właścicielem kont zostajesz Ty."
     },
     {
       "nazwa": "Zakres i rytm",
-      "opis": "Ustalamy, co wchodzi w opiekę, jak często wysyłamy raport i kto zatwierdza posty i wpisy."
+      "opis": "Ustalamy, co wchodzi w opiekę, jak często wysyłamy raport i kto zatwierdza posty i wpisy.",
+      "ty": "Wybierasz części opieki i rytm raportu. Wskazujesz, kto u Ciebie zatwierdza posty i wpisy."
     },
     {
       "nazwa": "Zmiany na bieżąco",
-      "opis": "Zmianę wprowadzamy, przepuszczamy przez bramkę kontroli, publikujemy i sprawdzamy na żywej stronie w jednym przebiegu."
+      "opis": "Zmianę wprowadzamy, przepuszczamy przez bramkę kontroli, publikujemy i sprawdzamy na żywej stronie w jednym przebiegu.",
+      "ty": "Zgłaszasz zmianę mailem albo telefonicznie, a drobne poprawki robisz sam w panelu."
     },
     {
       "nazwa": "Pomiar",
-      "opis": "Mierzymy szybkość w PageSpeed Insights i patrzymy w Search Console po każdej większej zmianie i w stałym rytmie."
+      "opis": "Mierzymy szybkość w PageSpeed Insights i patrzymy w Search Console po każdej większej zmianie i w stałym rytmie.",
+      "ty": "Nic. Wyniki pomiarów dostajesz w raporcie."
     },
     {
       "nazwa": "Raport i lista poprawek",
-      "opis": "Wysyłamy raport z wnioskami i proponujemy następne kroki. Ty decydujesz, co robimy dalej."
+      "opis": "Wysyłamy raport z wnioskami i proponujemy następne kroki. Ty decydujesz, co robimy dalej.",
+      "ty": "Czytasz raport i decydujesz, które poprawki robimy w kolejnym okresie."
     }
   ],
   "wideo": "",
@@ -198,5 +203,21 @@
       "adres": "/faq/",
       "tekst": "Pytania o strony i sklepy internetowe"
     }
-  ]
+  ],
+  "faktCenaPodpis": "netto za opiekę techniczną",
+  "faktTrzeci": {
+    "liczba": "30 dni",
+    "podpis": "codziennych kopii hostingu lh.pl"
+  },
+  "coDostajeszEtykieta": "W cenie",
+  "nieObiecujemy": {
+    "etykieta": "Uczciwie",
+    "naglowek": "Nie obiecujemy miejsca w Google. Obiecujemy to, co da się zmierzyć.",
+    "akapity": [
+      "Czego nie obiecujemy: miejsca w wynikach Google ani w odpowiedziach ChatGPT, bo o nich decyduje wyszukiwarka i asystent, a nie wykonawca strony. Nie podajemy też „wyniku widoczności w AI”, dopóki nie ma metody, którą każdy może powtórzyć.",
+      "Na stronach nie używamy zdjęć wygenerowanych przez AI. Obiecujemy to, co sprawdzisz sam: szybkość w PageSpeed Insights, dostępność dla osób z czytnikiem ekranu i poprawne dane strukturalne."
+    ]
+  },
+  "procesEtykieta": "Krok po kroku",
+  "procesLead": "Prowadzenie strony internetowej zaczyna się od przeglądu i toczy się w stałym rytmie. Przy każdym kroku piszemy, co robimy my, a co Ty."
 }

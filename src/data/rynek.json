@@ -1,0 +1,15 @@
+{
+  "_opis": "Pas rynku (src/components/zywe/PasRynku.astro): odsetek prawdziwych stron z dobrymi Core Web Vitals według technologii. Liczby statyczne, z datą odczytu i źródłem. Weryfikacja u źródła pierwotnego (HTTP Archive Core Web Vitals Technology Report) — patrz docs/ZYWE.md §Ż6.",
+  "naglowek": "Ile stron w sieci przechodzi Core Web Vitals",
+  "wstep": "Odsetek prawdziwych stron, które mają dobre Core Web Vitals, według technologii, na której stoją.",
+  "pozycje": [
+    { "nazwa": "Astro", "wartosc": 71 },
+    { "nazwa": "WordPress", "wartosc": 48 },
+    { "nazwa": "Next.js", "wartosc": 35 }
+  ],
+  "zrodlo": "HTTP Archive / Chrome UX Report (CrUX), dane cytowane przez astro.build",
+  "zrodloAdres": "https://httparchive.org/reports/techreport/",
+  "odczyt": "2026-11-06",
+  "zweryfikowaneUZrodla": false,
+  "dopisek": "Budujemy w Astro."
+}

@@ -1,6 +1,6 @@
 ---
 // Jeden wpis bloga: /blog/<id>/ → dist/blog/<id>/index.html. Adres dostają wyłącznie wpisy z opublikowane() (src/lib/wpisy.ts).
-// Treść Markdown renderuje Astro 7 domyślnym procesorem, bez wtyczek. Wzorzec: pan-stolarz.pl src/pages/blog/[slug].astro,
+// Treść Markdown renderuje Astro 7 procesorem Sätteri z wtyczkami z astro.config.mjs (podpisy zdjęć, tabele-karty). Wzorzec: pan-stolarz.pl src/pages/blog/[slug].astro,
 // uproszczony do jednej trasy statycznej na GitHub Pages. Okruszki widoczne = BreadcrumbList w JSON-LD, wpis = BlogPosting.
 import type { InferGetStaticPropsType } from 'astro';
 import { Image } from 'astro:assets';
@@ -8,6 +8,12 @@ import { render } from 'astro:content';
 import Bazowy from '../../layouts/Bazowy.astro';
 import PasekMarki from '../../components/PasekMarki.astro';
 import Stopka from '../../components/Stopka.astro';
+import PodpisAutora from '../../components/PodpisAutora.astro';
+// Schemat i Lejek: wpis w Markdownie wstawia ich HTML ręcznie (bez MDX); import wnosi ich style globalne na stronę wpisu.
+import Schemat from '../../components/Schemat.astro';
+import Lejek from '../../components/Lejek.astro';
+import autorDane from '../../data/autor.json';
+import zdjecieAutora from '../../assets/blog/autor-piotr-czwarnowski.jpg';
 import teksty from '../../data/blog.json';
 import firma from '../../data/firma.json';
 import { tekst } from '../../lib/tekst';
@@ -53,6 +59,30 @@ const slowa = (wpis.body ?? '')
   .filter((w) => /[\p{L}\d]/u.test(w)).length;
 const minuty = Math.max(1, Math.round(slowa / 200));
 
+// Autor-osoba z autor.json: miniatura w linii meta, podpis na końcu, BlogPosting.author = @id strony autora.
+const autorOsoba = dane.autor === autorDane.imie;
+const idOsoby = `${baza}${autorDane.adres}#osoba`;
+// Wpis z ręcznie wstawionym zdjęciem autora w treści nie dostaje drugiego podpisu.
+const podpisWTresci = /autor-piotr-czwarnowski\.jpg/.test(wpis.body ?? '');
+const zaktualizowano = dane.dataAktualizacji?.toISOString();
+const opis = dane.opisSeo || dane.wJednymZdaniu || '';
+
+// „Z tego wpisu dowiesz się…” tylko przy wpisie > 1000 słów: pole albo pierwsze trzy nagłówki H2 (bez źródeł).
+const obietnica =
+  slowa > 1000
+    ? dane.zTegoWpisu ||
+      (() => {
+        // Śródtytuły w środku zdania małą literą; skróty (AI, SEO, PSI) zostają wersalikami.
+        const malaLitera = (t: string) => (/^\p{Lu}\p{Ll}/u.test(t) ? t.charAt(0).toLocaleLowerCase('pl') + t.slice(1) : t);
+        const tytuly = sekcje.filter((h) => !/^źródła/i.test(h.text)).slice(0, 3).map((h) => malaLitera(h.text));
+        return tytuly.length >= 2 ? `Z tego wpisu dowiesz się: ${tytuly.join('; ')}.` : '';
+      })()
+    : '';
+const sekcjeSpisu = sekcje;
+// Komponenty używane tylko dla stylów (patrz import); odwołanie trzyma je w grafie modułów.
+void Schemat;
+void Lejek;
+
 // Brak pliku zdjęcia nie zatrzymuje builda, ale jest widoczny w dzienniku.
 const obraz = plikObrazu(dane.zdjecie);
 if (dane.zdjecie && !obraz) console.warn(`[wpis ${wpis.id}] zdjęcie ${dane.zdjecie} nie ma pliku w src/assets — wpis bez zdjęcia`);
@@ -79,15 +109,17 @@ const daneStrukturalne = {
       '@type': 'BlogPosting',
       '@id': `${adres}#wpis`,
       headline: dane.tytul,
-      description: dane.opisSeo || undefined,
+      description: opis || undefined,
       datePublished: opublikowano,
-      dateModified: opublikowano,
+      dateModified: zaktualizowano ?? opublikowano,
       inLanguage: 'pl-PL',
       mainEntityOfPage: adres,
       image: obrazAdres,
-      author: dane.autor
-        ? { '@type': 'Person', name: dane.autor, url: `${baza}/` }
-        : { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      author: autorOsoba
+        ? { '@type': 'Person', '@id': idOsoby, name: dane.autor, url: `${baza}${autorDane.adres}` }
+        : dane.autor
+          ? { '@type': 'Person', name: dane.autor }
+          : { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
       publisher: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
       isPartOf: { '@type': 'Blog', '@id': `${baza}/blog/#blog` },
     },
@@ -104,7 +136,7 @@ const daneStrukturalne = {
 };
 ---
 
-<Bazowy tytul={tytulKarty} opis={dane.opisSeo || dane.tytul} typOg="article" obrazOg={obrazAdres}>
+<Bazowy tytul={tytulKarty} opis={opis || dane.tytul} typOg="article" obrazOg={obrazAdres}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
 
   <PasekMarki />
@@ -124,8 +156,33 @@ const daneStrukturalne = {
     <article>
       <h1 class="wpis__tytul">{dane.tytul}</h1>
       <p class="wpis__data">
-        <time datetime={opublikowano}>{dataPoPolsku(dane.dataPublikacji!)}</time>{' · '}{minuty} min czytania{' · '}{firma.nazwaKrotka}
+        {
+          autorOsoba ? (
+            <a class="wpis__autor" href={autorDane.adres}>
+              <Image class="wpis__autor-zdjecie" src={zdjecieAutora} alt="" width={40} height={40} densities={[1, 2]} loading="eager" decoding="async" />
+              {dane.autor}
+            </a>
+          ) : (
+            <span>{dane.autor ?? firma.nazwaKrotka}</span>
+          )
+        }
+        <span class="wpis__data-reszta">
+          <time datetime={opublikowano}>{dataPoPolsku(dane.dataPublikacji!)}</time>
+          {dane.dataAktualizacji && (
+            <>
+              {' · aktualizacja: '}
+              <time datetime={zaktualizowano}>{dataPoPolsku(dane.dataAktualizacji)}</time>
+            </>
+          )}
+          {' · '}{minuty} min czytania
+        </span>
       </p>
+
+      {dane.wJednymZdaniu && (
+        <div class="ramka-w-skrocie wpis__zdanie">
+          <p><strong>W jednym zdaniu.</strong> {dane.wJednymZdaniu}</p>
+        </div>
+      )}
 
       {/* Jedyny obraz z priorytetem (kandydat na LCP); kadr 3:2 z CSS rezerwuje miejsce. */}
       {obraz && (
@@ -146,7 +203,35 @@ const daneStrukturalne = {
       {/* Od 64rem: treść w lewym torze siatki, pasek boczny (spis sekcji + wezwanie) w prawym; lead (pierwszy akapit) na całą szerokość. */}
       <div class="wpis__uklad">
         <div class="wpis__tresc">
+          {obietnica && <div class="wpis__obietnica">{obietnica}</div>}
+          {sekcjeSpisu.length > 1 && (
+            <details class="wpis__spis-mobilny">
+              <summary>{tekst(teksty.spisTytul, 'W tym wpisie')} ({sekcjeSpisu.length})</summary>
+              <ol>
+                {sekcjeSpisu.map((h) => (
+                  <li><a href={`#${h.slug}`}>{h.text}</a></li>
+                ))}
+              </ol>
+            </details>
+          )}
           <Content />
+          {dane.wTwojejFirmie && (
+            <aside class="ramka-w-skrocie wpis__firma" aria-labelledby="w-twojej-firmie">
+              <h2 id="w-twojej-firmie" class="wpis__firma-tytul">W Twojej firmie</h2>
+              <p><strong>{dane.wTwojejFirmie.pytanie}</strong></p>
+              <p>{dane.wTwojejFirmie.odpowiedz}</p>
+              {dane.wTwojejFirmie.krok && (
+                <p>
+                  {dane.wTwojejFirmie.krokAdres ? (
+                    <a href={dane.wTwojejFirmie.krokAdres}>{dane.wTwojejFirmie.krok}</a>
+                  ) : (
+                    dane.wTwojejFirmie.krok
+                  )}
+                </p>
+              )}
+            </aside>
+          )}
+          {autorOsoba && !podpisWTresci && <PodpisAutora />}
         </div>
 
         <p class="wpis__udostepnij">
@@ -184,7 +269,7 @@ const daneStrukturalne = {
           <ul class="wpis__dalej-lista">
             {inne.map((w) => (
               <li>
-                <a class="karta" href={w.adres}>
+                <a class="karta karta--link" href={w.adres}>
                   {w.obraz && (
                     <Image
                       class="karta__zdjecie"
@@ -300,12 +385,121 @@ const daneStrukturalne = {
     text-align: center;
   }
 
+  /* Linia meta: autor z miniaturą 40 px + data, aktualizacja, czas czytania; na środku pod H1. */
   .wpis__data {
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--o-2) var(--o-4);
     margin-top: var(--o-4);
     margin-bottom: var(--o-8);
     font-size: var(--t-s);
     color: var(--tekst-cichy);
+  }
+
+  .wpis__autor {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--o-2);
+    min-height: 44px;
+    font-weight: 600;
+    color: var(--tekst);
+    text-decoration: underline;
+    text-decoration-color: var(--linia);
+    text-underline-offset: 3px;
+  }
+
+  .wpis__autor:hover {
+    color: var(--akcent);
+  }
+
+  /* Miniatura kwadratowa w ramce (bez kółka — reguła zdjęć). */
+  .wpis__autor-zdjecie {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 1px solid var(--linia);
+    border-radius: var(--promien-maly);
+  }
+
+  .wpis__zdanie {
+    max-width: 56rem;
+    margin: 0 auto var(--o-8);
+  }
+
+  .wpis__zdanie p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 48rem) {
+    .wpis__zdanie p {
+      font-size: var(--t-l);
+    }
+  }
+
+  /* „Z tego wpisu dowiesz się…”: akapit nad leadem, mniejszy, z kreską akcentu. */
+  .wpis__obietnica {
+    margin: 0 0 var(--o-6);
+    padding-left: var(--o-4);
+    border-left: 3px solid var(--akcent-jasny, var(--akcent));
+    line-height: 1.55;
+    font-weight: 600;
+  }
+
+  /* Spis treści na telefonie i tablecie: zwinięty <details>; od 64rem jest boczny. */
+  .wpis__spis-mobilny {
+    margin: 0 0 var(--o-8);
+    padding: 0 var(--o-4);
+    background: var(--powierzchnia);
+    border-radius: var(--promien);
+  }
+
+  .wpis__spis-mobilny summary {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .wpis__spis-mobilny ol {
+    margin: 0 0 var(--o-4);
+    padding-left: var(--o-6);
+  }
+
+  .wpis__spis-mobilny li + li {
+    margin-top: 0;
+  }
+
+  .wpis__spis-mobilny a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-s);
+    line-height: 1.35;
+  }
+
+  @media (min-width: 64rem) {
+    .wpis__spis-mobilny {
+      display: none;
+    }
+  }
+
+  /* Ramka „W Twojej firmie” na końcu treści (klasa .ramka-w-skrocie z motyw.css). */
+  .wpis__firma {
+    margin: var(--o-12) 0 0;
+    padding: var(--o-6);
+  }
+
+  .wpis__tresc .wpis__firma-tytul {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-l);
+  }
+
+  .wpis__firma p:last-child {
+    margin-bottom: 0;
   }
 
   /* Zdjęcie otwierające na pełną szerokość kontenera; kadr 21:9 od góry (nagłówek zrzutu zostaje widoczny), 16:10 na telefonie. */
@@ -364,10 +558,10 @@ const daneStrukturalne = {
       text-align: left;
     }
 
-    /* Pasek od drugiego wiersza (pod leadem) przez wszystkie wiersze treści; wiersze puste mają wysokość 0 (row-gap 0). */
+    /* Pasek od pierwszego wiersza przez wszystkie wiersze treści; wiersze puste mają wysokość 0 (row-gap 0). */
     .wpis__bok {
       grid-column: 2;
-      grid-row: 2 / span 300;
+      grid-row: 1 / span 300;
       position: sticky;
       top: 5rem;
       align-self: start;
@@ -380,21 +574,11 @@ const daneStrukturalne = {
     line-height: 1.7;
   }
 
-  /* Pierwszy akapit = lead, stopień większy, na środku (od 64rem na całą szerokość kontenera). */
-  .wpis__tresc > :global(p:first-child) {
-    text-align: center;
+  /* Pierwszy akapit = lead, stopień większy, do lewej (długi tekst wyśrodkowany czyta się gorzej). */
+  .wpis__tresc > :global(p:first-of-type) {
     font-size: var(--t-l);
     line-height: 1.5;
     color: var(--tekst);
-  }
-
-  @media (min-width: 64rem) {
-    .wpis__tresc > :global(p:first-child) {
-      grid-column: 1 / -1;
-      max-width: 56rem;
-      margin-inline: auto;
-      margin-bottom: var(--o-12);
-    }
   }
 
   .wpis__tresc :global(h2) {
@@ -458,19 +642,28 @@ const daneStrukturalne = {
 
   /* Tabele z Markdownu (wpisy z porównaniami): przewijane w poziomie WEWNĄTRZ tabeli, nie strony; na komputerze w torze tekstu obok paska bocznego. */
   .wpis__tresc :global(table) {
-    display: block;
     width: 100%;
     max-width: 100%;
     margin: var(--o-6) 0 var(--o-8);
-    overflow-x: auto;
     border-collapse: collapse;
     font-size: var(--t-s);
     line-height: 1.45;
   }
 
+  /* Powyżej 40rem tabela przewija się w poziomie wewnątrz siebie; na ≤ 40rem wiersz = karta (.tabela-karty, motyw.css). */
+  @media (min-width: 40.0625rem) {
+    .wpis__tresc :global(table) {
+      display: block;
+      overflow-x: auto;
+    }
+
+    .wpis__tresc :global(:is(th, td)) {
+      min-width: 9rem;
+    }
+  }
+
   .wpis__tresc :global(th),
   .wpis__tresc :global(td) {
-    min-width: 9rem;
     padding: var(--o-2) var(--o-3);
     border-bottom: 1px solid var(--linia);
     text-align: left;
@@ -688,8 +881,6 @@ const daneStrukturalne = {
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    background: var(--powierzchnia);
-    border-radius: var(--promien);
     color: var(--tekst);
     text-decoration: none;
   }

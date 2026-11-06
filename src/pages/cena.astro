@@ -4,11 +4,15 @@
 // napis, build się nie zatrzyma (docs/CMS-ZASADY-PRACY.md ③). Puste pole ceny = napis `brakCeny`.
 // Tabele: prawdziwe <table> z <th scope>; poniżej 40 rem wiersz jest kartą.
 // Nad tabelami kalkulator (src/components/Kalkulator.astro, teksty src/data/kalkulator.json, kotwica #kalkulator).
+// Faza 2 (2026-11-06): nad kalkulatorem trzy ceny „od” z linkiem do kalkulatora z wybranym rodzajem (?co=<id> z kalkulator.json),
+// pod nim karta „Przykład wyliczenia” — wszystkie kwoty liczone przy buildzie z cena.json; brak pozycji = karta nie powstaje.
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 import Kalkulator from '../components/Kalkulator.astro';
 import cenaJson from '../data/cena.json';
+import kalkJson from '../data/kalkulator.json';
+import { opublikowane, adresWpisu } from '../lib/wpisy';
 import firma from '../data/firma.json';
 import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
@@ -35,6 +39,86 @@ const wiersze = (klucz: string): Wiersz[] =>
     .filter((w) => w.pozycja);
 
 const brak = napis('brakCeny', 'wycena indywidualna');
+
+/** "5 750 zł" → 5750; brak kwoty → null (ta sama reguła co w Kalkulator.astro). */
+const kwotaZ = (s: string): number | null => {
+  const m = s.match(/(\d[\d\s]*)(?:,(\d{1,2}))?\s*zł/);
+  if (!m) return null;
+  const n = Number(m[1].replace(/\D/g, '')) + (m[2] ? Number(m[2].padEnd(2, '0')) / 100 : 0);
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+/** 9286.5 → "9 286,50 zł" (jak w kalkulatorze). */
+const zl = (x: number): string => {
+  const [c, g] = (Math.round(x * 100) / 100).toFixed(2).split('.');
+  return `${c.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')}${g === '00' ? '' : `,${g}`}\u00a0zł`;
+};
+const znajdz = (klucz: string, fragment: string) =>
+  wiersze(klucz).find((w) => w.pozycja.toLowerCase().includes(fragment.toLowerCase()) && kwotaZ(w.cena) !== null);
+const wielka = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+const mala = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+const pierwszeZdanie = (t: string) => (t.match(/^[^.]*\./)?.[0] ?? t).trim();
+
+// Id rodzaju w kalkulatorze dla pozycji cennika (para tabela + szukaj z kalkulator.json) → ?co=<id>#kalkulator.
+const rodzajeKalk = ((kalkJson as Record<string, unknown>).rodzaje ?? []) as { id?: string; tabela?: string; szukaj?: string }[];
+const doKalkulatora = (tabela: string, pozycja: string, dodatki = ''): string => {
+  const z = rodzajeKalk.find((r) => r.tabela === tabela && r.szukaj && pozycja.toLowerCase().includes(r.szukaj.toLowerCase()));
+  return z?.id ? `/cena/?co=${encodeURIComponent(z.id)}${dodatki}#kalkulator` : '#kalkulator';
+};
+
+// Trzy ceny „od”: wizytówka, strona firmowa i najtańszy sklep z tabeli uruchomienia sklepu.
+const wiz = znajdz('stronaWykonanie', 'wizytówka');
+const firmowa = znajdz('stronaWykonanie', 'strona firmowa');
+const sklep = wiersze('sklepWykonanie')
+  .filter((w) => kwotaZ(w.cena) !== null)
+  .sort((a, b) => (kwotaZ(a.cena) as number) - (kwotaZ(b.cena) as number))[0];
+const ceny = [
+  wiz && { nazwa: 'Wizytówka', kwota: kwotaZ(wiz.cena) as number, opis: wiz.opis, adres: doKalkulatora('stronaWykonanie', wiz.pozycja) },
+  firmowa && { nazwa: 'Strona firmowa', kwota: kwotaZ(firmowa.cena) as number, opis: firmowa.opis, adres: doKalkulatora('stronaWykonanie', firmowa.pozycja) },
+  sklep && { nazwa: 'Sklep internetowy', kwota: kwotaZ(sklep.cena) as number, opis: `${sklep.pozycja}: ${mala(sklep.opis)}`, adres: doKalkulatora('sklepWykonanie', sklep.pozycja) },
+].filter(Boolean) as { nazwa: string; kwota: number; opis: string; adres: string }[];
+const cenyNaglowek = wiz && sklep ? `Strona od ${zl(kwotaZ(wiz.cena) as number)}, sklep od ${zl(kwotaZ(sklep.cena) as number)} netto` : '';
+
+// Przykład wyliczenia: strona firmowa + 4 wpisy na blogu; obok tylko pozycje, które cennik już nazywa.
+const VAT = Number(napis('zastrzezenie', '').match(/(\d+)\s*%/)?.[1] ?? 23) || 23;
+const wpis = znajdz('stronaProwadzenie', 'wpis na blogu');
+const hosting = znajdz('stronaProwadzenie', 'hosting');
+const opieka = znajdz('stronaProwadzenie', 'opieka techniczna');
+const blogAbonament = znajdz('stronaProwadzenie', 'prowadzenie bloga');
+const ILE_WPISOW = 4;
+const przyklad = firmowa && wpis
+  ? (() => {
+      const cStrony = kwotaZ(firmowa.cena) as number;
+      const cWpisu = kwotaZ(wpis.cena) as number;
+      const netto = cStrony + ILE_WPISOW * cWpisu;
+      const osobnoZOpisu = napis('stronaWykonanieOpis', '').split('.').map((x) => x.trim()).find((x) => /osobno/i.test(x));
+      return {
+        strona: { nazwa: firmowa.pozycja, kwota: cStrony },
+        wpis: { nazwa: wielka(wpis.pozycja.replace(/^Treści:\s*/i, '')), kwota: cWpisu },
+        netto,
+        brutto: Math.round(netto * (100 + VAT)) / 100,
+        wCenie: [
+          `${firmowa.pozycja}: ${mala(firmowa.opis.replace(/\.$/, ''))}.`,
+          `W każdym wpisie: ${pierwszeZdanie(wpis.opis).replace(/^[^:]*:\s*/, '')}`,
+        ],
+        osobno: [
+          osobnoZOpisu && `${osobnoZOpisu}.`,
+          hosting && `${hosting.pozycja}: ${zl(kwotaZ(hosting.cena) as number)} ${hosting.jednostka}.`,
+        ].filter(Boolean) as string[],
+        coMiesiac: [
+          opieka && `${opieka.pozycja}: ${zl(kwotaZ(opieka.cena) as number)} ${opieka.jednostka}.`,
+          blogAbonament && `${wielka(blogAbonament.pozycja.replace(/^Treści:\s*/i, ''))}, ${ILE_WPISOW} wpisy: ${zl(kwotaZ(blogAbonament.cena) as number)} ${blogAbonament.jednostka}.`,
+        ].filter(Boolean) as string[],
+        adres: doKalkulatora('stronaWykonanie', firmowa.pozycja, `&wpisy=${ILE_WPISOW}`),
+      };
+    })()
+  : null;
+
+// Dwa wpisy bloga o cenie i czasie budowy (D poz. 2); wpis nieopublikowany albo usunięty = bez linku.
+const WPISY_O_CENIE = ['ile-kosztuje-strona-i-sklep-internetowy', 'ile-trwa-budowa-strony-i-co-dostajesz'];
+const wszystkieWpisy = await opublikowane();
+const wpisyOCenie = WPISY_O_CENIE.map((id) => wszystkieWpisy.find((w) => w.id === id))
+  .filter((w): w is NonNullable<typeof w> => Boolean(w))
+  .map((w) => ({ tytul: w.data.tytul, adres: adresWpisu(w.id) }));
 
 // Linki do stron usług pod nagłówkami tabel (plan SEO §3 D, runda 5).
 const linkiTabel: Record<string, { tekst: string; adres: string }[]> = {
@@ -124,8 +208,64 @@ const daneStrukturalne = {
       {napis('zastrzezenie', 'Ceny netto, do faktury doliczamy 23 % VAT.')}
     </p>
 
+    {ceny.length === 3 && (
+      <section class="od" aria-labelledby="ceny-od">
+        <p class="etykieta od__etykieta">Ceny od</p>
+        <h2 id="ceny-od" class="od__tytul">{cenyNaglowek}</h2>
+        <ul class="siatka-3 od__siatka">
+          {ceny.map((c) => (
+            <li class="karta od__karta">
+              <h3 class="od__nazwa">{c.nazwa}</h3>
+              <p class="od__cena"><span class="od__slowo">od</span> <span class="liczba">{zl(c.kwota)}</span> <span class="od__slowo">netto</span></p>
+              <p class="od__opis">{c.opis}</p>
+              <a class="od__link" href={c.adres}>Policz dokładnie<span class="sr-only">: {c.nazwa}</span> →</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
     {/* Kalkulator na górze, pod ramką VAT (runda 4, 2026-10-27): „żeby każdy mógł sobie wycenić”. Kwoty czyta z cena.json. */}
     <Kalkulator />
+
+    {przyklad && (
+      <section class="karta przyklad" aria-labelledby="przyklad-tytul">
+        <p class="etykieta">Przykład wyliczenia</p>
+        <h2 id="przyklad-tytul" class="przyklad__tytul">
+          Strona firmowa z {ILE_WPISOW} wpisami na blogu: {zl(przyklad.netto)} netto
+        </h2>
+        <table class="przyklad__tabela">
+          <caption class="sr-only">Wyliczenie: strona firmowa i {ILE_WPISOW} wpisy na blogu</caption>
+          <tbody>
+            <tr><th scope="row">{przyklad.strona.nazwa}</th><td>{zl(przyklad.strona.kwota)}</td></tr>
+            <tr><th scope="row">{przyklad.wpis.nazwa} × {ILE_WPISOW} ({zl(przyklad.wpis.kwota)} za wpis)</th><td>{zl(ILE_WPISOW * przyklad.wpis.kwota)}</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><th scope="row">Razem netto, jednorazowo</th><td>{zl(przyklad.netto)}</td></tr>
+            <tr><th scope="row">Razem brutto z {VAT} % VAT</th><td>{zl(przyklad.brutto)}</td></tr>
+          </tfoot>
+        </table>
+        <div class="przyklad__kolumny">
+          <div>
+            <h3>W cenie</h3>
+            <ul>{przyklad.wCenie.map((x) => <li>{x}</li>)}</ul>
+          </div>
+          {przyklad.osobno.length > 0 && (
+            <div>
+              <h3>Osobno</h3>
+              <ul>{przyklad.osobno.map((x) => <li>{x}</li>)}</ul>
+            </div>
+          )}
+          {przyklad.coMiesiac.length > 0 && (
+            <div>
+              <h3>Co miesiąc, jeśli wybierzesz</h3>
+              <ul>{przyklad.coMiesiac.map((x) => <li>{x}</li>)}</ul>
+            </div>
+          )}
+        </div>
+        <p class="przyklad__link"><a href={przyklad.adres}>Policz ten wariant w kalkulatorze →</a></p>
+      </section>
+    )}
 
     <nav class="spis" aria-labelledby="spis-tabel">
       <h2 id="spis-tabel" class="sr-only">Spis tabel</h2>
@@ -172,11 +312,20 @@ const daneStrukturalne = {
       </section>
     ))}
 
+    {wpisyOCenie.length > 0 && (
+      <p class="tabela__linki cena__blog">
+        Skąd biorą się te kwoty i ile trwa budowa, piszemy na blogu:{' '}
+        {wpisyOCenie.map((w, i) => (
+          <>{i > 0 && ' oraz '}<a href={w.adres}>{w.tytul}</a></>
+        ))}.
+      </p>
+    )}
+
     <section class="kontakt" aria-labelledby="cena-kontakt" data-ujawnij>
-      <h2 id="cena-kontakt" class="kontakt__tytul">{napis('ctaNaglowek', 'Chcesz poznać cenę swojej strony?')}</h2>
+      <h2 id="cena-kontakt" class="kontakt__tytul">{napis('ctaNaglowek', 'Dokładną cenę podamy, gdy opiszesz zakres')}</h2>
       <p>{napis('ctaTekst', 'Napisz albo zadzwoń.')}</p>
+      <p class="kontakt__guzik"><a class="guzik" href="/kontakt/">{napis('ctaLink', 'Przejdź do kontaktu')}</a></p>
       <ul class="kontakt__dane">
-        <li><a href="/kontakt/">{napis('ctaLink', 'Przejdź do kontaktu')}</a></li>
         {mail && <li><a href={`mailto:${mail}`}>{mail}</a></li>}
         {cyfry && <li><a href={`tel:+48${cyfry.slice(-9)}`}>{telefon}</a></li>}
       </ul>
@@ -495,6 +644,174 @@ const daneStrukturalne = {
 
   .kontakt__dane a:hover {
     color: var(--tekst);
+  }
+
+  /* Trzy ceny „od” nad kalkulatorem: etykieta i H2 na środku, siatka-3 i karta z motyw.css (kontrakt fazy 2). */
+  .od {
+    margin: var(--o-8) 0 var(--o-12);
+    text-align: center;
+  }
+
+  .od__tytul,
+  .przyklad__tytul {
+    margin-top: var(--o-2);
+    font-size: var(--t-xl);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .od__siatka {
+    margin: var(--o-8) 0 0;
+    text-align: left;
+  }
+
+  .od__karta {
+    display: flex;
+    flex-direction: column;
+    padding: var(--o-6);
+  }
+
+  .od__nazwa {
+    font-size: var(--t-l);
+  }
+
+  .od__cena {
+    margin: var(--o-3) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--o-2);
+  }
+
+  .od__cena .liczba {
+    color: var(--akcent);
+    white-space: nowrap;
+  }
+
+  .od__slowo {
+    color: var(--tekst-cichy);
+    font-weight: 600;
+  }
+
+  .od__opis {
+    margin: var(--o-3) 0 var(--o-4);
+  }
+
+  .od__link,
+  .przyklad__link a {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* Przykład wyliczenia pod kalkulatorem: karta z motywu, tabela dwóch kolumn i trzy listy. */
+  .przyklad {
+    margin: 0 0 var(--o-12);
+    padding: var(--o-6);
+  }
+
+  @media (min-width: 48rem) {
+    .przyklad {
+      padding: var(--o-8);
+    }
+  }
+
+  .przyklad__tabela {
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
+    margin-top: var(--o-6);
+    font-size: var(--t-m);
+  }
+
+  /* Reguły tabel cennika wyżej (wiersz = karta poniżej 48 rem) nie dotyczą tej tabeli: zostaje zwykłą tabelą dwóch kolumn. */
+  .przyklad__tabela {
+    display: table;
+  }
+
+  .przyklad__tabela tbody,
+  .przyklad__tabela tfoot {
+    display: table-row-group;
+  }
+
+  .przyklad__tabela tr {
+    display: table-row;
+    padding: 0;
+    border: 0;
+  }
+
+  .przyklad__tabela th,
+  .przyklad__tabela td {
+    display: table-cell;
+    padding: var(--o-2) 0;
+    border-bottom: 1px solid var(--linia);
+    text-align: left;
+    font-family: var(--font-sans);
+    font-weight: 400;
+  }
+
+  .przyklad__tabela td {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    padding-left: var(--o-4);
+  }
+
+  .przyklad__tabela tbody tr:nth-child(even) {
+    background: none;
+  }
+
+  .przyklad__tabela tfoot th,
+  .przyklad__tabela tfoot td {
+    font-weight: 700;
+    border-bottom: 0;
+  }
+
+  .przyklad__tabela tfoot tr:first-child th,
+  .przyklad__tabela tfoot tr:first-child td {
+    border-top: 2px solid var(--tekst);
+  }
+
+  .przyklad__kolumny {
+    display: grid;
+    gap: var(--o-6);
+    margin-top: var(--o-8);
+  }
+
+  @media (min-width: 56rem) {
+    .przyklad__kolumny {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .przyklad__kolumny h3 {
+    font-size: var(--t-m);
+  }
+
+  .przyklad__kolumny ul {
+    margin: var(--o-2) 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .przyklad__kolumny li + li {
+    margin-top: var(--o-2);
+  }
+
+  .przyklad__link {
+    margin: var(--o-6) 0 0;
+  }
+
+  .cena__blog {
+    margin-top: var(--o-12);
+  }
+
+  .kontakt__guzik {
+    margin: var(--o-4) 0;
   }
 
   .sr-only {

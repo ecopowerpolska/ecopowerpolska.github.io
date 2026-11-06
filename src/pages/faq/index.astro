@@ -142,10 +142,11 @@ const daneStrukturalne = {
       })();
     </script>
 
-    <section class="kontakt" aria-labelledby="faq-kontakt" data-ujawnij>
+    <section class="kontakt karta" aria-labelledby="faq-kontakt" data-ujawnij>
       <h2 id="faq-kontakt" class="kontakt__tytul">{napis('kontaktNaglowek', 'Nie ma tu Twojego pytania?')}</h2>
       <p>{napis('kontaktTekst', 'Napisz albo zadzwoń.')}</p>
       <ul class="kontakt__dane">
+        <li><a class="guzik" href="/kontakt/">{napis('kontaktGuzik', 'Napisz do nas')}</a></li>
         {mail && <li><a href={`mailto:${mail}`}>{mail}</a></li>}
         {cyfry && <li><a href={`tel:+48${cyfry.slice(-9)}`}>{telefon}</a></li>}
       </ul>
@@ -220,16 +221,12 @@ const daneStrukturalne = {
     text-align: center;
   }
 
-  .faq__tytul {
-    font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl));
-    text-wrap: balance;
-  }
+  /* Rozmiar H1 z motywu (--t-display, D30). */
 
   .faq__lead {
     margin-block: var(--o-4) var(--o-8);
     font-size: var(--t-l);
     line-height: 1.5;
-    color: var(--tekst-cichy);
   }
 
   /* Akordeon: kreska między pytaniami, plus/minus jak FAQ satelit (details.karta). */
@@ -313,8 +310,6 @@ const daneStrukturalne = {
   .kontakt {
     margin-top: var(--o-16);
     padding: var(--o-6);
-    background: var(--powierzchnia);
-    border-radius: var(--promien);
   }
 
   /* Komputer: nagłówek z tekstem po lewej, dane kontaktowe po prawej — pełna szerokość kontenera. */
@@ -355,14 +350,19 @@ const daneStrukturalne = {
     gap: 0 var(--o-6);
   }
 
-  .kontakt__dane a {
+  .kontakt__dane {
+    align-items: flex-start;
+    gap: var(--o-3) var(--o-6);
+  }
+
+  .kontakt__dane a:not(.guzik) {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
     font-weight: 600;
   }
 
-  .kontakt__dane a:hover {
+  .kontakt__dane a:not(.guzik):hover {
     color: var(--tekst);
   }
 </style>

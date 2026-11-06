@@ -1,6 +1,7 @@
 ---
 // Szkielet podstrony efektu /efekty/<slug>/ (runda 7, 2026-10-30). Wspólny dla efektów nowych: okruszki, H1 na środku,
-// pokaz na pełną szerokość (slot), pod nim trzy krótkie bloki (co to daje / kiedy ma sens / ile waży) i guzik do /kontakt/.
+// pokaz na pełną szerokość (slot), pod nim trzy krótkie bloki (co to daje / kiedy ma sens / ile waży) w .karta
+// i .guzik do /kontakt/ (faza 2: obie klasy z motyw.css).
 // Wszystkie teksty bierze z wpisu o tym slugu w src/data/efekty.json - nowy efekt = wpis w JSON + plik w src/pages/efekty/.
 import Bazowy from '../../layouts/Bazowy.astro';
 import PasekMarki from '../PasekMarki.astro';
@@ -83,15 +84,15 @@ const daneStrukturalne = {
     <div class="efekt__pokaz"><slot /></div>
 
     <section class="efekt__info" aria-label="O tym efekcie">
-      <div>
+      <div class="karta">
         <h2>Co to daje</h2>
         <p>{pole('opisDlugi')}</p>
       </div>
-      <div>
+      <div class="karta">
         <h2>Kiedy to ma sens</h2>
         <p>{pole('dlaKogo')}</p>
       </div>
-      <div>
+      <div class="karta">
         <h2>Ile waży</h2>
         <p>{pole('kosztWydajnosci')}</p>
         <p class="efekt__waga">{pole('waga')}</p>
@@ -101,7 +102,7 @@ const daneStrukturalne = {
       </div>
     </section>
 
-    <p class="efekt__cta"><a class="efekt__guzik" href="/kontakt/">Chcę to na swojej stronie</a></p>
+    <p class="efekt__cta"><a class="guzik" href="/kontakt/">Chcę to na swojej stronie</a></p>
   </main>
 
   <Stopka />
@@ -181,12 +182,15 @@ const daneStrukturalne = {
   }
 
   /* Trzy bloki pod pokazem na pełną szerokość; na telefonie jedna kolumna. */
+  /* Bloki = .karta z motyw.css (kontrakt fazy 2), bez kreski nad sekcją. */
   .efekt__info {
     display: grid;
-    gap: var(--o-8);
+    gap: var(--o-6);
     margin-top: var(--o-12);
-    padding-top: var(--o-8);
-    border-top: 1px solid var(--linia);
+  }
+
+  .efekt__info > .karta {
+    padding: var(--o-6);
   }
 
   @media (min-width: 48rem) {
@@ -202,7 +206,10 @@ const daneStrukturalne = {
 
   .efekt__info p {
     margin: 0 0 var(--o-3);
-    color: var(--tekst-cichy);
+  }
+
+  .efekt__info p:last-child {
+    margin-bottom: 0;
   }
 
   .efekt__waga {
@@ -221,19 +228,4 @@ const daneStrukturalne = {
     text-align: center;
   }
 
-  .efekt__guzik {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
-    padding: 0 var(--o-8);
-    border-radius: var(--promien-maly);
-    background: var(--akcent);
-    color: var(--tlo);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .efekt__guzik:hover {
-    text-decoration: underline;
-  }
 </style>

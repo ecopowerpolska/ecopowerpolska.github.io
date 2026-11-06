@@ -5,6 +5,7 @@ opisSeo: "Ile kosztuje strona internetowa i sklep w 2026 roku: widełki i median
 dataPublikacji: "2026-10-28T10:30:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna garderoba-na-wymiar-warszawa.pl: nagłówek „Garderoby na wymiar w Warszawie, od pomiaru do montażu” i zdjęcie garderoby z półkami"
+autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

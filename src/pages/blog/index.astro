@@ -21,6 +21,23 @@ const wpisy = (await opublikowane()).map((w) => ({
 }));
 
 const naglowek = tekst(teksty.naglowek, 'Blog');
+
+// „Od czego zacząć”: dwie ścieżki czytania. Treść z blog.json → odCzegoZaczac (panel); bez pola — wartości niżej.
+type Sciezka = { tytul: string; wpisy: string[] };
+type OdCzego = { naglowek?: string; sciezki?: Sciezka[] };
+const domyslneSciezki: Sciezka[] = [
+  {
+    tytul: 'Planujesz pierwszą stronę',
+    wpisy: ['strona-czy-sklep-internetowy-od-czego-zaczac', 'ile-kosztuje-strona-i-sklep-internetowy', 'ile-trwa-budowa-strony-i-co-dostajesz'],
+  },
+  { tytul: 'Masz już stronę', wpisy: ['core-web-vitals-po-polsku', 'prawne-aspekty-strony-internetowej-zgody-regulaminy'] },
+];
+const odCzego = ((teksty as Record<string, unknown>).odCzegoZaczac ?? {}) as OdCzego;
+const poId = new Map(wpisy.map((w) => [w.id, w]));
+// Wpis spoza listy opublikowanych (szkic, literówka w panelu) po prostu znika ze ścieżki.
+const sciezki = (odCzego.sciezki?.length ? odCzego.sciezki : domyslneSciezki)
+  .map((s) => ({ tytul: s.tytul, wpisy: (s.wpisy ?? []).map((id) => poId.get(id)).filter((w) => w !== undefined) }))
+  .filter((s) => s.wpisy.length > 0);
 const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
 
 // JSON-LD: Blog z listą wpisów, wydawca = organizacja ze strony głównej (to samo @id).
@@ -54,11 +71,33 @@ const daneStrukturalne = {
     <p class="blog__lead">{tekst(teksty.lead, 'Piszemy o tym, jak budujemy strony i sklepy internetowe dla firm: od wyboru drogi, przez panel treści, po publikację i utrzymanie.')}</p>
 
     {
+      sciezki.length > 0 && (
+        <section class="blog__start" aria-labelledby="od-czego-zaczac">
+          <h2 id="od-czego-zaczac" class="blog__start-tytul">{tekst(odCzego.naglowek, 'Od czego zacząć')}</h2>
+          <div class="blog__sciezki">
+            {sciezki.map((s) => (
+              <div class="blog__sciezka">
+                <h3 class="blog__sciezka-tytul">{s.tytul}</h3>
+                <ol class="blog__sciezka-lista">
+                  {s.wpisy.map((w) => (
+                    <li>
+                      <a class="karta karta--link blog__sciezka-karta" href={w.adres}>{w.tytul}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
       wpisy.length > 0 ? (
         <ul class="blog__lista">
           {wpisy.map((w, i) => (
             <li data-ujawnij>
-              <a class="karta" href={w.adres}>
+              <a class="karta karta--link" href={w.adres}>
                 {w.obraz && (
                   <Image
                     class="karta__zdjecie"
@@ -143,15 +182,8 @@ const daneStrukturalne = {
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    background: var(--powierzchnia);
-    border-radius: var(--promien);
     color: var(--tekst);
     text-decoration: none;
-  }
-
-  /* najechanie: kolor tytułu (para akcent na powierzchni z motyw.css), tło bez zmian */
-  .karta:hover {
-    background: var(--powierzchnia);
   }
 
   /* aktywny (wciśnięty) */
@@ -202,6 +234,64 @@ const daneStrukturalne = {
     -webkit-line-clamp: 3;
     line-clamp: 3;
     overflow: hidden;
+  }
+
+  /* „Od czego zacząć”: dwie ścieżki obok siebie od 56rem (3 + 2 karty-odnośniki), jedna pod drugą niżej. */
+  .blog__start {
+    margin: 0 0 var(--o-16);
+  }
+
+  .blog__start-tytul {
+    margin: 0 0 var(--o-6);
+    text-align: center;
+    font-size: var(--t-xl);
+  }
+
+  .blog__sciezki {
+    display: grid;
+    gap: var(--o-8);
+  }
+
+  @media (min-width: 56rem) {
+    .blog__sciezki {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+  .blog__sciezka-tytul {
+    margin: 0 0 var(--o-3);
+    font-size: var(--t-l);
+  }
+
+  .blog__sciezka-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-3);
+  }
+
+  .blog__sciezka-karta {
+    display: flex;
+    /* Reguła kart listy niżej ustawia kolumnę; tu wiersz, inaczej krótki tytuł staje na środku karty. */
+    flex-direction: row;
+    align-items: center;
+    min-height: 48px;
+    height: auto;
+    padding: var(--o-4) var(--o-6);
+    background: #fff;
+    border: var(--obrys-karty, 1px solid var(--linia));
+    box-shadow: var(--cien-karty, none);
+    border-radius: var(--promien-karty, var(--promien));
+    font-weight: 600;
+    line-height: 1.35;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .blog__sciezka-karta:hover {
+    background: #fff;
+    color: var(--akcent);
   }
 
   .blog__pusto {

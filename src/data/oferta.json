@@ -1,4 +1,41 @@
 {
+  "heroGuzikCena": "Policz cenę strony",
+  "liczbyEtykieta": "EcoPower Polska w liczbach",
+  "liczbaRealizacjiPodpis": "stron firm z Warszawy, każda zmierzona po publikacji",
+  "liczbaPsiPodpis": "punktów PageSpeed na telefonie w realizacjach",
+  "liczbaCenyPodpis": "netto za stronę wizytówkę, ceny jawne w cenniku",
+  "liczbaNarzedziPodpis": "darmowych testów strony, bez logowania",
+  "realizacjeNaglowek": "Strony firm z Warszawy, każda zmierzona po publikacji.",
+  "realizacjeNota": "Pomiar: Google PageSpeed Insights, wynik laboratoryjny osobno dla telefonu i komputera. To nie gwarancja pozycji w Google, ale każdy może go powtórzyć sam.",
+  "uslugiEtykieta": "Oferta",
+  "uslugiNaglowek": "Od pustej domeny do strony, którą zmieniasz sam.",
+  "uslugi": [
+    {
+      "nazwa": "Strona firmowa",
+      "opis": "Oferta otwiera się od razu, także na telefonie, a zapytania trafiają prosto na Twoją skrzynkę.",
+      "link": "/strony-internetowe-warszawa/",
+      "cena": "Strona firmowa"
+    },
+    {
+      "nazwa": "Sklep internetowy",
+      "opis": "Sprzedajesz online z płatnościami i dostawami. Silnik sklepu dobieramy do asortymentu.",
+      "link": "/sklepy-internetowe-warszawa/",
+      "cena": "Sklep WooCommerce"
+    },
+    {
+      "nazwa": "Strona wizytówka",
+      "opis": "Jedna strona z ofertą i formularzem: firma ma swój adres w sieci bez dużego budżetu.",
+      "link": "/strona-wizytowka/",
+      "cena": "Wizytówka, strona jednostronicowa"
+    },
+    {
+      "nazwa": "Prowadzenie strony",
+      "opis": "Zmiany, kopie i pomiar szybkości robimy my, a Ty dostajesz raport z wnioskami.",
+      "link": "/prowadzenie-strony-internetowej/",
+      "cena": "Opieka techniczna i aktualizacje"
+    }
+  ],
+  "uslugiInneNaglowek": "Robimy też",
   "zakresNaglowek": "Czym się zajmujemy",
   "zakresLead": "Robimy całą drogę od pustej domeny do strony, którą firma sama aktualizuje.",
   "zakres": [
@@ -48,31 +85,47 @@
       "link": "/prowadzenie-strony-internetowej/"
     }
   ],
-  "procesNaglowek": "Jak pracujemy",
+  "procesNaglowek": "Sześć kroków, a Twoja obecna strona działa do końca.",
+  "procesEtykieta": "Proces",
+  "procesLink": "Szczegóły krok po kroku",
+  "procesLinkAdres": "/strony-internetowe-warszawa/#krok-po-kroku",
+  "procesTy": "Ty",
   "proces": [
     {
       "nazwa": "Zakres",
-      "opis": "Ustalamy, co strona ma robić: jakie usługi pokazuje, czy przyjmuje zapytania, czy sprzedaje. Z tego wynika wybór hostingu i panelu."
+      "opis": "Ustalamy, co strona ma robić: jakie usługi pokazuje, czy przyjmuje zapytania, czy sprzedaje. Z tego wynika wybór hostingu i panelu.",
+      "krotko": "Ustalamy, co strona ma robić: pokazywać usługi, zbierać zapytania czy sprzedawać.",
+      "ty": "opowiadasz o firmie i swoich klientach."
     },
     {
       "nazwa": "Treść i zdjęcia",
-      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Na stronę trafiają prawdziwe zdjęcia realizacji, nie obrazy z generatora."
+      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Na stronę trafiają prawdziwe zdjęcia realizacji, nie obrazy z generatora.",
+      "krotko": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony, bez obrazów z generatora.",
+      "ty": "przesyłasz teksty, zdjęcia i logo."
     },
     {
       "nazwa": "Budowa pod adresem roboczym",
-      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zanim zastąpi obecną."
+      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zanim zastąpi obecną.",
+      "krotko": "Nowa strona powstaje obok starej, pod osobnym adresem.",
+      "ty": "oglądasz ją i zgłaszasz poprawki."
     },
     {
       "nazwa": "Kontrola przed publikacją",
-      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting."
+      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting.",
+      "krotko": "Automatyczna bramka sprawdza tytuły, dostępność i wagę plików; strona z błędem nie wychodzi.",
+      "ty": "akceptujesz wersję do publikacji."
     },
     {
       "nazwa": "Przepięcie domeny",
-      "opis": "Przełączamy domenę na nową stronę, a stare adresy przekierowujemy na nowe (301), żeby wyniki w Google nie prowadziły w próżnię."
+      "opis": "Przełączamy domenę na nową stronę, a stare adresy przekierowujemy na nowe (301), żeby wyniki w Google nie prowadziły w próżnię.",
+      "krotko": "Przełączamy domenę, a stare adresy kierujemy na nowe, żeby wyniki w Google prowadziły dalej.",
+      "ty": "udostępniasz panel domeny na czas przepięcia."
     },
     {
       "nazwa": "Utrzymanie",
-      "opis": "Po publikacji wprowadzamy zmiany, mierzymy szybkość i pilnujemy Search Console. Każda zmiana jest od razu publikowana i sprawdzana na żywej stronie."
+      "opis": "Po publikacji wprowadzamy zmiany, mierzymy szybkość i pilnujemy Search Console. Każda zmiana jest od razu publikowana i sprawdzana na żywej stronie.",
+      "krotko": "Po publikacji wprowadzamy zmiany, mierzymy szybkość i pilnujemy Search Console.",
+      "ty": "piszesz, co zmienić, albo zmieniasz sam w panelu."
     }
   ],
   "dostajeszNaglowek": "Co dostajesz",
@@ -124,6 +177,22 @@
       "opis": "Panel dobieramy do wybranego systemu i hostingu, tak żebyś mógł sam zmieniać teksty, zdjęcia i wpisy."
     }
   ],
+  "testyNaglowek": "Sprawdź swoją stronę, zanim do nas napiszesz.",
+  "testyWybrane": [
+    "test-szybkosci",
+    "wyszukiwanie-agentowe-ai",
+    "seo-techniczne"
+  ],
+  "testyOtworz": "Otwórz test",
+  "testyLink": "Wszystkie darmowe narzędzia",
+  "autorNaglowek": "Mała firma, krótka droga: piszesz do osoby, która buduje Twoją stronę.",
+  "autorTekst": "Każdą stronę buduję tak, żeby jej właściciel widział wynik w liczbach: po publikacji mierzę ją w PageSpeed Insights i pokazuję wynik z datą pomiaru. Zakres, poprawki i publikację ustalasz bezpośrednio ze mną.",
+  "autorPodpis": "Piotr Czwarnowski, EcoPower Polska",
+  "autorLink": "Więcej o mnie",
+  "autorZdjecieAlt": "Piotr Czwarnowski z lupą nagłowną nasuniętą na okulary",
+  "zamkniecieNaglowek": "Policz cenę w minutę. Resztę ustalimy w jednej rozmowie.",
+  "zamkniecieGuzik": "Policz cenę",
+  "zamkniecieLink": "Napisz do nas",
   "kontaktNaglowek": "Kontakt",
   "kontaktTekst": "Napisz, jaki adres ma mieć strona, co ma robić i czy masz już domenę, teksty i zdjęcia. Na tej podstawie zaproponujemy hosting, panel i zakres.",
   "kontaktMail": "Napisz: kontakt@ecopowerpolska.pl",

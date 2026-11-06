@@ -22,7 +22,7 @@ const polski = tekst(napisy.jezykPolski, 'Polski');
 const zmien = tekst(napisy.jezykZmien, 'Zmień język strony, obecnie polski. Przełącznik ładuje się po kliknięciu.');
 
 // Barwy = wartości hex tokenów motywu (widżet przyjmuje tekst do własnego CSS). Pary: tekst #15201a na #f4f5f1 (15,3:1), ramka #4b5a4f (6,7:1 na #f4f5f1),
-// najechanie #dcdfd3 (tekst 12,4:1). Stopka ma tło --powierzchnia (#e8eae2), widżet leży na niej jako jasna pigułka.
+// najechanie #dcdfd3 (tekst 12,4:1). Stopka ma tło --tlo-ciemne (#10231b, D31), widżet leży na niej jako jasna pigułka.
 const ustawienia = {
   default_language: 'pl',
   languages: ['pl', 'en', 'de', 'uk', 'ru', 'fr', 'es', 'it'],
@@ -64,9 +64,10 @@ const ustawienia = {
     margin: 0 0 var(--o-4);
   }
 
+  /* Kolor po rodzicu: stopka jest ciemna (D31), etykieta bierze #b9c4bd na #10231b. */
   .tlumacz__etykieta {
     font-weight: 600;
-    color: var(--tekst-cichy);
+    color: inherit;
   }
 
   /* Przycisk startowy: wygląd widżetu (jasna pigułka, ramka 4b5a4f), cel dotyku 44 px. Znika, gdy widżet wstawi się obok. */

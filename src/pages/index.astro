@@ -1,10 +1,10 @@
 ---
-// index.astro — strona główna firmy od stron WWW i sklepów (przebudowa 2026-10-23).
-// Układ: nagłówek firmy → oferta → realizacje → ostatnie wpisy → skrót FAQ → kontakt. Zdania „o spółce” pod kontaktem nie ma (Piotr 2026-10-30).
-// Napisy z src/data/strona.json i src/data/oferta.json (panel), realizacje z kolekcji
-// `serwisy` (src/data/serwisy.json). Wygląd bez zmian: tokeny motyw.css, PasekMarki, Stopka,
-// kierunek „rejestr" (docs/DECYZJE-WIZUALNE.md). Zero JS na tej trasie poza stopką.
+// index.astro — strona główna (faza 2, 2026-11-06, decyzja 7): hero → pas liczb → realizacje → oferta → proces →
+// darmowe testy → kto robi → blog → FAQ → pas zamykający → kontakt. Pasy i klasy z motyw.css (kontrakt fazy 2).
+// Liczby pasa czytane kodem z serwisy/pomiary/cena/narzedzia.json; w HTML stoją wartości końcowe (SEO, bez JS).
+// JS: tylko licznik liczb (decyzja 9), raz, wyłączony przy ograniczeniu ruchu.
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
@@ -13,27 +13,102 @@ import Oferta from '../components/Oferta.astro';
 import Realizacje from '../components/Realizacje.astro';
 import FaqSkrot from '../components/FaqSkrot.astro';
 import OstatnieWpisy from '../components/OstatnieWpisy.astro';
+import WykresPsi from '../components/zywe/WykresPsi.astro';
+import PasRynku from '../components/zywe/PasRynku.astro';
 import { tekst } from '../lib/tekst';
 import stronaJson from '../data/strona.json';
+import ofertaJson from '../data/oferta.json';
+import pomiaryJson from '../data/pomiary.json';
+import cenaJson from '../data/cena.json';
+import narzedziaJson from '../data/narzedzia.json';
+import zdjecieAutora from '../assets/blog/autor-piotr-czwarnowski.jpg';
 
-// Panel może pole wyczyścić albo zapisać `null` — każdy napis idzie przez tekst().
 const strona = stronaJson as Record<string, string | null | undefined>;
+const o = ofertaJson as Record<string, unknown>;
+const napis = (klucz: string, domyslny: string) => tekst(o[klucz] as string | null | undefined, domyslny);
 
 // Kolejność = kolejność w serwisy.json (przeciąganie w panelu, D8); ukryte nie wchodzą.
 const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
 
-// D2: nazwa spółki pada raz na ekran — niesie ją tytuł karty i logo, H1 mówi, co firma robi.
+// D2/D3: tytuł i opis meta bez zmian; nagłówek i zdanie pod nim z panelu (strona.json).
 const tytul = tekst(strona.tytulKarty, 'EcoPower Polska — strony i sklepy internetowe dla firm');
-// D3: opis meta zbieżny z nagłówkiem i zdaniem pod nim.
 const opis = tekst(
   strona.opisWyszukiwarki,
   'Budujemy szybkie strony i sklepy internetowe dla firm: projekt, panel do edycji, hosting i widoczność w Google. Wyniki PageSpeed każdej realizacji.',
 );
-const naglowek = tekst(strona.naglowek, 'Budujemy strony i sklepy internetowe dla firm.');
+const naglowek = tekst(strona.naglowek, 'Strony i sklepy, które ładują się w sekundę.');
 const lead = tekst(
   strona.zdanieNaglowka,
-  'Projekt, panel do edycji treści, hosting, domena, poczta i widoczność w Google. Potem stronę utrzymujemy.',
+  'Budujemy strony i sklepy internetowe dla firm: klient widzi ofertę od razu, także na telefonie, a treść zmieniasz sam w panelu.',
 );
+
+// ── Pas liczb ──
+// Zakres PSI na telefonie z pomiarów widocznych realizacji (klucz = adres, dosłownie).
+const pomiary = ((pomiaryJson as { pomiary?: Record<string, { data?: string; mobile?: { wydajnosc?: number | null } | null }> }).pomiary) ?? {};
+const wynikiTelefon = realizacje
+  .map((r) => pomiary[r.data.adres]?.mobile?.wydajnosc)
+  .filter((w): w is number => typeof w === 'number');
+const daty = realizacje.map((r) => pomiary[r.data.adres]?.data ?? '').filter(Boolean).sort();
+const dataPomiaru = (() => {
+  const m = (daty[daty.length - 1] ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : '';
+})();
+const psiMin = wynikiTelefon.length ? Math.min(...wynikiTelefon) : 0;
+const psiMax = wynikiTelefon.length ? Math.max(...wynikiTelefon) : 0;
+
+// Najniższa cena „od” wśród stron (cena.json, „2 900 zł” → 2900).
+const naKwote = (c: unknown) => Number(String(c ?? '').replace(/[^\d,]/g, '').replace(',', '.'));
+const cenyStron = ((cenaJson as Record<string, unknown>).stronaWykonanie as { cena?: string }[] | undefined ?? [])
+  .map((p) => naKwote(p.cena))
+  .filter((n) => Number.isFinite(n) && n > 0);
+const cenaOd = cenyStron.length ? Math.min(...cenyStron) : 0;
+
+// Narzędzia działające (narzedzia.json, stan „dziala”).
+type Narzedzie = { id?: string; nazwa?: string; opis?: string; stan?: string; adres?: string };
+// Lead strony narzędzi pod nagłówkiem sekcji testów (rzutowanie poza JSX: generyki w wyrażeniu JSX psują parser).
+const leadNarzedzi = typeof (narzedziaJson as Record<string, unknown>).lead === 'string' ? String((narzedziaJson as Record<string, unknown>).lead) : '';
+const narzedzia = ((narzedziaJson as Record<string, unknown>).kafelki as Narzedzie[] | undefined ?? []).filter(
+  (n) => n.stan === 'dziala' && n.nazwa && n.adres,
+);
+const wybraneId = Array.isArray(o.testyWybrane) ? (o.testyWybrane as string[]) : [];
+const wybrane = [
+  ...wybraneId.map((id) => narzedzia.find((n) => n.id === id)).filter((n): n is Narzedzie => !!n),
+  ...narzedzia,
+]
+  .filter((n, i, t) => t.indexOf(n) === i)
+  .slice(0, 3);
+
+// Spacja tysięcy (twarda), jak w cenniku: 2900 → „2 900”.
+const tysiace = (n: number) => String(n).replace(/\B(?=(\d{3})+$)/g, ' ');
+
+interface Liczba {
+  adres: string;
+  czesci: (string | number)[];
+  podpis: string;
+}
+const liczby: Liczba[] = [
+  realizacje.length > 0 && {
+    adres: '#realizacje',
+    czesci: [realizacje.length],
+    podpis: napis('liczbaRealizacjiPodpis', 'stron firm, każda zmierzona po publikacji'),
+  },
+  wynikiTelefon.length > 0 && {
+    adres: '/jak-sprawdzic-szybkosc-strony/',
+    czesci: psiMin === psiMax ? [psiMax] : [psiMin, '–', psiMax],
+    podpis: `${napis('liczbaPsiPodpis', 'punktów PageSpeed na telefonie w realizacjach')}${dataPomiaru ? ` (pomiar ${dataPomiaru})` : ''}`,
+  },
+  cenaOd > 0 && {
+    adres: '/cena/',
+    czesci: ['od\u00a0', cenaOd, '\u00a0zł'],
+    podpis: napis('liczbaCenyPodpis', 'netto za stronę wizytówkę'),
+  },
+  narzedzia.length > 0 && {
+    adres: '/darmowe-narzedzia/',
+    czesci: [narzedzia.length],
+    podpis: napis('liczbaNarzedziPodpis', 'darmowych testów strony'),
+  },
+].filter((l): l is Liczba => !!l);
+
 ---
 
 <Bazowy tytul={tytul} opis={opis}>
@@ -45,86 +120,385 @@ const lead = tekst(
   <PasekMarki />
 
   <main id="tresc">
-    <section class="hero">
-      <h1 class="hero__tytul">{naglowek}</h1>
-      <p class="hero__opis">{lead}</p>
-      <p class="hero__akcja">
-        <a class="hero__link" href="/kontakt/">{tekst(strona.hasloAkcji, 'Zapytaj o stronę')}</a>
-      </p>
+    <section class="pas hero hero--poswiata" aria-labelledby="hero-tytul">
+      <div class="pas__tresc">
+        <h1 id="hero-tytul" class="hero__tytul">{naglowek}</h1>
+        <p class="hero__opis">{lead}</p>
+        <p class="hero__akcja">
+          <a class="guzik" href="/cena/#kalkulator" data-astro-prefetch="viewport">{napis('heroGuzikCena', 'Policz cenę strony')}</a>
+          <a class="guzik guzik--drugi" href="/kontakt/">{tekst(strona.hasloAkcji, 'Zapytaj o stronę')}</a>
+        </p>
+      </div>
     </section>
 
-    <Oferta czesc="oferta" />
+    {liczby.length > 0 && (
+      <section class="pas pas--ciemny pas-liczb" aria-label={napis('liczbyEtykieta', 'EcoPower Polska w liczbach')}>
+        <div class="pas__tresc">
+          <ul class="liczby">
+            {liczby.map((l) => (
+              <li>
+                <a class="liczby__link" href={l.adres}>
+                  <span class="liczba">
+                    {l.czesci.map((c) =>
+                      typeof c === 'number' ? (
+                        <span class="liczby__cyfry" data-licz={c} style={`--cyfry:${String(c).length};--odstepy:${Math.floor((String(c).length - 1) / 3)}`}>{tysiace(c)}</span>
+                      ) : c === '–' ? (
+                        c
+                      ) : (
+                        <span class="liczby__dodatek">{c}</span>
+                      ),
+                    )}
+                  </span>
+                  <span class="liczba__podpis">{l.podpis}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
 
-    <Realizacje naglowek={strona.naglowekRealizacji} wstep={strona.wstepRealizacji} />
+    <div class="pas pas--jasny">
+      <div class="pas__tresc">
+        <Realizacje
+          etykieta={strona.naglowekRealizacji}
+          naglowek={o.realizacjeNaglowek as string}
+          wstep={o.realizacjeNota as string}
+          pierwszyEager
+        />
+      </div>
+    </div>
 
-    {/* Wpisy po realizacjach (dowód pracy, potem wiedza), przed FAQ i kontaktem; nad zgięciem ich nie ma, więc zdjęcia lazy. */}
-    <OstatnieWpisy />
+    <WykresPsi tlo="powierzchnia" />
 
-    <FaqSkrot />
+    <div class="pas pas--jasny">
+      <div class="pas__tresc">
+        <Oferta czesc="uslugi" />
+      </div>
+    </div>
 
-    <Oferta czesc="kontakt" />
+    <div class="pas pas--powierzchnia">
+      <div class="pas__tresc">
+        <Oferta czesc="proces" />
+      </div>
+    </div>
+
+    <PasRynku />
+
+    {wybrane.length > 0 && (
+      <section class="pas pas--powierzchnia" id="darmowe-testy" aria-labelledby="testy-tytul" data-ujawnij>
+        <div class="pas__tresc">
+          <h2 id="testy-tytul" class="naglowek-sekcji">{napis('testyNaglowek', 'Sprawdź swoją stronę, zanim do nas napiszesz.')}</h2>
+          {leadNarzedzi && <p class="wstep-sekcji">{leadNarzedzi}</p>}
+          <ul class="siatka-3 testy">
+            {wybrane.map((n) => (
+              <li class="karta karta--link test">
+                <h3 class="test__nazwa"><a href={n.adres}>{n.nazwa}</a></h3>
+                {n.opis && <p class="test__opis">{n.opis}</p>}
+                <span class="test__dalej" aria-hidden="true">{napis('testyOtworz', 'Otwórz test')} →</span>
+              </li>
+            ))}
+          </ul>
+          <p class="sekcja-dalej">
+            <a href="/darmowe-narzedzia/">{napis('testyLink', 'Wszystkie darmowe narzędzia')} ({narzedzia.length})<span aria-hidden="true"> →</span></a>
+          </p>
+        </div>
+      </section>
+    )}
+
+    <section class="pas pas--jasny" id="kto-robi" aria-labelledby="autor-tytul" data-ujawnij>
+      <div class="pas__tresc autor">
+        <Image
+          class="autor__zdjecie"
+          src={zdjecieAutora}
+          alt={napis('autorZdjecieAlt', 'Piotr Czwarnowski')}
+          width={480}
+          densities={[1, 2]}
+          format="webp"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="autor__tekst">
+          <h2 id="autor-tytul">{napis('autorNaglowek', 'Mała firma, krótka droga: piszesz do osoby, która buduje Twoją stronę.')}</h2>
+          <p>{napis('autorTekst', '')}</p>
+          <p class="autor__podpis">{napis('autorPodpis', 'Piotr Czwarnowski, EcoPower Polska')}</p>
+          <p class="autor__link">
+            <a href="/autor/piotr-czwarnowski/">{napis('autorLink', 'Więcej o mnie')}<span aria-hidden="true"> →</span></a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="pas pas--powierzchnia">
+      <div class="pas__tresc">
+        <OstatnieWpisy />
+      </div>
+    </div>
+
+    <div class="pas pas--jasny">
+      <div class="pas__tresc">
+        <FaqSkrot />
+      </div>
+    </div>
+
+    <section class="pas pas--ciemny zamkniecie" aria-labelledby="zamkniecie-tytul">
+      <div class="pas__tresc">
+        <h2 id="zamkniecie-tytul">{napis('zamkniecieNaglowek', 'Policz cenę w minutę. Resztę ustalimy w jednej rozmowie.')}</h2>
+        <p class="zamkniecie__akcja">
+          <a class="guzik guzik--na-ciemnym" href="/cena/">{napis('zamkniecieGuzik', 'Policz cenę')}</a>
+          <a href="/kontakt/">{napis('zamkniecieLink', 'Napisz do nas')}</a>
+        </p>
+      </div>
+    </section>
+
+    <div class="pas pas--jasny">
+      <div class="pas__tresc">
+        <Oferta czesc="kontakt" />
+      </div>
+    </div>
   </main>
 
   <Stopka />
 </Bazowy>
 
+<script>
+  // Licznik liczb (decyzja 9): raz, ~1 s, od zera do wartości z HTML; ograniczenie ruchu = wartość od razu.
+  // Po 1 s wartość końcowa wraca z HTML zegarem — także gdy klatki stoją (karta w tle, robot renderujący).
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver((w) =>
+      w.forEach(({ isIntersecting: widac, target: t }) => {
+        if (!widac) return;
+        io.unobserve(t);
+        const koniec = t.textContent;
+        const cel = Number((t as HTMLElement).dataset.licz);
+        const t0 = performance.now();
+        let stop = false;
+        const krok = () => {
+          if (stop) return;
+          const p = Math.min(1, Math.max(0, (performance.now() - t0) / 1e3));
+          t.textContent = String(Math.round(cel * (1 - (1 - p) ** 3))).replace(/\B(?=(\d{3})+$)/g, '\u00a0');
+          if (p < 1) requestAnimationFrame(krok);
+        };
+        requestAnimationFrame(krok);
+        setTimeout(() => ((stop = true), (t.textContent = koniec)), 1050);
+      }),
+    );
+    document.querySelectorAll('[data-licz]').forEach((e) => io.observe(e));
+  }
+</script>
+
 <style>
-  /* Hero wyśrodkowany (D22, 2026-10-30), H1 płynny (clamp); H1 dostaje 22ch miary. */
+  /* Hero: tekst + 2 przyciski, bez obrazu (LCP = H1). Wyśrodkowany (D22). */
   .hero {
-    max-width: var(--szerokosc-tresci);
-    margin: 0 auto;
-    padding: var(--o-16) var(--o-6) var(--o-12);
     text-align: center;
+    padding-block: var(--o-24) var(--o-16);
   }
 
   .hero__tytul {
-    font-size: clamp(var(--t-xxl), 3.4vw + 1.4rem, var(--t-display));
-    letter-spacing: -0.015em;
-    max-width: 22ch;
+    max-width: 18ch;
     margin-inline: auto;
   }
 
   .hero__opis {
-    margin: var(--o-4) auto 0;
+    margin: var(--o-6) auto 0;
     max-width: 44rem;
     font-size: var(--t-l);
-    color: var(--tekst-cichy);
     line-height: 1.5;
+    color: var(--tekst);
   }
 
   .hero__akcja {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--o-3) var(--o-4);
     margin: var(--o-8) 0 0;
   }
 
-  /* Odnośnik z obrysem: pary akcent/tło i akcent/powierzchnia z motyw.css, bez nowego koloru. */
-  .hero__link {
-    /* spoczynek */
+  /* Pas liczb: 4 kolumny od 56 rem, 2×2 niżej; każda liczba jest linkiem. */
+  .pas-liczb {
+    padding-block: var(--o-12);
+  }
+
+  .liczby {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--o-8) var(--o-6);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 56rem) {
+    .liczby {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .pas--ciemny .liczby__link {
+    display: block;
+    height: 100%;
+    color: var(--na-ciemnym);
+    text-decoration: none;
+  }
+
+  .pas--ciemny .liczby__link:hover .liczba__podpis {
+    color: var(--na-ciemnym);
+    text-decoration: underline;
+    text-decoration-color: var(--akcent-jasny);
+    text-underline-offset: 3px;
+  }
+
+  .liczba {
+    white-space: nowrap;
+  }
+
+  /* Stała szerokość cyfr w trakcie liczenia (tabular-nums + min-width) — nic obok się nie przesuwa (CLS 0). */
+  .liczby__cyfry {
+    display: inline-block;
+    min-width: calc(var(--cyfry) * 1ch + var(--odstepy) * 0.3em);
+    text-align: end;
+  }
+
+  /* „od” i „zł” mniejsze od cyfr: liczba mieści się w kolumnie także na 390 px. */
+  .liczby__dodatek {
+    /* 0,55 em = min. 19,8 px pogrubione = duży tekst wg WCAG (3:1); --akcent-jasny na --tlo-ciemne ma 3,84:1. */
+    font-size: 0.55em;
+    letter-spacing: 0;
+  }
+
+  /* Nagłówki sekcji nad siatką na środku (reguła Piotra). */
+  .naglowek-sekcji {
+    text-align: center;
+    max-width: 24ch;
+    margin: 0 auto var(--o-4);
+  }
+
+  .wstep-sekcji {
+    max-width: 44rem;
+    margin: 0 auto var(--o-8);
+    text-align: center;
+  }
+
+  .sekcja-dalej {
+    margin: var(--o-8) 0 0;
+    text-align: center;
+  }
+
+  .sekcja-dalej a,
+  .autor__link a {
     display: inline-flex;
     align-items: center;
-    min-height: 48px;
-    padding: 0 var(--o-6);
-    border: 2px solid var(--akcent);
-    border-radius: var(--promien);
+    min-height: var(--cel-dotyku);
+    font-weight: 600;
+  }
+
+  /* Karta testu: cała klikalna (::after odnośnika rozpięty na kartę). */
+  .test {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    padding: var(--o-6);
+  }
+
+  .test__nazwa {
+    font-size: var(--t-l);
+  }
+
+  .test__nazwa a {
+    color: var(--tekst);
+    text-decoration: none;
+  }
+
+  .test__nazwa a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--promien-karty);
+  }
+
+  .test__nazwa a:focus-visible {
+    outline: none;
+  }
+
+  .test__nazwa a:focus-visible::after {
+    outline: 2px solid var(--akcent);
+    outline-offset: 3px;
+  }
+
+  .test__opis {
+    margin: 0;
+    flex: 1;
+  }
+
+  .test__dalej {
     font-weight: 600;
     color: var(--akcent);
-    text-decoration: none;
-    transition: background-color 120ms ease;
   }
 
-  /* najechanie */
-  .hero__link:hover {
-    background: var(--powierzchnia);
-    text-decoration: none;
+  /* Kto robi: zdjęcie 1/3 (kwadrat z pliku, ramka + cień), tekst 2/3; na telefonie jedno pod drugim. */
+  .autor {
+    display: grid;
+    gap: var(--o-8);
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  /* aktywny (wciśnięty) */
-  .hero__link:active {
-    transform: translateY(1px);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero__link {
-      transition: none;
+  @media (min-width: 48rem) {
+    .autor {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: var(--o-12);
     }
+  }
+
+  .autor__zdjecie {
+    display: block;
+    width: 100%;
+    max-width: 24rem;
+    height: auto;
+    margin-inline: auto;
+    border: var(--obrys-karty);
+    border-radius: var(--promien-karty);
+    box-shadow: var(--cien-karty);
+  }
+
+  .autor__tekst p {
+    max-width: var(--miara);
+    margin: var(--o-4) 0 0;
+  }
+
+  .autor__podpis {
+    font-weight: 600;
+  }
+
+  .autor__tekst .autor__link {
+    margin-top: var(--o-2);
+  }
+
+  /* Pas zamykający: H2 na środku, przycisk na ciemnym + link. */
+  .zamkniecie {
+    text-align: center;
+  }
+
+  .zamkniecie h2 {
+    max-width: 22ch;
+    margin-inline: auto;
+  }
+
+  .zamkniecie__akcja {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--o-4) var(--o-8);
+    margin: var(--o-8) 0 0;
+  }
+
+  .zamkniecie__akcja a:not(.guzik) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--cel-dotyku);
+    font-weight: 600;
   }
 </style>

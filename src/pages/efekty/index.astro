@@ -3,7 +3,7 @@
 // kafelki otwierające podstrony z pokazami, na pełną szerokość, resztę dokładamy sukcesywnie). Lista kafelków z src/data/efekty.json
 // (panel: Teksty strony → Efekty): nowy efekt = wpis w JSON + plik src/pages/efekty/<slug>.astro na szkielecie SzkieletEfektu.
 // Pokazują się tylko efekty ze statusem „gotowy”; pole `adres` kieruje kafelek na istniejącą stronę zamiast /efekty/<slug>/. Zero JS.
-// Siatka: 3 kafelki w rzędzie od 64 rem, 2 od 48 rem, 1 na telefonie; niepełny ostatni rząd z lewej jak reszta.
+// Faza 2 (2026-11-06): kafelek = .karta.karta--link z motyw.css. Siatka: 3 kafelki w rzędzie od 64 rem, 2 od 48 rem, 1 na telefonie; niepełny ostatni rząd z lewej jak reszta.
 import Bazowy from '../../layouts/Bazowy.astro';
 import PasekMarki from '../../components/PasekMarki.astro';
 import Stopka from '../../components/Stopka.astro';
@@ -101,8 +101,8 @@ const daneStrukturalne = {
       <h2 id="wybierz-efekt" class="wybor__naglowek">{napis('wybierzNaglowek', 'Wszystkie efekty')}</h2>
       <ul class="karty">
         {efekty.map((w, i) => (
-          <li class="karta" data-ujawnij={i > 2 ? '' : undefined}>
-            <a class="karta__link" href={w.adres || `/efekty/${w.slug}/`}>
+          <li class="karty__el" data-ujawnij={i > 2 ? '' : undefined}>
+            <a class="karta karta--link karta__link" href={w.adres || `/efekty/${w.slug}/`}>
               {w.miniatura && (
                 <span class="karta__obraz">
                   <img
@@ -257,21 +257,17 @@ const daneStrukturalne = {
     }
   }
 
-  /* Karta jak kafelek Realizacji: wypełnienie zamiast obwódki, promień z motywu. */
+  /* Tło, obrys, cień, promień i uniesienie przy najechaniu: .karta / .karta--link z motyw.css (kontrakt fazy 2). */
   .karta__link {
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    background: var(--powierzchnia);
-    border-radius: var(--promien);
     color: var(--tekst);
     text-decoration: none;
-    transition: background-color 160ms ease;
   }
 
   .karta__link:hover {
-    background: var(--powierzchnia-mocna);
     text-decoration: none;
   }
 
@@ -350,6 +346,11 @@ const daneStrukturalne = {
   .karta__link:focus-visible {
     outline: 3px solid var(--akcent);
     outline-offset: 3px;
+  }
+
+  /* Przycisk w karcie: ten sam wygląd co .guzik, ale jako napis (cała karta jest jednym linkiem). */
+  .karta__link:hover .karta__przycisk {
+    background: #0f4f40;
   }
 
   /* Link w akapicie odróżniony nie tylko kolorem (WCAG 1.4.1; Lighthouse link-in-text-block, PSI 2026-10-27: 96 → 100). */

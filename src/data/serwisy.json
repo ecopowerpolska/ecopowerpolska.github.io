@@ -4,6 +4,12 @@
       "nazwa": "Studio Agat",
       "adres": "https://studioagat.pl/",
       "opis": "Projekty wnętrz, kuchnie i meble na wymiar, remonty pod klucz w Warszawie.",
+      "teza": "z WordPressa na Astro",
+      "tagi": [
+        "Przeniesienie strony",
+        "Kalkulator wyceny",
+        "Panel treści"
+      ],
       "zakres": "Przeniesienie ze WordPressa do Astro\nPrzekierowania starych adresów\nKalkulator wyceny kuchni\nPanel treści w PHP na hostingu lh.pl\nDNS w Cloudflare\nFormularz chroniony Turnstile",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-studioagat.jpg",
@@ -14,6 +20,12 @@
       "nazwa": "Nadi Home",
       "adres": "https://nadihome.pl/",
       "opis": "Remonty mieszkań i wykończenia pod klucz w Warszawie.",
+      "teza": "z WordPressa na Astro z panelem treści",
+      "tagi": [
+        "Przeniesienie strony",
+        "Panel treści",
+        "Cennik i galeria"
+      ],
       "zakres": "Zastąpienie WordPressa stroną w Astro na hostingu lh.pl\nPanel treści Sveltia\nCennik robocizny i galeria\nFAQ i blog\nFormularz chroniony Turnstile",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-nadihome.jpg",
@@ -24,6 +36,12 @@
       "nazwa": "Pan Stolarz",
       "adres": "https://pan-stolarz.pl/",
       "opis": "Meble na wymiar w Warszawie: kuchnie, szafy i garderoby.",
+      "teza": "strona od zera z trzema kalkulatorami cen",
+      "tagi": [
+        "Nowa strona",
+        "Kalkulatory cen",
+        "Blog"
+      ],
       "zakres": "Strona od zera w Astro\nKalkulatory cen kuchni, szaf i garderób\nGalerie, FAQ i blog\nFormularz z Turnstile\nGoogle Analytics dopiero po zgodzie\nWpisy wysyłane na Facebooka",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-pan-stolarz.jpg",
@@ -34,6 +52,12 @@
       "nazwa": "Kuchnia na wymiar Warszawa",
       "adres": "https://kuchnia-na-wymiar-warszawa.pl/",
       "opis": "Kuchnie na wymiar w Warszawie, od pomiaru do montażu.",
+      "teza": "strona od zera z kalkulatorem ceny kuchni",
+      "tagi": [
+        "Nowa strona",
+        "Kalkulator ceny",
+        "Formularz z załącznikami"
+      ],
       "zakres": "Strona od zera w Astro na hostingu lh.pl\nKalkulator ceny kuchni netto i z VAT\nGaleria realizacji, FAQ i blog\nFormularz z załącznikami chroniony Turnstile",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg",
@@ -44,6 +68,12 @@
       "nazwa": "Szafy na wymiar Warszawa",
       "adres": "https://szafy-na-wymiar-warszawa.pl/",
       "opis": "Szafy wnękowe, przesuwne i do sufitu w Warszawie.",
+      "teza": "strona od zera z kalkulatorem ceny szafy",
+      "tagi": [
+        "Nowa strona",
+        "Kalkulator ceny",
+        "Galeria"
+      ],
       "zakres": "Strona od zera w Astro na hostingu lh.pl\nKalkulator ceny szafy\nGaleria, FAQ i blog\nFormularz chroniony Turnstile",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg",
@@ -54,6 +84,12 @@
       "nazwa": "Garderoba na wymiar Warszawa",
       "adres": "https://garderoba-na-wymiar-warszawa.pl/",
       "opis": "Garderoby na wymiar w Warszawie: walk-in, we wnęce i pod skosem.",
+      "teza": "strona od zera z kalkulatorem ceny garderoby",
+      "tagi": [
+        "Nowa strona",
+        "Kalkulator ceny",
+        "Galeria"
+      ],
       "zakres": "Strona od zera w Astro na hostingu lh.pl\nKalkulator ceny garderoby\nGaleria, FAQ i blog\nFormularz chroniony Turnstile",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg",
@@ -64,6 +100,12 @@
       "nazwa": "Pan Wylewka",
       "adres": "https://panwylewka.pl/",
       "opis": "Wylewki betonowe w Warszawie i okolicach.",
+      "teza": "z WordPressa na Astro, z wizytówką Google",
+      "tagi": [
+        "Przeniesienie strony",
+        "Panel treści",
+        "Wizytówka Google"
+      ],
       "zakres": "Przepisanie ze WordPressa na Astro na hostingu lh.pl\nPrzekierowania starych adresów\nPanel treści Sveltia\nFormularz chroniony Turnstile\nPodpięta wizytówka Google",
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-panwylewka.jpg",
@@ -74,6 +116,8 @@
       "nazwa": "allegro",
       "adres": "https://allegro.pl/",
       "opis": "",
+      "teza": "",
+      "tagi": [],
       "zakres": "",
       "grupa": "",
       "obrazek": "../assets/serwisy/pasted-image-1788775080217.png",

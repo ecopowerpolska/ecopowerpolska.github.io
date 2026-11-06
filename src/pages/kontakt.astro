@@ -5,6 +5,8 @@ import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 import Formularz from '../components/Formularz.astro';
+import { Image } from 'astro:assets';
+import fotoAutora from '../assets/blog/autor-piotr-czwarnowski.jpg';
 import k from '../data/kontakt.json';
 import firma from '../data/firma.json';
 import blog from '../data/blog.json';
@@ -13,6 +15,12 @@ import { tekst } from '../lib/tekst';
 const tytul = tekst(k.tytulKarty, 'Kontakt i wycena — EcoPower Polska');
 const opis = tekst(k.opisWyszukiwarki, 'Zapytaj o stronę albo sklep internetowy.');
 const naglowek = tekst(k.naglowek, 'Kontakt i wycena');
+const lista = (v: unknown): string[] => (Array.isArray(v) ? v.map((x) => (typeof x === 'string' ? x.trim() : '')).filter(Boolean) : []);
+const pierwszaLista = lista(k.pierwszaLista);
+const pasujemyTak = lista(k.pasujemyTak);
+const kroki = (Array.isArray(k.poKroki) ? k.poKroki : [])
+  .map((x) => ({ tytul: tekst(x?.tytul, ''), tekst: tekst(x?.tekst, '') }))
+  .filter((x) => x.tytul && x.tekst);
 const mail = firma.email.toLowerCase();
 const cyfry = firma.telefon.replace(/\D/g, '');
 const telefon = cyfry.length === 9 ? cyfry.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : firma.telefon;
@@ -70,9 +78,53 @@ const daneStrukturalne = {
     <h1 class="kontakt__tytul">{naglowek}</h1>
     {k.lead && <p class="kontakt__lead">{k.lead}</p>}
 
+    {/* Przed formularzem (2026-11-06): co napisać i z kim pracujemy najlepiej — dwie kolumny na całą szerokość. */}
+    <div class="zanim">
+      <section class="zanim__kolumna" aria-labelledby="pierwsza-naglowek">
+        <h2 id="pierwsza-naglowek" class="zanim__naglowek">{tekst(k.pierwszaNaglowek, 'Co napisać w pierwszej wiadomości')}</h2>
+        {k.pierwszaTekst && <p>{k.pierwszaTekst}</p>}
+        {pierwszaLista.length > 0 && <ul class="zanim__lista">{pierwszaLista.map((p) => <li>{p}</li>)}</ul>}
+        {k.pierwszaUwaga && <p class="zanim__uwaga">{k.pierwszaUwaga}</p>}
+        {k.podpis && (
+          <p class="podpis">
+            <a href={tekst(k.podpisAdres, '/autor/piotr-czwarnowski/')}>
+              <Image src={fotoAutora} alt="" width={40} height={40} densities={[1, 2]} class="podpis__foto" />
+              <span>{k.podpis}</span>
+            </a>
+          </p>
+        )}
+      </section>
+      <section class="zanim__kolumna" aria-labelledby="pasujemy-naglowek">
+        <h2 id="pasujemy-naglowek" class="zanim__naglowek">{tekst(k.pasujemyNaglowek, 'Pasujemy, gdy…')}</h2>
+        <ul class="pasujemy">
+          {pasujemyTak.map((p) => (
+            <li><span class="pasujemy__znak">{tekst(k.pasujemyTakEtykieta, 'Tak')}</span> {p}</li>
+          ))}
+          {k.pasujemyNie && (
+            <li class="pasujemy__nie"><span class="pasujemy__znak">{tekst(k.pasujemyNieEtykieta, 'Raczej nie')}</span> {k.pasujemyNie}</li>
+          )}
+        </ul>
+      </section>
+    </div>
+
+    {kroki.length > 0 && (
+      <section class="po" aria-labelledby="po-naglowek">
+        <h2 id="po-naglowek" class="po__naglowek">{tekst(k.poNaglowek, 'Co dzieje się po wysłaniu')}</h2>
+        <ol class="siatka-3 po__kroki">
+          {kroki.map((x, i) => (
+            <li class="karta po__krok">
+              <span class="numer-kroku" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{x.tytul}</h3>
+              <p>{x.tekst}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
     <div class="kontakt__uklad">
       <Formularz />
-      <aside class="dane" aria-labelledby="dane-naglowek">
+      <aside class="dane karta" aria-labelledby="dane-naglowek">
         <h2 id="dane-naglowek" class="dane__naglowek">{tekst(k.daneNaglowek, 'Wolisz zadzwonić albo napisać?')}</h2>
         {k.daneTekst && <p class="dane__tekst">{k.daneTekst}</p>}
         <ul class="dane__lista">
@@ -97,9 +149,7 @@ const daneStrukturalne = {
     margin: 0 auto;
     padding: var(--o-8) var(--o-6) var(--o-16);
   }
-  /* Okruszki: ten sam wygląd co na /cena/ i /faq/ (D14). */
-  /* D22 (2026-10-30): okruszki, H1 i wstęp w wąskiej kolumnie wyśrodkowanej, układ formularza na pełną szerokość. */
-  .okruszki { max-width: 44rem; margin-inline: auto; }
+  /* Okruszki przy lewej krawędzi kontenera, jak na /cena/ i /faq/ (D14); 44 rem i margin auto przesuwały je na x=368 (2026-11-06). */
   .okruszki ol { list-style: none; margin: 0 0 var(--o-6); padding: 0; display: flex; gap: 0 var(--o-2); font-size: var(--t-s); color: var(--tekst-cichy); }
   .okruszki li { display: inline-flex; align-items: center; flex: 0 0 auto; white-space: nowrap; }
   .okruszki li:last-child { flex: 1 1 0; min-width: 0; contain: inline-size; }
@@ -108,17 +158,46 @@ const daneStrukturalne = {
   .okruszki a { display: inline-flex; align-items: center; min-height: 44px; }
   .okruszki a:hover { color: var(--tekst); }
 
-  .kontakt__tytul { max-width: 44rem; margin-inline: auto; text-align: center; font-size: clamp(var(--t-xl), 3vw + 1rem, var(--t-xxl)); }
-  .kontakt__lead { max-width: 44rem; margin: var(--o-4) auto var(--o-8); text-align: center; font-size: var(--t-l); line-height: 1.5; color: var(--tekst-cichy); }
+  /* H1 i wstęp na środku, rozmiar H1 z motywu (--t-display). */
+  .kontakt__tytul { text-align: center; }
+  .kontakt__lead { margin: var(--o-4) 0 var(--o-12); text-align: center; font-size: var(--t-l); line-height: 1.5; }
+
+  /* Dwie kolumny obok siebie na całą szerokość; H2 do lewej nad akapitem. */
+  .zanim { display: grid; gap: var(--o-8) var(--o-12); margin-bottom: var(--o-16); }
+  @media (min-width: 56rem) { .zanim { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .zanim__naglowek { margin: 0 0 var(--o-4); font-size: var(--t-xl); line-height: 1.15; }
+  .zanim__kolumna p { margin: 0 0 var(--o-3); }
+  .zanim__lista { margin: 0 0 var(--o-4); padding-left: 1.25rem; }
+  .zanim__lista li + li { margin-top: var(--o-1); }
+  .zanim__uwaga { padding: var(--o-3) var(--o-4); border-left: 3px solid var(--akcent); background: var(--powierzchnia); border-radius: var(--promien-maly); }
+
+  /* Podpis: miniatura 40 px w proporcji pliku (1:1), ramka 1 px i cień, bez zaokrąglenia w koło. */
+  .zanim__kolumna .podpis { margin-top: var(--o-6); }
+  .podpis a { display: inline-flex; align-items: center; gap: var(--o-3); min-height: 44px; font-weight: 600; }
+  .podpis__foto { width: 40px; height: 40px; border: var(--obrys-karty); box-shadow: var(--cien-karty); }
+
+  .pasujemy { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--o-3); }
+  /* Etykieta w lewej kolumnie, zdanie w prawej — wiersze nie zawijają się pod etykietę. */
+  .pasujemy li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--o-2); }
+  .pasujemy__znak { font-weight: 700; color: var(--akcent); }
+  .pasujemy__nie .pasujemy__znak { color: var(--tekst-cichy); }
+
+  /* Trzy kroki: H2 na środku nad siatką. */
+  .po { margin-bottom: var(--o-16); }
+  .po__naglowek { margin: 0 0 var(--o-8); text-align: center; }
+  .po__kroki { list-style: none; margin: 0; padding: 0; }
+  .po__krok { padding: var(--o-6); }
+  .po__krok h3 { margin: var(--o-3) 0 var(--o-2); }
+  .po__krok p { margin: 0; }
 
   .kontakt__uklad { display: grid; gap: var(--o-12); }
   @media (min-width: 64rem) {
     .kontakt__uklad { grid-template-columns: minmax(0, 1fr) 20rem; align-items: start; }
     .dane { position: sticky; top: calc(80px + var(--o-6)); }
   }
-  .dane { padding: var(--o-6); background: var(--powierzchnia); border-radius: var(--promien); }
+  .dane { padding: var(--o-6); }
   .dane__naglowek { margin: 0 0 var(--o-2); font-size: var(--t-l); line-height: 1.25; }
-  .dane__tekst { margin: 0 0 var(--o-4); color: var(--tekst-cichy); }
+  .dane__tekst { margin: 0 0 var(--o-4); }
   .dane__lista { list-style: none; margin: 0 0 var(--o-4); padding: 0; }
   .dane__lista a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: var(--t-m); overflow-wrap: anywhere; }
   .dane__firma { margin: 0; font-size: var(--t-s); color: var(--tekst-cichy); }

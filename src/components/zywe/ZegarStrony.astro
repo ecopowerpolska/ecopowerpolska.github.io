@@ -1,0 +1,77 @@
+---
+// Ż1 ZegarStrony — pasek nad stopką: Core Web Vitals TEJ strony zmierzone w przeglądarce odwiedzającego.
+// Bez JS zostaje zdanie o pomiarze i kreski w miejscu wartości. Skrypt /zywe/zegar.js (≤ 2 kB) dociąga
+// web-vitals dopiero po załadowaniu strony; nic nie wysyła i nic nie zapisuje (docs/ZYWE.md).
+---
+
+<section class="pas pas--powierzchnia zegar" aria-label="Szybkość tej strony u Ciebie" data-zegar>
+  <div class="pas__tresc zegar__tresc">
+    <p class="zegar__zdanie">
+      Ta strona otworzyła się u Ciebie w <strong class="zegar__wartosc" data-wv="lcp">–</strong> <abbr title="Largest Contentful Paint, czas pokazania największego elementu">(LCP)</abbr>,
+      przesunięcie układu <strong class="zegar__wartosc" data-wv="cls">–</strong> <abbr title="Cumulative Layout Shift">(CLS)</abbr>,
+      reakcja <strong class="zegar__wartosc zegar__wartosc--inp" data-wv="inp">po kliknięciu</strong> <abbr title="Interaction to Next Paint, czas reakcji na kliknięcie">(INP)</abbr>.
+    </p>
+    <p class="zegar__nota">
+      Mierzy Twoja przeglądarka, tą samą metodą co Google. Nic nie wysyłamy i nic nie zapisujemy.
+      <a href="/jak-sprawdzic-szybkosc-strony/">Sprawdź swoją stronę</a>
+    </p>
+  </div>
+</section>
+<script is:inline src="/zywe/zegar.js" defer></script>
+<!-- is:inline: plik z public/ (stały adres, osobny od pakietu Astro), ładowany defer, bez wpływu na LCP. -->
+
+<style>
+  /* Wysokość zarezerwowana: wartości mają stałą szerokość w ch, zdanie nie przeskakuje po pomiarze (CLS 0). */
+  /* Pas cieńszy niż sekcja treści (.pas daje --o-16). */
+  .zegar {
+    padding-block: var(--o-6);
+  }
+
+  .zegar__tresc {
+    min-height: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--o-1);
+    text-align: center;
+  }
+
+  .zegar__zdanie {
+    margin: 0;
+    font-size: var(--t-s);
+    line-height: 1.6;
+  }
+
+  .zegar__wartosc {
+    display: inline-block;
+    min-width: 5ch;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--akcent);
+  }
+
+  .zegar__wartosc--inp {
+    min-width: 10ch;
+  }
+
+  /* Wynik "słaby" w kolorze tekstu: liczba zostaje, kolor jej nie zastępuje. */
+  .zegar__wartosc[data-ocena='poor'] {
+    color: var(--tekst);
+  }
+
+  .zegar abbr {
+    text-decoration: none;
+    color: var(--tekst-cichy);
+  }
+
+  .zegar__nota {
+    margin: 0;
+    font-size: var(--t-xs);
+    color: var(--tekst-cichy);
+  }
+
+  .zegar__nota a {
+    font-weight: 600;
+    margin-left: var(--o-1);
+  }
+</style>

@@ -115,6 +115,9 @@ const serwisy = defineCollection({
         adres: naTekst(wpis.adres) ?? '',
         opis: naTekst(wpis.opis),
         zakres: naTekst(wpis.zakres),
+        // teza i tagi karty realizacji (faza 2, 2026-11-06); zły typ = pole pominięte, nie błąd builda
+        teza: naTekst(wpis.teza),
+        tagi: Array.isArray(wpis.tagi) ? wpis.tagi.map((t) => naTekst(t)).filter((t): t is string => Boolean(t)) : undefined,
         // 🔴 Grupa: pole `grupa`, a gdy go w ogole nie ma — stare `kategoria`.
         // Powod: przegladarka Piotra moze miec w pamieci podrecznej stara config.yml
         // (GitHub Pages podaje ja z max-age=600) i zapisac wpis w starym ukladzie.
@@ -139,6 +142,8 @@ const serwisy = defineCollection({
       opis: z.string().optional(),
       // jedno zdanie „co zrobiliśmy” przy tej stronie (sekcja Realizacje)
       zakres: z.string().optional(),
+      teza: z.string().optional(),
+      tagi: z.array(z.string()).optional(),
       // klucz grupy z src/data/grupy.json albo pusty tekst (kafelek bez przypisania).
       // Klucz nieistniejacy w grupy.json NIE jest bledem — kafelek idzie do sekcji
       // koncowej (kontrakt §3 regula 3).
@@ -214,6 +219,25 @@ const wpisy = defineCollection({
         zdjecieAlt: naTekst(d.zdjecieAlt)?.trim() ?? '',
         // Autor-osoba (opcjonalnie): gdy jest, BlogPosting.author = Person; pusty = firma jak dotąd.
         autor: naTekst(d.autor)?.trim() || undefined,
+        // Ramka „W jednym zdaniu” pod H1; puste opisSeo bierze to zdanie do description.
+        wJednymZdaniu: naTekst(d.wJednymZdaniu)?.trim() || undefined,
+        // Akapit „Z tego wpisu dowiesz się…” (wpis > 1000 słów); puste = automat z nagłówków H2.
+        zTegoWpisu: naTekst(d.zTegoWpisu)?.trim() || undefined,
+        // Data aktualizacji: dateModified i dopisek przy dacie; nieczytelna = brak (jak publikacja).
+        dataAktualizacji: dataWpisu(d.dataAktualizacji) ?? undefined,
+        // Ramka „W Twojej firmie” na końcu wpisu: wszystkie pola tekstowe, puste = ramki nie ma.
+        wTwojejFirmie: (() => {
+          const f = (d.wTwojejFirmie && typeof d.wTwojejFirmie === 'object' ? d.wTwojejFirmie : {}) as Record<string, unknown>;
+          const pytanie = naTekst(f.pytanie)?.trim() ?? '';
+          const odpowiedz = naTekst(f.odpowiedz)?.trim() ?? '';
+          if (!pytanie || !odpowiedz) return undefined;
+          return {
+            pytanie,
+            odpowiedz,
+            krok: naTekst(f.krok)?.trim() || undefined,
+            krokAdres: naTekst(f.krokAdres)?.trim() || undefined,
+          };
+        })(),
         szkic: d.szkic === true || d.szkic === 'true',
       };
     },
@@ -225,6 +249,12 @@ const wpisy = defineCollection({
       zdjecie: z.string(),
       zdjecieAlt: z.string(),
       autor: z.string().optional(),
+      wJednymZdaniu: z.string().optional(),
+      zTegoWpisu: z.string().optional(),
+      dataAktualizacji: z.date().optional(),
+      wTwojejFirmie: z
+        .object({ pytanie: z.string(), odpowiedz: z.string(), krok: z.string().optional(), krokAdres: z.string().optional() })
+        .optional(),
       szkic: z.boolean(),
     }),
   ),

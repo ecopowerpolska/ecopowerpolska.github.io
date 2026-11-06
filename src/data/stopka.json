@@ -14,7 +14,16 @@
   "linkPolityki": "Polityka prywatności",
   "linkNarzedzi": "Darmowe narzędzia",
   "linkRegulaminu": "Regulamin",
-  "etykietaUslug": "Usługi",
+  "etykietaUslug": "Oferta",
+  "etykietaNarzedzi": "Narzędzia i blog",
+  "etykietaStron": "Strony, które prowadzimy",
+  "etykietaDanych": "Dane spółki",
+  "stronyProwadzone": [
+    "studioagat.pl",
+    "pan-stolarz.pl",
+    "nadihome.pl",
+    "panwylewka.pl"
+  ],
   "etykietaJezyka": "Język strony",
   "jezykPolski": "Polski",
   "jezykZmien": "Zmień język strony, obecnie polski. Przełącznik ładuje się po kliknięciu.",

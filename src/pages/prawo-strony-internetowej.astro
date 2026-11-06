@@ -1,0 +1,440 @@
+---
+// /prawo-strony-internetowej/ — hub prawny: generatory, test, dwa wpisy prawne, pary „Nie myl” i tabela „który dokument kiedy”.
+// Dane: src/data/prawo.json (panel: Prawo strony). Tytuły i daty wpisów bierzemy z kolekcji (wpis nieopublikowany
+// albo usunięty = karta znika, nie zostaje martwy link). Tabela = wykładnia z wpisu o prawnych aspektach strony.
+// JSON-LD: CollectionPage z listą podstron (ItemList) + BreadcrumbList. Bez FAQPage (bramka A10).
+import Bazowy from '../layouts/Bazowy.astro';
+import PasekMarki from '../components/PasekMarki.astro';
+import Stopka from '../components/Stopka.astro';
+import dane from '../data/prawo.json';
+import blog from '../data/blog.json';
+import firma from '../data/firma.json';
+import { tekst } from '../lib/tekst';
+import { kawalki } from '../lib/odnosniki';
+import { opublikowane, adresWpisu } from '../lib/wpisy';
+
+const d = dane as Record<string, unknown>;
+const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
+const napis = (k: string, dom: string) => tekst(naTekst(d[k]), dom);
+const tablica = (k: string) => (Array.isArray(d[k]) ? (d[k] as Record<string, unknown>[]) : []);
+const wewnetrzny = (a: string) => a.startsWith('/') && !a.startsWith('//');
+
+const narzedzia = tablica('narzedzia')
+  .map((n) => ({ tytul: naTekst(n?.tytul), tekst: naTekst(n?.tekst), adres: naTekst(n?.adres), guzik: naTekst(n?.guzik) }))
+  .filter((n) => n.tytul && wewnetrzny(n.adres));
+
+const FORMAT = new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Warsaw' });
+const wszystkie = await opublikowane();
+const wpisy = tablica('wpisy')
+  .map((w) => {
+    const id = naTekst(w?.wpis);
+    const e = wszystkie.find((x) => x.id === id);
+    return e
+      ? {
+          tytul: e.data.tytul,
+          adres: adresWpisu(e.id),
+          tekst: naTekst(w?.tekst),
+          data: e.data.dataPublikacji ? e.data.dataPublikacji.toISOString() : '',
+          dataPl: e.data.dataPublikacji ? FORMAT.format(e.data.dataPublikacji) : '',
+        }
+      : null;
+  })
+  .filter((w): w is NonNullable<typeof w> => w !== null);
+
+const nieMyl = tablica('nieMyl')
+  .map((n) => ({ tytul: naTekst(n?.tytul), tekst: naTekst(n?.tekst) }))
+  .filter((n) => n.tytul && n.tekst);
+
+const kolumny = {
+  masz: napis('kolumnaMasz', 'Masz'),
+  regulamin: napis('kolumnaRegulamin', 'Regulamin'),
+  polityka: napis('kolumnaPolityka', 'Polityka prywatności'),
+  cookies: napis('kolumnaCookies', 'Zgoda na cookies'),
+  inne: napis('kolumnaInne', 'Do tego'),
+};
+const tabela = tablica('tabela')
+  .map((w) => ({
+    masz: naTekst(w?.masz),
+    regulamin: naTekst(w?.regulamin),
+    polityka: naTekst(w?.polityka),
+    cookies: naTekst(w?.cookies),
+    inne: naTekst(w?.inne),
+  }))
+  .filter((w) => w.masz);
+
+const tytul = napis('tytulKarty', 'Prawo strony internetowej — EcoPower Polska');
+const opis = napis('opisWyszukiwarki', 'Jakie dokumenty potrzebuje strona firmowa i sklep: regulamin, polityka prywatności, zgody.');
+const naglowek = napis('naglowek', 'Prawo strony internetowej');
+const wSkrocie = naTekst(d.wSkrocie);
+const slownikTekst = naTekst(d.slownikTekst);
+const tabelaNota = naTekst(d.tabelaNota);
+
+const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
+const adres = new URL('/prawo-strony-internetowej/', import.meta.env.SITE).href;
+const okruszki = [
+  { nazwa: tekst(blog.stronaGlowna, 'Strona główna'), adres: '/' },
+  { nazwa: napis('okruszek', 'Prawo strony'), adres: '/prawo-strony-internetowej/' },
+];
+const podstrony = [
+  ...narzedzia.map((n) => ({ nazwa: n.tytul, adres: n.adres })),
+  ...wpisy.map((w) => ({ nazwa: w.tytul, adres: w.adres })),
+];
+
+const daneStrukturalne = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${adres}#strona`,
+      url: adres,
+      name: tytul,
+      description: opis,
+      inLanguage: 'pl-PL',
+      isPartOf: { '@type': 'WebSite', '@id': `${baza}/#witryna` },
+      about: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      mainEntity: {
+        '@type': 'ItemList',
+        '@id': `${adres}#podstrony`,
+        itemListElement: podstrony.map((p, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: p.nazwa,
+          url: new URL(p.adres, import.meta.env.SITE).href,
+        })),
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: okruszki.map((o, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: o.nazwa,
+        item: new URL(o.adres, import.meta.env.SITE).href,
+      })),
+    },
+  ],
+};
+---
+
+<Bazowy tytul={tytul} opis={opis}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(daneStrukturalne)} />
+
+  <PasekMarki />
+
+  <main id="tresc" class="prawo">
+    <section class="pas pas--jasny" aria-labelledby="prawo-tytul">
+      <div class="pas__tresc naglowek-strony">
+        <nav class="okruszki" aria-label={tekst(blog.okruszkiEtykieta, 'Ścieżka')}>
+          <ol>
+            {okruszki.map((o, i) => (
+              <li>
+                {i < okruszki.length - 1 ? <a href={o.adres}>{o.nazwa}</a> : <span aria-current="page">{o.nazwa}</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+        <p class="etykieta">{napis('etykieta', 'Prawo na stronie')}</p>
+        <h1 id="prawo-tytul">{naglowek}</h1>
+        <p class="naglowek-strony__lead">{napis('lead', 'Które dokumenty potrzebuje Twoja strona albo sklep.')}</p>
+        {wSkrocie && (
+          <p class="ramka-w-skrocie w-skrocie">
+            <strong>{napis('wSkrocieEtykieta', 'W skrócie')}:</strong> {wSkrocie}
+          </p>
+        )}
+      </div>
+    </section>
+
+    {narzedzia.length > 0 && (
+      <section class="pas pas--powierzchnia" aria-labelledby="prawo-narzedzia">
+        <div class="pas__tresc">
+          <h2 id="prawo-narzedzia" class="srodek">{napis('narzedziaNaglowek', 'Przygotuj dokumenty i sprawdź stronę')}</h2>
+          <ul class="siatka-3">
+            {narzedzia.map((n) => (
+              <li class="karta karta--link kafel">
+                <h3><a href={n.adres} class="kafel__link">{n.tytul}</a></h3>
+                {n.tekst && <p>{n.tekst}</p>}
+                {n.guzik && <span class="kafel__dalej" aria-hidden="true">{n.guzik} →</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {wpisy.length > 0 && (
+      <section class="pas pas--jasny" aria-labelledby="prawo-wpisy">
+        <div class="pas__tresc">
+          <h2 id="prawo-wpisy" class="srodek">{napis('wpisyNaglowek', 'Przepisy z podstawą prawną')}</h2>
+          <ul class="siatka-3">
+            {wpisy.map((w) => (
+              <li class="karta karta--link kafel">
+                {w.data && <time class="kafel__data" datetime={w.data}>{w.dataPl}</time>}
+                <h3><a href={w.adres} class="kafel__link">{w.tytul}</a></h3>
+                {w.tekst && <p>{w.tekst}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {nieMyl.length > 0 && (
+      <section class="pas pas--powierzchnia" aria-labelledby="prawo-niemyl">
+        <div class="pas__tresc">
+          <h2 id="prawo-niemyl" class="srodek">{napis('nieMylNaglowek', 'Nie myl')}</h2>
+          <ul class="siatka-3">
+            {nieMyl.map((n) => (
+              <li class="karta kafel">
+                <h3>{n.tytul}</h3>
+                <p>{n.tekst}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {tabela.length > 0 && (
+      <section class="pas pas--jasny" aria-labelledby="prawo-tabela">
+        <div class="pas__tresc">
+          <h2 id="prawo-tabela" class="srodek">{napis('tabelaNaglowek', 'Który dokument kiedy')}</h2>
+          {naTekst(d.tabelaLead) && <p class="srodek lead-sekcji">{naTekst(d.tabelaLead)}</p>}
+          <div class="tabela-ramka">
+            <table class="tabela-karty dokumenty">
+              <caption class="ukryte">{napis('tabelaNaglowek', 'Który dokument kiedy')}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{kolumny.masz}</th>
+                  <th scope="col">{kolumny.regulamin}</th>
+                  <th scope="col">{kolumny.polityka}</th>
+                  <th scope="col">{kolumny.cookies}</th>
+                  <th scope="col">{kolumny.inne}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tabela.map((w) => (
+                  <tr>
+                    <th scope="row">{w.masz}</th>
+                    <td data-label={kolumny.regulamin}>{w.regulamin || '–'}</td>
+                    <td data-label={kolumny.polityka}>{w.polityka || '–'}</td>
+                    <td data-label={kolumny.cookies}>{w.cookies || '–'}</td>
+                    <td data-label={kolumny.inne}>{w.inne || '–'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {tabelaNota && <p class="nota"><span class="dowod dowod--ocena">{napis('notaEtykieta', 'Nasz wniosek')}</span> {tabelaNota}</p>}
+          {slownikTekst && (
+            <p class="nota">{kawalki(slownikTekst).map((c) => (c.adres ? <a href={c.adres}>{c.tekst}</a> : c.tekst))}</p>
+          )}
+        </div>
+      </section>
+    )}
+
+    <section class="pas pas--powierzchnia" aria-labelledby="prawo-kontakt">
+      <div class="pas__tresc dalej">
+        <h2 id="prawo-kontakt">{napis('kontaktNaglowek', 'Chcesz, żeby ktoś sprawdził to za Ciebie?')}</h2>
+        {naTekst(d.kontaktTekst) && <p>{naTekst(d.kontaktTekst)}</p>}
+        <p class="dalej__guziki">
+          <a class="guzik" href={napis('kontaktAdres', '/kontakt/')}>{napis('kontaktGuzik', 'Napisz do nas')}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Stopka />
+</Bazowy>
+
+<style>
+  .naglowek-strony {
+    text-align: center;
+  }
+
+  .naglowek-strony h1 {
+    max-width: 52rem;
+    margin-inline: auto;
+    font-size: clamp(2.25rem, 3vw + 1.25rem, 3.25rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .naglowek-strony__lead {
+    max-width: 46rem;
+    margin: var(--o-4) auto 0;
+    font-size: var(--t-l);
+    line-height: 1.5;
+  }
+
+  /* Ramka „W skrócie”: akapit do lewej, wyśrodkowany blok o mierze tekstu. */
+  .w-skrocie {
+    max-width: 46rem;
+    margin: var(--o-8) auto 0;
+    text-align: start;
+  }
+
+  h2 {
+    font-size: var(--t-h2, var(--t-xl));
+    text-wrap: balance;
+  }
+
+  .srodek {
+    text-align: center;
+  }
+
+  .lead-sekcji {
+    max-width: 46rem;
+    margin: var(--o-3) auto 0;
+  }
+
+  .siatka-3 {
+    margin-top: var(--o-8);
+  }
+
+  /* Kafel: cała karta klikalna przez ::after linku w H3 (jeden link, jedna nazwa dla czytnika). */
+  .kafel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--o-2);
+    padding: var(--o-6);
+  }
+
+  .kafel h3 {
+    font-size: var(--t-l);
+    line-height: 1.2;
+  }
+
+  .kafel p {
+    margin: 0;
+  }
+
+  .kafel__link {
+    color: var(--tekst);
+  }
+
+  .kafel__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .kafel:hover .kafel__link {
+    color: var(--akcent);
+  }
+
+  .kafel__dalej {
+    margin-top: auto;
+    padding-top: var(--o-2);
+    font-weight: 600;
+    color: var(--akcent);
+  }
+
+  .kafel__data {
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .tabela-ramka {
+    margin-top: var(--o-8);
+    overflow-x: auto;
+    background: var(--karta, #fff);
+    border: var(--obrys-karty, 1px solid var(--linia));
+    border-radius: var(--promien-karty, var(--promien));
+    box-shadow: var(--cien-karty, none);
+  }
+
+  .dokumenty thead th {
+    font-weight: 700;
+    background: var(--powierzchnia);
+  }
+
+  .dokumenty tbody th {
+    font-weight: 600;
+  }
+
+  .dokumenty tbody tr:last-child :is(th, td) {
+    border-bottom: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .tabela-ramka {
+      overflow: visible;
+      background: none;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .dokumenty tbody th {
+      display: block;
+      padding: 0 0 var(--o-2);
+      border-bottom: 1px solid var(--linia);
+    }
+  }
+
+  .ukryte {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .nota {
+    max-width: 46rem;
+    margin: var(--o-4) 0 0;
+    font-size: var(--t-s);
+  }
+
+  .nota a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .dalej p {
+    max-width: 46rem;
+    margin: var(--o-3) 0 0;
+  }
+
+  .dalej__guziki {
+    margin-top: var(--o-6) !important;
+  }
+
+  .okruszki {
+    text-align: start;
+  }
+
+  .okruszki ol {
+    list-style: none;
+    margin: 0 0 var(--o-4);
+    padding: 0;
+    display: flex;
+    gap: 0 var(--o-2);
+    font-size: var(--t-s);
+    color: var(--tekst-cichy);
+  }
+
+  .okruszki li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .okruszki li + li::before {
+    content: '›';
+    margin-right: var(--o-2);
+  }
+
+  .okruszki a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .okruszki [aria-current] {
+    line-height: 44px;
+  }
+</style>

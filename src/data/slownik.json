@@ -1,0 +1,417 @@
+{
+  "tytulKarty": "Słownik stron internetowych i sklepów — EcoPower Polska",
+  "opisWyszukiwarki": "40 pojęć ze świata stron i sklepów internetowych prostym językiem: domena, hosting, SEO, Core Web Vitals, RODO, wyszukiwanie agentowe. Każde z testem do sprawdzenia u siebie.",
+  "okruszek": "Słownik",
+  "etykieta": "Słownik",
+  "naglowek": "Słownik stron internetowych i sklepów",
+  "lead": "Czterdzieści pojęć, które słyszysz przy zamawianiu strony albo sklepu. Każde wyjaśniamy jednym zdaniem i kilkoma prostymi, mówimy, z czym się je myli, i dajemy jeden test, który zrobisz sam na swojej stronie.",
+  "indeksEtykieta": "Hasła według liter",
+  "etykietaWJednymZdaniu": "W jednym zdaniu",
+  "etykietaNieMyl": "Nie myl z",
+  "etykietaSprawdz": "Sprawdź u siebie",
+  "etykietaWiecej": "Więcej",
+  "zakonczenieNaglowek": "Nie ma tu pojęcia, którego szukasz?",
+  "zakonczenieTekst": "Odpowiedzi na pytania o czas, cenę i obsługę strony są w [pytaniach i odpowiedziach](/faq/), a własną stronę sprawdzisz w [darmowych testach](/darmowe-narzedzia/).",
+  "hasla": [
+    {
+      "nazwa": "Adres kanoniczny",
+      "kotwica": "adres-kanoniczny",
+      "wJednymZdaniu": "Adres kanoniczny to wskazanie w kodzie podstrony, który z kilku adresów z tą samą treścią jest tym właściwym.",
+      "opis": "Ta sama podstrona bywa dostępna pod kilkoma adresami, na przykład z ukośnikiem na końcu i bez niego. Znacznik canonical mówi wyszukiwarce, którą wersję pokazywać w wynikach. Na naszych stronach każda podstrona wskazuje samą siebie, z ukośnikiem na końcu.",
+      "nieMyl": "przekierowaniem 301. Przekierowanie przenosi człowieka i robota pod nowy adres, a adres kanoniczny jest tylko wskazówką dla wyszukiwarki i nikogo nie przenosi.",
+      "sprawdz": "Otwórz źródło strony (Ctrl+U), poszukaj słowa canonical i sprawdź, czy adres obok jest dokładnie tym, który widzisz w pasku przeglądarki.",
+      "link": "/narzedzia/seo-techniczne/",
+      "linkTekst": "darmowy test SEO technicznego"
+    },
+    {
+      "nazwa": "AI Overviews i AI Mode",
+      "kotwica": "ai-overviews",
+      "wJednymZdaniu": "AI Overviews to podsumowanie napisane przez AI nad wynikami Google, a AI Mode to osobny tryb wyszukiwarki, w którym rozmawiasz z AI zamiast przeglądać listę linków.",
+      "opis": "Oba korzystają z tych samych stron, które Google zwykle indeksuje, i podają źródła odpowiedzi. Google pisze, że do pojawienia się w nich nie trzeba żadnych nowych plików ani specjalnych znaczników. Wystarcza zwykłe, porządne SEO: dostępna treść, poprawne dane strukturalne i strona otwarta dla robota Google.",
+      "nieMyl": "wyszukiwaniem agentowym. AI Overviews odpowiada na pytanie, a agent sam wykonuje zadanie, na przykład wypełnia formularz.",
+      "sprawdz": "Zadaj w Google pytanie, na które Twoja strona dobrze odpowiada, i zobacz, czy jest wśród źródeł pod podsumowaniem AI.",
+      "link": "/narzedzia/wyszukiwanie-agentowe-ai/",
+      "linkTekst": "test wyszukiwania agentowego i AI"
+    },
+    {
+      "nazwa": "ARD",
+      "kotwica": "ard",
+      "wJednymZdaniu": "ARD to plik w formacie JSON, w którym strona opisuje agentom AI swoje zasoby, zwykle pod adresem /.well-known/ard.json.",
+      "opis": "Format jest propozycją w wersji 0.91 i jego autorzy zastrzegają, że może się zmienić. PageSpeed Insights sprawdza w kategorii przeglądania agentowego tylko to, czy plik zgadza się ze schematem. Nie sprawdza, czy ktokolwiek go czyta, a w źródłach, które przeczytaliśmy, żaden duży agent tego nie deklaruje.",
+      "nieMyl": "llms.txt. llms.txt to lista treści w Markdownie, a ARD opisuje zasoby i usługi strony w ustalonym schemacie JSON.",
+      "sprawdz": "Dopisz do adresu swojej strony /.well-known/ard.json i zobacz, czy otwiera się plik, czy błąd 404.",
+      "link": "/faq/#przegladanie-agentowe",
+      "linkTekst": "co to jest przeglądanie agentowe"
+    },
+    {
+      "nazwa": "Astro",
+      "kotwica": "astro",
+      "wJednymZdaniu": "Astro to narzędzie do budowy stron, które jeszcze przed publikacją składa gotowe pliki HTML, więc przeglądarka nie czeka na skrypty.",
+      "opis": "Strona powstaje raz, przy budowie, a nie przy każdym wejściu odwiedzającego. JavaScript trafia tylko tam, gdzie jest naprawdę potrzebny, na przykład do kalkulatora. W Astro budujemy wszystkie nasze strony, a na hosting trafiają gotowe pliki.",
+      "nieMyl": "panelem treści. Astro buduje stronę, a panel, w którym zmieniasz teksty i zdjęcia, dokładamy osobno.",
+      "sprawdz": "Wyłącz w przeglądarce JavaScript i otwórz swoją stronę: jeśli tekst i menu dalej są na miejscu, strona nie zależy od skryptów.",
+      "link": "/faq/#szybkosc",
+      "linkTekst": "czy strona będzie szybka na telefonie"
+    },
+    {
+      "nazwa": "Bramka płatności",
+      "kotwica": "bramka-platnosci",
+      "wJednymZdaniu": "Bramka płatności to usługa operatora, która przyjmuje od klienta zapłatę kartą, BLIK-iem albo przelewem i przekazuje ją sklepowi.",
+      "opis": "Dane karty wpisuje się u operatora, a nie w sklepie, więc sklep ich nie przechowuje. Operator pobiera prowizję od transakcji i po zapłacie wysyła sklepowi potwierdzenie, które zmienia status zamówienia. W sklepach proponujemy na przykład Stripe Checkout albo polskiego operatora z BLIK-iem.",
+      "nieMyl": "koszykiem. Koszyk zbiera produkty i dane zamówienia, a bramka zajmuje się wyłącznie pieniędzmi.",
+      "sprawdz": "Złóż w swoim sklepie zamówienie testowe i sprawdź, czy po zapłacie status zmienia się sam, bez Twojego kliknięcia.",
+      "link": "/faq/#sklep",
+      "linkTekst": "jaki sklep internetowy możemy zrobić"
+    },
+    {
+      "nazwa": "Certyfikat SSL i HTTPS",
+      "kotwica": "certyfikat-ssl",
+      "wJednymZdaniu": "Certyfikat SSL szyfruje połączenie między przeglądarką a serwerem, a HTTPS to adres strony, która z takiego połączenia korzysta.",
+      "opis": "Bez certyfikatu przeglądarka oznacza stronę jako niezabezpieczoną, a dane z formularza idą otwartym tekstem. Certyfikat ma termin ważności i musi się odnawiać sam, inaczej strona pewnego dnia pokaże ostrzeżenie zamiast treści. Na naszych stronach każdy adres z http przenosi na https.",
+      "nieMyl": "ochroną całej strony przed włamaniem. Certyfikat chroni dane w drodze, a nie same pliki na serwerze.",
+      "sprawdz": "Wpisz w pasku adres swojej strony z http:// na początku i sprawdź, czy przeglądarka sama przeniesie Cię na https://.",
+      "link": "/narzedzia/bezpieczenstwo-i-zaufanie/",
+      "linkTekst": "test bezpieczeństwa i zaufania strony"
+    },
+    {
+      "nazwa": "CLS",
+      "kotwica": "cls",
+      "wJednymZdaniu": "CLS (Cumulative Layout Shift) mierzy, jak bardzo elementy strony przesuwają się podczas ładowania.",
+      "opis": "Przesunięcie widać wtedy, gdy tekst ucieka spod palca, bo nad nim doładowało się zdjęcie, baner albo krój pisma. Google uznaje za dobry wynik 0,1 lub mniej. Na naszych realizacjach sprawdzamy go w każdym pomiarze, a wyniki z datą pokazujemy na stronie [jak mierzymy](/jak-mierzymy/).",
+      "nieMyl": "szybkością ładowania. Strona może otworzyć się szybko i mimo to skakać.",
+      "sprawdz": "Otwórz swoją stronę na telefonie przy słabym zasięgu i obserwuj, czy coś przeskakuje, zanim zdążysz przeczytać pierwszy akapit.",
+      "link": "/faq/#tbt-cls",
+      "linkTekst": "co mierzą TBT i CLS"
+    },
+    {
+      "nazwa": "CMS, czyli panel treści",
+      "kotwica": "cms",
+      "wJednymZdaniu": "CMS to panel, w którym bez programisty zmieniasz teksty, zdjęcia, wpisy na blogu i dane firmy na swojej stronie.",
+      "opis": "Na naszych stronach panel stoi pod adresem /admin/. Albo zapisuje zmiany w repozytorium strony i strona przebudowuje się sama w kilka minut, albo działa w PHP na hostingu i logujesz się do niego hasłem. Wyczyszczone pole wraca do napisu domyślnego, więc strona nie zostanie bez nagłówka.",
+      "nieMyl": "hostingiem. Hosting przechowuje pliki strony, a panel jest tylko oknem do ich edycji.",
+      "sprawdz": "Zmień w panelu jedno zdanie i policz, po ilu minutach widzisz je na żywej stronie bez pomocy wykonawcy.",
+      "link": "/faq/#panel-a-github",
+      "linkTekst": "panel treści a konto na GitHubie"
+    },
+    {
+      "nazwa": "Content-Signal",
+      "kotwica": "content-signal",
+      "wJednymZdaniu": "Content-Signal to wiersz w pliku robots.txt, w którym strona deklaruje, do czego wolno użyć jej treści: do wyników wyszukiwania, do odpowiedzi AI albo do trenowania modeli.",
+      "opis": "Zapis opisał Cloudflare we wrześniu 2025 roku i ma trzy pozycje: search, ai-input i ai-train. To deklaracja preferencji, a nie blokada. Bot, który jej nie respektuje, dalej może stronę pobrać.",
+      "nieMyl": "zakazem Disallow w robots.txt. Disallow mówi robotowi, czego nie pobierać, a Content-Signal mówi, co wolno zrobić z tym, co już pobrał.",
+      "sprawdz": "Dopisz do adresu swojej strony /robots.txt i poszukaj wiersza zaczynającego się od Content-Signal.",
+      "link": "/narzedzia/wyszukiwanie-agentowe-ai/",
+      "linkTekst": "test wyszukiwania agentowego i AI"
+    },
+    {
+      "nazwa": "CrUX",
+      "kotwica": "crux",
+      "wJednymZdaniu": "CrUX (Chrome User Experience Report) to dane Google o tym, jak strona działała u prawdziwych użytkowników Chrome w ostatnich 28 dniach.",
+      "opis": "Google włącza do raportu tylko strony z odpowiednio dużym ruchem i nie podaje dokładnego progu. Strona nowa albo rzadko odwiedzana nie ma jeszcze próbki, więc PageSpeed pokazuje przy niej „Brak danych”. To nie jest błąd strony, dane pojawią się same, gdy przybędzie odwiedzin.",
+      "nieMyl": "wynikiem laboratoryjnym PageSpeed Insights. Laboratorium to jeden przebieg na symulowanym telefonie, a CrUX zbiera prawdziwe wizyty z 28 dni.",
+      "sprawdz": "Sprawdź swoją stronę w PageSpeed Insights i zobacz, czy górna sekcja o wrażeniach użytkowników ma liczby, czy napis „Brak danych”.",
+      "link": "/narzedzia/dane-terenowe-crux/",
+      "linkTekst": "test danych z prawdziwych wizyt"
+    },
+    {
+      "nazwa": "Dane strukturalne (schema.org)",
+      "kotwica": "dane-strukturalne",
+      "wJednymZdaniu": "Dane strukturalne to opis strony w kodzie, w słowniku schema.org, który mówi wyszukiwarce wprost: to jest firma, to jej adres, to wpis i jego autor.",
+      "opis": "Człowiek ich nie widzi, czyta je robot wyszukiwarki. Na naszych stronach zapisujemy je w formacie JSON-LD: dane firmy, ścieżkę okruszków, usługi i wpisy na blogu. Muszą zgadzać się z tym, co widać na stronie, bo inaczej Google je pomija.",
+      "nieMyl": "opisem w wynikach wyszukiwania (meta description). Opis to zdanie dla człowieka pod tytułem, a dane strukturalne to fakty dla maszyny.",
+      "sprawdz": "Wklej adres swojej strony do Testu wyników z elementami rozszerzonymi Google i zobacz, czy znajduje jakiekolwiek dane.",
+      "link": "/narzedzia/seo-techniczne/",
+      "linkTekst": "darmowy test SEO technicznego"
+    },
+    {
+      "nazwa": "DNS",
+      "kotwica": "dns",
+      "wJednymZdaniu": "DNS to system, który zamienia nazwę domeny na adres serwera, żeby przeglądarka i poczta wiedziały, dokąd się połączyć.",
+      "opis": "Ustawienia domeny to zestaw rekordów: jedne wskazują serwer strony, inne serwer poczty, jeszcze inne potwierdzają własność domeny. Zmiana rekordu nie działa od razu wszędzie, rozchodzi się po sieci zwykle w kilka godzin. Przed każdą zmianą zapisujemy komplet rekordów jako punkt powrotu.",
+      "nieMyl": "domeną. Domena to nazwa, którą kupujesz, a DNS to ustawienia, które mówią, co pod tą nazwą działa.",
+      "sprawdz": "Zaloguj się do panelu domeny i sprawdź, czy wiesz, kto ma do niego dostęp i gdzie wskazują rekordy strony i poczty.",
+      "link": "/faq/#poczta",
+      "linkTekst": "czy przy przepięciu domeny stracę pocztę"
+    },
+    {
+      "nazwa": "Domena",
+      "kotwica": "domena",
+      "wJednymZdaniu": "Domena to adres Twojej strony w internecie, na przykład firma.pl, wykupiony na rok u rejestratora i odnawiany co roku.",
+      "opis": "Domena jest Twoja, a nie wykonawcy strony, i powinna być zarejestrowana na Twoją firmę. Przy nowej stronie domena zostaje u Twojego rejestratora, a do strony podpinamy ją rekordami DNS. Ta sama domena obsługuje zwykle także firmową pocztę.",
+      "nieMyl": "hostingiem. Domena to adres, a hosting to miejsce, w którym leżą pliki strony.",
+      "sprawdz": "Sprawdź w panelu rejestratora, na kogo jest zarejestrowana Twoja domena i kiedy mija termin jej odnowienia.",
+      "link": "/faq/#domena-hosting-poczta",
+      "linkTekst": "czym różni się domena od hostingu i poczty"
+    },
+    {
+      "nazwa": "Hosting",
+      "kotwica": "hosting",
+      "wJednymZdaniu": "Hosting to serwer, na którym leżą pliki strony i z którego trafiają do przeglądarki każdego odwiedzającego.",
+      "opis": "Strony z formularzem, sprzedażą albo rezerwacjami stawiamy na hostingu lh.pl, każdą w osobnej przestrzeni. Prosta wizytówka bez sprzedaży może stać na GitHub Pages. Hosting opłacasz osobno od budowy strony, zwykle raz w roku.",
+      "nieMyl": "serwerem poczty. Poczta firmowa może działać u innego dostawcy niż strona, dlatego przenosiny strony nie mogą jej ruszyć.",
+      "sprawdz": "Znajdź fakturę albo umowę za hosting i sprawdź, czy wiesz, u kogo stoi Twoja strona i do kiedy jest opłacona.",
+      "link": "/faq/#hosting",
+      "linkTekst": "gdzie stoi strona"
+    },
+    {
+      "nazwa": "INP",
+      "kotwica": "inp",
+      "wJednymZdaniu": "INP (Interaction to Next Paint) mierzy, jak szybko strona pokazuje reakcję po kliknięciu albo dotknięciu.",
+      "opis": "W 2024 roku INP zastąpił w Core Web Vitals starszy wskaźnik reakcji. Google uznaje za dobry wynik 200 ms lub mniej. INP liczy się wyłącznie z prawdziwych wizyt, więc strona bez danych CrUX nie ma jeszcze wyniku INP.",
+      "nieMyl": "TBT, czyli czasem blokowania z testu laboratoryjnego. TBT podpowiada, jak może być, a INP mówi, jak było u ludzi.",
+      "sprawdz": "Na telefonie otwórz menu albo rozwiń pytanie na swojej stronie i sprawdź, czy reakcja jest natychmiastowa, czy czekasz.",
+      "link": "/blog/core-web-vitals-po-polsku/",
+      "linkTekst": "Core Web Vitals po polsku"
+    },
+    {
+      "nazwa": "IndexNow",
+      "kotwica": "indexnow",
+      "wJednymZdaniu": "IndexNow to sposób na zgłoszenie wyszukiwarkom Bing, Yandex i Seznam nowych albo zmienionych adresów strony od razu, bez czekania na robota.",
+      "opis": "Strona wysyła listę adresów i klucz, który potwierdza, że zgłasza ją właściciel. Plik z tym kluczem leży jawnie na stronie. Google z IndexNow nie korzysta, jemu mapę strony zgłasza się w Search Console.",
+      "nieMyl": "mapą strony. Mapa to stały spis wszystkich adresów, a IndexNow to jednorazowe powiadomienie o zmianie.",
+      "sprawdz": "Wpisz w Bing site: i adres swojej strony, a potem sprawdź, czy ostatnio dodana podstrona jest już na liście.",
+      "link": "/faq/#widocznosc-w-google",
+      "linkTekst": "czy strona będzie widoczna w Google"
+    },
+    {
+      "nazwa": "Koszyk",
+      "kotwica": "koszyk",
+      "wJednymZdaniu": "Koszyk to część sklepu, która zbiera wybrane produkty, liczy sumę z dostawą i prowadzi klienta do zamówienia.",
+      "opis": "Koszyk musi zapamiętać wybór klienta między podstronami, więc zapisuje dane w przeglądarce. Ta pamięć jest niezbędna do działania usługi, dlatego nie wymaga zgody, ale trzeba o niej poinformować w polityce prywatności. Przed zamówieniem klient ma widzieć cenę, koszt dostawy i formy płatności.",
+      "nieMyl": "bramką płatności. Koszyk przyjmuje zamówienie, a pieniądze przyjmuje operator płatności.",
+      "sprawdz": "Dodaj produkt do koszyka w swoim sklepie, przejdź na inną podstronę i wróć: produkt powinien wciąż tam być.",
+      "link": "/blog/prawne-aspekty-strony-internetowej-zgody-regulaminy/",
+      "linkTekst": "wpis o prawnych aspektach strony"
+    },
+    {
+      "nazwa": "Landing page",
+      "kotwica": "landing-page",
+      "wJednymZdaniu": "Landing page to pojedyncza podstrona zbudowana pod jeden cel, na przykład zapisanie się na wycenę po kliknięciu w reklamę.",
+      "opis": "Ma jedną ofertę, jedno wezwanie do działania i niewiele linków, które odciągają od celu. Robi się ją zwykle pod kampanię albo jedną usługę. Mierzy się ją liczbą zapytań z niej, a nie liczbą odwiedzin.",
+      "nieMyl": "stroną wizytówką. Wizytówka przedstawia całą firmę, a landing page sprzedaje jedną rzecz jednej grupie klientów.",
+      "sprawdz": "Otwórz podstronę, na którą kierujesz reklamę, i policz, ile kliknięć dzieli odwiedzającego od wysłania zapytania.",
+      "link": "/blog/strona-czy-sklep-internetowy-od-czego-zaczac/",
+      "linkTekst": "strona czy sklep: od czego zacząć"
+    },
+    {
+      "nazwa": "LCP",
+      "kotwica": "lcp",
+      "wJednymZdaniu": "LCP (Largest Contentful Paint) to czas, po którym na ekranie pojawia się największy element strony, zwykle zdjęcie albo główny nagłówek.",
+      "opis": "To najprostsza miara tego, kiedy człowiek uznaje, że strona się otworzyła. Google uznaje za dobry wynik 2,5 sekundy lub mniej. Najczęściej psuje go zbyt duże zdjęcie na samej górze strony.",
+      "nieMyl": "FCP, czyli pierwszym elementem na ekranie. Pierwszy może być drobny napis, a LCP czeka na główną treść.",
+      "sprawdz": "Zmierz swoją stronę w PageSpeed Insights na telefonie i sprawdź, czy Largest Contentful Paint jest poniżej 2,5 s.",
+      "link": "/blog/core-web-vitals-po-polsku/",
+      "linkTekst": "Core Web Vitals po polsku"
+    },
+    {
+      "nazwa": "llms.txt",
+      "kotwica": "llms-txt",
+      "wJednymZdaniu": "llms.txt to plik w Markdownie w katalogu głównym strony, który podaje modelom AI w jednym miejscu opis strony i listę ważnych podstron.",
+      "opis": "To propozycja z 2024 roku, a nie standard, i nie ma potwierdzonego wpływu na widoczność w Google ani w ChatGPT. PageSpeed Insights sprawdza w kategorii przeglądania agentowego tylko jego formę. My go mamy, bo mierzymy tę kategorię i plik nic nie kosztuje.",
+      "nieMyl": "robots.txt. robots.txt mówi robotom, czego nie pobierać, a llms.txt podsuwa im, co warto przeczytać.",
+      "sprawdz": "Dopisz do adresu swojej strony /llms.txt i zobacz, czy otwiera się tekst z nagłówkiem i listą podstron.",
+      "link": "/blog/wyszukiwanie-agentowe-strony-i-sklepy/",
+      "linkTekst": "wpis o wyszukiwaniu agentowym"
+    },
+    {
+      "nazwa": "Mapa strony (sitemap)",
+      "kotwica": "mapa-strony",
+      "wJednymZdaniu": "Mapa strony to plik XML ze spisem wszystkich adresów strony, które mają trafić do wyszukiwarki.",
+      "opis": "Robot i tak znajduje podstrony po linkach, ale mapa przyspiesza to i pokazuje te, do których prowadzi mało linków. Na naszych stronach mapa powstaje sama przy każdej budowie, więc nowa podstrona trafia do niej bez ręcznej pracy. Adres mapy wpisujemy w robots.txt i zgłaszamy w Search Console.",
+      "nieMyl": "spisem treści dla ludzi. Mapa strony jest plikiem dla robota i odwiedzający jej nie ogląda.",
+      "sprawdz": "Dopisz do adresu swojej strony /sitemap.xml i sprawdź, czy otwiera się lista adresów, a w niej Twoja najnowsza podstrona.",
+      "link": "/narzedzia/seo-techniczne/",
+      "linkTekst": "darmowy test SEO technicznego"
+    },
+    {
+      "nazwa": "PageSpeed Insights",
+      "kotwica": "pagespeed-insights",
+      "wJednymZdaniu": "PageSpeed Insights to bezpłatne narzędzie Google, które uruchamia na stronie test Lighthouse i daje wyniki od 0 do 100 za wydajność, ułatwienia dostępu, sprawdzone metody i SEO.",
+      "opis": "Każdą stronę mierzy osobno na symulowanym telefonie i na komputerze. Google uznaje 90–100 punktów za wynik dobry, 50–89 za wymagający poprawy, a 0–49 za słaby. Ma też kategorię przeglądania agentowego, punktowaną liczbą zdanych testów, którą Google opisuje jako eksperymentalną.",
+      "nieMyl": "pozycją w Google. Wynik 100 znaczy, że strona nie ma przeszkód technicznych, a nie że będzie pierwsza w wynikach.",
+      "sprawdz": "Wpisz adres swojej strony w naszym teście szybkości i porównaj wynik na telefonie z wynikiem na komputerze.",
+      "link": "/jak-sprawdzic-szybkosc-strony/",
+      "linkTekst": "darmowy test szybkości strony"
+    },
+    {
+      "nazwa": "Pliki cookie",
+      "kotwica": "pliki-cookie",
+      "wJednymZdaniu": "Pliki cookie to małe zapisy w przeglądarce odwiedzającego, dzięki którym strona pamięta na przykład koszyk, wybór języka albo dane do statystyk.",
+      "opis": "Od 10 listopada 2024 roku zasady zapisywania czegokolwiek w urządzeniu odwiedzającego reguluje art. 399 Prawa komunikacji elektronicznej. To, co niezbędne do działania strony, nie wymaga zgody. Analityka, piksele reklamowe i osadzenia zbierające dane mogą ruszyć dopiero po zgodzie, a odmowa ma być równie łatwa jak zgoda.",
+      "nieMyl": "zgodą na przetwarzanie danych z RODO. Zgoda na cookies dotyczy zapisu w przeglądarce, a formularz kontaktowy zgody zwykle w ogóle nie potrzebuje.",
+      "sprawdz": "Otwórz swoją stronę w oknie prywatnym, odmów zgody i sprawdź w naszym teście prawa, czy analityka mimo to się uruchamia.",
+      "link": "/blog/polityka-prywatnosci-2027-co-sie-zmieni/",
+      "linkTekst": "polityka prywatności w 2027 roku"
+    },
+    {
+      "nazwa": "Polityka prywatności",
+      "kotwica": "polityka-prywatnosci",
+      "wJednymZdaniu": "Polityka prywatności to dokument, który mówi odwiedzającemu, kto zbiera jego dane, jakie, po co, komu je przekazuje i jak długo przechowuje.",
+      "opis": "Potrzebuje jej każda strona, która zbiera dane osobowe, a wystarczy do tego zwykły formularz kontaktowy. Ma opisywać to, co strona robi naprawdę, łącznie z hostingiem i narzędziami, które przetwarzają dane. Poprawia się ją przy każdej zmianie formularza albo analityki.",
+      "nieMyl": "regulaminem. Polityka mówi o danych osobowych, a regulamin o zasadach korzystania ze strony i zawierania umów.",
+      "sprawdz": "Przeczytaj swoją politykę i sprawdź, czy wymienia wszystkie narzędzia, które naprawdę działają na stronie, na przykład analitykę albo czat.",
+      "link": "/generator-polityki-prywatnosci/",
+      "linkTekst": "darmowy generator polityki prywatności"
+    },
+    {
+      "nazwa": "PrestaShop",
+      "kotwica": "prestashop",
+      "wJednymZdaniu": "PrestaShop to samodzielny silnik sklepu internetowego o otwartym kodzie, instalowany na własnym hostingu.",
+      "opis": "W odróżnieniu od WooCommerce nie potrzebuje WordPressa, bo od początku jest sklepem. Sprawdza się przy dużym katalogu i rozbudowanych wariantach produktów. Sklep, dane i moduły są Twoje, ale aktualizacje i kopie trzeba prowadzić samemu albo zlecić.",
+      "nieMyl": "platformą abonamentową. PrestaShop stoi na Twoim hostingu, a platforma abonamentowa na serwerach dostawcy.",
+      "sprawdz": "Sprawdź w panelu swojego sklepu, którą wersję silnika masz i kiedy była ostatnia aktualizacja.",
+      "link": "/blog/woocommerce-prestashop-czy-shoper/",
+      "linkTekst": "WooCommerce, PrestaShop czy Shoper"
+    },
+    {
+      "nazwa": "Profil Firmy w Google",
+      "kotwica": "profil-firmy-w-google",
+      "wJednymZdaniu": "Profil Firmy w Google to bezpłatna wizytówka firmy w Mapach i w wyszukiwarce Google z adresem, godzinami, zdjęciami i opiniami.",
+      "opis": "To często pierwsze, co klient widzi, gdy szuka usługi w okolicy. Nazwa, adres i telefon w profilu muszą być takie same jak na stronie, wtedy jedno potwierdza drugie. Weryfikację profilu przechodzi właściciel firmy.",
+      "nieMyl": "stroną wizytówką. Profil leży w Google i Google o nim decyduje, a strona jest Twoja.",
+      "sprawdz": "Wyszukaj nazwę swojej firmy w Mapach Google i sprawdź, czy telefon i adres strony w profilu zgadzają się z tymi na stronie.",
+      "link": "/prowadzenie-strony-internetowej/",
+      "linkTekst": "wizytówka Google w opiece nad stroną"
+    },
+    {
+      "nazwa": "Przekierowanie 301",
+      "kotwica": "przekierowanie-301",
+      "wJednymZdaniu": "Przekierowanie 301 to stałe przeniesienie starego adresu na nowy: kto wejdzie pod stary, od razu trafia pod nowy.",
+      "opis": "Przy przenosinach strony każdy stary adres powinien prowadzić 301 do odpowiadającej mu nowej podstrony, a nie na stronę główną. Dzięki temu działają dawne linki, a Google wie, gdzie jest nowa wersja. Przekierowanie robi serwer, zanim strona w ogóle się załaduje.",
+      "nieMyl": "przekierowaniem tymczasowym 302. 302 mówi wyszukiwarce, że stary adres jeszcze wróci, więc zostaje on w wynikach.",
+      "sprawdz": "Wpisz adres swojej strony raz z www, a raz bez www: jeśli jeden z nich nie przenosi na drugi, Google widzi dwie strony.",
+      "link": "/narzedzia/seo-techniczne/",
+      "linkTekst": "darmowy test SEO technicznego"
+    },
+    {
+      "nazwa": "Regulamin sklepu",
+      "kotwica": "regulamin-sklepu",
+      "wJednymZdaniu": "Regulamin sklepu to zasady umowy między sklepem a kupującym: jak złożyć zamówienie, zapłacić, odebrać towar, odstąpić od umowy i złożyć reklamację.",
+      "opis": "Musi być dostępny przed złożeniem zamówienia, bo postanowienia, których klient nie mógł przeczytać, go nie wiążą. Przy sprzedaży konsumentowi zawiera pouczenie o 14 dniach na odstąpienie od umowy zawartej na odległość. Najważniejsze informacje mają też stać przy guziku zamówienia, a nie tylko w regulaminie.",
+      "nieMyl": "regulaminem serwisu. Regulamin serwisu opisuje korzystanie ze strony, na przykład z formularza, a regulamin sklepu dodatkowo zasady zakupu i zwrotów.",
+      "sprawdz": "Przejdź w swoim sklepie do ostatniego kroku zamówienia i sprawdź, czy link do regulaminu jest widoczny przed guzikiem zapłaty.",
+      "link": "/blog/prawne-aspekty-strony-internetowej-zgody-regulaminy/",
+      "linkTekst": "wpis o prawnych aspektach strony"
+    },
+    {
+      "nazwa": "Rekord MX",
+      "kotwica": "rekord-mx",
+      "wJednymZdaniu": "Rekord MX to wpis w ustawieniach domeny, który wskazuje, który serwer odbiera pocztę wysłaną na adresy w tej domenie.",
+      "opis": "Gdy rekord MX zniknie albo wskaże zły serwer, listy do firmy przestają dochodzić, często bez żadnego komunikatu. Obok niego stoją rekordy SPF, DKIM i DMARC, które chronią przed podszywaniem się pod Twoją domenę. Przy przepinaniu strony zostawiamy je wszystkie bez zmian.",
+      "nieMyl": "rekordem strony (A albo CNAME). Rekord strony mówi, gdzie jest strona, a MX, gdzie jest skrzynka.",
+      "sprawdz": "Sprawdź swoją domenę w naszym teście poczty i zobacz, czy rekordy MX, SPF i DMARC są na miejscu.",
+      "link": "/narzedzia/poczta-domeny/",
+      "linkTekst": "test poczty i zabezpieczeń domeny"
+    },
+    {
+      "nazwa": "RODO",
+      "kotwica": "rodo",
+      "wJednymZdaniu": "RODO to unijne rozporządzenie o ochronie danych osobowych, które mówi, kiedy i na jakiej podstawie firma może zbierać i przechowywać dane ludzi.",
+      "opis": "Dotyczy także zwykłej strony firmowej, bo formularz kontaktowy zbiera imię, e-mail i telefon. Do odpowiedzi na zapytanie zgoda nie jest potrzebna, podstawą są działania przed zawarciem umowy albo uzasadniony interes firmy. Trzeba za to poinformować, kto jest administratorem danych i co się z nimi dzieje.",
+      "nieMyl": "zgodą na pliki cookie. Cookies reguluje Prawo komunikacji elektronicznej, a RODO dotyczy danych osobowych w ogóle.",
+      "sprawdz": "Spójrz na swój formularz kontaktowy i sprawdź, czy obok guzika wysyłki jest krótka informacja o danych i link do polityki prywatności.",
+      "link": "/faq/#rodo",
+      "linkTekst": "co z RODO, polityką prywatności i ciasteczkami"
+    },
+    {
+      "nazwa": "Search Console",
+      "kotwica": "search-console",
+      "wJednymZdaniu": "Search Console to bezpłatne narzędzie Google, które pokazuje, na jakie frazy strona wyświetla się w wynikach, ile osób w nią kliknęło i czego Google nie zaindeksował.",
+      "opis": "Zgłasza się w nim mapę strony i sprawdza błędy indeksowania pojedynczych podstron. Liczy wejścia z wyszukiwarki bez ciasteczek, więc pokazuje cały ruch z Google. Na jego danych opieramy wybór tematów wpisów i poprawki tytułów.",
+      "nieMyl": "Google Analytics. Analytics liczy ruch na stronie z każdego źródła, ale tylko u osób, które zgodziły się na statystyki.",
+      "sprawdz": "Zaloguj się do Search Console i sprawdź w raporcie Strony, ile podstron Google zaindeksował, a ile pominął.",
+      "link": "/faq/#widocznosc-w-google",
+      "linkTekst": "czy strona będzie widoczna w Google"
+    },
+    {
+      "nazwa": "SEO",
+      "kotwica": "seo",
+      "wJednymZdaniu": "SEO to praca nad stroną, żeby wyszukiwarka mogła ją znaleźć, zrozumieć i pokazać wysoko tym, którzy szukają Twoich usług.",
+      "opis": "Składa się z części technicznej, czyli szybkości, adresów, mapy strony i danych strukturalnych, oraz z treści, która odpowiada na pytania klientów. Efekty widać po tygodniach, a nie po dniach. Pozycji w wynikach nie obiecujemy, mierzymy je i poprawiamy stronę na podstawie danych.",
+      "nieMyl": "reklamą Google Ads. Reklama działa, dopóki płacisz za kliknięcia, a SEO buduje miejsce w bezpłatnych wynikach.",
+      "sprawdz": "Wpisz w Google swoją usługę i miasto, na przykład stolarz Warszawa, i sprawdź, czy Twoja strona jest na pierwszej stronie wyników.",
+      "link": "/faq/#widocznosc-w-google",
+      "linkTekst": "czy strona będzie widoczna w Google"
+    },
+    {
+      "nazwa": "Shoper i IdoSell",
+      "kotwica": "shoper-idosell",
+      "wJednymZdaniu": "Shoper i IdoSell to polskie platformy sklepowe w abonamencie: sklep działa na serwerach dostawcy, a Ty płacisz co miesiąc i nie zajmujesz się hostingiem.",
+      "opis": "Aktualizacje, bezpieczeństwo i kopie zapasowe są po stronie dostawcy, a płatności i kurierów podpina się gotowymi integracjami. W zamian wygląd i funkcje ogranicza to, co platforma przewiduje. Przeniesienie sklepu do innego systemu wymaga eksportu danych i nowej budowy.",
+      "nieMyl": "sklepem na własnym hostingu. WooCommerce i PrestaShop stoją u Ciebie, a platforma abonamentowa u dostawcy.",
+      "sprawdz": "Sprawdź w umowie z platformą, czy możesz wyeksportować produkty, klientów i zamówienia do pliku, gdybyś chciał zmienić system.",
+      "link": "/blog/woocommerce-prestashop-czy-shoper/",
+      "linkTekst": "WooCommerce, PrestaShop czy Shoper"
+    },
+    {
+      "nazwa": "Sklep internetowy",
+      "kotwica": "sklep-internetowy",
+      "wJednymZdaniu": "Sklep internetowy to strona, na której klient wybiera produkt, płaci i zawiera umowę bez rozmowy ze sprzedawcą.",
+      "opis": "Poza katalogiem potrzebuje koszyka, płatności, dostaw i dokumentów: regulaminu sklepu i polityki prywatności. Sprzedaż konsumentowi uruchamia obowiązki z ustawy o prawach konsumenta, w tym 14 dni na odstąpienie od umowy. Drogę budowy wybieramy po rozmowie o liczbie produktów i sposobie obsługi zamówień.",
+      "nieMyl": "katalogiem z formularzem zapytania. Przy katalogu klient pyta o ofertę, a w sklepie zawiera umowę od razu.",
+      "sprawdz": "Policz, ile kliknięć dzieli klienta od zapłaty na Twojej stronie, i sprawdź, czy po drodze zna już koszt dostawy.",
+      "link": "/blog/strona-czy-sklep-internetowy-od-czego-zaczac/",
+      "linkTekst": "strona czy sklep: od czego zacząć"
+    },
+    {
+      "nazwa": "Strona statyczna",
+      "kotwica": "strona-statyczna",
+      "wJednymZdaniu": "Strona statyczna to strona złożona z gotowych plików HTML, które serwer wysyła od razu, bez budowania ich z bazy danych przy każdym wejściu.",
+      "opis": "Dzięki temu otwiera się szybko i ma mniej miejsc, przez które można się włamać, bo nie ma bazy danych do zaatakowania. Treść dalej zmieniasz w panelu, a strona przebudowuje się sama po zapisie. Formularz obsługuje osobny skrypt na serwerze.",
+      "nieMyl": "stroną, której nie da się zmieniać. Statyczna znaczy gotowa przed wejściem odwiedzającego, a nie zamrożona.",
+      "sprawdz": "Otwórz swoją stronę kilka razy z rzędu i sprawdź, czy kolejne otwarcia są natychmiastowe, czy za każdym razem czekasz tak samo.",
+      "link": "/faq/#kod-i-kopie",
+      "linkTekst": "gdzie jest kod strony i co z kopiami"
+    },
+    {
+      "nazwa": "Strona wizytówka",
+      "kotwica": "strona-wizytowka",
+      "wJednymZdaniu": "Strona wizytówka to najprostsza strona firmy: jedna strona albo dwie, trzy podstrony z ofertą, danymi i formularzem kontaktowym.",
+      "opis": "Wystarcza firmie, która potrzebuje adresu w sieci, żeby klient sprawdził ofertę i zadzwonił. Nie ma sprzedaży, rezerwacji ani płatności, więc wymaga mniej dokumentów niż sklep. Gdy firma zacznie potrzebować bloga albo osobnych stron usług, wizytówkę rozbudowuje się do strony firmowej.",
+      "nieMyl": "Profilem Firmy w Google. Profil to wizytówka w Mapach Google, a strona wizytówka leży pod Twoją domeną.",
+      "sprawdz": "Otwórz swoją stronę na telefonie i sprawdź, czy telefon i adres e-mail widać bez przewijania i czy da się w nie kliknąć.",
+      "link": "/faq/#wizytowka-a-strona-firmowa",
+      "linkTekst": "czym różni się wizytówka od strony firmowej"
+    },
+    {
+      "nazwa": "Turnstile",
+      "kotwica": "turnstile",
+      "wJednymZdaniu": "Turnstile to zabezpieczenie formularza od Cloudflare, które odróżnia człowieka od bota zwykle bez przepisywania liter i klikania obrazków.",
+      "opis": "Przeglądarka dostaje od Cloudflare jednorazowy znacznik, a serwer sprawdza go, zanim przyjmie zgłoszenie. Bez ważnego znacznika serwer odrzuca wiadomość, zanim trafi ona do Twojej skrzynki. Klucz tajny leży na hostingu, a nie w kodzie strony.",
+      "nieMyl": "klasyczną CAPTCHA z obrazkami. Turnstile zwykle niczego od człowieka nie wymaga, a sprawdzenie dzieje się w tle.",
+      "sprawdz": "Wyślij swój formularz kontaktowy z innego urządzenia i sprawdź, czy musiałeś rozwiązywać zagadkę, i czy wiadomość doszła.",
+      "link": "/faq/#spam",
+      "linkTekst": "jak chronimy formularz przed spamem"
+    },
+    {
+      "nazwa": "WCAG i dostępność",
+      "kotwica": "wcag",
+      "wJednymZdaniu": "WCAG to wytyczne dostępności treści internetowych, czyli zasady, dzięki którym ze strony skorzystają też osoby słabowidzące, niewidome i obsługujące ją samą klawiaturą.",
+      "opis": "Chodzi między innymi o kontrast tekstu, opisy zdjęć, etykiety pól i widoczny fokus przy poruszaniu się klawiszem Tab. Ustawa z 26 kwietnia 2024 roku obejmuje sklepy i strony, przez które zawiera się umowy, poza mikroprzedsiębiorcami. Jako miarę stosuje się w praktyce WCAG 2.1 na poziomie AA.",
+      "nieMyl": "wynikiem ułatwień dostępu w PageSpeed. 100 punktów to automatyczny test części kryteriów, a nie pełna zgodność z WCAG.",
+      "sprawdz": "Przejdź przez swoją stronę samym klawiszem Tab i sprawdź, czy cały czas widzisz, który element jest zaznaczony.",
+      "link": "/narzedzia/dostepnosc/",
+      "linkTekst": "test dostępności strony"
+    },
+    {
+      "nazwa": "WooCommerce",
+      "kotwica": "woocommerce",
+      "wJednymZdaniu": "WooCommerce to bezpłatna wtyczka, która zamienia stronę na WordPressie w sklep internetowy na własnym hostingu.",
+      "opis": "Sam dodajesz produkty, obsługujesz zamówienia i stany magazynowe w panelu WordPressa. Płatności, dostawy i faktury podpina się kolejnymi wtyczkami. Każda wtyczka to coś do aktualizowania, więc sklep wymaga regularnej opieki.",
+      "nieMyl": "WordPressem. WordPress to system stron, a WooCommerce to dodany do niego sklep.",
+      "sprawdz": "Zajrzyj w panelu WordPressa do listy wtyczek i policz, ile z nich czeka na aktualizację.",
+      "link": "/blog/woocommerce-prestashop-czy-shoper/",
+      "linkTekst": "WooCommerce, PrestaShop czy Shoper"
+    },
+    {
+      "nazwa": "Wyszukiwanie agentowe",
+      "kotwica": "wyszukiwanie-agentowe",
+      "wJednymZdaniu": "Wyszukiwanie agentowe to wyszukiwanie, w którym asystent AI sam wykonuje zadanie: szuka terminu, porównuje oferty i wypełnia formularz.",
+      "opis": "Dla strony oznacza to trzy osobne sprawy: czy AI Search ją znajdzie i pokaże, czy agent w przeglądarce poradzi sobie z jej obsługą i czy sklep da się kiedyś obsłużyć przez protokoły zakupowe. Pierwszą załatwia zwykłe SEO, drugą dostępny HTML i stabilny układ. Protokoły zakupowe dopiero startują.",
+      "nieMyl": "AI Overviews. Podsumowanie AI odpowiada na pytanie, a agent sam przechodzi przez stronę i działa w Twoim imieniu.",
+      "sprawdz": "Poproś asystenta AI z przeglądarką, żeby znalazł na Twojej stronie telefon i godziny otwarcia, i zobacz, czy mu się uda.",
+      "link": "/blog/wyszukiwanie-agentowe-strony-i-sklepy/",
+      "linkTekst": "wpis o wyszukiwaniu agentowym"
+    }
+  ]
+}

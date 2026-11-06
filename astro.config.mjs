@@ -16,6 +16,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
+import { tabeleKarty } from './src/lib/tabele-karty.mjs';
 import { fileURLToPath } from 'node:url';
 import { existsSync, renameSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
@@ -87,7 +88,7 @@ export default defineConfig({
   integrations: [sitemap({ filter: (adres) => !adres.includes('/przyklady/') && !adres.includes('/dziekujemy/') }), sitemapJakoPlikSitemapXml()],
 
   // Markdown jest tylko we wpisach bloga; wtyczka przy definicji wyżej.
-  markdown: { processor: satteri({ mdastPlugins: [zdjeciaZPodpisem] }) },
+  markdown: { processor: satteri({ mdastPlugins: [zdjeciaZPodpisem], hastPlugins: [tabeleKarty] }) },
 
   // `prefetch` świadomie WYŁĄCZONY (walidator zgłosi to jako AG004 INFO).
   // Powód: guard.config.json deklaruje całą witrynę jako zero-JS, a prefetch
@@ -103,23 +104,23 @@ export default defineConfig({
   // fonts.googleapis.com i fonts.gstatic.com, 2026-09-06, oba dostępne stąd) — GitHub
   // Actions ma sieć zawsze; na maszynie bez sieci build tego kroku nie wykona.
   //
-  // Dwie rodziny, każda innej roli (frontend-design: „typography carries personality"):
-  //   — Source Serif 4  → nagłówki: poważny, edytorski krój (Adobe), niesie ciężar
-  //     „spółka prowadząca rejestr serwisów", bez efekciarstwa.
-  //   — IBM Plex Sans    → tekst, etykiety, nawigacja: techniczny, inżynierski krój
-  //     (IBM), niesie skojarzenie z infrastrukturą/„Power" bez dosłownej ikonografii.
+  // Dwie rodziny (decyzja 2026-11-06, D30 w docs/DECYZJE-WIZUALNE.md):
+  //   — IBM Plex Sans → cała strona, także nagłówki H1–H3 w wadze 700 (`--font-display`
+  //     w motyw.css wskazuje na `--font-sans`). Wagi: 400 tekst, 600 menu i etykiety, 700 nagłówki.
+  //   — Source Serif 4 → wyłącznie akapity i listy w treści wpisu bloga (`--font-szeryf`),
+  //     wagi 400 (tekst) i 600 (pogrubienie `strong`); bez preloadu — nie stoi w nagłówkach.
   // `latin-ext` OBOWIĄZKOWY — bez niego polskie znaki (ą ć ę ł ń ó ś ź ż) w nagłówkach
   // i tekście spadają cicho na font systemowy w środku zdania.
   fonts: [
     {
       provider: fontProviders.google(),
       name: 'Source Serif 4',
-      cssVariable: '--font-display',
+      cssVariable: '--font-szeryf',
       // Zapas szeryfowy (D14, 2026-10-27): Astro liczy metryki zastępczego kroju względem
       // Times New Roman zamiast Ariala — przy Arialu nagłówek strony głównej łamał się
       // w innym miejscu do czasu wczytania fontu (CLS 0,015 w pomiarze cls-cdp z Arialem).
       fallbacks: ['serif'],
-      weights: [500, 600],
+      weights: [400, 600],
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
     },
@@ -127,7 +128,7 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'IBM Plex Sans',
       cssVariable: '--font-sans',
-      weights: [400, 600],
+      weights: [400, 600, 700],
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
     },

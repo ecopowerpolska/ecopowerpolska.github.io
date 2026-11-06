@@ -14,14 +14,12 @@
        jedna wspólna szerokość kontenera od nagłówka po stopkę,
      · promień kart ZREDUKOWANY (6px, nie 18px) — karta wygląda jak wpis w rejestrze,
        nie jak bąbel interfejsu telefonu,
-     · dwa kroje o jasno różnych rolach: nagłówki serifem (powaga rejestru), reszta
-       grotesk techniczny (IBM Plex — skojarzenie z infrastrukturą, bez dosłownej
-       ikonografii „mocy"),
-     · JEDEN gest koloru: głęboka zieleń morska jako akcent (liczba serwisów, linki,
-       fokus) — nie zielony-eco-cliché (limonka), nie identyczny z żadnym znanym
-       akcentem narzędzi AI,
-     · sekcje oddzielone wypełnieniem, nie kreską — kreska na tle 3:1 nie przechodzi
-       (patrz D97 niżej), wypełnienie niesie granicę i jest zmierzone jak tekst.
+     · jeden krój na całej stronie: IBM Plex Sans, nagłówki w wadze 700 (D30, 2026-11-06);
+       Source Serif 4 tylko w akapitach treści wpisu bloga (--font-szeryf),
+     · dwa odcienie jednej zieleni (D32): --akcent do tekstu i przycisków na jasnym,
+       --akcent-jasny do wypełnień, liczb i słupków; bez ciepłego koloru,
+     · sekcje oddzielone pasami tła na pełną szerokość okna (.pas), nie kreską;
+       ciemne pasy (--tlo-ciemne) pod hero, na zamknięcie i w stopce (D31).
 
    🔴 KONTRASTY POLICZONE (WCAG 2.2, wzór relatywnej luminancji), nie oszacowane —
    policzone skryptem Node przy doborze palety, nie odczytane z oka. Każda para MUSI
@@ -31,7 +29,7 @@
    włącznie ze stanem najechania (hover), bo akcent na --powierzchnia-mocna jest
    najciaśniejszą parą w całym motywie i to ona rozstrzyga, czy dobór koloru się broni. */
 
-/* 🔴 Motyw jest JEDEN i jasny — bez wariantu ciemnego (docs/DECYZJE-WIZUALNE.md D1). */
+/* 🔴 Motyw jest JEDEN i jasny — bez wariantu ciemnego (D1). Ciemne PASY (D31) to sekcje, nie motyw. */
 /* kontrast: #15201a na #f4f5f1 tekst */
 /* kontrast: #15201a na #e8eae2 tekst */
 /* kontrast: #4b5a4f na #f4f5f1 tekst */
@@ -44,6 +42,33 @@
    Style: kontrast stopni czytelny na pierwszy rzut oka, bez stopni „prawie takich
    samych"). Ten komentarz też musi zaczynać się od `skala:` — bramka go szuka. */
 /* skala: 0.8125rem 0.9375rem 1.0625rem 1.375rem 1.875rem 2.75rem 4.25rem */
+/* Nagłówki od 2026-11-06 (D30): H1 --t-display clamp(2.75rem…6rem), H2 --t-h2 clamp(1.75rem…2.5rem),
+   liczby --t-liczba clamp(2.25rem…3.5rem); płynne, więc poza listą literałów wyżej. */
+
+/* Pary nowe 2026-11-06 (pasy, karty, przyciski): */
+/* kontrast: #f4f5f1 na #10231b tekst */
+/* kontrast: #b9c4bd na #10231b tekst */
+/* kontrast: #3cbf96 na #10231b tekst */
+/* kontrast: #1f8a6c na #10231b duzy */
+/* kontrast: #1f8a6c na #10231b nietekst */
+/* kontrast: #f4f5f1 na #166653 tekst */
+/* kontrast: #f4f5f1 na #0f4f40 tekst */
+/* kontrast: #030c08 na #1f8a6c tekst */
+/* kontrast: #15201a na #ffffff tekst */
+/* kontrast: #4b5a4f na #ffffff tekst */
+/* kontrast: #166653 na #ffffff tekst */
+/* kontrast: #1f8a6c na #f4f5f1 duzy */
+/* kontrast: #1f8a6c na #e8eae2 duzy */
+/* kontrast: #1f8a6c na #ffffff duzy */
+/* kontrast: #15201a na #dae8e1 tekst */
+/* kontrast: #166653 na #dae8e1 tekst */
+/* kontrast: #4b5a4f na #dae8e1 tekst */
+/* kontrast: #f4f5f1 na #1a3a2d tekst */
+/* kontrast: #5f7d6e na #10231b nietekst */
+/* kontrast: #1d4f7a na #e5edf5 tekst */
+/* kontrast: #166653 na #e1efe9 tekst */
+/* kontrast: #15201a na #dcdfd3 tekst */
+/* kontrast: #5a3d8a na #ece8f4 tekst */
 
 :root {
   /* ── kolor: jasny (domyślny) ──────────────────────────────────────────────── */
@@ -55,10 +80,25 @@
   --akcent: #166653;
   --linia: #c7ccc0;
 
+  /* ── pasy, karty i drugi akcent (D31–D33, 2026-11-06) ─────────────────────── */
+  --tlo-ciemne: #10231b;
+  --na-ciemnym: #f4f5f1;
+  --na-ciemnym-cichy: #b9c4bd;
+  /* Drobny tekst w kolorze na ciemnym (etykieta, najechanie linku): --akcent-jasny ma tam 3,84:1 — za mało dla 13 px. */
+  --akcent-na-ciemnym: #3cbf96;
+  --linia-na-ciemnym: #5f7d6e;
+  --akcent-jasny: #1f8a6c;
+  --akcent-mocny: #0f4f40;
+  --karta: #ffffff;
+  --obrys-karty: 1px solid var(--linia);
+  --cien-karty: 0 1px 2px rgb(21 32 26 / 6%), 0 8px 24px rgb(21 32 26 / 6%);
+  --cien-karty-hover: 0 2px 4px rgb(21 32 26 / 8%), 0 16px 40px rgb(21 32 26 / 12%);
+  --promien-karty: 0.75rem;
+
   color-scheme: light;
 
   /* ── typografia ────────────────────────────────────────────────────────────
-     Zmienne --font-display / --font-sans definiuje <Font cssVariable="..." />
+     Zmienne --font-sans / --font-szeryf definiuje <Font cssVariable="..." />
      (Fonts API, Bazowy.astro) - Source Serif 4 i IBM Plex Sans, self-hosted
      przy buildzie, z wlasnym fallbackiem metrycznym. TU ICH NIE DEKLARUJEMY:
      zapis `--font-x: var(--font-x, ...)` odwoluje sie do samego siebie (cykl),
@@ -71,7 +111,13 @@
   --t-l: 1.375rem;
   --t-xl: 1.875rem;
   --t-xxl: 2.75rem;
-  --t-display: 4.25rem;
+  --t-display: clamp(2.75rem, 1.6rem + 4.6vw, 6rem);
+  --t-h2: clamp(1.75rem, 1rem + 2vw, 2.5rem);
+  --t-liczba: clamp(2.25rem, 1.5rem + 2.5vw, 3.5rem);
+
+  /* Nagłówki groteską (D30): Fonts API daje --font-sans i --font-szeryf; --font-display to tylko alias
+     dla komponentów, które go używają. Inna nazwa niż zmienne Fonts API — bez cyklu z kontroli 2026-09-06. */
+  --font-display: var(--font-sans);
 
   /* ── siatka odstępów: krok 4 px u dołu, rośnie geometrycznie u góry ─────────── */
   --o-1: 0.25rem;
@@ -158,9 +204,31 @@ h2,
 h3 {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+/* Skala nagłówków (D30). Strona z własnym rozmiarem nagłówka nadpisuje to stylem komponentu. */
+h1 {
+  font-size: var(--t-display);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+h2 {
+  font-size: var(--t-h2);
+}
+
+h3 {
+  font-size: var(--t-l);
+  line-height: 1.2;
+}
+
+/* Treść wpisu bloga: akapity i listy szeryfem, nagłówki wpisu zostają groteską (D30). */
+.wpis__tresc :is(p, li, blockquote) {
+  font-family: var(--font-szeryf);
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -257,3 +325,334 @@ a:active {
 }
 /* Zamknięty przełącznik dwf.js ma ok. 32 px wysokości (WCAG 2.5.8 spełnione, standard 44 px nie). Poprawka (DO POMIARU na żywym DOM, nie nakładana na ślepo):
    .gtranslate_wrapper .gt_selected a { min-height: 44px; display: flex; align-items: center; box-sizing: border-box; } */
+
+/* ════════════════════════════════════════════════════════════════════════════
+   KLASY WSPÓLNE (kontrakt fazy 2, 2026-11-06). Komponenty UŻYWAJĄ tych nazw,
+   nie definiują własnych odpowiedników. Pary kolorów — komentarze `kontrast:` na górze.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── przyciski ── */
+.guzik {
+  /* spoczynek */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--o-2);
+  min-height: 48px;
+  padding: 0 var(--o-6);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--tlo);
+  background: var(--akcent);
+  border: 2px solid var(--akcent);
+  border-radius: var(--o-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+/* najechanie */
+.guzik:hover {
+  color: var(--tlo);
+  background: var(--akcent-mocny);
+  border-color: var(--akcent-mocny);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+/* aktywny (wciśnięty) */
+.guzik:active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.guzik--drugi {
+  color: var(--akcent);
+  background: transparent;
+}
+
+.guzik--drugi:hover {
+  color: var(--tlo);
+  background: var(--akcent);
+  border-color: var(--akcent);
+}
+
+/* Na ciemnym pasie: tło --akcent-jasny, tekst prawie czarny (#030c08; #06130d dawał 4,44:1). */
+.guzik--na-ciemnym {
+  color: #030c08;
+  background: var(--akcent-jasny);
+  border-color: var(--akcent-jasny);
+}
+
+.guzik--na-ciemnym:hover {
+  color: var(--tlo-ciemne);
+  background: var(--na-ciemnym);
+  border-color: var(--na-ciemnym);
+}
+
+/* ── karty ── */
+.karta {
+  background: var(--karta);
+  border: var(--obrys-karty);
+  border-radius: var(--promien-karty);
+  box-shadow: var(--cien-karty);
+}
+
+/* Karta klikalna: uniesienie 2 px i mocniejszy cień; sam transform, więc CLS 0. */
+.karta--link {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.karta--link:hover,
+.karta--link:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--cien-karty-hover);
+}
+
+/* ── etykieta nad nagłówkiem (najwyżej 3 na stronę) ── */
+.etykieta {
+  display: block;
+  margin: 0 0 var(--o-3);
+  font-family: var(--font-sans);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--akcent);
+}
+
+/* ── pasy: sekcja na pełną szerokość okna, treść 76 rem na środku ── */
+.pas {
+  width: 100%;
+  padding-block: var(--o-16);
+}
+
+.pas__tresc {
+  max-width: var(--szerokosc-tresci);
+  margin-inline: auto;
+  padding-inline: var(--o-6);
+}
+
+@media (max-width: 26rem) {
+  .pas {
+    padding-block: var(--o-12);
+  }
+
+  .pas__tresc {
+    padding-inline: var(--o-4);
+  }
+}
+
+.pas--jasny {
+  background: var(--tlo);
+}
+
+.pas--powierzchnia {
+  background: var(--powierzchnia);
+}
+
+.pas--ciemny {
+  background: var(--tlo-ciemne);
+  color: var(--na-ciemnym);
+}
+
+.pas--ciemny :is(h1, h2, h3) {
+  color: var(--na-ciemnym);
+}
+
+.pas--ciemny a:not(.guzik) {
+  color: var(--na-ciemnym);
+  text-decoration: underline;
+  text-decoration-color: var(--akcent-jasny);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.pas--ciemny a:not(.guzik):hover {
+  color: var(--akcent-na-ciemnym);
+}
+
+.pas--ciemny .etykieta {
+  color: var(--akcent-na-ciemnym);
+}
+
+/* fokus z klawiatury na ciemnym: obrys --akcent-jasny (3,84:1, próg 3:1 elementu nietekstowego) */
+:is(.pas--ciemny, .stopka) :focus-visible {
+  outline-color: var(--akcent-jasny);
+}
+
+/* ── liczby i kroki ── */
+.liczba {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--t-liczba);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--akcent);
+}
+
+.pas--ciemny .liczba {
+  color: var(--akcent-jasny);
+}
+
+.liczba__podpis {
+  display: block;
+  margin-top: var(--o-2);
+  font-size: var(--t-s);
+  line-height: 1.4;
+}
+
+.pas--ciemny .liczba__podpis {
+  color: var(--na-ciemnym-cichy);
+}
+
+.numer-kroku {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--t-liczba);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--akcent-jasny);
+}
+
+.pas--ciemny .numer-kroku {
+  color: var(--na-ciemnym-cichy);
+}
+
+/* ── ramka „w skrócie” ── */
+.ramka-w-skrocie {
+  padding: var(--o-6);
+  background: var(--powierzchnia);
+  border-left: 3px solid var(--akcent);
+  border-radius: var(--promien);
+}
+
+.pas--powierzchnia .ramka-w-skrocie {
+  background: var(--karta);
+}
+
+/* ── pigułki rodzaju dowodu ── */
+.dowod {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem var(--o-2);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  border-radius: var(--promien-maly);
+  white-space: nowrap;
+}
+
+.dowod--dokumentacja {
+  color: #1d4f7a;
+  background: #e5edf5;
+}
+
+.dowod--badanie {
+  color: #5a3d8a;
+  background: #ece8f4;
+}
+
+.dowod--pomiar {
+  color: var(--akcent);
+  background: #e1efe9;
+}
+
+.dowod--ocena {
+  color: var(--tekst);
+  background: var(--powierzchnia-mocna);
+}
+
+/* ── tabela, która na wąskim ekranie staje się kartami ── */
+.tabela-karty {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-karty :is(th, td) {
+  padding: var(--o-3);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--linia);
+}
+
+@media (max-width: 40rem) {
+  .tabela-karty thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .tabela-karty tr {
+    display: block;
+    margin-bottom: var(--o-4);
+    padding: var(--o-3) var(--o-4);
+    background: var(--karta);
+    border: var(--obrys-karty);
+    border-radius: var(--promien-karty);
+    box-shadow: var(--cien-karty);
+  }
+
+  .tabela-karty td {
+    display: grid;
+    grid-template-columns: minmax(7rem, 40%) 1fr;
+    gap: var(--o-3);
+    padding: var(--o-2) 0;
+  }
+
+  .tabela-karty tr td:last-child {
+    border-bottom: 0;
+  }
+
+  .tabela-karty td::before {
+    content: attr(data-label);
+    font-weight: 600;
+  }
+}
+
+/* ── siatka po 3: niepełny rząd zostaje do lewej ── */
+.siatka-3 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--o-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40rem) {
+  .siatka-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 56rem) {
+  .siatka-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ── poświata hero (D34): stała, sam CSS, prawy górny róg, krycie 12 %; mieszanka z --tlo = #dae8e1 ── */
+.hero--poswiata {
+  background:
+    radial-gradient(ellipse 60% 70% at 100% 0%, rgb(31 138 108 / 12%), transparent 70%),
+    var(--tlo);
+}
+
+/* Ruch kart i przycisków wyłączony przy ograniczeniu ruchu (reguła ogólna wyżej skraca też czas). */
+@media (prefers-reduced-motion: reduce) {
+  .guzik:hover,
+  .karta--link:hover,
+  .karta--link:focus-within {
+    transform: none;
+  }
+}

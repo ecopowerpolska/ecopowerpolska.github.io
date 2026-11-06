@@ -1,5 +1,5 @@
 # Handler formularza www.ecopowerpolska.pl na koncie lh.pl (public_html/api.ecopowerpolska.pl/).
-# Z sieci odpowiadają wyslij.php (POST formularza), komentarze.php (komentarze pod wpisami ambasadapodroznikow.pl: GET lista, POST, moderacja z maila), firma.php (GET dane firmy po NIP) i audyt.php (GET audyt obcej strony; moduły testy/ zamyka ich własny .htaccess); konfig/ i stan/ (z podkatalogami firma/, firma-ip/)
+# Z sieci odpowiadają wyslij.php (POST formularza), komentarze.php (komentarze pod wpisami ambasadapodroznikow.pl: GET lista, POST, moderacja z maila), firma.php (GET dane firmy po NIP) audyt.php (GET audyt obcej strony; moduły testy/ zamyka ich własny .htaccess), licznik.php (GET licznik sprawdzeń narzędzi) i obecni.php (POST/GET liczba czytających); konfig/ i stan/ (z podkatalogami firma/, firma-ip/)
 # zamykają ich własne .htaccess (bez FilesMatch "wszystko poza", pułapka ⑱).
 Options -Indexes
 <FilesMatch "\.(bak|save|orig|old|swp|tmp|dist|log|json|ini|md|przyklad|licznik|php~)$">

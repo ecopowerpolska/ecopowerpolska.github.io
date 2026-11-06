@@ -3,28 +3,29 @@
   "opisWyszukiwarki": "Tworzymy strony internetowe dla firm z Warszawy: projekt, treść, panel do edycji i hosting. Strony w Astro z wynikiem 97–100 w PageSpeed.",
   "naglowek": "Tworzenie stron internetowych dla firm w Warszawie",
   "okruszek": "Strony internetowe",
-  "lead": "Budujemy strony internetowe dla firm z Warszawy: od ustalenia zakresu i tekstów po panel do edycji, hosting i zgłoszenie w Google. Strony stawiamy w Astro jako gotowe pliki, więc otwierają się szybko także na telefonie. Nasze realizacje mają w PageSpeed Insights na telefonie od 97 do 100 punktów wydajności.",
+  "lead": "Tworzenie strony internetowej obejmuje u nas projekt, teksty, panel do edycji, hosting i zgłoszenie w Google: dostajesz stronę gotową do zbierania zapytań. Robimy je dla firm z Warszawy, których klienci mają znaleźć ofertę i telefon w kilka sekund, także na telefonie.",
   "uslugaNazwa": "Tworzenie stron internetowych dla firm w Warszawie",
   "uslugaTyp": "Tworzenie stron internetowych",
   "uslugaOpis": "Projekt, treść, panel do edycji, hosting i widoczność w Google. Strony budowane w Astro, mierzone w PageSpeed Insights po publikacji.",
   "cenaOdPozycja": "Wizytówka, strona jednostronicowa",
-  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajeszNaglowek": "Dostajesz stronę, kod i dostęp. Bez zamka na dostawcę.",
   "coDostajesz": [
     "Stronę zaprojektowaną pod Twoje usługi: oferta, realizacje, dane firmy i formularz tam, gdzie klient ich szuka.",
     "Teksty napisane z Twoich informacji i prawdziwe zdjęcia realizacji, bez obrazów z generatora.",
-    "Panel do edycji treści pod adresem /admin/: teksty, zdjęcia, wpisy i dane firmy zmieniasz sam.",
+    "Panel do edycji treści pod adresem /admin/, z dostępem tylko do Twojej strony: teksty, zdjęcia, wpisy i dane firmy zmieniasz sam.",
     "Formularz kontaktowy w PHP chroniony przez Cloudflare Turnstile, z wiadomościami na Twój adres.",
-    "Hosting w osobnej przestrzeni na lh.pl albo bezpłatne GitHub Pages dla wizytówki bez sprzedaży.",
+    "Hosting w osobnej przestrzeni na lh.pl, z własną wersją PHP, albo bezpłatne GitHub Pages dla wizytówki bez sprzedaży.",
     "Domenę podpiętą bez utraty poczty i przekierowania 301 ze starej strony.",
+    "Szyfrowane połączenie (HTTPS) na Twojej domenie i przekierowanie wariantu z „www” albo bez.",
     "Zgłoszenie w Google Search Console i w Bing, mapę strony i dane firmy w danych strukturalnych.",
-    "Własne repozytorium kodu z historią każdej zmiany i pomiar PageSpeed Insights po publikacji."
+    "Własne repozytorium kodu z historią każdej zmiany i pomiar PageSpeed Insights po publikacji. Strony klientów nie dzielą kodu ani dostępów."
   ],
   "sekcje": [
     {
       "id": "jaka-strona",
       "naglowek": "Jaką stronę internetową zrobimy dla Twojej firmy",
       "akapity": [
-        "Zaczynamy od pytania, co strona ma robić: pokazać usługi, zebrać zapytania czy sprzedawać. Od odpowiedzi zależy wielkość strony, hosting i rodzaj panelu. Najczęściej robimy jedną z trzech stron."
+        "Stronę internetową dla firmy dobieramy do tego, co ma robić: pokazać usługi, zbierać zapytania czy sprzedawać. Od odpowiedzi zależy wielkość strony, hosting i rodzaj panelu. Najczęściej robimy jedną z trzech stron."
       ],
       "lista": [
         "Wizytówka: jedna strona albo dwie, trzy podstrony z ofertą, danymi firmy i formularzem. Wystarczy firmie, która zaczyna albo ma jedną usługę. Opisujemy ją osobno: [strona wizytówka dla małej firmy](/strona-wizytowka/).",
@@ -39,27 +40,74 @@
       "id": "ile-trwa",
       "naglowek": "Ile trwa zrobienie strony internetowej",
       "akapity": [
-        "Termin podajemy po rozmowie o zakresie, bo zależy od liczby podstron, formularzy, sklepu i przenoszenia treści ze starej strony. Inaczej liczy się wizytówkę z jednym formularzem, a inaczej stronę z kalkulatorem i blogiem.",
+        "Czas zrobienia strony internetowej podajemy po rozmowie o zakresie, bo zależy od liczby podstron, formularzy, sklepu i przenoszenia treści ze starej strony. Inaczej liczy się wizytówkę z jednym formularzem, a inaczej stronę z kalkulatorem i blogiem.",
         "Najdłużej trwa zwykle zebranie materiałów: opisu usług, zdjęć, logo i danych firmy. Im szybciej je dostaniemy, tym szybciej strona będzie gotowa. Teksty możemy napisać sami na podstawie Twoich informacji.",
         "Nowa strona powstaje obok starej, pod adresem roboczym. Obecna strona działa przez cały czas budowy i klienci nadal ją widzą. Etapy i to, co zostaje u Ciebie po publikacji, opisujemy we wpisie [ile trwa budowa strony i co dostajesz](/blog/ile-trwa-budowa-strony-i-co-dostajesz/)."
       ]
     },
     {
       "id": "astro",
-      "naglowek": "Dlaczego budujemy strony w Astro i co to daje w Google",
+      "naglowek": "Strona w Astro to gotowe pliki: otwiera się od razu, także dla Google",
       "akapity": [
-        "Astro składa stronę raz, w chwili publikacji. Do przeglądarki trafiają gotowe pliki HTML, a nie strona składana z bazy danych przy każdym wejściu. Serwer nie ma nic do liczenia, więc odpowiada od razu.",
+        "Astro to narzędzie, które składa stronę raz, w chwili publikacji. Do przeglądarki trafiają gotowe pliki HTML, a nie strona składana z bazy danych przy każdym wejściu. Serwer nie ma nic do liczenia, więc odpowiada od razu.",
         "Na stronie nie ma zbędnego JavaScriptu. Zdjęcia przygotowujemy w kilku rozmiarach, więc telefon pobiera mniejszy plik niż monitor. Każde zdjęcie ma z góry zarezerwowane miejsce, dlatego tekst nie ucieka spod palca w czasie ładowania.",
         "Google ocenia wygodę strony wskaźnikami Core Web Vitals: czasem pokazania największego elementu, reakcją na dotyk i przesunięciami układu. Gotowy HTML pomaga we wszystkich trzech, a robot wyszukiwarki dostaje pełną treść bez czekania na skrypty.",
         "Każdą stronę mierzymy po publikacji w PageSpeed Insights, osobno na telefonie i na komputerze. Ten sam test zrobisz w minutę: [sprawdź szybkość swojej strony](/jak-sprawdzic-szybkosc-strony/).",
         "Przenosimy też strony z WordPressa na Astro. Tak było z Nadi Home, Studio Agat i Pan Wylewka. Stare adresy przekierowaliśmy na nowe przekierowaniem 301, więc dawne linki i wyniki w Google prowadzą na właściwe podstrony."
+      ],
+      "akapityPo": [
+        "Astro i hosting lh.pl albo GitHub Pages proponujemy, bo takie strony mierzymy i znamy ich wyniki. To propozycja, nie przymus: strony i sklepy budujemy i prowadzimy też w innych systemach i na innych hostingach. Ty wybierasz, my doradzamy."
+      ],
+      "kolumny": [
+        {
+          "naglowek": "Proponujemy",
+          "pozycje": [
+            {
+              "nazwa": "Astro",
+              "opis": "Strona trafia na serwer jako gotowe pliki HTML. Przy wejściu nie odpytuje bazy danych i nie ładuje zbędnych skryptów, więc pierwszy ekran pojawia się szybko."
+            },
+            {
+              "nazwa": "lh.pl",
+              "opis": "Polski hosting z PHP, pocztą i dostępem SSH. Każda strona ma osobny katalog z separacją, a to, co działa na serwerze (formularze, panel), piszemy w PHP."
+            },
+            {
+              "nazwa": "GitHub Pages",
+              "opis": "Wizytówka bez sprzedaży, rezerwacji i płatności może stać na GitHub Pages bez opłat za hosting. Tak działa ta strona."
+            },
+            {
+              "nazwa": "Cloudflare",
+              "opis": "Strefa DNS domeny i ochrona formularzy (Turnstile). Rekordy poczty przenosimy razem z domeną, więc skrzynki działają bez przerwy."
+            }
+          ]
+        },
+        {
+          "naglowek": "Wykonamy też",
+          "pozycje": [
+            {
+              "nazwa": "WordPress",
+              "opis": "Jeśli wolisz system, który już znasz, zbudujemy stronę w WordPressie i będziemy ją prowadzić: aktualizacje, kopie zapasowe, poprawki."
+            },
+            {
+              "nazwa": "WooCommerce, PrestaShop, Shoper",
+              "opis": "Sklep stawiamy na silniku, który pasuje do asortymentu i sposobu sprzedaży. Wybór omawiamy przed startem, razem z kosztami utrzymania."
+            },
+            {
+              "nazwa": "Twój obecny hosting",
+              "opis": "Strona może stać na hostingu, który już masz, albo na serwerze wskazanym przez Ciebie. Sposób wgrywania dopasowujemy do jego możliwości."
+            },
+            {
+              "nazwa": "Panel do edycji treści",
+              "opis": "Panel dobieramy do wybranego systemu i hostingu, tak żebyś mógł sam zmieniać teksty, zdjęcia i wpisy."
+            }
+          ]
+        }
       ]
     },
     {
       "id": "panel",
       "naglowek": "Panel do edycji treści: zmienisz tekst i zdjęcia sam",
       "akapity": [
-        "Strona dostaje panel pod adresem /admin/. Zmieniasz w nim teksty, zdjęcia, wpisy na blogu i dane firmy, bez pisania kodu i bez dzwonienia do nas.",
+        "Panel do edycji treści stoi pod adresem /admin/ Twojej strony. Zmieniasz w nim teksty, zdjęcia, wpisy na blogu i dane firmy, bez pisania kodu i bez dzwonienia do nas.",
         "Mamy dwa rodzaje panelu. Panel Sveltia zapisuje zmiany w repozytorium strony, a strona przebudowuje się sama w ciągu kilku minut; tak działa ta strona i strona Nadi Home. Panel w PHP stoi na hostingu i logujesz się do niego hasłem, bez konta na GitHubie; taki panel ma Studio Agat.",
         "Wyczyszczone pole przywraca napis domyślny, więc strona nie zostanie bez nagłówka. Każda zmiana z panelu jest w repozytorium osobnym wpisem, który da się cofnąć. Jak wygląda praca w panelu, pokazujemy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/)."
       ]
@@ -78,7 +126,7 @@
       "id": "widocznosc",
       "naglowek": "Widoczność w Google od pierwszego dnia",
       "akapity": [
-        "Stronę publikujemy z tytułami i opisami pisanymi pod to, czego szukają Twoi klienci, z mapą strony, adresami kanonicznymi i danymi firmy w danych strukturalnych. Po publikacji zgłaszamy ją w Google Search Console oraz w Bing przez IndexNow.",
+        "Widoczność w Google zaczyna się w dniu publikacji: stronę wypuszczamy z tytułami i opisami pisanymi pod to, czego szukają Twoi klienci, z mapą strony, adresami kanonicznymi i danymi firmy w danych strukturalnych. Po publikacji zgłaszamy ją w Google Search Console oraz w Bing przez IndexNow.",
         "Jeśli firma ma wizytówkę w Google, ustawiamy w niej adres strony, a na stronie te same dane: nazwę, adres i telefon. Wpisy w profilu mogą prowadzić prosto do podstron usług.",
         "Strony dostają też plik llms.txt i katalog dla asystentów AI. Dzięki temu w kategorii przeglądania agentowego PageSpeed Insights nasze realizacje przechodzą 4 z 4 testów.",
         "Pozycji w wynikach Google nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console. Tym zajmujemy się w ramach [prowadzenia strony po publikacji](/prowadzenie-strony-internetowej/)."
@@ -102,31 +150,37 @@
     }
   ],
   "procesNaglowek": "Jak wygląda tworzenie strony internetowej krok po kroku",
-  "procesLead": "Każda strona przechodzi przez te same sześć etapów, od pierwszej rozmowy do opieki po publikacji.",
+  "procesLead": "Tworzenie strony internetowej przechodzi u nas przez sześć etapów, od pierwszej rozmowy do opieki po publikacji. Przy każdym piszemy, co robimy my, a co Ty.",
   "proces": [
     {
       "nazwa": "Zakres",
-      "opis": "Ustalamy, co strona ma robić: jakie usługi pokazuje, czy przyjmuje zapytania, czy sprzedaje. Z tego wynika wybór hostingu i panelu. Na tym etapie podajemy wycenę i termin."
+      "opis": "Ustalamy, co strona ma robić: jakie usługi pokazuje, czy przyjmuje zapytania, czy sprzedaje. Z tego wynika wybór hostingu i panelu. Na tym etapie podajemy wycenę i termin.",
+      "ty": "Mówisz, co robi firma, kto jest Twoim klientem i czego oczekujesz od strony."
     },
     {
       "nazwa": "Treść i zdjęcia",
-      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Brakujące teksty piszemy z Twoich informacji. Na stronę trafiają prawdziwe zdjęcia realizacji, Twoje albo z banku zdjęć."
+      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Brakujące teksty piszemy z Twoich informacji. Na stronę trafiają prawdziwe zdjęcia realizacji, Twoje albo z banku zdjęć.",
+      "ty": "Przekazujesz opis usług, zdjęcia, logo i dane firmy albo wskazujesz obecną stronę, z której je bierzemy."
     },
     {
       "nazwa": "Budowa pod adresem roboczym",
-      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zgłaszasz uwagi i dopiero gotowa wersja zastępuje obecną."
+      "opis": "Budujemy nową stronę obok starej, pod osobnym adresem. Obecna strona działa przez cały czas budowy, a gotowa wersja zastępuje ją dopiero po Twojej akceptacji.",
+      "ty": "Oglądasz stronę pod adresem roboczym na telefonie i komputerze i zgłaszasz uwagi."
     },
     {
       "nazwa": "Kontrola przed publikacją",
-      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting."
+      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie na hosting.",
+      "ty": "Akceptujesz gotową wersję. Do publikacji idzie dopiero strona bez błędów w bramce."
     },
     {
       "nazwa": "Przepięcie domeny",
-      "opis": "Przełączamy domenę na nową stronę, stare adresy przekierowujemy na nowe, a pocztę sprawdzamy listem testowym w obie strony."
+      "opis": "Przełączamy domenę na nową stronę, stare adresy przekierowujemy na nowe, a pocztę sprawdzamy listem testowym w obie strony.",
+      "ty": "Dajesz dostęp do domeny albo do strefy DNS. Sprawdzasz po przepięciu, czy poczta dochodzi."
     },
     {
       "nazwa": "Utrzymanie",
-      "opis": "Po publikacji mierzymy szybkość, pilnujemy Search Console i wprowadzamy zmiany. Każda zmiana jest od razu publikowana i sprawdzana na żywej stronie."
+      "opis": "Po publikacji mierzymy szybkość, pilnujemy Search Console i wprowadzamy zmiany. Każda zmiana jest od razu publikowana i sprawdzana na żywej stronie.",
+      "ty": "Zmieniasz treść sam w panelu albo zlecasz zmianę nam. Decydujesz, co poprawiamy dalej."
     }
   ],
   "wideo": "",
@@ -140,14 +194,6 @@
     {
       "pytanie": "Ile kosztuje strona internetowa dla firmy?",
       "odpowiedz": "To zależy od liczby podstron, formularzy, panelu i tego, czy piszemy teksty. Orientacyjne kwoty netto podajemy w cenniku, a zakres swojej strony policzysz w kalkulatorze i dołączysz do zapytania."
-    },
-    {
-      "pytanie": "Czy mogę zmieniać treść sam?",
-      "odpowiedz": "Tak. Strona dostaje panel pod adresem /admin/, w którym zmieniasz teksty, zdjęcia, wpisy i dane firmy. Jeśli wolisz nie zakładać konta na GitHubie, robimy panel w PHP z logowaniem hasłem."
-    },
-    {
-      "pytanie": "Gdzie będzie stała strona?",
-      "odpowiedz": "Strona z formularzem, sprzedażą albo rezerwacjami stoi na hostingu lh.pl, w osobnej przestrzeni. Wizytówka bez sprzedaży może stać bezpłatnie na GitHub Pages. Domena zostaje u Twojego rejestratora."
     },
     {
       "pytanie": "Czy przeniesiecie moją stronę z WordPressa?",
@@ -167,9 +213,71 @@
   "przyciskKontakt": "Zapytaj o wycenę strony",
   "zobaczTezNaglowek": "Zobacz też",
   "zobaczTez": [
-    { "adres": "/sklepy-internetowe-warszawa/", "tekst": "Tworzenie sklepów internetowych" },
-    { "adres": "/strona-wizytowka/", "tekst": "Strona wizytówka dla firmy" },
-    { "adres": "/prowadzenie-strony-internetowej/", "tekst": "Prowadzenie strony po publikacji" },
-    { "adres": "/faq/", "tekst": "Pytania o strony i sklepy internetowe" }
-  ]
+    {
+      "adres": "/sklepy-internetowe-warszawa/",
+      "tekst": "Tworzenie sklepów internetowych"
+    },
+    {
+      "adres": "/strona-wizytowka/",
+      "tekst": "Strona wizytówka dla firmy"
+    },
+    {
+      "adres": "/prowadzenie-strony-internetowej/",
+      "tekst": "Prowadzenie strony po publikacji"
+    },
+    {
+      "adres": "/faq/",
+      "tekst": "Pytania o strony i sklepy internetowe"
+    }
+  ],
+  "faktCenaPodpis": "netto za stronę wizytówkę",
+  "faktTrzeci": {
+    "liczba": "Panel",
+    "podpis": "do edycji treści w cenie strony"
+  },
+  "coDostajeszEtykieta": "W cenie",
+  "gotowoscAi": {
+    "naglowek": "Czy Twoja strona jest gotowa na asystentów AI: 5 pytań",
+    "akapity": [
+      "Gotowość strony na asystentów AI sprawdzisz pięcioma pytaniami. Przy czterech z nich jest link do naszego darmowego testu."
+    ],
+    "pytania": [
+      {
+        "pytanie": "Czy strona ma jeden adres i odpowiada kodem 200?",
+        "opis": "Wersje z www i bez, z ukośnikiem na końcu i bez, mają prowadzić jednym przekierowaniem na ten sam adres kanoniczny. Asystent, który trafi na pętlę przekierowań albo błąd, odpuszcza stronę.",
+        "narzedzie": "seo-techniczne"
+      },
+      {
+        "pytanie": "Czy tekst da się przeczytać bez skryptów?",
+        "opis": "Część robotów pobiera sam HTML i nie uruchamia JavaScriptu. Oferta, ceny i dane kontaktowe muszą być w kodzie strony od razu, a nie doładowywane skryptem.",
+        "narzedzie": "wyszukiwanie-agentowe-ai"
+      },
+      {
+        "pytanie": "Czy nazwa, adres i telefon w danych strukturalnych zgadzają się z wizytówką Google?",
+        "opis": "Te same dane firmy w danych strukturalnych, w stopce i w Profilu Firmy w Google pozwalają połączyć stronę z firmą bez zgadywania.",
+        "narzedzie": "seo-techniczne"
+      },
+      {
+        "pytanie": "Czy każda sekcja zaczyna się od odpowiedzi?",
+        "opis": "Pierwsze zdanie pod nagłówkiem ma odpowiadać na pytanie z nagłówka i nazywać rzecz pełną nazwą. Taki fragment da się wyjąć ze strony i zacytować bez reszty tekstu."
+      },
+      {
+        "pytanie": "Czy formularz da się wypełnić z klawiatury i ma etykiety pól?",
+        "opis": "Agent w przeglądarce, tak jak osoba z czytnikiem ekranu, rozpoznaje pole po etykiecie i przechodzi po formularzu klawiszem Tab. Pole bez etykiety jest dla niego puste.",
+        "narzedzie": "dostepnosc"
+      }
+    ],
+    "akapityPo": [
+      "Co z tego naprawdę działa, a co jest tylko zapowiedzią, opisujemy we wpisie [wyszukiwanie agentowe: co zmienia w stronach i sklepach](/blog/wyszukiwanie-agentowe-strony-i-sklepy/)."
+    ]
+  },
+  "nieObiecujemy": {
+    "etykieta": "Uczciwie",
+    "naglowek": "Nie obiecujemy miejsca w Google. Obiecujemy to, co da się zmierzyć.",
+    "akapity": [
+      "Czego nie obiecujemy: miejsca w wynikach Google ani w odpowiedziach ChatGPT, bo o nich decyduje wyszukiwarka i asystent, a nie wykonawca strony. Nie podajemy też „wyniku widoczności w AI”, dopóki nie ma metody, którą każdy może powtórzyć.",
+      "Na stronach nie używamy zdjęć wygenerowanych przez AI. Obiecujemy to, co sprawdzisz sam: szybkość w PageSpeed Insights, dostępność dla osób z czytnikiem ekranu i poprawne dane strukturalne."
+    ]
+  },
+  "procesEtykieta": "Krok po kroku"
 }

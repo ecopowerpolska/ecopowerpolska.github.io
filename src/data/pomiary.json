@@ -2,22 +2,22 @@
   "_opis": "Wyniki PageSpeed Insights realizacji (scripts/psi-realizacje.py, docs/POMIARY.md). Plik generowany — nie edytować ręcznie, nie jest w panelu CMS.",
   "pomiary": {
     "https://studioagat.pl/": {
-      "data": "2026-10-27",
+      "data": "2026-11-06",
       "mobile": {
-        "wydajnosc": 99,
+        "wydajnosc": 100,
         "dostepnosc": 100,
         "sprawdzoneMetody": 100,
         "seo": 100,
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 948,
-        "lcp": 1801,
+        "fcp": 926,
+        "lcp": 1351,
         "tbt": 0,
-        "cls": 0,
-        "si": 2324,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "cls": 0.052,
+        "si": 926,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
       "desktop": {
         "wydajnosc": 100,
@@ -27,33 +27,40 @@
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 335,
-        "lcp": 441,
+        "fcp": 268,
+        "lcp": 362,
         "tbt": 0,
         "cls": 0,
-        "si": 477,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "si": 439,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
-      "teren": "brak"
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 100,
+          "komputer": 100
+        }
+      ]
     },
     "https://nadihome.pl/": {
-      "data": "2026-10-27",
+      "data": "2026-11-06",
       "mobile": {
-        "wydajnosc": 97,
+        "wydajnosc": 100,
         "dostepnosc": 100,
         "sprawdzoneMetody": 100,
         "seo": 100,
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 930,
-        "lcp": 2181,
+        "fcp": 932,
+        "lcp": 932,
         "tbt": 0,
         "cls": 0,
-        "si": 3835,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "si": 932,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
       "desktop": {
         "wydajnosc": 100,
@@ -63,18 +70,25 @@
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 301,
-        "lcp": 361,
+        "fcp": 275,
+        "lcp": 526,
         "tbt": 0,
-        "cls": 0,
-        "si": 393,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "cls": 0.001,
+        "si": 412,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
-      "teren": "brak"
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 100,
+          "komputer": 100
+        }
+      ]
     },
     "https://pan-stolarz.pl/": {
-      "data": "2026-10-27",
+      "data": "2026-11-06",
       "mobile": {
         "wydajnosc": 99,
         "dostepnosc": 100,
@@ -83,13 +97,13 @@
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 990,
-        "lcp": 1501,
+        "fcp": 985,
+        "lcp": 985,
         "tbt": 0,
         "cls": 0,
-        "si": 3594,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "si": 3667,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
       "desktop": {
         "wydajnosc": 100,
@@ -99,33 +113,40 @@
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 267,
-        "lcp": 361,
+        "fcp": 268,
+        "lcp": 321,
         "tbt": 0,
         "cls": 0,
-        "si": 267,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "si": 268,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
-      "teren": "brak"
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 99,
+          "komputer": 100
+        }
+      ]
     },
     "https://kuchnia-na-wymiar-warszawa.pl/": {
-      "data": "2026-10-27",
+      "data": "2026-11-06",
       "mobile": {
-        "wydajnosc": 99,
+        "wydajnosc": 100,
         "dostepnosc": 100,
         "sprawdzoneMetody": 100,
         "seo": 100,
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 999,
-        "lcp": 1501,
-        "tbt": 0,
+        "fcp": 1061,
+        "lcp": 1362,
+        "tbt": 11,
         "cls": 0,
-        "si": 3625,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "si": 1221,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
       "desktop": {
         "wydajnosc": 100,
@@ -135,18 +156,25 @@
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 340,
-        "lcp": 361,
-        "tbt": 0,
-        "cls": 0,
-        "si": 364,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "fcp": 367,
+        "lcp": 430,
+        "tbt": 6,
+        "cls": 0.003,
+        "si": 609,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
-      "teren": "brak"
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 100,
+          "komputer": 100
+        }
+      ]
     },
     "https://szafy-na-wymiar-warszawa.pl/": {
-      "data": "2026-10-27",
+      "data": "2026-11-06",
       "mobile": {
         "wydajnosc": 100,
         "dostepnosc": 100,
@@ -155,13 +183,99 @@
         "przegladanieAgentowe": 100,
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
-        "fcp": 943,
-        "lcp": 1501,
+        "fcp": 936,
+        "lcp": 936,
         "tbt": 0,
         "cls": 0,
-        "si": 943,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "si": 936,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
+      },
+      "desktop": {
+        "wydajnosc": 100,
+        "dostepnosc": 100,
+        "sprawdzoneMetody": 100,
+        "seo": 100,
+        "przegladanieAgentowe": 100,
+        "agentoweZdane": 4,
+        "agentoweWszystkie": 4,
+        "fcp": 294,
+        "lcp": 329,
+        "tbt": 0,
+        "cls": 0,
+        "si": 312,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
+      },
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 100,
+          "komputer": 100
+        }
+      ]
+    },
+    "https://garderoba-na-wymiar-warszawa.pl/": {
+      "data": "2026-11-06",
+      "mobile": {
+        "wydajnosc": 100,
+        "dostepnosc": 100,
+        "sprawdzoneMetody": 100,
+        "seo": 100,
+        "przegladanieAgentowe": 100,
+        "agentoweZdane": 4,
+        "agentoweWszystkie": 4,
+        "fcp": 945,
+        "lcp": 1351,
+        "tbt": 0,
+        "cls": 0,
+        "si": 945,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
+      },
+      "desktop": {
+        "wydajnosc": 100,
+        "dostepnosc": 100,
+        "sprawdzoneMetody": 100,
+        "seo": 100,
+        "przegladanieAgentowe": 100,
+        "agentoweZdane": 4,
+        "agentoweWszystkie": 4,
+        "fcp": 269,
+        "lcp": 321,
+        "tbt": 0,
+        "cls": 0,
+        "si": 269,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
+      },
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 100,
+          "komputer": 100
+        }
+      ]
+    },
+    "https://panwylewka.pl/": {
+      "data": "2026-11-06",
+      "mobile": {
+        "wydajnosc": 96,
+        "dostepnosc": 100,
+        "sprawdzoneMetody": 100,
+        "seo": 100,
+        "przegladanieAgentowe": 98,
+        "agentoweZdane": 4,
+        "agentoweWszystkie": 4,
+        "fcp": 944,
+        "lcp": 2401,
+        "tbt": 0,
+        "cls": 0,
+        "si": 3583,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
       "desktop": {
         "wydajnosc": 100,
@@ -172,86 +286,21 @@
         "agentoweZdane": 4,
         "agentoweWszystkie": 4,
         "fcp": 270,
-        "lcp": 361,
+        "lcp": 442,
         "tbt": 0,
-        "cls": 0,
-        "si": 270,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
+        "cls": 0.001,
+        "si": 356,
+        "lighthouse": "13.6.0",
+        "data": "2026-11-06"
       },
-      "teren": "brak"
-    },
-    "https://garderoba-na-wymiar-warszawa.pl/": {
-      "data": "2026-10-27",
-      "mobile": {
-        "wydajnosc": 100,
-        "dostepnosc": 100,
-        "sprawdzoneMetody": 100,
-        "seo": 100,
-        "przegladanieAgentowe": 100,
-        "agentoweZdane": 4,
-        "agentoweWszystkie": 4,
-        "fcp": 967,
-        "lcp": 1502,
-        "tbt": 0,
-        "cls": 0,
-        "si": 2145,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
-      },
-      "desktop": {
-        "wydajnosc": 100,
-        "dostepnosc": 100,
-        "sprawdzoneMetody": 100,
-        "seo": 100,
-        "przegladanieAgentowe": 100,
-        "agentoweZdane": 4,
-        "agentoweWszystkie": 4,
-        "fcp": 301,
-        "lcp": 401,
-        "tbt": 0,
-        "cls": 0,
-        "si": 384,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
-      },
-      "teren": "brak"
-    },
-    "https://panwylewka.pl/": {
-      "data": "2026-10-27",
-      "mobile": {
-        "wydajnosc": 99,
-        "dostepnosc": 100,
-        "sprawdzoneMetody": 100,
-        "seo": 100,
-        "przegladanieAgentowe": 100,
-        "agentoweZdane": 4,
-        "agentoweWszystkie": 4,
-        "fcp": 924,
-        "lcp": 1951,
-        "tbt": 0,
-        "cls": 0.004,
-        "si": 924,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
-      },
-      "desktop": {
-        "wydajnosc": 100,
-        "dostepnosc": 100,
-        "sprawdzoneMetody": 100,
-        "seo": 100,
-        "przegladanieAgentowe": 100,
-        "agentoweZdane": 4,
-        "agentoweWszystkie": 4,
-        "fcp": 278,
-        "lcp": 422,
-        "tbt": 0,
-        "cls": 0.006,
-        "si": 461,
-        "lighthouse": "13.5.0",
-        "data": "2026-10-27"
-      },
-      "teren": "brak"
+      "teren": "brak",
+      "historia": [
+        {
+          "data": "2026-11-06",
+          "telefon": 96,
+          "komputer": 100
+        }
+      ]
     }
   }
 }

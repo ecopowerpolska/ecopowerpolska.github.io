@@ -1,0 +1,28 @@
+---
+// Ż5 CzytaTeraz — "W tej chwili czyta N osób". Liczbę daje api.ecopowerpolska.pl/obecni.php; przeglądarka
+// odzywa się co 60 s losowym id trzymanym tylko w pamięci karty (bez ciasteczek, bez Web Storage, bez IP).
+// Bez JS zostaje zdanie o tym, jak liczymy. Co dokładnie jest zapisywane: docs/ZYWE.md §Ż5.
+---
+
+<p class="czyta" data-obecni>
+  <span class="czyta__liczba" data-obecni-tekst>Liczymy tylko, ile osób czyta stronę w tej chwili</span>{' '}
+  <span class="czyta__nota">— bez ciasteczek i bez adresów IP.</span>
+</p>
+<script is:inline src="/zywe/obecni.js" defer></script>
+<!-- is:inline: plik z public/ (stały adres), defer. -->
+
+<style>
+  .czyta {
+    min-height: 1.5rem;
+    margin: 0;
+    font-size: var(--t-xs);
+  }
+
+  .czyta__liczba {
+    font-weight: 600;
+  }
+
+  .czyta__nota {
+    color: inherit;
+  }
+</style>

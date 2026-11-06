@@ -59,11 +59,11 @@ const obraz = obrazOg || domyslnyOg;
     <meta name="theme-color" content="#f4f5f1" />
 
     {/* Fonts API (Astro 6+, wbudowane) — NIGDY @fontsource, NIGDY <link> do Google
-        Fonts (AG013/AG028). Rodziny zadeklarowane w astro.config.mjs (`fonts: [...]`);
-        `preload` na obu, bo obie są używane nad foldem (nagłówek serifem, reszta
-        paska i hero groteskiem) — żadna nie jest opcjonalna dla pierwszego malowania. */}
-    <Font cssVariable="--font-display" preload />
-    <Font cssVariable="--font-sans" preload />
+        Fonts (AG013/AG028). Rodziny w astro.config.mjs (`fonts: [...]`). Preload tylko wag
+        nad zgięciem: 400 (tekst), 600 (menu, przyciski), 700 (H1). Szeryf stoi wyłącznie
+        w akapitach wpisu bloga (D30) — bez preloadu, zapas metryczny trzyma układ. */}
+    <Font cssVariable="--font-sans" preload={[{ weight: 400 }, { weight: 600 }, { weight: 700 }]} />
+    <Font cssVariable="--font-szeryf" />
 
     {/* Ikona zakładki: sam kwadrat EP z logo firmowego, wycięty z pliku Piotra
         (wybór Piotra 2026-09-07). Na jasnym kaflu w kolorze tła strony, nie na

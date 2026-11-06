@@ -7,7 +7,9 @@
   "menuFaq": "FAQ",
   "menuBlog": "Blog",
   "menuTest": "Test szybkości",
+  "menuTesty": "Darmowe testy",
   "menuKontakt": "Kontakt",
+  "menuWycena": "Wycena",
   "stronaGlowna": "Strona główna",
   "tytulKarty": "Blog o stronach i sklepach internetowych — EcoPower Polska",
   "opisWyszukiwarki": "Wpisy EcoPower Polska o budowie stron i sklepów internetowych dla firm: wybór drogi, czas budowy, panel treści, hosting i widoczność w Google.",
@@ -30,5 +32,25 @@
   "wezwanieTekst": "Opisz w kilku zdaniach, co ma powstać. Orientacyjną cenę policzysz sam w kalkulatorze.",
   "wezwanieGuzik": "Zapytaj o stronę",
   "wezwanieCena": "Policz cenę",
-  "czytajTakze": "Czytaj także"
+  "czytajTakze": "Czytaj także",
+  "odCzegoZaczac": {
+    "naglowek": "Od czego zacząć",
+    "sciezki": [
+      {
+        "tytul": "Planujesz pierwszą stronę",
+        "wpisy": [
+          "strona-czy-sklep-internetowy-od-czego-zaczac",
+          "ile-kosztuje-strona-i-sklep-internetowy",
+          "ile-trwa-budowa-strony-i-co-dostajesz"
+        ]
+      },
+      {
+        "tytul": "Masz już stronę",
+        "wpisy": [
+          "core-web-vitals-po-polsku",
+          "prawne-aspekty-strony-internetowej-zgody-regulaminy"
+        ]
+      }
+    ]
+  }
 }

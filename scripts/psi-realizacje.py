@@ -7,7 +7,16 @@ src/components/Realizacje.astro. Plik NIE jest w panelu CMS — odświeża go ty
 Uruchomienie (z katalogu strony; klucz wyłącznie w zmiennej środowiska, nigdy w pliku):
   KEY=$(bash /home/ecopower/projekty/test-claude/potwor/scripts/klucze-dostepne.sh pagespeed-z440) \
     python3 -I scripts/psi-realizacje.py
-Opcje: --adres <url> (tylko ten adres; reszta pliku bez zmian), --proby N (domyślnie 2).
+Opcje: --adres <url> (tylko ten adres; reszta pliku bez zmian), --proby N (domyślnie 2),
+  --sucho (mierzy i wypisuje, nic nie zapisuje), --bez-commita (zapisuje plik, bez commita i pusha).
+Bez tych dwóch flag (tryb cronu, /home/ecopower/projekty/WWW/narzedzia/psi-realizacje/uruchom.sh): po zapisie commit
+samego pomiary.json komunikatem "Pomiar PSI realizacji <data>" i push na main (tożsamość i poświadczenie z .git/config
+repo, bez tokenu w skrypcie). Gdy w drzewie są zmiany w innych śledzonych plikach albo gałąź nie jest main — plik się
+zapisuje, ale commit i push są pomijane (kod 3), żeby nie wciągnąć cudzej pracy.
+
+Historia (od 2026-11-06): każdy adres ma `historia: [{data, telefon, komputer}]` = wydajność mobile/desktop z danego
+dnia, najstarszy pierwszy, najwyżej HISTORIA_MAKS wpisów; drugi pomiar tego samego dnia zastępuje wpis dnia.
+Czyta ją src/components/zywe/WykresPsi.astro. Pomiary idą SZEREGOWO z odstępem 10 s (równoległe PSI dają timeouty).
 
 Co mierzy (API v5, Lighthouse po stronie Google), osobno telefon (mobile) i komputer (desktop):
   · pięć kategorii: performance, accessibility, best-practices, seo, agentic-browsing — wynik 0–100 = score × 100;
@@ -20,10 +29,10 @@ Błąd pomiaru po N próbach: dla tej strategii zostaje poprzedni wynik z pliku 
 go nie ma — null (kafelek pokazuje wtedy „pomiar w toku”).
 """
 
-import concurrent.futures
 import datetime
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.error
@@ -52,6 +61,46 @@ METRYKI = {
 }
 STRATEGIE = ('mobile', 'desktop')
 WARSZAWA = ZoneInfo('Europe/Warsaw')
+ODSTEP_S = 10
+HISTORIA_MAKS = 60
+PLIK_W_REPO = 'src/data/pomiary.json'
+
+
+def git(*argumenty: str, sprawdz: bool = True) -> subprocess.CompletedProcess:
+    return subprocess.run(['git', '-C', str(KATALOG), *argumenty], capture_output=True, text=True, check=sprawdz)
+
+
+def repo_gotowe() -> str:
+    """Pusty napis = można commitować; inaczej powód pominięcia commita."""
+    if git('rev-parse', '--abbrev-ref', 'HEAD').stdout.strip() != 'main':
+        return 'gałąź inna niż main'
+    obce = [w[3:] for w in git('status', '--porcelain', '--untracked-files=no').stdout.splitlines() if w[3:] != PLIK_W_REPO]
+    return f'zmiany w innych plikach: {", ".join(obce[:5])}' if obce else ''
+
+
+def opublikuj(data: str) -> int:
+    git('add', PLIK_W_REPO)
+    if git('diff', '--cached', '--quiet', '--', PLIK_W_REPO, sprawdz=False).returncode == 0:
+        print('pomiary.json bez zmian — commit pominięty')
+        return 0
+    git('commit', '--quiet', '-m', f'Pomiar PSI realizacji {data}', '--', PLIK_W_REPO)
+    if git('push', '--quiet', 'origin', 'main', sprawdz=False).returncode != 0:
+        # Ktoś wypchnął w międzyczasie: drzewo czyste poza naszym commitem, więc rebase jest bezpieczny.
+        git('pull', '--rebase', '--quiet', 'origin', 'main')
+        git('push', '--quiet', 'origin', 'main')
+    print(f'commit i push: {git("rev-parse", "--short", "HEAD").stdout.strip()} Pomiar PSI realizacji {data}')
+    return 0
+
+
+def dopisz_historie(stara: list, data: str, mobile: dict | None, desktop: dict | None) -> list:
+    wpis = {'data': data,
+            'telefon': (mobile or {}).get('wydajnosc'),
+            'komputer': (desktop or {}).get('wydajnosc')}
+    historia = [h for h in (stara or []) if isinstance(h, dict) and h.get('data') != data]
+    if wpis['telefon'] is not None or wpis['komputer'] is not None:
+        historia.append(wpis)
+    historia.sort(key=lambda h: h.get('data') or '')
+    return historia[-HISTORIA_MAKS:]
 
 
 def zapytaj(adres: str, strategia: str, klucz: str) -> dict:
@@ -125,6 +174,15 @@ def main() -> int:
     argumenty = sys.argv[1:]
     proby = int(argumenty[argumenty.index('--proby') + 1]) if '--proby' in argumenty else 2
     tylko = argumenty[argumenty.index('--adres') + 1] if '--adres' in argumenty else None
+    sucho = '--sucho' in argumenty
+    commit = not sucho and '--bez-commita' not in argumenty
+    powod = ''
+    if commit:
+        powod = repo_gotowe()
+        if not powod:
+            # Najpierw dogonić origin (tylko przewinięcie), żeby commit pomiaru nie rozjechał historii.
+            if git('pull', '--ff-only', '--quiet', 'origin', 'main', sprawdz=False).returncode != 0:
+                powod = 'git pull --ff-only nie przeszedł'
 
     serwisy = json.loads(SERWISY.read_text(encoding='utf-8'))
     lista = serwisy['serwisy'] if isinstance(serwisy, dict) else serwisy
@@ -139,8 +197,11 @@ def main() -> int:
     stare_pomiary = stare.get('pomiary', {})
 
     zadania = [(a, s) for a in adresy for s in STRATEGIE]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pula:
-        wyniki = dict(zip(zadania, pula.map(lambda z: zmierz(z[0], z[1], klucz, proby), zadania)))
+    wyniki = {}
+    for i, (a, s) in enumerate(zadania):
+        if i:
+            time.sleep(ODSTEP_S)
+        wyniki[(a, s)] = zmierz(a, s, klucz, proby)
 
     nowe = {} if not tylko else {a: v for a, v in stare_pomiary.items() if a in
                                  [s['adres'] for s in lista if not s.get('ukryty')]}
@@ -156,7 +217,11 @@ def main() -> int:
                 if s == 'mobile' or teren == 'brak':
                     teren = r[1]
         daty = [wpis[s]['data'] for s in STRATEGIE if wpis.get(s)]
-        nowe[adres] = {'data': min(daty) if daty else None, **wpis, 'teren': teren}
+        dzien = datetime.datetime.now(WARSZAWA).date().isoformat()
+        swieze = {s: (wyniki[(adres, s)] or (None,))[0] for s in STRATEGIE}
+        historia = dopisz_historie((stare_pomiary.get(adres) or {}).get('historia', []), dzien,
+                                   swieze['mobile'], swieze['desktop'])
+        nowe[adres] = {'data': min(daty) if daty else None, **wpis, 'teren': teren, 'historia': historia}
         m, d = wpis.get('mobile') or {}, wpis.get('desktop') or {}
         skrot = lambda x: ' '.join(str(x.get(n, '–')) for n in KATEGORIE.values()) if x else 'brak pomiaru'
         print(f'{adres}  telefon: {skrot(m)}  |  komputer: {skrot(d)}  |  teren: {teren}')
@@ -166,9 +231,18 @@ def main() -> int:
                  'Plik generowany — nie edytować ręcznie, nie jest w panelu CMS.',
         'pomiary': nowe,
     }
+    kod = 0 if all(wyniki.values()) else 1
+    if sucho:
+        print(f'--sucho: nic nie zapisano ({len(nowe)} adresów; historia np. {next(iter(nowe.values()), {}).get("historia", [])[-2:]})')
+        return kod
     POMIARY.write_text(json.dumps(wynik, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'zapisano {POMIARY.relative_to(KATALOG)}: {len(nowe)} adresów')
-    return 0 if all(wyniki.values()) else 1
+    if not commit:
+        return kod
+    if powod:
+        print(f'commit i push pominięte: {powod}', file=sys.stderr)
+        return 3
+    return opublikuj(datetime.datetime.now(WARSZAWA).date().isoformat()) or kod
 
 
 if __name__ == '__main__':

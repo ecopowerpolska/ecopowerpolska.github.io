@@ -1,10 +1,11 @@
-# MAPA-STRONY — trasa → plik → komponenty → dane (stan 2026-10-30, po rundzie 9)
+# MAPA-STRONY — trasa → plik → komponenty → dane (stan 2026-11-06, faza 2)
 
 Cel: następne zlecenia czytają ten plik zamiast całego repo. Teksty widoczne na stronie idą przez
 `tekst(klucz, 'domyślny')` (`src/lib/tekst.ts`), dane w `src/data/*.json`, edycja w panelu `/admin/`
 (`public/admin/config.yml` jest lustrem tych plików: nowe pole w JSON = nowe pole w configu, inaczej zapis
 z panelu je skasuje). Kontener treści: `--szerokosc-tresci` (76 rem); układ i tokeny: `src/styles/motyw.css`,
-decyzje: `docs/DECYZJE-WIZUALNE.md` (D22, D23).
+decyzje: `docs/DECYZJE-WIZUALNE.md` (D22, D23, D26–D37). Klasy wspólne (`.guzik`, `.karta`, `.pas`, `.etykieta`, `.liczba`, `.siatka-3` …)
+definiuje WYŁĄCZNIE `motyw.css` (D26–D37, kontrakt fazy 2).
 
 ## Trasy
 
@@ -29,10 +30,14 @@ decyzje: `docs/DECYZJE-WIZUALNE.md` (D22, D23).
 | `/regulamin/` | `regulamin.astro` | — | `regulamin.json`, `firma.json` | spis części + treść w kolumnach CSS (24 rem), punkty a)–e) | 0 |
 | `/polityka-prywatnosci/` | `polityka-prywatnosci.astro` | — | `polityka.json` (`sekcje[]`: `akapity`, `lista`, `szeroka`, `tabela`), `firma.json` | spis 4/2/1, treść w kolumnach, tabela cookie `column-span:all`, na telefonie karty | 0 |
 | 4 strony usług | `strony-internetowe-warszawa`, `sklepy-internetowe-warszawa`, `strona-wizytowka`, `prowadzenie-strony-internetowej` `.astro` | — | `src/data/uslugi/<trasa>.json`, `cena.json` (`{od: pozycja}` = klucz nazwy pozycji cennika — nie zmieniać nazw pozycji), `pomiary.json` | szkielet `.usluga__*` (D19) | 0 |
+| `/autor/piotr-czwarnowski/` | `src/pages/autor/piotr-czwarnowski.astro` | `PodpisAutora` | `autor.json` | strona autora; JSON-LD `Person` z `@id` `…/autor/piotr-czwarnowski/#osoba` (na nią wskazuje `Organization.founder`) | — |
+| `/slownik/` | `src/pages/slownik.astro` | `Slownik` | `slownik.json` | pojęcia stron, sklepów, szybkości i Google | — |
+| `/jak-mierzymy/` | `src/pages/jak-mierzymy.astro` | — | `jak-mierzymy.json` | metoda pomiarów pokazywanych na stronie | — |
+| `/prawo-strony-internetowej/` | `src/pages/prawo-strony-internetowej.astro` | — | `prawo.json` | hub prawny (D37) | — |
 | `/404.html` | `404.astro` | — | `strona-404.json` | — | 1,5 kB |
 
 Wspólne dla wszystkich tras: `src/layouts/Bazowy.astro` (head, `Zgoda`, `Ujawnianie`, skip-link), `PasekMarki` (logo + menu, sticky,
-8 pozycji, hamburger < 53 rem), `Stopka` (menu 2 wiersze, „Usługi”, `Tlumacz`, dane spółki z guzikami kopiowania, wiersz „Sąd rejestrowy / Kapitał zakładowy” z `firma.json` `sad`, `kapital` (KSH art. 206 § 1), prawa zastrzeżone). `Bazowy` daje każdej stronie `og:image` = `public/og-ecopower-polska.png` (1200×630, logo na tle motywu); wpis bloga podaje własny.
+8 pozycji z „Wycena” jako przycisk — D35, hamburger < 53 rem), `Stopka` (ciemna, 4 kolumny: Oferta | Narzędzia i blog | Strony, które prowadzimy | Dane spółki — D36; dolny wiersz z dokumentami i `Tlumacz`, dane spółki z guzikami kopiowania, wiersz „Sąd rejestrowy / Kapitał zakładowy” z `firma.json` `sad`, `kapital` (KSH art. 206 § 1), prawa zastrzeżone). `Bazowy` daje każdej stronie `og:image` = `public/og-ecopower-polska.png` (1200×630, logo na tle motywu); wpis bloga podaje własny.
 
 ## Mechanizmy wspólne
 

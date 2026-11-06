@@ -1,0 +1,101 @@
+{
+  "tytulKarty": "Prawo strony internetowej: regulamin, polityka prywatności, zgody — EcoPower Polska",
+  "opisWyszukiwarki": "Jakie dokumenty potrzebuje strona firmowa i sklep: regulamin, polityka prywatności, zgoda na cookies. Tabela dla wizytówki, strony z formularzem i sklepu, darmowe generatory i wpisy z podstawą prawną.",
+  "okruszek": "Prawo strony",
+  "etykieta": "Prawo na stronie",
+  "naglowek": "Prawo strony internetowej: regulamin, polityka prywatności i zgody",
+  "lead": "Na tej stronie sprawdzisz, które dokumenty potrzebuje Twoja strona albo sklep, przygotujesz je w darmowych generatorach i doczytasz przepisy we wpisach, w których każdy obowiązek ma podstawę prawną.",
+  "wSkrocieEtykieta": "W skrócie",
+  "wSkrocie": "Każda strona firmowa podaje dane firmy. Gdy zbiera dane osobowe, a wystarczy do tego formularz kontaktowy, potrzebuje też polityki prywatności. Regulamin, zgoda na cookies i obowiązki wobec konsumenta zależą od tego, co strona robi: przyjmuje zapytania, zapisuje na newsletter czy sprzedaje.",
+  "narzedziaNaglowek": "Przygotuj dokumenty i sprawdź stronę",
+  "narzedzia": [
+    {
+      "tytul": "Generator regulaminu serwisu",
+      "tekst": "Podajesz NIP, a my pobieramy dane firmy z rejestru i składamy regulamin świadczenia usług drogą elektroniczną do pobrania.",
+      "adres": "/generator-regulaminu/",
+      "guzik": "Przygotuj regulamin"
+    },
+    {
+      "tytul": "Generator polityki prywatności",
+      "tekst": "Podajesz NIP i zaznaczasz narzędzia na stronie, a my składamy wzór polityki prywatności opartej na RODO, z opisem plików cookie.",
+      "adres": "/generator-polityki-prywatnosci/",
+      "guzik": "Przygotuj politykę"
+    },
+    {
+      "tytul": "Test: prawo na stronie",
+      "tekst": "Sprawdzamy, czy Twoja strona ma politykę prywatności, zgodę na cookies, regulamin i dane firmy, i czy analityka nie rusza przed zgodą.",
+      "adres": "/narzedzia/prawo-na-stronie/",
+      "guzik": "Sprawdź stronę"
+    }
+  ],
+  "wpisyNaglowek": "Przepisy z podstawą prawną",
+  "wpisy": [
+    {
+      "wpis": "prawne-aspekty-strony-internetowej-zgody-regulaminy",
+      "tekst": "Co musi mieć strona firmowa i sklep: dane firmy, zgody, regulaminy i obowiązki wobec konsumenta, w tabelach z podstawą prawną i z listą kontrolną."
+    },
+    {
+      "wpis": "polityka-prywatnosci-2027-co-sie-zmieni",
+      "tekst": "Co już obowiązuje, a co jest tylko projektem: ciasteczka według Prawa komunikacji elektronicznej, dostępność sklepów, czat z AI i Digital Omnibus."
+    }
+  ],
+  "nieMylNaglowek": "Nie myl",
+  "nieMyl": [
+    {
+      "tytul": "Regulamin to nie polityka prywatności",
+      "tekst": "Regulamin opisuje zasady korzystania ze strony i zawierania umów: formularz, konto, zamówienie, zwrot. Polityka prywatności mówi, kto zbiera dane osobowe, po co i komu je przekazuje. Strona z formularzem potrzebuje obu, bo odpowiadają na inne pytania."
+    },
+    {
+      "tytul": "Zgoda na cookies to nie zgoda z RODO",
+      "tekst": "Zgodę na zapis w przeglądarce, na przykład dla analityki, reguluje art. 399 Prawa komunikacji elektronicznej. Odpowiedź na zapytanie z formularza zgody z RODO nie wymaga, bo podstawą są działania przed zawarciem umowy. Jedna nie zastępuje drugiej."
+    },
+    {
+      "tytul": "Pole „zapoznałem się” to nie zgoda",
+      "tekst": "Zaznaczenie, że ktoś przeczytał politykę, potwierdza tylko informację. Zgoda na newsletter albo marketing telefoniczny jest osobna, niezaznaczona z góry i łatwa do wycofania."
+    }
+  ],
+  "tabelaNaglowek": "Który dokument kiedy",
+  "tabelaLead": "Znajdź wiersz, który opisuje Twoją stronę. Kolumny mówią, co jest potrzebne.",
+  "kolumnaMasz": "Masz",
+  "kolumnaRegulamin": "Regulamin",
+  "kolumnaPolityka": "Polityka prywatności",
+  "kolumnaCookies": "Zgoda na cookies",
+  "kolumnaInne": "Do tego",
+  "tabela": [
+    {
+      "masz": "Tylko wizytówkę, bez formularza i analityki",
+      "regulamin": "zwykle nie",
+      "polityka": "krótka, bo dane techniczne zbiera hosting",
+      "cookies": "nie, gdy strona nic nie zapisuje",
+      "inne": "dane firmy"
+    },
+    {
+      "masz": "Stronę z formularzem albo kalkulatorem",
+      "regulamin": "krótki regulamin formularza",
+      "polityka": "tak",
+      "cookies": "zależnie od narzędzi na stronie",
+      "inne": "informacja o danych przy formularzu"
+    },
+    {
+      "masz": "Newsletter, konto albo komentarze",
+      "regulamin": "tak",
+      "polityka": "tak",
+      "cookies": "tak, gdy jest analityka",
+      "inne": "osobna zgoda na marketing"
+    },
+    {
+      "masz": "Sklep internetowy",
+      "regulamin": "tak, regulamin sklepu",
+      "polityka": "tak",
+      "cookies": "tak, gdy jest analityka lub reklamy",
+      "inne": "informacje przed zamówieniem, 14 dni na zwrot, dostępność"
+    }
+  ],
+  "tabelaNota": "To nasza wykładnia przepisów, a nie porada prawna. Ustawa nie mówi wprost, że sam formularz wymaga regulaminu, dlatego szczegóły dla Twojej firmy warto potwierdzić z prawnikiem.",
+  "slownikTekst": "Pojęcia z tej strony wyjaśniamy prostym językiem w słowniku: [RODO](/slownik/#rodo), [polityka prywatności](/slownik/#polityka-prywatnosci), [pliki cookie](/slownik/#pliki-cookie) i [regulamin sklepu](/slownik/#regulamin-sklepu).",
+  "kontaktNaglowek": "Chcesz, żeby ktoś sprawdził to za Ciebie?",
+  "kontaktTekst": "Przy budowie i prowadzeniu strony przygotowujemy jej mechanikę: zgody, formularz z informacją o danych i dokumenty zgodne z tym, co strona naprawdę robi.",
+  "kontaktGuzik": "Napisz do nas",
+  "kontaktAdres": "/kontakt/",
+  "notaEtykieta": "Nasz wniosek"
+}

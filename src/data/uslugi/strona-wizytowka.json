@@ -3,12 +3,12 @@
   "opisWyszukiwarki": "Strona wizytówka dla małej firmy: jedna strona albo kilka podstron, formularz, mapa i wizytówka Google. Co zawiera, ile kosztuje i kiedy wystarczy.",
   "naglowek": "Strona wizytówka dla firmy",
   "okruszek": "Strona wizytówka",
-  "lead": "Strona wizytówka to mała strona firmy: kim jesteś, co robisz, gdzie Cię znaleźć i jak się skontaktować. Budujemy ją w Astro jako gotowe pliki, więc otwiera się szybko także na telefonie. Ta strona też jest wizytówką: w PageSpeed Insights ma 98–99 punktów na telefonie i 100 na komputerze (pomiar z 27 października 2026).",
+  "lead": "Strona wizytówka to mała strona firmy: kim jesteś, co robisz, gdzie Cię znaleźć i jak się skontaktować, z formularzem i danymi firmy dla Google. Robimy ją dla fachowców, małych biur i firm, które startują i potrzebują adresu w sieci, a nie sklepu.",
   "uslugaNazwa": "Strona wizytówka dla firmy",
   "uslugaTyp": "Strona wizytówka",
   "uslugaOpis": "Jedna strona albo 2–3 podstrony z opisem usług, danymi firmy, formularzem kontaktowym i odnośnikiem do mapy. Strona w Astro, bez sprzedaży może stać na GitHub Pages bez opłat za hosting.",
   "cenaOdPozycja": "Wizytówka, strona jednostronicowa",
-  "coDostajeszNaglowek": "Co dostajesz",
+  "coDostajeszNaglowek": "Dostajesz małą stronę, która robi swoje: telefon, adres, formularz.",
   "coDostajesz": [
     "Jedną stronę albo 2–3 podstrony: usługi, informacje o firmie i kontakt.",
     "Formularz kontaktowy, który wysyła wiadomość na Twój adres e-mail. Boty zatrzymuje Cloudflare Turnstile.",
@@ -34,7 +34,7 @@
       "id": "co-zawiera",
       "naglowek": "Co zawiera nasza strona wizytówka",
       "akapity": [
-        "Zakres ustalamy po rozmowie, ale każda wizytówka, którą robimy, ma te same podstawy:"
+        "Strona wizytówka, którą robimy, ma zawsze te same podstawy, a resztę zakresu ustalamy po rozmowie:"
       ],
       "lista": [
         "Nagłówek z nazwą firmy i jednym zdaniem o tym, co robisz i gdzie.",
@@ -56,7 +56,48 @@
         "Jeśli strona ma sprzedawać, przyjmować rezerwacje albo płatności, wizytówka nie wystarczy. Porównanie dróg opisaliśmy we wpisie [strona czy sklep internetowy — od czego zacząć](/blog/strona-czy-sklep-internetowy-od-czego-zaczac/).",
         "Wizytówka nie zamyka drogi. Zbudowana w Astro rozrasta się o kolejne podstrony bez przenoszenia na inny system, więc możesz zacząć od małej strony i dołożyć usługi, gdy firma urośnie."
       ],
-      "lista": []
+      "lista": [],
+      "tabela": {
+        "podpis": "Wizytówka, strona firmowa i sklep: czym się różnią",
+        "kolumny": [
+          "Co porównujemy",
+          "Wizytówka",
+          "Strona firmowa",
+          "Sklep"
+        ],
+        "wiersze": [
+          [
+            "Podstrony",
+            "1–3",
+            "zwykle 5–10",
+            "katalog produktów, koszyk i kasa"
+          ],
+          [
+            "Panel do edycji",
+            "na życzenie, panel treści /admin/",
+            "panel treści /admin/ w cenie",
+            "panel sklepu do produktów i zamówień"
+          ],
+          [
+            "Hosting",
+            "GitHub Pages bez opłat albo lh.pl",
+            "osobna przestrzeń na lh.pl",
+            "lh.pl albo platforma abonamentowa"
+          ],
+          [
+            "Co w cenie",
+            "usługi, dane firmy, formularz, zgłoszenie w Google",
+            "oferta, galeria realizacji, blog, formularz, zgłoszenie w Google",
+            "płatności, dostawy, regulamin, zamówienie testowe"
+          ],
+          [
+            "Cena od",
+            "{od: Wizytówka, strona jednostronicowa} netto",
+            "{od: Strona firmowa} netto",
+            "{od: Sklep WooCommerce} netto"
+          ]
+        ]
+      }
     },
     {
       "id": "ile-kosztuje",
@@ -72,7 +113,7 @@
       "id": "github-pages",
       "naglowek": "Wizytówka bez opłat za hosting na GitHub Pages",
       "akapity": [
-        "Strona, która niczego nie sprzedaje, nie przyjmuje rezerwacji ani płatności, może stać na GitHub Pages. To usługa GitHuba, która publikuje gotowe pliki strony bez opłat za hosting. Tak działa ta strona: www.ecopowerpolska.pl stoi na GitHub Pages.",
+        "GitHub Pages to usługa GitHuba, która publikuje gotowe pliki strony bez opłat za hosting. Może na niej stać strona, która niczego nie sprzedaje, nie przyjmuje rezerwacji ani płatności. Tak działa ta strona: www.ecopowerpolska.pl stoi na GitHub Pages.",
         "Warunek jest jeden i mówimy o nim przed startem: na bezpłatnym planie GitHub Pages publikuje tylko z repozytorium publicznego. Publiczna jest wtedy historia zmian i kod strony, a nie dane z formularza. Te trafiają prosto na Twój adres e-mail.",
         "GitHub Pages nie uruchamia PHP, więc formularz kontaktowy potrzebuje małego skryptu na zwykłym hostingu. Tak działa formularz na naszej stronie kontaktowej: skrypt PHP stoi na hostingu lh.pl i sprawdza każde zgłoszenie przed wysłaniem.",
         "Gdy strona zacznie sprzedawać albo przyjmować rezerwacje, przenosimy ją na hosting lh.pl. Kod zostaje ten sam, zmienia się tylko miejsce publikacji."
@@ -83,7 +124,7 @@
       "id": "wizytowka-google",
       "naglowek": "Strona wizytówka a wizytówka Google",
       "akapity": [
-        "To dwie różne rzeczy o podobnej nazwie. Strona wizytówka to Twoja strona pod Twoim adresem. Wizytówka Google, czyli Profil Firmy w Google, to wpis w Mapach i w wynikach wyszukiwania: nazwa, adres, godziny, zdjęcia i opinie.",
+        "Strona wizytówka i wizytówka Google to dwie różne rzeczy o podobnej nazwie. Strona wizytówka to Twoja strona pod Twoim adresem. Wizytówka Google, czyli Profil Firmy w Google, to wpis w Mapach i w wynikach wyszukiwania: nazwa, adres, godziny, zdjęcia i opinie.",
         "Najlepiej działają razem. W profilu ustawiamy adres strony, a na stronie te same dane: nazwę, adres i telefon, w stopce, w kontakcie i w danych strukturalnych. Klient z Map trafia wtedy od razu na właściwą stronę, a Google widzi, że dane w obu miejscach się zgadzają.",
         "Profil Firmy uzupełniamy w ramach [prowadzenia strony po publikacji](/prowadzenie-strony-internetowej/): kategorie, usługi, obszar działania, zdjęcia i wpisy z linkiem do strony. Weryfikację profilu przechodzi właściciel firmy, a właścicielem profilu zostajesz Ty."
       ],
@@ -91,7 +132,7 @@
     }
   ],
   "przykladyNaglowek": "Przykłady stron wizytówek z wynikami PageSpeed",
-  "przykladyLead": "Pierwszym przykładem jest strona, którą właśnie czytasz: 98–99 punktów wydajności na telefonie i 100 na komputerze. Niżej trzy małe strony jednej usługi, które zrobiliśmy dla firm z Warszawy tą samą metodą. Mają więcej podstron niż wizytówka, ale pokazują, jak szybka jest taka strona. Wyniki to pomiar PageSpeed Insights, a każdy może je sprawdzić sam: [sprawdź szybkość swojej strony](/jak-sprawdzic-szybkosc-strony/).",
+  "przykladyLead": "Pierwszym przykładem jest strona, którą właśnie czytasz. Niżej trzy małe strony jednej usługi, które zrobiliśmy dla firm z Warszawy tą samą metodą. Mają więcej podstron niż wizytówka, ale pokazują, jak szybka jest taka strona. Wyniki to pomiar PageSpeed Insights, a każdy może je sprawdzić sam: [sprawdź szybkość swojej strony](/jak-sprawdzic-szybkosc-strony/).",
   "przyklady": [
     {
       "adres": "https://garderoba-na-wymiar-warszawa.pl/",
@@ -106,27 +147,32 @@
       "zdanie": "Kuchnie na wymiar w Warszawie. Kalkulator ceny netto i z VAT, galeria realizacji i formularz z załącznikami."
     }
   ],
-  "procesNaglowek": "Jak pracujemy",
+  "procesNaglowek": "Jak powstaje strona wizytówka krok po kroku",
   "proces": [
     {
       "nazwa": "Zakres",
-      "opis": "Ustalamy, co ma być na stronie: usługi, obszar działania, dane do kontaktu. Z tego wynika, czy wystarczy GitHub Pages, czy strona stanie na hostingu lh.pl."
+      "opis": "Ustalamy, co ma być na stronie: usługi, obszar działania, dane do kontaktu. Z tego wynika, czy wystarczy GitHub Pages, czy strona stanie na hostingu lh.pl.",
+      "ty": "Mówisz, czym zajmuje się firma, gdzie działa i jak klienci mają się kontaktować."
     },
     {
       "nazwa": "Treść i zdjęcia",
-      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Tekst możemy napisać na podstawie rozmowy."
+      "opis": "Teksty i zdjęcia bierzemy od Ciebie albo z obecnej strony. Tekst możemy napisać na podstawie rozmowy.",
+      "ty": "Przekazujesz opis usług, zdjęcia i logo albo opowiadasz o firmie w rozmowie, a tekst piszemy my."
     },
     {
       "nazwa": "Budowa pod adresem roboczym",
-      "opis": "Nowa strona powstaje obok starej. Oglądasz ją pod osobnym adresem, zanim zastąpi obecną."
+      "opis": "Budujemy nową stronę obok starej, pod osobnym adresem. Obecna strona działa przez cały czas budowy, a gotowa wersja zastępuje ją dopiero po Twojej akceptacji.",
+      "ty": "Oglądasz stronę pod adresem roboczym na telefonie i komputerze i zgłaszasz uwagi."
     },
     {
       "nazwa": "Kontrola przed publikacją",
-      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie do publikacji."
+      "opis": "Automatyczna bramka sprawdza tytuły, opisy, mapę strony, dostępność i wagę plików. Strona z błędem nie idzie do publikacji.",
+      "ty": "Akceptujesz gotową wersję. Do publikacji idzie dopiero strona bez błędów w bramce."
     },
     {
       "nazwa": "Publikacja i zgłoszenie w Google",
-      "opis": "Podpinamy domenę tak, żeby poczta działała dalej, zgłaszamy mapę strony w Search Console i mierzymy stronę w PageSpeed Insights."
+      "opis": "Podpinamy domenę tak, żeby poczta działała dalej, zgłaszamy mapę strony w Search Console i mierzymy stronę w PageSpeed Insights.",
+      "ty": "Dajesz dostęp do domeny i sprawdzasz po przepięciu, czy poczta dochodzi."
     }
   ],
   "wideo": "",
@@ -136,18 +182,6 @@
     {
       "pytanie": "Ile trwa zrobienie strony wizytówki?",
       "odpowiedz": "Termin podajemy po rozmowie o zakresie. Najdłużej trwa zwykle zebranie materiałów: tekstów, zdjęć i danych firmy. Stronę publikujemy dopiero wtedy, gdy przejdzie kontrolę szybkości, dostępności i danych dla wyszukiwarek."
-    },
-    {
-      "pytanie": "Czy sam zmienię treść wizytówki?",
-      "odpowiedz": "Tak, jeśli strona dostanie panel treści pod adresem /admin/. Tak edytujemy tę stronę: panel Sveltia zapisuje zmiany w repozytorium, a strona przebudowuje się sama w ciągu kilku minut. Jak to wygląda, opisaliśmy we wpisie [panel treści: jak sam zmienisz tekst i zdjęcia](/blog/panel-tresci-jak-samodzielnie-zmienic-strone/)."
-    },
-    {
-      "pytanie": "Co z domeną i pocztą, które już mam?",
-      "odpowiedz": "Domena zostaje u Twojego rejestratora, a do nowej strony podpinamy ją rekordami DNS. Przed zmianą zapisujemy komplet rekordów jako punkt powrotu i zmieniamy tylko rekordy adresowe strony. Rekordy poczty zostają bez zmian, a pracę kończymy, gdy list testowy dochodzi w obie strony."
-    },
-    {
-      "pytanie": "Czy wizytówka będzie widoczna w Google?",
-      "odpowiedz": "Zgłaszamy ją w Google Search Console i w Bing przez IndexNow, z mapą strony, tytułem, opisem i danymi firmy w danych strukturalnych. Pozycji w wynikach nie obiecujemy. Sprawdzamy je pomiarem fraz i poprawiamy stronę na podstawie danych z Search Console."
     }
   ],
   "cenaNaglowek": "Ile to kosztuje",
@@ -174,5 +208,21 @@
       "adres": "/faq/",
       "tekst": "Pytania o strony i sklepy internetowe"
     }
-  ]
+  ],
+  "faktCenaPodpis": "netto za stronę wizytówkę",
+  "faktTrzeci": {
+    "liczba": "0 zł",
+    "podpis": "za hosting na GitHub Pages, gdy strona nic nie sprzedaje"
+  },
+  "coDostajeszEtykieta": "W cenie",
+  "nieObiecujemy": {
+    "etykieta": "Uczciwie",
+    "naglowek": "Nie obiecujemy miejsca w Google. Obiecujemy to, co da się zmierzyć.",
+    "akapity": [
+      "Czego nie obiecujemy: miejsca w wynikach Google ani w odpowiedziach ChatGPT, bo o nich decyduje wyszukiwarka i asystent, a nie wykonawca strony. Nie podajemy też „wyniku widoczności w AI”, dopóki nie ma metody, którą każdy może powtórzyć.",
+      "Na stronach nie używamy zdjęć wygenerowanych przez AI. Obiecujemy to, co sprawdzisz sam: szybkość w PageSpeed Insights, dostępność dla osób z czytnikiem ekranu i poprawne dane strukturalne."
+    ]
+  },
+  "procesEtykieta": "Krok po kroku",
+  "procesLead": "Strona wizytówka przechodzi u nas przez pięć etapów. Przy każdym piszemy, co robimy my, a co Ty."
 }

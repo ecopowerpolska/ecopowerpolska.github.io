@@ -5,6 +5,7 @@ opisSeo: "Co musi mieć strona firmowa i sklep w Polsce: dane firmy, polityka pr
 dataPublikacji: "2026-10-31T06:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna kuchnia-na-wymiar-warszawa.pl: nagłówek „Kuchnie na wymiar w Warszawie, od pomiaru do montażu”, dwa guziki i zdjęcie białej kuchni z drewnianym blatem"
+autor: "Piotr Czwarnowski"
 szkic: false
 ---
 
@@ -51,7 +52,7 @@ Art. 8 ustawy o świadczeniu usług drogą elektroniczną każe usługodawcy okr
 | Strona z newsletterem, kontem albo komentarzami | tak, [UŚUDE art. 8](https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20240001513) | tak | tak, gdy jest analityka | osobna zgoda marketingowa; przy komentarzach sprawdź obowiązki z [DSA](https://eur-lex.europa.eu/eli/reg/2022/2065/oj/pol) |
 | Sklep internetowy | tak, regulamin sklepu | tak | tak, gdy jest analityka lub reklamy | informacje przedumowne, zwroty, dostępność |
 
-Kalkulator, który nie zapisuje danych na serwerze, nie zmienia wiersza „wizytówka”; kiedy jego wynik trafia do Ciebie przez formularz, dotyczą go reguły formularza. Nasza strona ma formularz i kalkulator, więc ma też krótki [regulamin serwisu](/regulamin/).
+Kalkulator, który nie zapisuje danych na serwerze, nie zmienia wiersza „wizytówka”; kiedy jego wynik trafia do Ciebie przez formularz, dotyczą go reguły formularza. Nasza strona ma formularz i kalkulator, więc ma też krótki [regulamin serwisu](/regulamin/). Regulamin dla swojej strony przygotujesz w naszym [generatorze regulaminu](/generator-regulaminu/), a politykę prywatności w [generatorze polityki prywatności](/generator-polityki-prywatnosci/); oba są darmowe i pobierają dane firmy z rejestru po numerze NIP.
 
 ## Sklep internetowy: obowiązki wobec konsumenta
 

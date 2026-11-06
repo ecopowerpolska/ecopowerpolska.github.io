@@ -13,6 +13,7 @@ import Zegar from '../components/narzedzia/Zegar.astro';
 import firma from '../data/firma.json';
 import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
+import pomiaryJson from '../data/pomiary.json';
 
 const klucz = (import.meta.env.PUBLIC_PSI_KLUCZ ?? '').trim();
 const naglowek = 'Darmowe narzędzie do sprawdzania szybkości strony';
@@ -44,6 +45,61 @@ const metryki = [
   ['total-blocking-time', 'Blokowanie (TBT)', '200,600'],
   ['cumulative-layout-shift', 'Przesunięcie układu (CLS)', '0.1,0.25'],
   ['speed-index', 'Indeks szybkości (SI)', '3400,5800'],
+];
+
+// Data ostatniego pomiaru realizacji: najnowsze pole `data` w pomiary.json, szukane w głąb (format pliku może dostać historię).
+const daty: string[] = [];
+const zbierzDaty = (v: unknown): void => {
+  if (Array.isArray(v)) v.forEach(zbierzDaty);
+  else if (v && typeof v === 'object')
+    for (const [k, x] of Object.entries(v)) {
+      if (k === 'data' && typeof x === 'string' && /^\d{4}-\d{2}-\d{2}/.test(x)) daty.push(x.slice(0, 10));
+      else zbierzDaty(x);
+    }
+};
+zbierzDaty(pomiaryJson);
+const ostatniPomiar = daty.sort().at(-1);
+const ostatniPomiarSlownie = ostatniPomiar
+  ? new Date(`${ostatniPomiar}T12:00:00Z`).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Warsaw' })
+  : '';
+
+// Tabela decyzyjna „strona jest wolna: od czego zacząć”. Progi = tablica `metryki` wyżej; działania = src/lib/psi-zalecenia.ts.
+const KOLUMNY = ['Objaw', 'Prawdopodobna przyczyna', 'Pierwsze działanie', 'Czym zmierzyć'];
+const decyzje: { objaw: string; przyczyna: string; dzialanie: string; pomiar: string; adres?: string; adresTekst?: string }[] = [
+  {
+    objaw: 'Długo widać pustą, białą kartkę',
+    przyczyna: 'Serwer odpowiada wolno albo skrypty i style wstrzymują wyświetlanie',
+    dzialanie: 'Włącz pamięć podręczną lub CDN; skrypty i style niepotrzebne na starcie ładuj później',
+    pomiar: 'FCP w teście wyżej, dobry wynik do 1,8 s',
+  },
+  {
+    objaw: 'Główne zdjęcie albo nagłówek pojawia się na końcu',
+    przyczyna: 'Ciężkie zdjęcie na górze strony, bez wymiarów i bez pierwszeństwa',
+    dzialanie: 'Zmniejsz i skompresuj zdjęcie (WebP lub AVIF), podaj mu wymiary i ładuj je pierwsze',
+    pomiar: 'LCP w teście wyżej, dobry wynik do 2,5 s; zdjęcia sprawdzi',
+    adres: '/narzedzia/waga-i-media/',
+    adresTekst: 'test wagi strony i zdjęć',
+  },
+  {
+    objaw: 'Treść skacze, przycisk ucieka spod palca',
+    przyczyna: 'Zdjęcia i osadzone elementy bez podanych wymiarów',
+    dzialanie: 'Podaj szerokość i wysokość każdemu zdjęciu i osadzonemu elementowi',
+    pomiar: 'CLS w teście wyżej, dobry wynik do 0,1',
+  },
+  {
+    objaw: 'Strona już się pokazała, ale nie reaguje na dotyk',
+    przyczyna: 'Skrypty zewnętrzne: reklamy, widżety, śledzenie',
+    dzialanie: 'Usuń zbędne skrypty, resztę ładuj po wyświetleniu strony',
+    pomiar: 'TBT w teście wyżej, dobry wynik do 200 ms',
+  },
+  {
+    objaw: 'Test wychodzi dobrze, a klienci mówią, że strona jest wolna',
+    przyczyna: 'Test to jeden symulowany telefon; prawdziwi odwiedzający mają inne urządzenia i sieć',
+    dzialanie: 'Sprawdź, jak strona działa u prawdziwych odwiedzających z ostatnich 28 dni',
+    pomiar: '',
+    adres: '/narzedzia/dane-terenowe-crux/',
+    adresTekst: 'Dane z prawdziwych wizyt (Core Web Vitals)',
+  },
 ];
 
 const daneStrukturalne = {
@@ -189,6 +245,41 @@ const daneStrukturalne = {
       </p>
     </section>
 
+    <aside class="ramka-w-skrocie zrodlo" aria-labelledby="skad-liczby">
+      <h2 id="skad-liczby" class="zrodlo__tytul">Skąd te liczby</h2>
+      <p>
+        Wynik w teście liczy Google PageSpeed Insights w chwili kliknięcia, osobno dla symulowanego telefonu i komputera.
+        To pojedynczy pomiar laboratoryjny, nie dane prawdziwych odwiedzających ani gwarancja pozycji w Google.
+      </p>
+      <p>
+        Nasze realizacje mierzymy tym samym narzędziem, pod zwykłym adresem strony, bez dopisków w adresie omijających
+        pamięć podręczną.{ostatniPomiarSlownie && <> Ostatni pomiar: <time datetime={ostatniPomiar}>{ostatniPomiarSlownie}</time>.</>}{' '}
+        Szczegóły metody opisujemy na stronie <a href="/jak-mierzymy/">jak mierzymy</a>.
+      </p>
+    </aside>
+
+    <section class="decyzje" aria-labelledby="decyzje-tytul">
+      <p class="etykieta decyzje__etykieta">Od czego zacząć</p>
+      <h2 id="decyzje-tytul" class="decyzje__tytul">Strona jest wolna: pięć objawów i pierwsze działanie</h2>
+      <table class="tabela-karty decyzje__tabela">
+        <thead>
+          <tr>{KOLUMNY.map((k) => <th scope="col">{k}</th>)}</tr>
+        </thead>
+        <tbody>
+          {decyzje.map((d) => (
+            <tr>
+              <th scope="row" data-label={KOLUMNY[0]}>{d.objaw}</th>
+              <td data-label={KOLUMNY[1]}>{d.przyczyna}</td>
+              <td data-label={KOLUMNY[2]}>{d.dzialanie}</td>
+              <td data-label={KOLUMNY[3]}>
+                <span>{d.pomiar}{d.pomiar && d.adres && ' '}{d.adres && <a href={d.adres}>{d.adresTekst}</a>}</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
     <div class="tresc">
       <h2>Darmowe narzędzia do sprawdzania strony: szybkość, SEO, dostępność</h2>
       <p>
@@ -206,7 +297,9 @@ const daneStrukturalne = {
       <p>
         Google uznaje 90–100 punktów za wynik dobry, 50–89 za wymagający poprawy, a 0–49 za słaby. Pod wynikami są
         metryki. LCP to czas, po którym widać największy element strony. CLS mówi, czy treść skacze podczas ładowania.
-        TBT pokazuje, jak długo strona nie reaguje na dotyk.
+        TBT pokazuje, jak długo strona nie reaguje na dotyk. Każdą z tych miar objaśniamy na przykładach we wpisie{' '}
+        <a href="/blog/core-web-vitals-po-polsku/">Core Web Vitals po polsku</a>, a pozostałe testy strony, od SEO po
+        pocztę, są w <a href="/darmowe-narzedzia/">darmowych narzędziach</a>.
       </p>
 
       <h2>Dlaczego szybkość ma znaczenie</h2>
@@ -239,7 +332,7 @@ const daneStrukturalne = {
     </div>
   </main>
 
-  <Stopka />
+  <Stopka zywe={false} />
 </Bazowy>
 
 <script>
@@ -561,10 +654,9 @@ const daneStrukturalne = {
     max-width: none;
   }
 
-  /* D22 (2026-10-30): okruszki w kolumnie 44 rem na środku, H1 i wstęp wyśrodkowane; test i poradnik zostają na pełnej szerokości. */
+  /* Okruszki od lewej krawędzi kontenera, jak na /cena/ i /darmowe-narzedzia/ (faza 2, H poz. 20a); H1 i wstęp wyśrodkowane. */
   .okruszki {
-    max-width: 44rem;
-    margin-inline: auto;
+    max-width: none;
   }
 
   .szybkosc__tytul {
@@ -1047,6 +1139,77 @@ const daneStrukturalne = {
     clip-path: inset(50%);
     white-space: nowrap;
     border: 0;
+  }
+
+  /* Ramka „Skąd te liczby” (klasa .ramka-w-skrocie z motyw.css) i tabela decyzyjna (.tabela-karty z motyw.css). */
+  .zrodlo {
+    margin: 0 0 var(--o-12);
+    font-size: var(--t-s);
+  }
+
+  .zrodlo__tytul {
+    font-size: var(--t-m);
+    margin: 0 0 var(--o-2);
+  }
+
+  .zrodlo p {
+    margin: 0 0 var(--o-2);
+  }
+
+  .zrodlo p:last-child {
+    margin-bottom: 0;
+  }
+
+  .zrodlo a,
+  .decyzje a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .decyzje {
+    margin: 0 0 var(--o-16);
+  }
+
+  .decyzje__etykieta,
+  .decyzje__tytul {
+    text-align: center;
+  }
+
+  .decyzje__tytul {
+    margin: var(--o-2) 0 var(--o-6);
+    font-size: var(--t-xl);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .decyzje__tabela {
+    font-size: var(--t-s);
+    line-height: 1.5;
+  }
+
+  .decyzje__tabela thead th {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--tekst-cichy);
+    border-bottom: 2px solid var(--tekst);
+  }
+
+  .decyzje__tabela tbody th {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--t-m);
+  }
+
+  /* Telefon: objaw jest tytułem karty-wiersza (motyw składa td w pary etykieta–treść, th zostawia). */
+  @media (max-width: 40rem) {
+    .decyzje__tabela tbody th {
+      display: block;
+      padding: var(--o-2) 0;
+    }
   }
 
   .tresc h2 {

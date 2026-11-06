@@ -5,7 +5,6 @@ opisSeo: "Jak działa panel treści pod adresem /admin/: co w nim zmienisz, czym
 dataPublikacji: "2026-10-16T11:30:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-nadihome.jpg"
 zdjecieAlt: "Strona główna nadihome.pl: nagłówek „Remonty mieszkań w Warszawie i wykończenia pod klucz” obok zdjęcia układania płytek"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

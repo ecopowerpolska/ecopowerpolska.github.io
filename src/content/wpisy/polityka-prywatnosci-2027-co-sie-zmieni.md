@@ -5,7 +5,6 @@ opisSeo: "Digital Omnibus, ciasteczka, AI Act, dostępność i NIS2: co już obo
 dataPublikacji: "2026-10-30T00:30:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: menu z numerem telefonu, nagłówek „Meble na wymiar w Warszawie” i zdjęcie kuchni w drewnie obok dwóch guzików"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

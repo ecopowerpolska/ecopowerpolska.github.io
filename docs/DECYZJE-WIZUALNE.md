@@ -380,7 +380,7 @@ D16 (pozycje menu), D23 (strona główna, stopka) i D25 (wejście do narzędzi) 
   pracujemy (01–06) → Darmowe testy (3 kafle + „wszystkie 12”) → Kto robi Twoją stronę → Z bloga → FAQ → pas zamykający →
   Kontakt (dane spółki skrócone) → stopka. „Co dostajesz” i „Dlaczego Astro i jaki hosting” przechodzą na `/strony-internetowe-warszawa/`.
 - **D28 — Licznik liczb w pasku dowodu:** raz, ok. 1 s, przy `prefers-reduced-motion` od razu wartość; ≤ 0,6 kB JS.
-- **D29 — Własne firmy** pokazujemy jako realizacje, własności nie ujawniamy; na stronie autora „strony, które zbudowałem”.
+- **D29 — Własne firmy** pokazujemy jako realizacje, własności nie ujawniamy.
 - **D30 — Krój i skala nagłówków:** H1–H3 w IBM Plex Sans 700 (`--font-display` w `motyw.css` = alias `--font-sans`);
   Source Serif 4 (`--font-szeryf`, wagi 400/600, bez preloadu) wyłącznie w akapitach i listach treści wpisu
   (`.wpis__tresc :is(p, li, blockquote)`). H1 `--t-display: clamp(2.75rem, 1.6rem + 4.6vw, 6rem)`, `-0.03em`, `line-height 1.02`;
@@ -401,7 +401,8 @@ D16 (pozycje menu), D23 (strona główna, stopka) i D25 (wejście do narzędzi) 
 - **D36 — Stopka:** ciemna (D31), kolumny Oferta | Narzędzia i blog | Strony, które prowadzimy | Dane spółki; dolny wiersz Strona główna ·
   Regulamin · Polityka prywatności · Ustawienia cookie · Język strony; telefon „537 318 316” z odstępami w widoku, w schowku bez odstępów,
   e-mail i adres www małymi literami; guziki „skopiuj” zostają (D4). Nazwa „EcoPower Polska Sp. z o.o.” (D14).
-- **D37 — Hub prawny** `/prawo-strony-internetowej/` powstaje (razem ze `/slownik/`, `/jak-mierzymy/` i stroną autora `/autor/piotr-czwarnowski/`).
+- **D37 — Hub prawny** `/prawo-strony-internetowej/` powstaje (razem ze `/slownik/` i `/jak-mierzymy/`).
+- ⛔ **UNIEWAŻNIONE 2026-11-06 (Piotr: „Skoro nie umiesz tego zrobić dobrze, to usuń”):** strona autora `/autor/piotr-czwarnowski/` (była częścią D37 i D29) usunięta wraz z biogramem, `src/data/autor.json`, linkiem „Więcej o nas”, zdjęciem i imieniem w podpisach oraz `Person`/`founder` w JSON-LD. Podpis i `author` wpisów = „EcoPower Polska”.
 
 Kontrakt klas wspólnych (`motyw.css`, jedyne miejsce definicji): `.guzik`, `.guzik--drugi`, `.guzik--na-ciemnym` (tekst `#030c08`,
 4,63:1 — `#06130d` dawał 4,44:1), `.karta`, `.karta--link` (uniesienie 2 px + cień, 150 ms, wyłączone przy ograniczeniu ruchu),

@@ -5,7 +5,6 @@ opisSeo: "Co musi mieć strona wizytówka firmy: oferta, kontakt, formularz, pra
 dataPublikacji: "2026-10-27T12:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna szafy-na-wymiar-warszawa.pl: granatowy pas z tytułem „Szafy na wymiar w Warszawie”, mosiężny guzik pomiaru i zdjęcie sypialni z szafą"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

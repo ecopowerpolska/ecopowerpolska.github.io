@@ -5,7 +5,6 @@ opisSeo: "Co mierzą LCP, INP i CLS, jakie wyniki Google uznaje za dobre i jak w
 dataPublikacji: "2026-10-29T16:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-panwylewka.jpg"
 zdjecieAlt: "Strona główna panwylewka.pl: logo Pan Wylewka, pomarańczowy guzik z numerem telefonu i napis „Wylewki betonowe Warszawa i okolice” na ciemnym zdjęciu"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

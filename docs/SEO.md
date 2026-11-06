@@ -9,14 +9,13 @@ wpisy wcześniejsze opisuje plan SEO.
 | strona | zapytanie główne (wyszukań/mies.) | odmiany w treści | title |
 |---|---|---|---|
 | `/blog/wyszukiwanie-agentowe-strony-i-sklepy` (wpis 2026-11-05, informacyjna; aktualizacje 2026-11-05: trzy cele, metodologia; 2026-11-06: trzy progi, query fan-out, etykiety dowodu) | wyszukiwanie agentowe (NIE ZMIERZONO — Planer/Ads API nie pytane) | agent AI na stronie, przeglądanie agentowe PageSpeed, llms.txt, Content-Signal, agentic commerce / UCP / ACP, query fan-out | Wyszukiwanie agentowe a strony i sklepy internetowe |
-| `/autor/piotr-czwarnowski/` (2026-11-06, strona autora) | Piotr Czwarnowski (nawigacyjna, marka osobista) | strony w Astro, PageSpeed realizacji | Piotr Czwarnowski — strony i sklepy internetowe w Astro, Warszawa |
 
 ## 2. Briefy
 
 ### 2a. Wpis `/blog/wyszukiwanie-agentowe-strony-i-sklepy` (2026-11-05)
 
-Intencja informacyjna, czytelnik: właściciel strony albo sklepu. Autor: Piotr Czwarnowski (pierwsza osoba, podpis i zdjęcie
-autora pod tekstem). H1 „Wyszukiwanie agentowe: asystent AI sam działa na Twojej stronie i w sklepie”. H2: czym jest (agent
+Intencja informacyjna, czytelnik: właściciel strony albo sklepu. Autor: „EcoPower Polska” (pierwsza osoba liczby mnogiej,
+bez zdjęcia i imienia autora). H1 „Wyszukiwanie agentowe: asystent AI sam działa na Twojej stronie i w sklepie”. H2: czym jest (agent
 wykonuje zadanie) · jak agent czyta stronę (drzewo dostępności, HTML, JSON-LD, llms.txt, robots.txt i Content-Signal, Agent
 Readiness, ruch botów) · pomiary czterech naszych stron (para przed/po studioagat.pl, PSI 4/4, sygnały `curl`) · 8 rzeczy do
 zrobienia · sklepy: UCP, ACP i token płatności · FAQ (4 × H3) · od czego zacząć; 19 źródeł na końcu. Ok. 2 400 słów,
@@ -25,10 +24,7 @@ zrobienia · sklepy: UCP, ACP i token płatności · FAQ (4 × H3) · od czego z
 
 ### 2b. Szablon wpisu i autor (2026-11-06, faza 2)
 
-- **Autor:** wszystkie 11 wpisów mają `autor: Piotr Czwarnowski`. Linia meta pokazuje imię z miniaturą 40 px i link do
-  `/autor/piotr-czwarnowski/`; `BlogPosting.author` = `{"@id": "https://www.ecopowerpolska.pl/autor/piotr-czwarnowski/#osoba"}`
-  (ten sam `@id` co `Person` na stronie autora, `ProfilePage`). Na końcu wpisu `PodpisAutora.astro` (pomijany, gdy treść ma już
-  zdjęcie autora). `sameAs` puste do czasu profili od Piotra.
+- **Autor:** strona autora usunięta 2026-11-06 (decyzja Piotra). Linia meta i `PodpisAutora.astro` pokazują „EcoPower Polska” (bez osoby, zdjęcia i linku); `BlogPosting.author` = `{"@type":"Organization","@id":"https://www.ecopowerpolska.pl/#organizacja"}`. Pole `autor` we frontmatterze wpisów usunięte.
 - **Pola opcjonalne wpisu** (`src/content.config.ts`): `wJednymZdaniu` (ramka pod H1; trafia do `description`, gdy `opisSeo` puste),
   `dataAktualizacji` (`dateModified` i dopisek „aktualizacja: …”), `zTegoWpisu` (akapit „Z tego wpisu dowiesz się…”, tylko wpis
   > 1000 słów; puste = pierwsze trzy H2), `wTwojejFirmie` (`pytanie`, `odpowiedz`, `krok`, `krokAdres`; ramka na końcu).

@@ -5,7 +5,6 @@ opisSeo: "Trzy cele wyszukiwania agentowego: widoczność w AI Search, obsługa 
 dataPublikacji: "2026-11-05T12:45:00+01:00"
 zdjecie: "../../assets/blog/wyszukiwanie-agentowe-asystent-ai.jpg"
 zdjecieAlt: "Osoba trzyma telefon z otwartym asystentem AI, na ekranie widać napis „AI”"
-autor: "Piotr Czwarnowski"
 wJednymZdaniu: "Na start wystarczą zwykłe SEO, dostępny HTML i dane strukturalne zgodne z treścią, a pliki dla agentów i protokoły zakupowe wdrażasz dopiero wtedy, gdy masz konkretny powód."
 dataAktualizacji: "2026-11-06"
 wTwojejFirmie:

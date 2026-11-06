@@ -5,7 +5,6 @@ opisSeo: "Co musi mieć strona firmowa i sklep w Polsce: dane firmy, polityka pr
 dataPublikacji: "2026-10-31T06:00:00+01:00"
 zdjecie: "../../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg"
 zdjecieAlt: "Strona główna kuchnia-na-wymiar-warszawa.pl: nagłówek „Kuchnie na wymiar w Warszawie, od pomiaru do montażu”, dwa guziki i zdjęcie białej kuchni z drewnianym blatem"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

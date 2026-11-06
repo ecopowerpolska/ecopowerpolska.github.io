@@ -19,7 +19,6 @@
 // stronach z `provider` = `@id` organizacji), pozostałe pozycje sekcji „Czym się zajmujemy” jako `Service` bez adresu.
 // 2026-11-06 (faza 2): JEDEN blok z `@graph` i stałymi `@id` (`#organizacja`, `#witryna`, `#oferta`, `#realizacje`);
 // bramka F1 czyta obiekty z @graph (obiekty_jsonld), więc LocalBusiness nie musi już stać osobno.
-// `founder` wskazuje osobę ze strony autora (`/autor/piotr-czwarnowski/#osoba`, ten sam @id definiuje tamta strona).
 // Realizacje: każda pozycja listy to `WebSite` z `creator` = organizacja.
 // CZEGO TU NIE MA: `subOrganization` na realizacje (to nie spółki zależne), `aggregateRating`/`review`
 // (opinii o sobie nie oznaczamy), `priceRange` (forma do decyzji) i `geo` (współrzędne niezmierzone).
@@ -56,8 +55,6 @@ const STRONY_USLUG = [
 ];
 // Pozycje oferty, które w całości SĄ stroną usługi (nie powtarzamy ich jako osobnej usługi bez adresu).
 const POZYCJE_ZE_STRONA = new Set(['strony firmowe', 'sklepy internetowe']);
-
-const idOsoby = `${baza}/autor/piotr-czwarnowski/#osoba`;
 
 const firmaLd = {
   '@type': ['Organization', 'LocalBusiness'],
@@ -104,7 +101,6 @@ const firmaLd = {
     'pozycjonowanie stron w Google',
   ],
   sameAs: ['https://github.com/ecopowerpolska'],
-  founder: { '@id': idOsoby },
   hasOfferCatalog: { '@id': idOferty },
 };
 

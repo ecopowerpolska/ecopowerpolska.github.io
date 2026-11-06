@@ -5,7 +5,6 @@ opisSeo: "WooCommerce, PrestaShop, Shoper i IdoSell albo szybki sklep w Astro: d
 dataPublikacji: "2026-10-20T15:00:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie”, przycisk „Sprawdź cenę kuchni, szafy albo garderoby” i zdjęcie kuchni w drewnie"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

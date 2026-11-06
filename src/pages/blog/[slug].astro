@@ -12,8 +12,6 @@ import PodpisAutora from '../../components/PodpisAutora.astro';
 // Schemat i Lejek: wpis w Markdownie wstawia ich HTML ręcznie (bez MDX); import wnosi ich style globalne na stronę wpisu.
 import Schemat from '../../components/Schemat.astro';
 import Lejek from '../../components/Lejek.astro';
-import autorDane from '../../data/autor.json';
-import zdjecieAutora from '../../assets/blog/autor-piotr-czwarnowski.jpg';
 import teksty from '../../data/blog.json';
 import firma from '../../data/firma.json';
 import { tekst } from '../../lib/tekst';
@@ -59,9 +57,7 @@ const slowa = (wpis.body ?? '')
   .filter((w) => /[\p{L}\d]/u.test(w)).length;
 const minuty = Math.max(1, Math.round(slowa / 200));
 
-// Autor-osoba z autor.json: miniatura w linii meta, podpis na końcu, BlogPosting.author = @id strony autora.
-const autorOsoba = dane.autor === autorDane.imie;
-const idOsoby = `${baza}${autorDane.adres}#osoba`;
+// Autor wpisu = firma (podpis „EcoPower Polska” bez osoby, bez linku; BlogPosting.author = Organization).
 // Wpis z ręcznie wstawionym zdjęciem autora w treści nie dostaje drugiego podpisu.
 const podpisWTresci = /autor-piotr-czwarnowski\.jpg/.test(wpis.body ?? '');
 const zaktualizowano = dane.dataAktualizacji?.toISOString();
@@ -115,11 +111,7 @@ const daneStrukturalne = {
       inLanguage: 'pl-PL',
       mainEntityOfPage: adres,
       image: obrazAdres,
-      author: autorOsoba
-        ? { '@type': 'Person', '@id': idOsoby, name: dane.autor, url: `${baza}${autorDane.adres}` }
-        : dane.autor
-          ? { '@type': 'Person', name: dane.autor }
-          : { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
+      author: { '@type': 'Organization', '@id': `${baza}/#organizacja` },
       publisher: { '@type': 'Organization', '@id': `${baza}/#organizacja`, name: firma.nazwaKrotka },
       isPartOf: { '@type': 'Blog', '@id': `${baza}/blog/#blog` },
     },
@@ -156,16 +148,7 @@ const daneStrukturalne = {
     <article>
       <h1 class="wpis__tytul">{dane.tytul}</h1>
       <p class="wpis__data">
-        {
-          autorOsoba ? (
-            <a class="wpis__autor" href={autorDane.adres}>
-              <Image class="wpis__autor-zdjecie" src={zdjecieAutora} alt="" width={40} height={40} densities={[1, 2]} loading="eager" decoding="async" />
-              {dane.autor}
-            </a>
-          ) : (
-            <span>{dane.autor ?? firma.nazwaKrotka}</span>
-          )
-        }
+        <span class="wpis__autor">{firma.nazwaKrotka}</span>
         <span class="wpis__data-reszta">
           <time datetime={opublikowano}>{dataPoPolsku(dane.dataPublikacji!)}</time>
           {dane.dataAktualizacji && (
@@ -231,7 +214,7 @@ const daneStrukturalne = {
               )}
             </aside>
           )}
-          {autorOsoba && !podpisWTresci && <PodpisAutora />}
+          {!podpisWTresci && <PodpisAutora />}
         </div>
 
         <p class="wpis__udostepnij">
@@ -385,7 +368,7 @@ const daneStrukturalne = {
     text-align: center;
   }
 
-  /* Linia meta: autor z miniaturą 40 px + data, aktualizacja, czas czytania; na środku pod H1. */
+  /* Linia meta: autor (firma) + data, aktualizacja, czas czytania; na środku pod H1. */
   .wpis__data {
     display: flex;
     flex-wrap: wrap;
@@ -399,28 +382,8 @@ const daneStrukturalne = {
   }
 
   .wpis__autor {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--o-2);
-    min-height: 44px;
     font-weight: 600;
     color: var(--tekst);
-    text-decoration: underline;
-    text-decoration-color: var(--linia);
-    text-underline-offset: 3px;
-  }
-
-  .wpis__autor:hover {
-    color: var(--akcent);
-  }
-
-  /* Miniatura kwadratowa w ramce (bez kółka — reguła zdjęć). */
-  .wpis__autor-zdjecie {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border: 1px solid var(--linia);
-    border-radius: var(--promien-maly);
   }
 
   .wpis__zdanie {

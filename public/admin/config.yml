@@ -323,12 +323,6 @@ collections:
         required: false
         hint: "Opisz, co widać na zdjęciu."
 
-      - name: autor
-        label: "Autor (osoba)"
-        widget: string
-        required: false
-        hint: "Imię i nazwisko autora. »Piotr Czwarnowski« = miniatura, podpis i link do strony autora; puste = firma."
-
       - name: wJednymZdaniu
         label: "W jednym zdaniu (opcjonalnie)"
         widget: text
@@ -716,7 +710,6 @@ collections:
           - { name: autorNaglowek, label: "Kto robi stronę: nagłówek", widget: string, required: false }
           - { name: autorTekst, label: "Kto robi stronę: tekst (l. mnoga)", widget: text, required: false }
           - { name: autorPodpis, label: "Kto robi stronę: podpis", widget: string, required: false }
-          - { name: autorLink, label: "Kto robi stronę: napis odnośnika do strony autora", widget: string, required: false }
           - { name: autorZdjecieAlt, label: "Kto robi stronę: opis zdjęcia (alt)", widget: string, required: false }
           - { name: zamkniecieNaglowek, label: "Pas zamykający: nagłówek", widget: string, required: false }
           - { name: zamkniecieGuzik, label: "Pas zamykający: napis przycisku (cennik)", widget: string, required: false }
@@ -821,7 +814,6 @@ collections:
           - { name: pierwszaLista, label: "Nad formularzem: co napisać (punkty)", widget: list, field: { name: punkt, label: "Punkt", widget: string }, required: false }
           - { name: pierwszaUwaga, label: "Nad formularzem: uwaga o hasłach", widget: text, required: false }
           - { name: podpis, label: "Podpis pod wskazówkami", widget: string, required: false, hint: "Puste pole = podpis znika." }
-          - { name: podpisAdres, label: "Adres linku podpisu", widget: string, required: false }
           - { name: podpisZdanie, label: "Podpis: zdanie w liczbie mnogiej", widget: string, required: false }
           - { name: formularzNota, label: "Nota o adresie, na który trafiają wiadomości z formularza", widget: text, required: false }
           - { name: pasujemyNaglowek, label: "„Pasujemy, gdy…”: nagłówek", widget: string, required: false }
@@ -1454,47 +1446,6 @@ collections:
           - { name: kontaktGuzik, label: "Kontakt: napis guzika", widget: string, required: false }
           - { name: kontaktAdres, label: "Kontakt: adres guzika", widget: string, required: false }
           - { name: notaEtykieta, label: "Pigułka przy nocie pod tabelą", widget: string, required: false }
-
-      # ---- strona autora ----
-      - name: autor
-        label: "Strona autora (Piotr Czwarnowski)"
-        file: "src/data/autor.json"
-        fields:
-          - { name: imie, label: "Imię i nazwisko (musi się zgadzać z polem Autor we wpisach)", widget: string }
-          - { name: adres, label: "Adres strony autora (nie zmieniać)", widget: string }
-          - { name: tytulKarty, label: "Tytuł karty", widget: string }
-          - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text }
-          - { name: zdjecieAlt, label: "Opis zdjęcia", widget: string }
-          - { name: naglowek, label: "Nagłówek H1", widget: string }
-          - { name: podtytul, label: "Etykieta nad nagłówkiem", widget: string }
-          - { name: wstep, label: "Wstęp (zdania)", widget: list, field: { name: zdanie, label: "Zdanie", widget: string } }
-          - { name: podpis, label: "Zdanie pod wpisami (podpis autora)", widget: string }
-          - { name: linkPodpisu, label: "Tekst linku w podpisie", widget: string }
-          - { name: jakPracujeNaglowek, label: "Nagłówek „Jak pracuję”", widget: string }
-          - name: jakPracuje
-            label: "Jak pracuję"
-            widget: list
-            fields:
-              - { name: tytul, label: "Tytuł", widget: string }
-              - { name: tekst, label: "Tekst", widget: text }
-          - { name: realizacjeNaglowek, label: "Nagłówek tabeli stron", widget: string }
-          - { name: realizacjeMetoda, label: "Zdanie o metodzie", widget: text }
-          - { name: realizacjeMetodaLink, label: "Tekst linku do metody", widget: string }
-          - { name: realizacjeMetodaAdres, label: "Adres metody", widget: string }
-          - { name: podpisNazwa, label: "Podpis pod wpisami: nazwa (np. EcoPower Polska)", widget: string, required: false }
-          - { name: sprawdzNaglowek, label: "Nagłówek „Sprawdź, zanim zapytasz”", widget: string }
-          - name: sprawdz
-            label: "Twierdzenia i dowody"
-            widget: list
-            fields:
-              - { name: twierdzenie, label: "Twierdzenie", widget: string }
-              - { name: dowod, label: "Dowód ({krs} i {nip} podstawia strona)", widget: text }
-              - { name: link, label: "Tekst linku", widget: string, required: false }
-              - { name: adres, label: "Adres linku", widget: string, required: false }
-          - { name: wpisyNaglowek, label: "Nagłówek listy wpisów", widget: string }
-          - { name: guzik, label: "Tekst guzika", widget: string }
-          - { name: knowsAbout, label: "Dziedziny (dane dla Google)", widget: list }
-          - { name: sameAs, label: "Profile zewnętrzne (adresy)", widget: list, required: false }
 
   # Kolekcja „Usługi” (runda 5, W1): 4 strony usług, ten sam zestaw pól (kotwica YAML &pola_uslugi).
   # W2 dopisuje dwa pliki z `fields: *pola_uslugi`. Tekst akapitów: [kotwica](/trasa/) = link, {od: Nazwa pozycji z cennika} = kwota z cennika.

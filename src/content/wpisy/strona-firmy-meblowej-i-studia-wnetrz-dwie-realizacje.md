@@ -5,7 +5,6 @@ opisSeo: "Dwie nasze realizacje: Pan Stolarz od zera i Studio Agat przeniesione 
 dataPublikacji: "2026-10-23T09:30:00+02:00"
 zdjecie: "../../assets/serwisy/zrzut-pan-stolarz.jpg"
 zdjecieAlt: "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie i przycisk sprawdzenia ceny"
-autor: "Piotr Czwarnowski"
 szkic: false
 ---
 

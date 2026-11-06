@@ -216,7 +216,7 @@ const liczby = ([
         <Image
           class="autor__zdjecie"
           src={zdjecieAutora}
-          alt={napis('autorZdjecieAlt', 'Piotr Czwarnowski')}
+          alt={napis('autorZdjecieAlt', '')}
           width={480}
           densities={[1, 2]}
           format="webp"
@@ -227,9 +227,6 @@ const liczby = ([
           <h2 id="autor-tytul">{napis('autorNaglowek', 'Mała firma, krótsza droga: piszesz bezpośrednio do osoby, która buduje Twoją stronę.')}</h2>
           <p>{napis('autorTekst', 'Każdą stronę budujemy tak, żeby jej właściciel widział wynik w liczbach: po publikacji mierzymy ją w PageSpeed Insights i pokazujemy wynik. Dobieramy osobę do strony. Zakres, poprawki i publikację ustalasz bezpośrednio z nią.')}</p>
           <p class="autor__podpis">{napis('autorPodpis', 'EcoPower Polska')}</p>
-          <p class="autor__link">
-            <a href="/autor/piotr-czwarnowski/">{napis('autorLink', 'Więcej o nas')}<span aria-hidden="true"> →</span></a>
-          </p>
         </div>
       </div>
     </section>
@@ -399,8 +396,7 @@ const liczby = ([
     text-align: center;
   }
 
-  .sekcja-dalej a,
-  .autor__link a {
+  .sekcja-dalej a {
     display: inline-flex;
     align-items: center;
     min-height: var(--cel-dotyku);
@@ -484,10 +480,6 @@ const liczby = ([
 
   .autor__podpis {
     font-weight: 600;
-  }
-
-  .autor__tekst .autor__link {
-    margin-top: var(--o-2);
   }
 
   /* Pas zamykający: H2 na środku, przycisk na ciemnym + link. */

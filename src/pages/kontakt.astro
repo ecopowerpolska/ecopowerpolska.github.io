@@ -5,8 +5,6 @@ import Bazowy from '../layouts/Bazowy.astro';
 import PasekMarki from '../components/PasekMarki.astro';
 import Stopka from '../components/Stopka.astro';
 import Formularz from '../components/Formularz.astro';
-import { Image } from 'astro:assets';
-import fotoAutora from '../assets/blog/autor-piotr-czwarnowski.jpg';
 import k from '../data/kontakt.json';
 import firma from '../data/firma.json';
 import blog from '../data/blog.json';
@@ -87,14 +85,7 @@ const daneStrukturalne = {
         {k.pierwszaUwaga && <p class="zanim__uwaga">{k.pierwszaUwaga}</p>}
         {k.formularzNota && <p>{k.formularzNota}</p>}
         {k.podpisZdanie && <p>{k.podpisZdanie}</p>}
-        {k.podpis && (
-          <p class="podpis">
-            <a href={tekst(k.podpisAdres, '/autor/piotr-czwarnowski/')}>
-              <Image src={fotoAutora} alt="" width={40} height={40} densities={[1, 2]} class="podpis__foto" />
-              <span>{k.podpis}</span>
-            </a>
-          </p>
-        )}
+        {k.podpis && <p class="podpis">{k.podpis}</p>}
       </section>
       <section class="zanim__kolumna" aria-labelledby="pasujemy-naglowek">
         <h2 id="pasujemy-naglowek" class="zanim__naglowek">{tekst(k.pasujemyNaglowek, 'Pasujemy, gdy…')}</h2>
@@ -175,8 +166,7 @@ const daneStrukturalne = {
 
   /* Podpis: miniatura 40 px w proporcji pliku (1:1), ramka 1 px i cień, bez zaokrąglenia w koło. */
   .zanim__kolumna .podpis { margin-top: var(--o-6); }
-  .podpis a { display: inline-flex; align-items: center; gap: var(--o-3); min-height: 44px; font-weight: 600; }
-  .podpis__foto { width: 40px; height: 40px; border: var(--obrys-karty); box-shadow: var(--cien-karty); }
+  .podpis { font-weight: 600; }
 
   .pasujemy { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--o-3); }
   /* Etykieta w lewej kolumnie, zdanie w prawej — wiersze nie zawijają się pod etykietę. */

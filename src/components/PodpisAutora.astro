@@ -1,18 +1,12 @@
 ---
-// Podpis na końcu wpisu: zdjęcie 72 px w ramce (kwadrat, nie kółko), „EcoPower Polska”, jedno zdanie w liczbie mnogiej, link. Imię i nazwisko autora tylko w linii meta wpisu i w JSON-LD.
-// Dane: src/data/autor.json. Bez JS.
-import { Image } from 'astro:assets';
-import autor from '../data/autor.json';
-import zdjecie from '../assets/blog/autor-piotr-czwarnowski.jpg';
-import { tekst } from '../lib/tekst';
+// Podpis na końcu wpisu: „EcoPower Polska” i jedno zdanie w liczbie mnogiej. Bez zdjęcia, bez imienia i bez linku (decyzja Piotra 2026-11-06).
+import firma from '../data/firma.json';
 ---
 
-<aside class="podpis-autora" aria-label={`Autor: ${tekst(autor.podpisNazwa, 'EcoPower Polska')}`}>
-  <Image class="podpis-autora__zdjecie" src={zdjecie} alt="" width={72} height={72} densities={[1, 2]} loading="lazy" decoding="async" />
+<aside class="podpis-autora" aria-label={`Autor: ${firma.nazwaKrotka}`}>
   <div>
-    <p class="podpis-autora__imie">{tekst(autor.podpisNazwa, 'EcoPower Polska')}</p>
-    <p class="podpis-autora__zdanie">{tekst(autor.podpis, '')}</p>
-    <a class="podpis-autora__link" href={autor.adres}>{tekst(autor.linkPodpisu, 'Więcej o autorze')}</a>
+    <p class="podpis-autora__imie">{firma.nazwaKrotka}</p>
+    <p class="podpis-autora__zdanie">Budujemy strony i sklepy w Astro i każdą mierzymy w PageSpeed Insights po publikacji.</p>
   </div>
 </aside>
 
@@ -29,37 +23,14 @@ import { tekst } from '../lib/tekst';
     box-shadow: var(--cien-karty, none);
   }
 
-  .podpis-autora__zdjecie {
-    flex: 0 0 72px;
-    width: 72px;
-    height: 72px;
-    object-fit: cover;
-    border: 1px solid var(--linia);
-    border-radius: var(--promien);
-  }
-
   .podpis-autora__imie {
     margin: 0;
     font-weight: 700;
   }
 
   .podpis-autora__zdanie {
-    margin: var(--o-1) 0 var(--o-2);
+    margin: var(--o-1) 0 0;
     font-size: var(--t-s);
     line-height: 1.5;
-  }
-
-  .podpis-autora__link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-weight: 600;
-    color: var(--akcent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .podpis-autora__link:hover {
-    color: var(--tekst);
   }
 </style>

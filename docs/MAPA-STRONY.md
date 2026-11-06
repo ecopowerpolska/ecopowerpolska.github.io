@@ -26,7 +26,6 @@ definiuje WYŁĄCZNIE `motyw.css` (D26–D37, kontrakt fazy 2).
 | `/regulamin/` | `regulamin.astro` | — | `regulamin.json`, `firma.json` | spis części + treść w kolumnach CSS (24 rem), punkty a)–e) | 0 |
 | `/polityka-prywatnosci/` | `polityka-prywatnosci.astro` | — | `polityka.json` (`sekcje[]`: `akapity`, `lista`, `szeroka`, `tabela`), `firma.json` | spis 4/2/1, treść w kolumnach, tabela cookie `column-span:all`, na telefonie karty | 0 |
 | 4 strony usług | `strony-internetowe-warszawa`, `sklepy-internetowe-warszawa`, `strona-wizytowka`, `prowadzenie-strony-internetowej` `.astro` | — | `src/data/uslugi/<trasa>.json`, `cena.json` (`{od: pozycja}` = klucz nazwy pozycji cennika — nie zmieniać nazw pozycji), `pomiary.json` | szkielet `.usluga__*` (D19) | 0 |
-| `/autor/piotr-czwarnowski/` | `src/pages/autor/piotr-czwarnowski.astro` | `PodpisAutora` | `autor.json` | strona autora; JSON-LD `Person` z `@id` `…/autor/piotr-czwarnowski/#osoba` (na nią wskazuje `Organization.founder`) | — |
 | `/slownik/` | `src/pages/slownik.astro` | `Slownik` | `slownik.json` | pojęcia stron, sklepów, szybkości i Google | — |
 | `/jak-mierzymy/` | `src/pages/jak-mierzymy.astro` | — | `jak-mierzymy.json` | metoda pomiarów pokazywanych na stronie | — |
 | `/prawo-strony-internetowej/` | `src/pages/prawo-strony-internetowej.astro` | — | `prawo.json` | hub prawny (D37) | — |

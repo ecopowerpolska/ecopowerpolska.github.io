@@ -63,7 +63,8 @@ const obraz = obrazOg || domyslnyOg;
         nad zgięciem: 400 (tekst), 600 (menu, przyciski), 700 (H1). Szeryf stoi wyłącznie
         w akapitach wpisu bloga (D30) — bez preloadu, zapas metryczny trzyma układ. */}
     <Font cssVariable="--font-sans" preload={[{ weight: 400 }, { weight: 600 }, { weight: 700 }]} />
-    <Font cssVariable="--font-szeryf" />
+    {/* Wpis bloga: akapity w szeryfie są kandydatem LCP na telefonie, więc preload wagi 400 tylko tam (PSI 06.11: LCP 2,6 s bez preloadu). */}
+    <Font cssVariable="--font-szeryf" preload={typOg === 'article' ? [{ weight: 400 }] : undefined} />
 
     {/* Ikona zakładki: sam kwadrat EP z logo firmowego, wycięty z pliku Piotra
         (wybór Piotra 2026-09-07). Na jasnym kaflu w kolorze tła strony, nie na

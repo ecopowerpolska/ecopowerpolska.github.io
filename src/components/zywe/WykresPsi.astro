@@ -250,6 +250,12 @@ const wysokosc = (v: number) => `${Math.max(4, Math.min(100, (v - 80) * 5))}%`;
     color: var(--tekst-cichy);
   }
 
+  /* Link w zdaniu podkreślony (PSI link-in-text-block, 06.11). */
+  .wykres__nota a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   .tylko-czytnik {
     position: absolute;
     width: 1px;

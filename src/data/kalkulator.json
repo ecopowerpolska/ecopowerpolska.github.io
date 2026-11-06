@@ -11,8 +11,6 @@
   "podpowiedzEtykieta": "Co obejmuje:",
   "nieDotyczy": "nie dotyczy wybranego rodzaju",
   "indywidualnie": "Strona w kilku językach, więcej podstron, niż mieści dana półka, albo własne funkcje: to wycena indywidualna po rozmowie, bez kwoty w kalkulatorze.",
-  "prowizjeNaglowek": "Prowizje operatora płatności",
-  "prowizjeDopisek": "pobiera operator od każdej transakcji, nie wliczamy ich do sumy.",
   "policz": "Policz",
   "miniJednorazowo": "jednorazowo",
   "miniMiesiecznie": "mies.",
@@ -148,24 +146,6 @@
       ]
     },
     {
-      "id": "hosting",
-      "nazwa": "Hosting, domena i certyfikat SSL",
-      "tabela": "stronaProwadzenie",
-      "szukaj": "Hosting, domena",
-      "okres": "rocznie",
-      "dla": [
-        "strona",
-        "sklep-astro"
-      ]
-    },
-    {
-      "id": "regulamin",
-      "nazwa": "Regulamin i polityka prywatności",
-      "tabela": "sklepProwadzenie",
-      "szukaj": "Regulamin",
-      "okres": "rocznie"
-    },
-    {
       "id": "godziny",
       "nazwa": "Prace dodatkowe",
       "tabela": "stronaProwadzenie",
@@ -185,17 +165,6 @@
     }
   ],
   "dodatkiSklepu": [
-    {
-      "id": "abonament",
-      "nazwa": "Abonament platformy (Shoper, IdoSell)",
-      "dopisek": "płatny platformie, nie nam",
-      "tabela": "sklepProwadzenie",
-      "szukaj": "Abonament platformy",
-      "okres": "miesiecznie",
-      "dla": [
-        "sklep-platforma"
-      ]
-    },
     {
       "id": "hostingSklepu",
       "nazwa": "Hosting sklepu na własnym silniku",
@@ -290,8 +259,5 @@
       }
     }
   ],
-  "prowizje": {
-    "tabela": "sklepProwadzenie",
-    "szukaj": "Prowizje operatora"
-  }
+  "platformaDopisek": "Abonament platformy (Shoper, IdoSell) i prowizje operatora płatności wg cennika dostawcy; nie wliczamy ich do sumy."
 }

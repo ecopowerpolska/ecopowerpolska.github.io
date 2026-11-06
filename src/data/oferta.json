@@ -1,11 +1,14 @@
 {
   "heroGuzikCena": "Policz cenę strony",
   "liczbyEtykieta": "EcoPower Polska w liczbach",
-  "liczbaRealizacjiPodpis": "stron firm z Warszawy, każda zmierzona po publikacji",
-  "liczbaPsiPodpis": "punktów PageSpeed na telefonie w realizacjach",
+  "liczbaRokPrefiks": "od ",
+  "liczbaRok": "2012",
+  "liczbaRokSufiks": " roku",
+  "liczbaRokPodpis": "budujemy strony i sklepy",
+  "liczbaJakoscTekst": "jakość obsługi na najwyższym poziomie",
   "liczbaCenyPodpis": "netto za stronę wizytówkę, ceny jawne w cenniku",
   "liczbaNarzedziPodpis": "darmowych testów strony, bez logowania",
-  "realizacjeNaglowek": "Strony firm z Warszawy, każda zmierzona po publikacji.",
+  "realizacjeNaglowek": "Przykładowe realizacje",
   "realizacjeNota": "Pomiar: Google PageSpeed Insights, wynik laboratoryjny osobno dla telefonu i komputera. To nie gwarancja pozycji w Google, ale każdy może go powtórzyć sam.",
   "uslugiEtykieta": "Oferta",
   "uslugiNaglowek": "Od pustej domeny do strony, którą zmieniasz sam.",
@@ -56,12 +59,12 @@
     },
     {
       "nazwa": "Hosting, domena i poczta",
-      "opis": "Stronę stawiamy na hostingu lh.pl, a wizytówkę bez sprzedaży na GitHub Pages. Przy przepięciu domeny przenosimy rekordy DNS tak, żeby poczta działała dalej.",
+      "opis": "Hosting i certyfikat SSL stron statycznych oraz stron, którymi się opiekujemy, są w cenie. Stronę stawiamy na hostingu lh.pl, a wizytówkę bez sprzedaży na GitHub Pages. Przy przepięciu domeny przenosimy rekordy DNS tak, żeby poczta działała dalej.",
       "link": "/strony-internetowe-warszawa/"
     },
     {
       "nazwa": "Formularze bez spamu",
-      "opis": "Formularz kontaktowy w PHP wysyła wiadomość na Twój adres. Boty zatrzymuje Cloudflare Turnstile, bez przepisywania liter z obrazka.",
+      "opis": "Formularz kontaktowy w PHP wysyła wiadomość na dowolny wskazany przez Ciebie adres; z kilku stron albo sklepów mogą trafiać na ten sam adres, oznaczone nazwą strony, z której przyszły. Boty zatrzymuje Cloudflare Turnstile, bez przepisywania liter z obrazka.",
       "link": "/strony-internetowe-warszawa/"
     },
     {
@@ -71,7 +74,7 @@
     },
     {
       "nazwa": "Pomiar jakości każdej strony",
-      "opis": "Każdą stronę mierzymy w PageSpeed Insights osobno na telefonie i na komputerze: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe, czyli gotowość na asystentów AI. Wyniki naszych realizacji publikujemy w sekcji Realizacje, a każdy może je sprawdzić sam na pagespeed.web.dev.",
+      "opis": "Każdą stronę mierzymy w PageSpeed Insights osobno na telefonie i na komputerze: wydajność, ułatwienia dostępu, sprawdzone metody, SEO i przeglądanie agentowe, czyli gotowość na asystentów AI. Przykładowe wyniki publikujemy w sekcji Realizacje, a każdy może je sprawdzić sam na pagespeed.web.dev.",
       "link": "/prowadzenie-strony-internetowej/"
     },
     {
@@ -85,7 +88,7 @@
       "link": "/prowadzenie-strony-internetowej/"
     }
   ],
-  "procesNaglowek": "Sześć kroków, a Twoja obecna strona działa do końca.",
+  "procesNaglowek": "Sześć kroków. Gdy pracujemy nad nową stroną, Twoja obecna działa bez zakłóceń.",
   "procesEtykieta": "Proces",
   "procesLink": "Szczegóły krok po kroku",
   "procesLinkAdres": "/strony-internetowe-warszawa/#krok-po-kroku",
@@ -135,7 +138,8 @@
     "Panel do edycji treści z dostępem tylko do Twojej strony.",
     "Szyfrowane połączenie (HTTPS) na Twojej domenie i przekierowanie wariantu z „www” albo bez.",
     "Mapę strony zgłoszoną w Google Search Console i przez IndexNow do Bing.",
-    "Pomiar PageSpeed Insights po publikacji; studioagat.pl po przepisaniu na Astro ma 98–100 punktów."
+    "Pomiar PageSpeed Insights po publikacji, z wynikiem dla Twojej strony.",
+    "Hosting i certyfikat SSL w cenie dla stron statycznych i stron, którymi się opiekujemy."
   ],
   "technologiaNaglowek": "Dlaczego Astro i jaki hosting",
   "technologiaLead": "Proponujemy Astro i hosting lh.pl albo GitHub Pages, bo takie strony mierzymy i mają w PageSpeed 97–100 punktów. To nasza propozycja, nie przymus: strony i sklepy budujemy i prowadzimy też na innych hostingach i w innych systemach. Ty wybierasz, my doradzamy.",
@@ -185,11 +189,11 @@
   ],
   "testyOtworz": "Otwórz test",
   "testyLink": "Wszystkie darmowe narzędzia",
-  "autorNaglowek": "Mała firma, krótka droga: piszesz do osoby, która buduje Twoją stronę.",
-  "autorTekst": "Każdą stronę buduję tak, żeby jej właściciel widział wynik w liczbach: po publikacji mierzę ją w PageSpeed Insights i pokazuję wynik z datą pomiaru. Zakres, poprawki i publikację ustalasz bezpośrednio ze mną.",
-  "autorPodpis": "Piotr Czwarnowski, EcoPower Polska",
-  "autorLink": "Więcej o mnie",
-  "autorZdjecieAlt": "Piotr Czwarnowski z lupą nagłowną nasuniętą na okulary",
+  "autorNaglowek": "Mała firma, krótsza droga: piszesz bezpośrednio do osoby, która buduje Twoją stronę.",
+  "autorTekst": "Każdą stronę budujemy tak, żeby jej właściciel widział wynik w liczbach: po publikacji mierzymy ją w PageSpeed Insights i pokazujemy wynik. Dobieramy osobę do strony. Zakres, poprawki i publikację ustalasz bezpośrednio z nią.",
+  "autorPodpis": "EcoPower Polska",
+  "autorLink": "Więcej o tym, jak pracujemy",
+  "autorZdjecieAlt": "Osoba budująca strony EcoPower Polska, z lupą nagłowną nasuniętą na okulary",
   "zamkniecieNaglowek": "Policz cenę w minutę. Resztę ustalimy w jednej rozmowie.",
   "zamkniecieGuzik": "Policz cenę",
   "zamkniecieLink": "Napisz do nas",

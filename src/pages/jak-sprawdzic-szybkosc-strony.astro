@@ -13,7 +13,6 @@ import Zegar from '../components/narzedzia/Zegar.astro';
 import firma from '../data/firma.json';
 import blog from '../data/blog.json';
 import { tekst } from '../lib/tekst';
-import pomiaryJson from '../data/pomiary.json';
 
 const klucz = (import.meta.env.PUBLIC_PSI_KLUCZ ?? '').trim();
 const naglowek = 'Darmowe narzędzie do sprawdzania szybkości strony';
@@ -46,22 +45,6 @@ const metryki = [
   ['cumulative-layout-shift', 'Przesunięcie układu (CLS)', '0.1,0.25'],
   ['speed-index', 'Indeks szybkości (SI)', '3400,5800'],
 ];
-
-// Data ostatniego pomiaru realizacji: najnowsze pole `data` w pomiary.json, szukane w głąb (format pliku może dostać historię).
-const daty: string[] = [];
-const zbierzDaty = (v: unknown): void => {
-  if (Array.isArray(v)) v.forEach(zbierzDaty);
-  else if (v && typeof v === 'object')
-    for (const [k, x] of Object.entries(v)) {
-      if (k === 'data' && typeof x === 'string' && /^\d{4}-\d{2}-\d{2}/.test(x)) daty.push(x.slice(0, 10));
-      else zbierzDaty(x);
-    }
-};
-zbierzDaty(pomiaryJson);
-const ostatniPomiar = daty.sort().at(-1);
-const ostatniPomiarSlownie = ostatniPomiar
-  ? new Date(`${ostatniPomiar}T12:00:00Z`).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Warsaw' })
-  : '';
 
 // Tabela decyzyjna „strona jest wolna: od czego zacząć”. Progi = tablica `metryki` wyżej; działania = src/lib/psi-zalecenia.ts.
 const KOLUMNY = ['Objaw', 'Prawdopodobna przyczyna', 'Pierwsze działanie', 'Czym zmierzyć'];
@@ -252,9 +235,9 @@ const daneStrukturalne = {
         To pojedynczy pomiar laboratoryjny, nie dane prawdziwych odwiedzających ani gwarancja pozycji w Google.
       </p>
       <p>
-        Nasze realizacje mierzymy tym samym narzędziem, pod zwykłym adresem strony, bez dopisków w adresie omijających
-        pamięć podręczną.{ostatniPomiarSlownie && <> Ostatni pomiar: <time datetime={ostatniPomiar}>{ostatniPomiarSlownie}</time>.</>}{' '}
-        Szczegóły metody opisujemy na stronie <a href="/jak-mierzymy/">jak mierzymy</a>.
+        Celem strony jest szybkość i widoczność w Google, więc żaden element nie może jej spowolnić. Każdą stronę
+        mierzymy w oficjalnym narzędziu Google PageSpeed Insights. Szczegóły metody opisujemy na stronie{' '}
+        <a href="/jak-mierzymy/">jak mierzymy</a>.
       </p>
     </aside>
 
@@ -326,7 +309,7 @@ const daneStrukturalne = {
         główną, bo każda ma inne zdjęcia i inny kod.
       </p>
       <p>
-        Nasze strony mierzymy tak samo. Wyniki każdej realizacji pokazujemy w sekcji{' '}
+        Nasze strony mierzymy tak samo. Przykładowe wyniki pokazujemy w sekcji{' '}
         <a href="/#realizacje">Realizacje</a>, a ceny wykonania i prowadzenia strony są w <a href="/cena/">cenniku</a>.
       </p>
     </div>

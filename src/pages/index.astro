@@ -1,8 +1,10 @@
 ---
-// index.astro — strona główna (faza 2, 2026-11-06, decyzja 7): hero → pas liczb → realizacje → oferta → proces →
-// darmowe testy → kto robi → blog → FAQ → pas zamykający → kontakt. Pasy i klasy z motyw.css (kontrakt fazy 2).
-// Liczby pasa czytane kodem z serwisy/pomiary/cena/narzedzia.json; w HTML stoją wartości końcowe (SEO, bez JS).
-// JS: tylko licznik liczb (decyzja 9), raz, wyłączony przy ograniczeniu ruchu.
+// index.astro — strona główna (faza 2, 2026-11-06, decyzja 7): hero → pas liczb → przykładowe realizacje → wykres →
+// oferta → proces → darmowe testy → kto robi → blog → FAQ → pas zamykający → kontakt. Pasy i klasy z motyw.css.
+// Faza 3 (słowa Piotra 2026-11-06): pas rynku usunięty; pas liczb ma 4 pola BEZ dat i BEZ liczby zrobionych stron:
+// „od 2012 roku” · jakość obsługi (pole tekstowe, bez cyfry) · „od {cena wizytówki z cena.json}” · liczba darmowych testów.
+// Kwotę i liczbę testów liczy kod z cena.json / narzedzia.json; w HTML stoją wartości końcowe (SEO, bez JS).
+// JS: tylko licznik liczb (decyzja 9), tylko na polach z cyfrą (cena, testy); rok i pole tekstowe stoją bez licznika.
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Bazowy from '../layouts/Bazowy.astro';
@@ -14,11 +16,9 @@ import Realizacje from '../components/Realizacje.astro';
 import FaqSkrot from '../components/FaqSkrot.astro';
 import OstatnieWpisy from '../components/OstatnieWpisy.astro';
 import WykresPsi from '../components/zywe/WykresPsi.astro';
-import PasRynku from '../components/zywe/PasRynku.astro';
 import { tekst } from '../lib/tekst';
 import stronaJson from '../data/strona.json';
 import ofertaJson from '../data/oferta.json';
-import pomiaryJson from '../data/pomiary.json';
 import cenaJson from '../data/cena.json';
 import narzedziaJson from '../data/narzedzia.json';
 import zdjecieAutora from '../assets/blog/autor-piotr-czwarnowski.jpg';
@@ -43,20 +43,7 @@ const lead = tekst(
 );
 
 // ── Pas liczb ──
-// Zakres PSI na telefonie z pomiarów widocznych realizacji (klucz = adres, dosłownie).
-const pomiary = ((pomiaryJson as { pomiary?: Record<string, { data?: string; mobile?: { wydajnosc?: number | null } | null }> }).pomiary) ?? {};
-const wynikiTelefon = realizacje
-  .map((r) => pomiary[r.data.adres]?.mobile?.wydajnosc)
-  .filter((w): w is number => typeof w === 'number');
-const daty = realizacje.map((r) => pomiary[r.data.adres]?.data ?? '').filter(Boolean).sort();
-const dataPomiaru = (() => {
-  const m = (daty[daty.length - 1] ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  return m ? `${m[3]}.${m[2]}.${m[1]}` : '';
-})();
-const psiMin = wynikiTelefon.length ? Math.min(...wynikiTelefon) : 0;
-const psiMax = wynikiTelefon.length ? Math.max(...wynikiTelefon) : 0;
-
-// Najniższa cena „od” wśród stron (cena.json, „2 900 zł” → 2900).
+// Najniższa cena „od” wśród stron (cena.json, „1 900 zł” → 1900).
 const naKwote = (c: unknown) => Number(String(c ?? '').replace(/[^\d,]/g, '').replace(',', '.'));
 const cenyStron = ((cenaJson as Record<string, unknown>).stronaWykonanie as { cena?: string }[] | undefined ?? [])
   .map((p) => naKwote(p.cena))
@@ -81,33 +68,50 @@ const wybrane = [
 // Spacja tysięcy (twarda), jak w cenniku: 2900 → „2 900”.
 const tysiace = (n: number) => String(n).replace(/\B(?=(\d{3})+$)/g, ' ');
 
+// Spacje na brzegach napisu zamieniamy na twarde, żeby „od” i „roku” nie traciły odstępu w elemencie inline.
+const sztywne = (t: string) => t.replace(/^ +| +$/g, (m) => '\u00a0'.repeat(m.length));
+
+// Część pola: `licz` = cyfry z licznikiem (spacja tysięcy), `stala` = cyfry bez licznika (rok), `maly` = „od”, „zł”, „roku”.
+interface Czesc {
+  r: 'licz' | 'stala' | 'maly';
+  t: string | number;
+}
 interface Liczba {
   adres: string;
-  czesci: (string | number)[];
-  podpis: string;
+  czesci?: Czesc[];
+  /** Pole tekstowe w miejscu liczby (bez cyfry). */
+  tekst?: string;
+  podpis?: string;
 }
-const liczby: Liczba[] = [
-  realizacje.length > 0 && {
-    adres: '#realizacje',
-    czesci: [realizacje.length],
-    podpis: napis('liczbaRealizacjiPodpis', 'stron firm, każda zmierzona po publikacji'),
+const liczby = ([
+  {
+    adres: '/strony-internetowe-warszawa/',
+    czesci: [
+      { r: 'maly', t: sztywne(napis('liczbaRokPrefiks', 'od ')) },
+      { r: 'stala', t: napis('liczbaRok', '2012') },
+      { r: 'maly', t: sztywne(napis('liczbaRokSufiks', ' roku')) },
+    ],
+    podpis: napis('liczbaRokPodpis', 'budujemy strony i sklepy'),
   },
-  wynikiTelefon.length > 0 && {
-    adres: '/jak-sprawdzic-szybkosc-strony/',
-    czesci: psiMin === psiMax ? [psiMax] : [psiMin, '–', psiMax],
-    podpis: `${napis('liczbaPsiPodpis', 'punktów PageSpeed na telefonie w realizacjach')}${dataPomiaru ? ` (pomiar ${dataPomiaru})` : ''}`,
+  {
+    adres: '/jak-mierzymy/',
+    tekst: napis('liczbaJakoscTekst', 'jakość obsługi na najwyższym poziomie'),
   },
   cenaOd > 0 && {
     adres: '/cena/',
-    czesci: ['od\u00a0', cenaOd, '\u00a0zł'],
+    czesci: [
+      { r: 'maly', t: 'od\u00a0' },
+      { r: 'licz', t: cenaOd },
+      { r: 'maly', t: '\u00a0zł' },
+    ],
     podpis: napis('liczbaCenyPodpis', 'netto za stronę wizytówkę'),
   },
   narzedzia.length > 0 && {
     adres: '/darmowe-narzedzia/',
-    czesci: [narzedzia.length],
+    czesci: [{ r: 'licz', t: narzedzia.length }],
     podpis: napis('liczbaNarzedziPodpis', 'darmowych testów strony'),
   },
-].filter((l): l is Liczba => !!l);
+] as (Liczba | false)[]).filter((l): l is Liczba => !!l);
 
 ---
 
@@ -138,18 +142,22 @@ const liczby: Liczba[] = [
             {liczby.map((l) => (
               <li>
                 <a class="liczby__link" href={l.adres}>
-                  <span class="liczba">
-                    {l.czesci.map((c) =>
-                      typeof c === 'number' ? (
-                        <span class="liczby__cyfry" data-licz={c} style={`--cyfry:${String(c).length};--odstepy:${Math.floor((String(c).length - 1) / 3)}`}>{tysiace(c)}</span>
-                      ) : c === '–' ? (
-                        c
-                      ) : (
-                        <span class="liczby__dodatek">{c}</span>
-                      ),
-                    )}
-                  </span>
-                  <span class="liczba__podpis">{l.podpis}</span>
+                  {l.tekst ? (
+                    <span class="liczba liczba--tekst">{l.tekst}</span>
+                  ) : (
+                    <span class="liczba">
+                      {(l.czesci ?? []).map((c) =>
+                        c.r === 'licz' ? (
+                          <span class="liczby__cyfry" data-licz={c.t} style={`--cyfry:${String(c.t).length};--odstepy:${Math.floor((String(c.t).length - 1) / 3)}`}>{tysiace(Number(c.t))}</span>
+                        ) : c.r === 'stala' ? (
+                          <span>{c.t}</span>
+                        ) : (
+                          <span class="liczby__dodatek">{c.t}</span>
+                        ),
+                      )}
+                    </span>
+                  )}
+                  {l.podpis && <span class="liczba__podpis">{l.podpis}</span>}
                 </a>
               </li>
             ))}
@@ -161,8 +169,7 @@ const liczby: Liczba[] = [
     <div class="pas pas--jasny">
       <div class="pas__tresc">
         <Realizacje
-          etykieta={strona.naglowekRealizacji}
-          naglowek={o.realizacjeNaglowek as string}
+          naglowek={napis('realizacjeNaglowek', 'Przykładowe realizacje')}
           wstep={o.realizacjeNota as string}
           pierwszyEager
         />
@@ -182,8 +189,6 @@ const liczby: Liczba[] = [
         <Oferta czesc="proces" />
       </div>
     </div>
-
-    <PasRynku />
 
     {wybrane.length > 0 && (
       <section class="pas pas--powierzchnia" id="darmowe-testy" aria-labelledby="testy-tytul" data-ujawnij>
@@ -219,11 +224,11 @@ const liczby: Liczba[] = [
           decoding="async"
         />
         <div class="autor__tekst">
-          <h2 id="autor-tytul">{napis('autorNaglowek', 'Mała firma, krótka droga: piszesz do osoby, która buduje Twoją stronę.')}</h2>
-          <p>{napis('autorTekst', '')}</p>
-          <p class="autor__podpis">{napis('autorPodpis', 'Piotr Czwarnowski, EcoPower Polska')}</p>
+          <h2 id="autor-tytul">{napis('autorNaglowek', 'Mała firma, krótsza droga: piszesz bezpośrednio do osoby, która buduje Twoją stronę.')}</h2>
+          <p>{napis('autorTekst', 'Każdą stronę budujemy tak, żeby jej właściciel widział wynik w liczbach: po publikacji mierzymy ją w PageSpeed Insights i pokazujemy wynik. Dobieramy osobę do strony. Zakres, poprawki i publikację ustalasz bezpośrednio z nią.')}</p>
+          <p class="autor__podpis">{napis('autorPodpis', 'EcoPower Polska')}</p>
           <p class="autor__link">
-            <a href="/autor/piotr-czwarnowski/">{napis('autorLink', 'Więcej o mnie')}<span aria-hidden="true"> →</span></a>
+            <a href="/autor/piotr-czwarnowski/">{napis('autorLink', 'Więcej o nas')}<span aria-hidden="true"> →</span></a>
           </p>
         </div>
       </div>
@@ -351,6 +356,15 @@ const liczby: Liczba[] = [
 
   .liczba {
     white-space: nowrap;
+  }
+
+  /* Pole tekstowe pasa (bez cyfry): zdanie w dwóch wierszach, mniejsze od liczb, ten sam kolor i krój. */
+  .liczba.liczba--tekst {
+    white-space: normal;
+    font-size: var(--t-xl);
+    line-height: 1.15;
+    letter-spacing: 0;
+    text-wrap: balance;
   }
 
   /* Stała szerokość cyfr w trakcie liczenia (tabular-nums + min-width) — nic obok się nie przesuwa (CLS 0). */

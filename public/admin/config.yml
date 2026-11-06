@@ -198,6 +198,7 @@ collections:
 
               - { name: teza, label: "Zdanie o efekcie, małą literą, bez liczby (wynik PageSpeed dopisuje się sam)", widget: string, required: false, hint: "np. z WordPressa na Astro" }
               - { name: tagi, label: "Tagi zakresu (najwyżej 3)", widget: list, required: false, field: { name: tag, label: "Tag", widget: string } }
+              - { name: przyklad, label: "Przykładowa realizacja (pokazywana na stronie głównej i w wynikach; zaznacz najwyżej 3)", widget: boolean, default: false, required: false }
 
               - name: zakres
                 label: "Co zrobiliśmy (opcjonalnie)"
@@ -570,12 +571,6 @@ collections:
               Odnośnik pod nagłówkiem, prowadzi do sekcji kontaktu. Puste pole = wraca
               napis domyślny: Zapytaj o stronę.
 
-          - name: naglowekRealizacji
-            label: "Nagłówek sekcji realizacji"
-            widget: string
-            required: false
-            hint: "Puste pole = wraca napis domyślny: Realizacje"
-
           - name: wstepRealizacji
             label: "Wstęp pod nagłówkiem realizacji (opcjonalnie)"
             widget: text
@@ -653,11 +648,14 @@ collections:
         fields:
           - { name: heroGuzikCena, label: "Hero: napis przycisku kalkulatora", widget: string, required: false }
           - { name: liczbyEtykieta, label: "Pas liczb: etykieta dla czytnika ekranu", widget: string, required: false }
-          - { name: liczbaRealizacjiPodpis, label: "Pas liczb: podpis liczby realizacji", widget: string, required: false }
-          - { name: liczbaPsiPodpis, label: "Pas liczb: podpis wyniku PageSpeed (data dopisuje się sama)", widget: string, required: false }
-          - { name: liczbaCenyPodpis, label: "Pas liczb: podpis najniższej ceny", widget: string, required: false }
+          - { name: liczbaRokPrefiks, label: "Pas liczb: napis przed rokiem (np. „od ”)", widget: string, required: false }
+          - { name: liczbaRok, label: "Pas liczb: rok startu (cyfry, bez licznika)", widget: string, required: false }
+          - { name: liczbaRokSufiks, label: "Pas liczb: napis po roku (np. „ roku”)", widget: string, required: false }
+          - { name: liczbaRokPodpis, label: "Pas liczb: podpis pod „od 2012 roku”", widget: string, required: false, hint: "Bez liczby zrobionych stron i bez dat. Puste pole = budujemy strony i sklepy" }
+          - { name: liczbaJakoscTekst, label: "Pas liczb: pole tekstowe o jakości obsługi (bez cyfry)", widget: string, required: false, hint: "Puste pole = jakość obsługi na najwyższym poziomie" }
+          - { name: liczbaCenyPodpis, label: "Pas liczb: podpis najniższej ceny (kwota z cennika dopisuje się sama)", widget: string, required: false }
           - { name: liczbaNarzedziPodpis, label: "Pas liczb: podpis liczby narzędzi", widget: string, required: false }
-          - { name: realizacjeNaglowek, label: "Realizacje: nagłówek (teza)", widget: string, required: false }
+          - { name: realizacjeNaglowek, label: "Przykładowe realizacje: nagłówek", widget: string, required: false, hint: "Puste pole = Przykładowe realizacje" }
           - { name: realizacjeNota, label: "Realizacje: nota o metodzie pomiaru pod siatką", widget: text, required: false }
           - { name: uslugiEtykieta, label: "Oferta: etykieta nad nagłówkiem", widget: string, required: false }
           - { name: uslugiNaglowek, label: "Oferta: nagłówek (teza)", widget: string, required: false }
@@ -716,7 +714,7 @@ collections:
           - { name: testyOtworz, label: "Darmowe testy: napis na karcie", widget: string, required: false }
           - { name: testyLink, label: "Darmowe testy: odnośnik do wszystkich (liczba dopisuje się sama)", widget: string, required: false }
           - { name: autorNaglowek, label: "Kto robi stronę: nagłówek", widget: string, required: false }
-          - { name: autorTekst, label: "Kto robi stronę: tekst (1. osoba)", widget: text, required: false }
+          - { name: autorTekst, label: "Kto robi stronę: tekst (l. mnoga)", widget: text, required: false }
           - { name: autorPodpis, label: "Kto robi stronę: podpis", widget: string, required: false }
           - { name: autorLink, label: "Kto robi stronę: napis odnośnika do strony autora", widget: string, required: false }
           - { name: autorZdjecieAlt, label: "Kto robi stronę: opis zdjęcia (alt)", widget: string, required: false }
@@ -744,6 +742,14 @@ collections:
           - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
           - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
           - { name: zastrzezenie, label: "Ramka: netto, VAT, aktualność cennika", widget: text, required: false }
+          - { name: generatoryTekst, label: "Zdanie o darmowych generatorach regulaminu i polityki (pod tabelami)", widget: text, required: false }
+          - name: generatoryLinki
+            label: "Generatory: odnośniki"
+            widget: list
+            required: false
+            fields:
+              - { name: tekst, label: "Napis odnośnika", widget: string }
+              - { name: adres, label: "Adres (wewnętrzny)", widget: string }
           - { name: kolumnaPozycji, label: "Tabela: nagłówek kolumny nazwy pozycji", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Pozycja" }
           - { name: kolumnaOpisu, label: "Tabela: nagłówek kolumny zakresu (opisu)", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Zakres" }
           - { name: kolumnaCeny, label: "Tabela: nagłówek kolumny ceny", widget: string, required: false }
@@ -758,7 +764,7 @@ collections:
             fields:
               - { name: pozycja, label: "Nazwa pozycji", widget: string }
               - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
-              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: cena, label: "Cena (np. 1 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
               - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: stronaProwadzenieNaglowek, label: "Tabela 2: nagłówek (strona, prowadzenie)", widget: string, required: false }
           - { name: stronaProwadzenieOpis, label: "Tabela 2: zdanie pod nagłówkiem", widget: text, required: false }
@@ -768,7 +774,7 @@ collections:
             fields:
               - { name: pozycja, label: "Nazwa pozycji", widget: string }
               - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
-              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: cena, label: "Cena (np. 1 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
               - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: sklepWykonanieNaglowek, label: "Tabela 3: nagłówek (sklep, uruchomienie)", widget: string, required: false }
           - { name: sklepWykonanieOpis, label: "Tabela 3: zdanie pod nagłówkiem", widget: text, required: false }
@@ -778,7 +784,7 @@ collections:
             fields:
               - { name: pozycja, label: "Nazwa pozycji", widget: string }
               - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
-              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: cena, label: "Cena (np. 1 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
               - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: sklepProwadzenieNaglowek, label: "Tabela 4: nagłówek (sklep, prowadzenie)", widget: string, required: false }
           - { name: sklepProwadzenieOpis, label: "Tabela 4: zdanie pod nagłówkiem", widget: text, required: false }
@@ -788,7 +794,7 @@ collections:
             fields:
               - { name: pozycja, label: "Nazwa pozycji", widget: string }
               - { name: opis, label: "Zakres (opis pozycji)", widget: text, required: false }
-              - { name: cena, label: "Cena (np. 2 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
+              - { name: cena, label: "Cena (np. 1 900 zł)", widget: string, required: false, hint: "Puste pole = na stronie napis z pola: Napis, gdy cena jest pusta" }
               - { name: jednostka, label: "Rozliczenie (np. miesięcznie, rocznie, za wpis, jednorazowo)", widget: string, required: false, hint: "Puste pole w tabelach wykonania = jednorazowo; w tabelach prowadzenia = bez dopisku" }
           - { name: ctaNaglowek, label: "Ramka kontaktu: nagłówek", widget: string, required: false }
           - { name: ctaTekst, label: "Ramka kontaktu: zdanie", widget: text, required: false }
@@ -816,6 +822,8 @@ collections:
           - { name: pierwszaUwaga, label: "Nad formularzem: uwaga o hasłach", widget: text, required: false }
           - { name: podpis, label: "Podpis pod wskazówkami", widget: string, required: false, hint: "Puste pole = podpis znika." }
           - { name: podpisAdres, label: "Adres linku podpisu", widget: string, required: false }
+          - { name: podpisZdanie, label: "Podpis: zdanie w liczbie mnogiej", widget: string, required: false }
+          - { name: formularzNota, label: "Nota o adresie, na który trafiają wiadomości z formularza", widget: text, required: false }
           - { name: pasujemyNaglowek, label: "„Pasujemy, gdy…”: nagłówek", widget: string, required: false }
           - { name: pasujemyTakEtykieta, label: "„Pasujemy”: etykieta wierszy tak", widget: string, required: false }
           - { name: pasujemyTak, label: "„Pasujemy”: wiersze tak", widget: list, field: { name: wiersz, label: "Wiersz", widget: string }, required: false }
@@ -932,8 +940,7 @@ collections:
           - { name: podpowiedzEtykieta, label: "Znak „i”: początek opisu dla czytnika ekranu", widget: string, required: false }
           - { name: nieDotyczy, label: "Napis przy pozycji wyłączonej", widget: string, required: false }
           - { name: indywidualnie, label: "Zdanie o wycenie indywidualnej", widget: text, required: false }
-          - { name: prowizjeNaglowek, label: "Prowizje: nagłówek", widget: string, required: false }
-          - { name: prowizjeDopisek, label: "Prowizje: dopisek", widget: string, required: false }
+          - { name: platformaDopisek, label: "Dopisek o abonamencie i prowizjach platformy", widget: text, required: false }
           - { name: policz, label: "Guzik „Policz”", widget: string, required: false }
           - { name: miniJednorazowo, label: "Pasek sumy na telefonie: słowo „jednorazowo”", widget: string, required: false }
           - { name: miniMiesiecznie, label: "Pasek sumy na telefonie: skrót „mies.”", widget: string, required: false }
@@ -1022,52 +1029,6 @@ collections:
               - { name: formy, label: "Odmiana nazwy", widget: object, required: false, fields: [ { name: jedna, label: "1", widget: string }, { name: kilka, label: "2–4", widget: string }, { name: wiele, label: "5 i więcej", widget: string } ] }
               - { name: dla, label: "Dla grup", widget: hidden }
               - { name: wyklucza, label: "Wyklucza", widget: hidden }
-          - name: prowizje
-            label: "Prowizje (wiersz cennika)"
-            widget: object
-            required: false
-            fields:
-              - { name: tabela, label: "Tabela cennika", widget: hidden }
-              - { name: szukaj, label: "Fragment nazwy pozycji", widget: hidden }
-
-      # ---- efekty (/efekty) ----
-      # Lustro src/data/efekty.json, czytają go src/pages/efekty/index.astro i src/pages/efekty/animacja-przewijaniem.astro.
-      # Karta pokazuje się tylko przy statusie „gotowy”. Slug = adres podstrony /efekty/<slug>/ (podstronę robi programista).
-      - name: efekty
-        label: "Efekty (/efekty)"
-        file: "src/data/efekty.json"
-        description: >-
-          Podstrona /efekty: „Efekty wizualne możliwe do zaimplementowania na stronę”, kafelki otwierające podstrony z pokazem. Kolejność w panelu = kolejność kafelków. Nowy efekt wymaga także pliku podstrony (programista); sam wpis tutaj nie tworzy adresu.
-        fields:
-          - { name: tytulKarty, label: "Tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
-          - { name: opisWyszukiwarki, label: "Opis dla wyszukiwarek", widget: text, required: false }
-          - { name: naglowek, label: "Nagłówek strony (H1)", widget: string, required: false }
-          - { name: lead, label: "Zdanie pod nagłówkiem", widget: text, required: false }
-          - { name: wydajnoscZdanie, label: "Zdanie o szybkości i pomiarze PageSpeed", widget: text, required: false }
-          - { name: wybierzNaglowek, label: "Nagłówek nad kartami", widget: string, required: false }
-          - { name: przycisk, label: "Napis przycisku na karcie", widget: string, required: false }
-          - name: efekty
-            label: "Efekty (karty)"
-            widget: list
-            fields:
-              - { name: nazwa, label: "Nazwa efektu (też H1 podstrony)", widget: string }
-              - { name: slug, label: "Adres podstrony (/efekty/…/)", widget: string, hint: "Małe litery, cyfry i myślniki. Zmiana adresu wymaga programisty." }
-              - { name: opisKrotki, label: "Opis na karcie", widget: text, required: false }
-              - { name: opisDlugi, label: "Podstrona: akapit „Co to daje”", widget: text, required: false }
-              - { name: dlaKogo, label: "Podstrona: dla kogo", widget: text, required: false }
-              - { name: lead, label: "Podstrona: zdanie pod nagłówkiem", widget: text, required: false }
-              - { name: kosztWzgledny, label: "Karta: koszt wydajności w jednym zdaniu", widget: text, required: false }
-              - { name: kosztWydajnosci, label: "Podstrona: akapit „Ile kosztuje wydajności”", widget: text, required: false }
-              - { name: status, label: "Status", widget: select, options: ["gotowy", "w przygotowaniu"], default: "gotowy" }
-              - { name: miniatura, label: "Miniatura karty (ścieżka w public/)", widget: string, required: false }
-              - { name: alt, label: "Opis miniatury dla niewidomych", widget: text, required: false }
-              - { name: waga, label: "Karta i podstrona: waga w kB (np. 0,7 kB)", widget: string, required: false }
-              - { name: naStronie, label: "Efekt działa na tej witrynie (plakietka „Działa na tej stronie”)", widget: boolean, default: false, required: false }
-              - { name: adres, label: "Adres istniejącej strony zamiast /efekty/…/ (np. /jak-sprawdzic-szybkosc-strony/)", widget: string, required: false }
-              - { name: tytulKarty, label: "Podstrona: tytuł karty i wyniku w wyszukiwarce", widget: string, required: false }
-              - { name: opisWyszukiwarki, label: "Podstrona: opis dla wyszukiwarek", widget: text, required: false }
-              - { name: inspiracja, label: "Skąd pomysł (tylko dla redakcji, nie pokazujemy)", widget: string, required: false }
-
 
       # ---- okno zgody na cookie ----
       - name: zgoda
@@ -1231,7 +1192,6 @@ collections:
         fields:
           - { name: menuOferta, label: "Menu i stopka: pozycja oferty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Oferta" }
           - { name: menuRealizacje, label: "Menu i stopka: pozycja realizacji", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Realizacje" }
-          - { name: menuEfekty, label: "Menu i stopka: pozycja efektów", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Efekty" }
           - { name: menuCena, label: "Menu i stopka: pozycja cen", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Cena" }
           - { name: menuSzybkosc, label: "Stopka i ścieżka: pozycja testu szybkości strony", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Szybkość" }
           - { name: menuFaq, label: "Menu: pozycja pytań i odpowiedzi", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: FAQ" }
@@ -1261,7 +1221,6 @@ collections:
           - { name: wezwanieGuzik, label: "Wpis: guzik wezwania (do kontaktu)", widget: string, required: false }
           - { name: wezwanieCena, label: "Wpis: drugi guzik wezwania (do cennika)", widget: string, required: false }
           - { name: czytajTakze, label: "Wpis: nagłówek „Czytaj także”", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Czytaj także" }
-          - { name: linkEfektyRealizacje, label: "Strona główna: przycisk pod Realizacjami do zakładki Efekty", widget: string, required: false, hint: "Puste pole = wraca napis domyślny: Zobacz efekty, które dodajemy do stron" }
           - name: odCzegoZaczac
             label: "Blog: Od czego zacząć"
             widget: object
@@ -1522,12 +1481,7 @@ collections:
           - { name: realizacjeMetoda, label: "Zdanie o metodzie", widget: text }
           - { name: realizacjeMetodaLink, label: "Tekst linku do metody", widget: string }
           - { name: realizacjeMetodaAdres, label: "Adres metody", widget: string }
-          - name: realizacje
-            label: "Daty publikacji stron"
-            widget: list
-            fields:
-              - { name: adres, label: "Adres (jak w kafelkach realizacji)", widget: string }
-              - { name: dataPublikacji, label: "Data publikacji", widget: datetime, format: "YYYY-MM-DD" }
+          - { name: podpisNazwa, label: "Podpis pod wpisami: nazwa (np. EcoPower Polska)", widget: string, required: false }
           - { name: sprawdzNaglowek, label: "Nagłówek „Sprawdź, zanim zapytasz”", widget: string }
           - name: sprawdz
             label: "Twierdzenia i dowody"
@@ -1541,27 +1495,6 @@ collections:
           - { name: guzik, label: "Tekst guzika", widget: string }
           - { name: knowsAbout, label: "Dziedziny (dane dla Google)", widget: list }
           - { name: sameAs, label: "Profile zewnętrzne (adresy)", widget: list, required: false }
-
-      # ---- pas rynku (strona główna) ----
-      - name: rynek
-        label: "Pas rynku (Core Web Vitals według technologii)"
-        file: src/data/rynek.json
-        fields:
-          - { name: _opis, label: "Opis (techniczny)", widget: hidden, required: false }
-          - { name: naglowek, label: "Nagłówek", widget: string }
-          - { name: wstep, label: "Zdanie pod nagłówkiem", widget: text, required: false }
-          - name: pozycje
-            label: "Pozycje (3–4)"
-            widget: list
-            max: 4
-            fields:
-              - { name: nazwa, label: "Technologia", widget: string }
-              - { name: wartosc, label: "Odsetek stron z dobrymi CWV (%)", widget: number, value_type: int, min: 0, max: 100 }
-          - { name: zrodlo, label: "Źródło (tekst)", widget: string }
-          - { name: zrodloAdres, label: "Źródło (adres)", widget: string }
-          - { name: odczyt, label: "Data odczytu", widget: datetime, format: "YYYY-MM-DD", time_format: false }
-          - { name: zweryfikowaneUZrodla, label: "Zweryfikowane u źródła pierwotnego", widget: boolean, required: false }
-          - { name: dopisek, label: "Dopisek po źródle", widget: string, required: false }
 
   # Kolekcja „Usługi” (runda 5, W1): 4 strony usług, ten sam zestaw pól (kotwica YAML &pola_uslugi).
   # W2 dopisuje dwa pliki z `fields: *pola_uslugi`. Tekst akapitów: [kotwica](/trasa/) = link, {od: Nazwa pozycji z cennika} = kwota z cennika.

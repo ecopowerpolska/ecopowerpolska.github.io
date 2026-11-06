@@ -2,56 +2,45 @@
   "imie": "Piotr Czwarnowski",
   "adres": "/autor/piotr-czwarnowski/",
   "tytulKarty": "Piotr Czwarnowski — strony i sklepy internetowe w Astro, Warszawa",
-  "opisWyszukiwarki": "Piotr Czwarnowski buduje strony i sklepy internetowe w Astro w EcoPower Polska Sp. z o.o. w Warszawie. Wyniki PageSpeed zbudowanych stron, metoda pomiaru i wpisy.",
+  "opisWyszukiwarki": "Piotr Czwarnowski, autor wpisów EcoPower Polska. EcoPower Polska Sp. z o.o. w Warszawie buduje strony i sklepy internetowe od 2012 roku. Przykładowe wyniki PageSpeed, metoda pomiaru i wpisy.",
   "zdjecieAlt": "Piotr Czwarnowski, uśmiechnięty, z lupą nagłowną z podświetleniem nasuniętą na okulary",
   "naglowek": "Piotr Czwarnowski",
   "podtytul": "Strony i sklepy internetowe, EcoPower Polska",
   "wstep": [
-    "Buduję strony i sklepy internetowe w EcoPower Polska Sp. z o.o. w Warszawie.",
-    "Składam je w Astro, więc do przeglądarki trafia gotowy HTML, który szybko otwiera się także na telefonie.",
-    "Każdą stronę po publikacji mierzę w PageSpeed Insights, osobno na telefonie i na komputerze.",
-    "Wynik publikuję obok zrzutu raportu, z datą pomiaru.",
-    "Napisałem wpis o wyszukiwaniu agentowym i hasło „Wyszukiwanie agentowe” w polskiej Wikipedii.",
-    "Kod tej strony i surowe wyniki pomiarów leżą w publicznych repozytoriach na GitHubie."
+    "EcoPower Polska Sp. z o.o. w Warszawie buduje strony i sklepy internetowe od 2012 roku.",
+    "Do każdej strony dobieramy osobę, która ją buduje.",
+    "Każdą stronę po publikacji mierzymy w PageSpeed Insights, osobno na telefonie i na komputerze, i pokazujemy wynik.",
+    "Zakres, poprawki i publikację ustalasz bezpośrednio z osobą, która buduje Twoją stronę."
   ],
-  "podpis": "Buduję strony i sklepy w Astro i każdą mierzę w PageSpeed Insights po publikacji.",
+  "podpis": "Budujemy strony i sklepy w Astro i każdą mierzymy w PageSpeed Insights po publikacji.",
   "linkPodpisu": "Więcej o autorze",
-  "jakPracujeNaglowek": "Jak pracuję",
+  "jakPracujeNaglowek": "Jak pracujemy",
   "jakPracuje": [
     {
       "tytul": "Jawny cennik",
-      "tekst": "Ceny stron i sklepów stoją na stronie z cennikiem, a kalkulator liczy orientacyjną kwotę, zanim do mnie napiszesz."
+      "tekst": "Ceny stron i sklepów stoją na stronie z cennikiem, a kalkulator liczy orientacyjną kwotę, zanim do nas napiszesz."
     },
     {
       "tytul": "Pomiar każdej strony",
-      "tekst": "Po publikacji mierzę stronę w PageSpeed Insights na telefonie i komputerze, bez parametrów omijających pamięć podręczną, i zapisuję wynik z datą."
+      "tekst": "Po publikacji mierzymy stronę w PageSpeed Insights na telefonie i komputerze, bez parametrów omijających pamięć podręczną."
     },
     {
       "tytul": "Zmiana od razu na żywej stronie",
-      "tekst": "Zmianę publikuję w tym samym przebiegu, w którym ją wprowadzam, i sprawdzam ją na żywej stronie, nie tylko u siebie."
+      "tekst": "Zmianę publikujemy w tym samym przebiegu, w którym ją wprowadzamy, i sprawdzamy ją na żywej stronie, nie tylko u siebie."
     },
     {
       "tytul": "Prawdziwe zdjęcia",
       "tekst": "Na strony trafiają prawdziwe zdjęcia, w proporcji pliku, bez obrazów wygenerowanych przez AI."
     }
   ],
-  "realizacjeNaglowek": "Strony, które zbudowałem",
-  "realizacjeMetoda": "Wynik to pomiar PageSpeed Insights w punktach (0–100), osobno na telefonie i komputerze, z dniem pomiaru w ostatniej kolumnie.",
+  "realizacjeNaglowek": "Przykładowe strony",
+  "realizacjeMetoda": "Wynik to pomiar PageSpeed Insights w punktach (0–100), osobno na telefonie i komputerze. Odnośnik „zmierz” w ostatniej kolumnie otwiera pomiar tej strony.",
   "realizacjeMetodaLink": "Jak mierzymy",
   "realizacjeMetodaAdres": "/jak-mierzymy/",
-  "realizacje": [
-    { "adres": "https://studioagat.pl/", "dataPublikacji": "2026-10-16" },
-    { "adres": "https://nadihome.pl/", "dataPublikacji": "2026-09-09" },
-    { "adres": "https://pan-stolarz.pl/", "dataPublikacji": "2026-10-14" },
-    { "adres": "https://kuchnia-na-wymiar-warszawa.pl/", "dataPublikacji": "2026-10-12" },
-    { "adres": "https://szafy-na-wymiar-warszawa.pl/", "dataPublikacji": "2026-10-13" },
-    { "adres": "https://garderoba-na-wymiar-warszawa.pl/", "dataPublikacji": "2026-10-13" },
-    { "adres": "https://panwylewka.pl/", "dataPublikacji": "2026-10-26" }
-  ],
   "sprawdzNaglowek": "Sprawdź, zanim zapytasz",
   "sprawdz": [
     {
-      "twierdzenie": "Strony, które buduję, są szybkie.",
+      "twierdzenie": "Strony, które budujemy, są szybkie.",
       "dowod": "Przy każdej stronie w tabeli wyżej jest odnośnik „zmierz”. Otwiera PageSpeed Insights z adresem tej strony, więc wynik sprawdzisz sam."
     },
     {
@@ -59,12 +48,6 @@
       "dowod": "EcoPower Polska Sp. z o.o., KRS {krs}, NIP {nip}. Numer wpiszesz w wyszukiwarce KRS Ministerstwa Sprawiedliwości.",
       "link": "Wyszukiwarka KRS",
       "adres": "https://wyszukiwarka-krs.ms.gov.pl/"
-    },
-    {
-      "twierdzenie": "Kod jest do obejrzenia.",
-      "dowod": "Kod tej strony jest publiczny na GitHubie.",
-      "link": "Repozytorium strony",
-      "adres": "https://github.com/ecopowerpolska/ecopowerpolska.github.io"
     },
     {
       "twierdzenie": "Ceny są jawne.",
@@ -79,8 +62,8 @@
       "adres": "/llms.txt"
     }
   ],
-  "wpisyNaglowek": "Moje wpisy",
-  "guzik": "Napisz do mnie",
+  "wpisyNaglowek": "Nasze wpisy",
+  "guzik": "Napisz do nas",
   "knowsAbout": [
     "strony internetowe",
     "sklepy internetowe",
@@ -91,5 +74,6 @@
     "SEO",
     "wyszukiwanie agentowe"
   ],
-  "sameAs": []
+  "sameAs": [],
+  "podpisNazwa": "EcoPower Polska"
 }

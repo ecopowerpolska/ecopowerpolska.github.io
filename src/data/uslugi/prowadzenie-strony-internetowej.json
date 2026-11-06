@@ -11,7 +11,7 @@
   "cenaJednostkaKod": "MON",
   "coDostajeszNaglowek": "Dostajesz opiekę, która kończy się raportem z danymi.",
   "coDostajesz": [
-    "Hosting, odnowienie domeny i certyfikat SSL pod jedną opieką.",
+    "Hosting i certyfikat SSL w cenie oraz odnowienie domeny pod jedną opieką.",
     "Kopie zapasowe: pełną historię zmian w repozytorium strony i codzienną kopię hostingu lh.pl przechowywaną 30 dni.",
     "Aktualizacje i monitoring strony.",
     "Zmiany treści i nowe podstrony, publikowane od razu i sprawdzane na żywej stronie.",
@@ -28,7 +28,7 @@
         "Prowadzenie strony to stała opieka po publikacji. Zakres ustalamy z Tobą i składamy go z kilku części. Każdą możesz wziąć osobno:"
       ],
       "lista": [
-        "Hosting, domena i certyfikat SSL: strona działa pod Twoim adresem, z szyfrowanym połączeniem, a domena odnawia się na czas.",
+        "Hosting, domena i certyfikat SSL: strona działa pod Twoim adresem, z szyfrowanym połączeniem, a domena odnawia się na czas. Hosting i certyfikat SSL są w cenie.",
         "Opieka techniczna: kopie zapasowe, aktualizacje i monitoring.",
         "Zmiany treści: nowe zdjęcia, ceny, godziny otwarcia, opisy usług i nowe podstrony.",
         "Blog: pojedyncze wpisy albo regularne prowadzenie bloga z doborem tematów pod wyszukiwarkę.",
@@ -88,7 +88,7 @@
       "naglowek": "Ile kosztuje opieka nad stroną internetową",
       "akapity": [
         "Opieka techniczna i aktualizacje strony kosztują u nas {od: Opieka techniczna i aktualizacje} netto. W tej kwocie są kopie zapasowe, aktualizacje i monitoring; prace poza pakietem rozliczamy godzinowo według cennika.",
-        "Hosting, domena i certyfikat SSL to {od: Hosting, domena i certyfikat SSL} netto. Pojedynczy wpis na blogu kosztuje {od: Treści: wpis na blogu}, a prowadzenie bloga firmowego, czyli 4 wpisy w miesiącu, {od: Treści: prowadzenie bloga firmowego} netto.",
+        "Hosting i certyfikat SSL stron, którymi się opiekujemy, są w cenie; odnowienie domeny płacisz rejestratorowi wg jego cennika. Pojedynczy wpis na blogu kosztuje {od: Treści: wpis na blogu}, a prowadzenie bloga firmowego, czyli 4 wpisy w miesiącu, {od: Treści: prowadzenie bloga firmowego} netto.",
         "Opieka nad sklepem jest osobną pozycją, od {od: Opieka techniczna sklepu} netto, bo obejmuje test ścieżki zakupu po aktualizacjach i pilnowanie płatności i zamówień. Wszystkie pozycje i kwoty: [ceny prowadzenia strony i sklepu](/cena/#strona-prowadzenie)."
       ],
       "lista": []
@@ -111,7 +111,7 @@
     }
   ],
   "przykladyNaglowek": "Strony, które prowadzimy",
-  "przykladyLead": "Te strony zbudowaliśmy i prowadzimy dalej: wprowadzamy zmiany, mierzymy je i pilnujemy Search Console. Wynik to pomiar PageSpeed Insights, z datą przy każdej stronie.",
+  "przykladyLead": "Te strony zbudowaliśmy i prowadzimy dalej: wprowadzamy zmiany, mierzymy je i pilnujemy Search Console. Wynik to pomiar PageSpeed Insights.",
   "przyklady": [
     {
       "adres": "https://studioagat.pl/",
@@ -160,7 +160,7 @@
   "pytania": [
     {
       "pytanie": "Czy muszę mieć opiekę, żeby strona działała?",
-      "odpowiedz": "Nie. Strona zbudowana w Astro to gotowe pliki i działa bez codziennej obsługi. Opłacony musi być hosting i domena. Opieka jest po to, żeby strona była aktualna, szybka i widoczna w Google, a ktoś reagował, gdy coś przestanie działać."
+      "odpowiedz": "Nie. Strona zbudowana w Astro to gotowe pliki i działa bez codziennej obsługi. Hosting i certyfikat SSL są w cenie, a domenę odnawiasz u rejestratora. Opieka jest po to, żeby strona była aktualna, szybka i widoczna w Google, a ktoś reagował, gdy coś przestanie działać."
     },
     {
       "pytanie": "Jak szybko wprowadzacie zmiany?",

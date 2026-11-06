@@ -32,7 +32,7 @@
     },
     {
       "pytanie": "Gdzie stoi strona?",
-      "odpowiedz": "Strony z formularzem, sprzedażą albo rezerwacjami stoją na hostingu lh.pl, każda w osobnej przestrzeni z oddzielonym katalogiem i własną wersją PHP. Stronę buduje GitHub Actions, a na hosting trafiają gotowe pliki. Prosta wizytówka bez sprzedaży może stać na GitHub Pages; repozytorium strony jest wtedy publiczne, więc publiczna jest też historia jej zmian.",
+      "odpowiedz": "Strony z formularzem, sprzedażą albo rezerwacjami stoją na hostingu lh.pl, każda w osobnej przestrzeni z oddzielonym katalogiem i własną wersją PHP. Stronę buduje GitHub Actions, a na hosting trafiają gotowe pliki. Prosta wizytówka bez sprzedaży może stać na GitHub Pages; repozytorium strony jest wtedy publiczne, więc publiczna jest też historia jej zmian. Hosting i certyfikat SSL stron statycznych oraz stron, którymi się opiekujemy, są w cenie.",
       "kotwica": "hosting",
       "naGlownej": false
     },
@@ -50,7 +50,7 @@
     },
     {
       "pytanie": "Czym różni się domena od hostingu i skrzynki pocztowej?",
-      "odpowiedz": "Domena to adres, na przykład ecopowerpolska.pl, wykupiony u rejestratora. Hosting to serwer z plikami strony, a skrzynka pocztowa odbiera listy na adres w tej domenie, i każde z nich może być u innej firmy: ta strona stoi na GitHub Pages, a skrzynka kontakt@ecopowerpolska.pl działa na serwerze LH.pl. Rekordy DNS domeny wskazują osobno stronę i osobno pocztę, dlatego przy przenoszeniu strony zmieniamy tylko rekordy strony, a rekordów poczty nie ruszamy.",
+      "odpowiedz": "Domena to adres, na przykład ecopowerpolska.pl, wykupiony u rejestratora. Hosting to serwer z plikami strony, a skrzynka pocztowa odbiera listy na adres w tej domenie, i każde z nich może być u innej firmy: ta strona stoi na GitHub Pages, a skrzynka kontakt@ecopowerpolska.pl działa na serwerze LH.pl. Rekordy DNS domeny wskazują osobno stronę i osobno pocztę, dlatego przy przenoszeniu strony zmieniamy tylko rekordy strony, a rekordów poczty nie ruszamy. W cenie strony statycznej jest hosting i certyfikat SSL; domenę odnawiasz u rejestratora wg jego cennika.",
       "kotwica": "domena-hosting-poczta",
       "naGlownej": false
     },
@@ -76,6 +76,12 @@
       "pytanie": "Jak chronicie formularz kontaktowy przed spamem?",
       "odpowiedz": "Formularz obsługuje skrypt PHP na hostingu i sprawdza każde zgłoszenie po stronie serwera: adres strony, z której przyszło, ukryte pole-pułapkę i weryfikację Cloudflare Turnstile. Zgłoszenie bez ważnej weryfikacji serwer odrzuca, zanim cokolwiek trafi do Twojej skrzynki. Klucz tajny Turnstile leży na hostingu, a nie w kodzie strony.",
       "kotwica": "spam",
+      "naGlownej": false
+    },
+    {
+      "pytanie": "Na jaki adres trafiają wiadomości z formularza?",
+      "odpowiedz": "Na dowolny adres, który wskażesz: wiadomości z formularza możemy przekierować tam, gdzie chcesz je czytać. Jeśli masz kilka stron albo sklepów, wiadomości z nich mogą trafiać na ten sam adres, a każda jest oznaczona nazwą strony, z której przyszła, więc od razu wiesz, kogo dotyczy.",
+      "kotwica": "adres-formularza",
       "naGlownej": false
     },
     {

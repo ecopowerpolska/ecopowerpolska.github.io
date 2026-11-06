@@ -85,6 +85,8 @@ const daneStrukturalne = {
         {k.pierwszaTekst && <p>{k.pierwszaTekst}</p>}
         {pierwszaLista.length > 0 && <ul class="zanim__lista">{pierwszaLista.map((p) => <li>{p}</li>)}</ul>}
         {k.pierwszaUwaga && <p class="zanim__uwaga">{k.pierwszaUwaga}</p>}
+        {k.formularzNota && <p>{k.formularzNota}</p>}
+        {k.podpisZdanie && <p>{k.podpisZdanie}</p>}
         {k.podpis && (
           <p class="podpis">
             <a href={tekst(k.podpisAdres, '/autor/piotr-czwarnowski/')}>

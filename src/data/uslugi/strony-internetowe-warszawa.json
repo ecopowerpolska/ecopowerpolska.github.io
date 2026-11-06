@@ -13,10 +13,11 @@
     "Stronę zaprojektowaną pod Twoje usługi: oferta, realizacje, dane firmy i formularz tam, gdzie klient ich szuka.",
     "Teksty napisane z Twoich informacji i prawdziwe zdjęcia realizacji, bez obrazów z generatora.",
     "Panel do edycji treści pod adresem /admin/, z dostępem tylko do Twojej strony: teksty, zdjęcia, wpisy i dane firmy zmieniasz sam.",
-    "Formularz kontaktowy w PHP chroniony przez Cloudflare Turnstile, z wiadomościami na Twój adres.",
-    "Hosting w osobnej przestrzeni na lh.pl, z własną wersją PHP, albo bezpłatne GitHub Pages dla wizytówki bez sprzedaży.",
+    "Formularz kontaktowy w PHP chroniony przez Cloudflare Turnstile.",
+    "Wiadomości z formularza kierujemy na dowolny wskazany przez Ciebie adres. Z kilku stron mogą trafiać na ten sam adres i są oznaczone nazwą strony, z której przyszły.",
+    "Hosting i certyfikat SSL w cenie: osobna przestrzeń na lh.pl z własną wersją PHP albo bezpłatne GitHub Pages dla wizytówki bez sprzedaży.",
     "Domenę podpiętą bez utraty poczty i przekierowania 301 ze starej strony.",
-    "Szyfrowane połączenie (HTTPS) na Twojej domenie i przekierowanie wariantu z „www” albo bez.",
+    "Szyfrowane połączenie (HTTPS) na Twojej domenie, bez dopłaty, i przekierowanie wariantu z „www” albo bez.",
     "Zgłoszenie w Google Search Console i w Bing, mapę strony i dane firmy w danych strukturalnych.",
     "Własne repozytorium kodu z historią każdej zmiany i pomiar PageSpeed Insights po publikacji. Strony klientów nie dzielą kodu ani dostępów."
   ],
@@ -116,6 +117,7 @@
       "id": "hosting",
       "naglowek": "Hosting, domena i poczta bez przerwy w działaniu",
       "akapity": [
+        "Hosting i certyfikat SSL stron statycznych oraz stron, którymi się opiekujemy, są w cenie, bez osobnej opłaty.",
         "Strona z formularzem, sprzedażą albo rezerwacjami stoi na hostingu lh.pl. Każda dostaje osobną przestrzeń z oddzielonym katalogiem i własną wersją PHP, więc nie dzieli miejsca z innymi stronami. Stronę buduje GitHub Actions, a na hosting trafiają gotowe pliki.",
         "Wizytówka bez sprzedaży, rezerwacji i płatności może stać na GitHub Pages bez opłat za hosting. Tak działa ta strona.",
         "Domena zostaje u Twojego rejestratora. Przed przepięciem zapisujemy komplet rekordów DNS jako punkt powrotu i zmieniamy tylko rekordy adresowe strony. Rekordy poczty zostają bez zmian, a pracę kończymy dopiero wtedy, gdy list testowy dochodzi w obie strony.",
@@ -134,7 +136,7 @@
     }
   ],
   "przykladyNaglowek": "Realizacje z wynikami PageSpeed",
-  "przykladyLead": "Wszystkie nasze realizacje to strony firm z Warszawy. Wyniki pochodzą z pomiaru PageSpeed Insights i każdy może je powtórzyć sam na pagespeed.web.dev.",
+  "przykladyLead": "Przykładowe realizacje to strony firm z Warszawy. Wyniki pochodzą z pomiaru PageSpeed Insights i każdy może je powtórzyć sam na pagespeed.web.dev.",
   "przyklady": [
     {
       "adres": "https://studioagat.pl/",
@@ -206,7 +208,7 @@
   ],
   "cenaNaglowek": "Ile kosztuje strona internetowa dla firmy w Warszawie",
   "cenaTekst": [
-    "Strona firmowa kosztuje u nas od {od: Strona firmowa} netto, wizytówka od {od: Wizytówka, strona jednostronicowa} netto. Kwoty za hosting, domenę i prowadzenie strony są w [cenniku stron internetowych](/cena/), a zakres swojej strony policzysz w kalkulatorze i wyślesz razem z zapytaniem.",
+    "Strona firmowa kosztuje u nas od {od: Strona firmowa} netto, wizytówka od {od: Wizytówka, strona jednostronicowa} netto. Hosting i certyfikat SSL stron statycznych są w cenie. Kwoty za prowadzenie strony są w [cenniku stron internetowych](/cena/), a zakres swojej strony policzysz w kalkulatorze i wyślesz razem z zapytaniem.",
     "Pracujemy z firmami z całej Warszawy; biuro jest na Gocławiu."
   ],
   "przyciskKalkulator": "Policz cenę strony w kalkulatorze",

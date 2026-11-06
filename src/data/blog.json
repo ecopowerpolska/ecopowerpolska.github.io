@@ -1,7 +1,6 @@
 {
   "menuOferta": "Oferta",
   "menuRealizacje": "Realizacje",
-  "menuEfekty": "Efekty",
   "menuCena": "Cena",
   "menuSzybkosc": "Szybkość",
   "menuFaq": "FAQ",
@@ -25,7 +24,6 @@
   "przyciskMenu": "Menu",
   "etykietaMenuStopki": "Strony witryny",
   "okruszkiEtykieta": "Ścieżka",
-  "linkEfektyRealizacje": "Zobacz efekty, które dodajemy do stron",
   "pasekBoczny": "Do wpisu",
   "spisTytul": "W tym wpisie",
   "wezwanieTytul": "Planujesz stronę albo sklep?",

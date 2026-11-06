@@ -1,5 +1,5 @@
 ---
-// Podpis autora na końcu wpisu: zdjęcie 72 px w ramce (kwadrat, nie kółko), imię, jedno zdanie, link do strony autora.
+// Podpis na końcu wpisu: zdjęcie 72 px w ramce (kwadrat, nie kółko), „EcoPower Polska”, jedno zdanie w liczbie mnogiej, link. Imię i nazwisko autora tylko w linii meta wpisu i w JSON-LD.
 // Dane: src/data/autor.json. Bez JS.
 import { Image } from 'astro:assets';
 import autor from '../data/autor.json';
@@ -7,10 +7,10 @@ import zdjecie from '../assets/blog/autor-piotr-czwarnowski.jpg';
 import { tekst } from '../lib/tekst';
 ---
 
-<aside class="podpis-autora" aria-label={`Autor: ${autor.imie}`}>
+<aside class="podpis-autora" aria-label={`Autor: ${tekst(autor.podpisNazwa, 'EcoPower Polska')}`}>
   <Image class="podpis-autora__zdjecie" src={zdjecie} alt="" width={72} height={72} densities={[1, 2]} loading="lazy" decoding="async" />
   <div>
-    <p class="podpis-autora__imie">{autor.imie}</p>
+    <p class="podpis-autora__imie">{tekst(autor.podpisNazwa, 'EcoPower Polska')}</p>
     <p class="podpis-autora__zdanie">{tekst(autor.podpis, '')}</p>
     <a class="podpis-autora__link" href={autor.adres}>{tekst(autor.linkPodpisu, 'Więcej o autorze')}</a>
   </div>

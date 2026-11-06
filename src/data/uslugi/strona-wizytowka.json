@@ -11,9 +11,9 @@
   "coDostajeszNaglowek": "Dostajesz małą stronę, która robi swoje: telefon, adres, formularz.",
   "coDostajesz": [
     "Jedną stronę albo 2–3 podstrony: usługi, informacje o firmie i kontakt.",
-    "Formularz kontaktowy, który wysyła wiadomość na Twój adres e-mail. Boty zatrzymuje Cloudflare Turnstile.",
+    "Formularz kontaktowy, który wysyła wiadomość na adres e-mail wskazany przez Ciebie. Z kilku stron mogą one trafiać na ten sam adres i są oznaczone nazwą strony, z której przyszły. Boty zatrzymuje Cloudflare Turnstile.",
     "Adres firmy z odnośnikiem do Map Google i numer telefonu, który na telefonie dzwoni po dotknięciu.",
-    "Szyfrowane połączenie (HTTPS) na Twojej domenie.",
+    "Szyfrowane połączenie (HTTPS) na Twojej domenie, w cenie.",
     "Tytuł, opis i dane firmy w danych strukturalnych, mapę strony zgłoszoną w Google Search Console i przez IndexNow do Bing.",
     "Pomiar PageSpeed Insights po publikacji, osobno na telefonie i na komputerze.",
     "Osobne repozytorium kodu z pełną historią zmian: każdą wersję strony da się odtworzyć.",
@@ -104,7 +104,7 @@
       "naglowek": "Ile kosztuje strona wizytówka",
       "akapity": [
         "Strona wizytówka kosztuje u nas od {od: Wizytówka, strona jednostronicowa} netto. To cena za jedną stronę albo 2–3 podstrony z formularzem kontaktowym.",
-        "Domenę, hosting i teksty liczymy osobno. Wizytówka bez sprzedaży może stać na GitHub Pages bez opłat za hosting (opis niżej), więc stałym kosztem zostaje wtedy przede wszystkim domena u rejestratora. Pełną listę cen, także prowadzenia strony po publikacji, znajdziesz w cenniku: [cena strony wizytówki](/cena/).",
+        "Hosting i certyfikat SSL są w cenie, a domenę i teksty liczymy osobno. Wizytówka bez sprzedaży może stać na GitHub Pages bez opłat za hosting (opis niżej), więc stałym kosztem zostaje wtedy przede wszystkim domena u rejestratora. Pełną listę cen, także prowadzenia strony po publikacji, znajdziesz w cenniku: [cena strony wizytówki](/cena/).",
         "Ostateczną kwotę podajemy po rozmowie o zakresie. Wpływa na nią liczba podstron, to, czy teksty piszemy my, i czy przenosimy treść ze starej strony."
       ],
       "lista": []

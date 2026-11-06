@@ -1,6 +1,6 @@
 // /llms.txt — streszczenie strony dla asystentów AI (wzorzec llmstxt.org).
 // Treść = plan analizy/seo-ecopowerpolska-2026-10-27.md §6.4 (runda 5, 2026-10-27): oferta z czterema stronami usług,
-// fakty, realizacje, strony witryny, kontakt. 2026-11-06: sekcja „Kto prowadzi firmę” i trasy autora, słownika, pomiaru, prawa. Liczby PageSpeed („97–100”, „4/4”, liczba realizacji, data) liczy kod
+// fakty, realizacje, strony witryny, kontakt. 2026-11-06: sekcja „Kto prowadzi firmę” i trasy autora, słownika, pomiaru, prawa. Liczby PageSpeed („97–100”, „4/4”; bez liczby realizacji i bez daty) liczy kod
 // z src/data/pomiary.json, liczbę pytań — z faq.json, listę wpisów — z kolekcji (te same filtry co /blog/).
 // Audyt Lighthouse `llms-txt` wymaga: wiersza `# Tytuł`, co najmniej jednego linku Markdown i ≥ 50 znaków.
 // llms.txt NIE wpływa na widoczność w Google (Search Central 2026-06-15) — służy botom AI i audytowi PSI.
@@ -10,6 +10,7 @@ import { getCollection } from 'astro:content';
 import firma from '../data/firma.json';
 import faq from '../data/faq.json';
 import pomiaryJson from '../data/pomiary.json';
+import serwisyJson from '../data/serwisy.json';
 import { tekst } from '../lib/tekst';
 import { opublikowane, adresWpisu, dataPoPolsku } from '../lib/wpisy';
 
@@ -28,6 +29,7 @@ const OPISY_REALIZACJI: Record<string, string> = {
   'https://kuchnia-na-wymiar-warszawa.pl/': 'kuchnie na wymiar z kalkulatorem ceny.',
   'https://szafy-na-wymiar-warszawa.pl/': 'szafy wnękowe, przesuwne i do sufitu.',
   'https://garderoba-na-wymiar-warszawa.pl/': 'garderoby walk-in, we wnęce i pod skosem.',
+  'https://holbud-polska.pl/': 'remonty mieszkań, domów, tarasów i balkonów w Warszawie, z kalkulatorem ceny remontu.',
   'https://panwylewka.pl/': 'wylewki betonowe w Warszawie i okolicach.',
 };
 
@@ -40,7 +42,13 @@ const zakres = (liczby: number[]): string => {
 
 export const GET: APIRoute = async () => {
   const baza = new URL('/', import.meta.env.SITE).href.replace(/\/$/, '');
-  const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
+  // Przykładowe realizacje (pole `przyklad` w serwisy.json, najwyżej 3), jak na stronie głównej; bez liczby i bez dat.
+  const widoczne = await getCollection('serwisy', ({ data }) => !data.ukryty);
+  const oznaczone = new Set(
+    ((serwisyJson as { serwisy?: { adres?: string; przyklad?: unknown }[] }).serwisy ?? []).filter((w) => w.przyklad === true).map((w) => String(w.adres ?? '')),
+  );
+  const przykladowe = widoczne.filter((s) => oznaczone.has(s.data.adres));
+  const realizacje = (przykladowe.length > 0 ? przykladowe : widoczne).slice(0, 3);
   const wpisy = await opublikowane();
   const nazwa = tekst(firma.nazwaKrotka, 'EcoPower Polska');
   const nazwaSpolki = tekst((firma as Record<string, unknown>).nazwaStopka as string | undefined, `${nazwa} Sp. z o.o.`);
@@ -61,24 +69,19 @@ export const GET: APIRoute = async () => {
       p!.desktop?.agentoweZdane === p!.desktop?.agentoweWszystkie,
   );
   const agentoweMax = zmierzone[0]?.mobile?.agentoweWszystkie ?? 4;
-  const dataPomiaru = zmierzone
-    .map((p) => p!.mobile!.data ?? '')
-    .sort()
-    .at(-1);
-  const dataPomiaruPl = dataPomiaru ? dataPomiaru.split('-').reverse().join('.') : '';
   const psiTelefon = telefonPsi.length > 0 ? zakres(telefonPsi) : '';
   const psiKomputer = komputerPsi.length > 0 ? zakres(komputerPsi) : '';
 
   const linie = [
     `# ${nazwa}`,
     '',
-    `> Budujemy szybkie strony internetowe i sklepy internetowe dla firm, a potem je prowadzimy. Każdą stronę mierzymy w Google PageSpeed Insights i publikujemy wynik${psiTelefon ? `: nasze realizacje mają ${psiTelefon} punktów wydajności na telefonie${psiKomputer ? ` i ${psiKomputer} na komputerze` : ''}` : ''}.`,
+    `> Budujemy szybkie strony internetowe i sklepy internetowe dla firm, a potem je prowadzimy. Każdą stronę mierzymy w Google PageSpeed Insights i publikujemy wynik${psiTelefon ? `: nasze przykładowe realizacje mają ${psiTelefon} punktów wydajności na telefonie${psiKomputer ? ` i ${psiKomputer} na komputerze` : ''}` : ''}.`,
     '',
     `${nazwaSpolki} to warszawska firma z Gocławia. Projektujemy, piszemy i wdrażamy strony i sklepy dla małych i średnich firm usługowych — od wizytówki po sklep z płatnością online. Ceny orientacyjne netto są w [cenniku](${baza}/cena/), a [kalkulator](${baza}/cena/#kalkulator) liczy wycenę od razu.`,
     '',
     '## Kto prowadzi firmę',
     '',
-    `Firmę prowadzi Piotr Czwarnowski. Projektuje i buduje nasze strony i sklepy, a na blogu opisuje, jak je mierzymy. Kim jest i jakie strony zbudował, opisuje [strona autora](${baza}/autor/piotr-czwarnowski/).`,
+    `Spółka buduje strony i sklepy od 2012 roku. Do każdej strony dobieramy osobę, która ją buduje; zakres, poprawki i publikację ustalasz bezpośrednio z nią. Jak pracujemy i co możesz sprawdzić przed zapytaniem, opisuje [strona autora](${baza}/autor/piotr-czwarnowski/).`,
     '',
     '## Co robimy',
     '',
@@ -109,7 +112,7 @@ export const GET: APIRoute = async () => {
     '- Technologia: Astro (statyczne pliki HTML), PHP 8.4 na hostingu lh.pl dla formularzy i paneli, Cloudflare dla DNS i ochrony formularzy (Turnstile).',
     ...(zmierzone.length > 0
       ? [
-          `- Szybkość: ${zmierzone.length} realizacji, PageSpeed Insights ${dataPomiaruPl} — wydajność na telefonie ${psiTelefon}, na komputerze ${psiKomputer}${wszystkieAgentowe ? `; przeglądanie agentowe ${agentoweMax}/${agentoweMax} na każdej` : ''}.`,
+          `- Szybkość: przykładowe realizacje w PageSpeed Insights — wydajność na telefonie ${psiTelefon}, na komputerze ${psiKomputer}${wszystkieAgentowe ? `; przeglądanie agentowe ${agentoweMax}/${agentoweMax} na każdej` : ''}.`,
         ]
       : []),
     '- Każda strona ma osobne repozytorium kodu i osobny dostęp do panelu — strony klientów nie dzielą kodu ani haseł.',
@@ -132,10 +135,8 @@ export const GET: APIRoute = async () => {
     `- [Cennik](${baza}/cena/): ceny netto wykonania i prowadzenia strony oraz sklepu, z kalkulatorem.`,
     `- [Kontakt i wycena](${baza}/kontakt/): formularz zapytania z dołączonym wyliczeniem z kalkulatora.`,
     `- [Pytania i odpowiedzi](${baza}/faq/): ${liczbaPytan} pytania o czas, panel, hosting, pocztę, sklep, PageSpeed i Google.`,
-    `- [Efekty na stronach](${baza}/efekty/): efekty z wagą w kB i wynikiem PageSpeed.`,
-    `- [Animacja sterowana przewijaniem](${baza}/efekty/animacja-przewijaniem/): przykład efektu z wagą skryptu i wynikiem PageSpeed.`,
     `- [Blog](${baza}/blog/): wpisy o budowie stron i sklepów — ceny, czas budowy, panel, wybór platformy.`,
-    `- [Piotr Czwarnowski](${baza}/autor/piotr-czwarnowski/): kto prowadzi firmę, jak pracuje i jakie strony zbudował.`,
+    `- [Jak pracujemy](${baza}/autor/piotr-czwarnowski/): kto buduje strony, jak je mierzymy i co możesz sprawdzić przed zapytaniem.`,
     `- [Słownik](${baza}/slownik/): pojęcia o stronach, sklepach, szybkości i widoczności w Google objaśnione krótko.`,
     `- [Jak mierzymy](${baza}/jak-mierzymy/): czym i kiedy mierzymy szybkość i jakość stron, które pokazujemy.`,
     `- [Prawo a strona internetowa](${baza}/prawo-strony-internetowej/): obowiązki prawne strony i sklepu firmy: dane firmy, polityka prywatności, cookies, regulamin.`,

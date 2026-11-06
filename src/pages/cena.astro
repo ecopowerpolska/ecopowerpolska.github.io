@@ -39,6 +39,9 @@ const wiersze = (klucz: string): Wiersz[] =>
     .filter((w) => w.pozycja);
 
 const brak = napis('brakCeny', 'wycena indywidualna');
+const generatoryLinki = (Array.isArray(cena.generatoryLinki) ? (cena.generatoryLinki as Record<string, unknown>[]) : [])
+  .map((l) => ({ tekst: naTekst(l?.tekst), adres: naTekst(l?.adres) }))
+  .filter((l) => l.tekst && l.adres);
 
 /** "5 750 zł" → 5750; brak kwoty → null (ta sama reguła co w Kalkulator.astro). */
 const kwotaZ = (s: string): number | null => {
@@ -81,7 +84,6 @@ const cenyNaglowek = wiz && sklep ? `Strona od ${zl(kwotaZ(wiz.cena) as number)}
 // Przykład wyliczenia: strona firmowa + 4 wpisy na blogu; obok tylko pozycje, które cennik już nazywa.
 const VAT = Number(napis('zastrzezenie', '').match(/(\d+)\s*%/)?.[1] ?? 23) || 23;
 const wpis = znajdz('stronaProwadzenie', 'wpis na blogu');
-const hosting = znajdz('stronaProwadzenie', 'hosting');
 const opieka = znajdz('stronaProwadzenie', 'opieka techniczna');
 const blogAbonament = znajdz('stronaProwadzenie', 'prowadzenie bloga');
 const ILE_WPISOW = 4;
@@ -98,11 +100,11 @@ const przyklad = firmowa && wpis
         brutto: Math.round(netto * (100 + VAT)) / 100,
         wCenie: [
           `${firmowa.pozycja}: ${mala(firmowa.opis.replace(/\.$/, ''))}.`,
+          'Hosting i certyfikat SSL.',
           `W każdym wpisie: ${pierwszeZdanie(wpis.opis).replace(/^[^:]*:\s*/, '')}`,
         ],
         osobno: [
           osobnoZOpisu && `${osobnoZOpisu}.`,
-          hosting && `${hosting.pozycja}: ${zl(kwotaZ(hosting.cena) as number)} ${hosting.jednostka}.`,
         ].filter(Boolean) as string[],
         coMiesiac: [
           opieka && `${opieka.pozycja}: ${zl(kwotaZ(opieka.cena) as number)} ${opieka.jednostka}.`,
@@ -317,6 +319,15 @@ const daneStrukturalne = {
         Skąd biorą się te kwoty i ile trwa budowa, piszemy na blogu:{' '}
         {wpisyOCenie.map((w, i) => (
           <>{i > 0 && ' oraz '}<a href={w.adres}>{w.tytul}</a></>
+        ))}.
+      </p>
+    )}
+
+    {napis('generatoryTekst', '') && generatoryLinki.length > 0 && (
+      <p class="tabela__linki cena__blog">
+        {napis('generatoryTekst', '')}{' '}
+        {generatoryLinki.map((l, i) => (
+          <>{i > 0 && ' i '}<a href={l.adres}>{l.tekst}</a></>
         ))}.
       </p>
     )}

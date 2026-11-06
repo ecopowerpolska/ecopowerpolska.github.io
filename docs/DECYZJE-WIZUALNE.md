@@ -286,7 +286,7 @@ wydajności (...) na komórkę, na stacjonarny” oraz „30 pomiar uruchomię j
   w karcie 340–390 px pięć pełnych polskich nazw nie mieści się w kolumnach. Pod tabelą data pomiaru, zdanie o braku danych
   CrUX i link „Sprawdź sam” do pagespeed.web.dev. Dane: `scripts/psi-realizacje.py` → `src/data/pomiary.json` (poza panelem,
   `docs/POMIARY.md`). Link kafelka jest wewnątrz karty, tabela poza nim (link w linku jest niedozwolony).
-- Efekt przewijania (dawniej `/przyklady/scrollytelling/`) stoi od 2026-10-27 pod `/efekty/animacja-przewijaniem/`, w sitemapie i Google. Stary adres przekierowuje tam meta refresh. `/efekty/` to siatka kart »Wybierz efekt«: kolumny stałej szerokości wyśrodkowane, jedna karta na środku.
+- ⛔ **UNIEWAŻNIONE 2026-11-06 (Piotr: „Stronę efekty, całą podstronę wywalamy”):** `/efekty/` z podstronami i `/przyklady/scrollytelling/` usunięte z repozytorium; pokazy ruchu w `Ujawnianie.astro` zostają (decyzja 23.10). Dawny zapis: efekt przewijania (dawniej `/przyklady/scrollytelling/`) stoi od 2026-10-27 pod `/efekty/animacja-przewijaniem/`, w sitemapie i Google. Stary adres przekierowuje tam meta refresh. `/efekty/` to siatka kart »Wybierz efekt«: kolumny stałej szerokości wyśrodkowane, jedna karta na środku.
 
 ## D14 — FAQ akordeonem, skrót nazwy w stopce, guzik 24 px, okruszki w jednej linii (2026-10-27)
 
@@ -351,7 +351,7 @@ Słowa Piotra (skrót): „masz zrobić wszystkie strony podstrony na szerokoś�
 - **FAQ:** lista pełnej szerokości, odpowiedź > 450 znaków w dwóch kolumnach od 64 rem.
 - **Cennik:** tabele w 4 kolumnach (Pozycja · Zakres · Cena · Rozliczenie), na telefonie karty. Ceny (jedno źródło `cena.json`): wpis na blogu **450 zł**, prowadzenie bloga 4 wpisy **1 600 zł/mies.** (= 4 × 400 zł, rabat 11 %), krótki wpis bez publikacji **150 zł**; integracje rozbite: płatności **1 200 zł**, Allegro **2 500 zł**, hurtownia **3 500 zł**; każda liczona w kalkulatorze po swojej cenie.
 - **Realizacje:** kafelki po 3 w rzędzie, niepełny rząd do lewej; „Co zrobiliśmy” (lista punktów) i „Szybkość i optymalizacja” (wynik PageSpeed) rozwijają się `<details>` bez JS, tylko w swoim kafelku.
-- **Efekty:** tytuł „Efekty wizualne możliwe do zaimplementowania na stronę”, kafelki 3 / 2 / 1 otwierają podstrony z działającym pokazem (8 efektów, 3 nowe); nowy efekt = wpis w `efekty.json` + plik na szkielecie `SzkieletEfektu`.
+- ⛔ **UNIEWAŻNIONE 2026-11-06 (zakładka usunięta).** **Efekty:** tytuł „Efekty wizualne możliwe do zaimplementowania na stronę”, kafelki 3 / 2 / 1 otwierają podstrony z działającym pokazem (8 efektów, 3 nowe); nowy efekt = wpis w `efekty.json` + plik na szkielecie `SzkieletEfektu`.
 - **Strona główna:** zastąpione przez D27 (kolejność sekcji 2026-11-06); usunięty tekst o spółce (D9) zostaje.
 - **Stopka:** zastąpione przez D36 (2026-11-06); wiersz „© rok EcoPower Polska Sp. z o.o. Wszelkie prawa zastrzeżone.” i przełącznik GTranslate zostają.
 - **Zgoda na cookie:** dolny pasek, dwa równe przyciski („Tylko niezbędne”, „Zgadzam się na wszystkie”), wybór w `localStorage['ep.zgoda']`; podstawa: art. 399 ust. 1 i 3 oraz art. 400 PKE (nie 398, który dotyczy marketingu).

@@ -44,7 +44,7 @@ const sekundy = (ms: number | null) => (ms == null ? '–' : `${(ms / 1000).toFi
 const cls = (v: number | null) => (v == null ? '–' : String(Math.round(v * 1000) / 1000).replace('.', ','));
 
 const wiersze = ((serwisyJson as { serwisy?: Record<string, unknown>[] }).serwisy ?? [])
-  .filter((s) => s && s.ukryty !== true && naTekst(s.adres))
+  .filter((s) => s && s.ukryty !== true && s.przyklad === true && naTekst(s.adres))
   .map((s) => {
     const adres = naTekst(s.adres);
     const p = pomiary[adres];
@@ -67,7 +67,9 @@ const wiersze = ((serwisyJson as { serwisy?: Record<string, unknown>[] }).serwis
       teren: naTekst(p?.teren),
       data,
     };
-  });
+  })
+  // Przykładowe realizacje (przyklad: true w serwisy.json); bez pomiaru wiersz pokazuje „pomiar w toku”.
+  ;
 
 const tytul = napis('tytulKarty', 'Jak mierzymy szybkość naszych stron — EcoPower Polska');
 const opis = napis('opisWyszukiwarki', 'Metoda pomiaru stron EcoPower Polska: PageSpeed Insights na telefonie i komputerze, z datą.');

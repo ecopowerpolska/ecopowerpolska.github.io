@@ -1,19 +1,19 @@
 {
   "tytulKarty": "Cennik stron i sklepów, Warszawa — EcoPower Polska",
-  "opisWyszukiwarki": "Cennik EcoPower Polska: wykonanie i prowadzenie strony internetowej i sklepu (WooCommerce, PrestaShop, Shoper, IdoSell, Astro). Ceny netto, kalkulator.",
+  "opisWyszukiwarki": "Cennik EcoPower Polska: wykonanie i prowadzenie strony internetowej i sklepu (WooCommerce, PrestaShop, Astro). Hosting i SSL stron w cenie. Ceny netto, kalkulator.",
   "naglowek": "Cennik stron i sklepów internetowych",
   "lead": "Podajemy ceny orientacyjne netto. Ostateczną wycenę przygotowujemy po rozmowie o zakresie: liczbie podstron, funkcjach, tekstach i zdjęciach.",
-  "zastrzezenie": "Ceny netto, do faktury doliczamy 23 % VAT. Cennik aktualny na październik 2026.",
+  "zastrzezenie": "Ceny netto, do faktury doliczamy 23 % VAT.",
   "kolumnaPozycji": "Pozycja",
   "kolumnaCeny": "Cena",
   "brakCeny": "wycena indywidualna",
   "stronaWykonanieNaglowek": "Strona internetowa: wykonanie",
-  "stronaWykonanieOpis": "Jednorazowo, zł netto. Domenę, hosting i teksty liczymy osobno.",
+  "stronaWykonanieOpis": "Jednorazowo, zł netto. Hosting i certyfikat SSL stron statycznych są w cenie. Domenę i teksty liczymy osobno.",
   "stronaWykonanie": [
     {
       "pozycja": "Wizytówka, strona jednostronicowa",
       "opis": "Jedna strona albo 2–3 podstrony, formularz kontaktowy.",
-      "cena": "2 900 zł",
+      "cena": "1 900 zł",
       "jednostka": ""
     },
     {
@@ -30,12 +30,12 @@
     }
   ],
   "stronaProwadzenieNaglowek": "Strona internetowa: prowadzenie",
-  "stronaProwadzenieOpis": "Koszty stałe po uruchomieniu, zł netto.",
+  "stronaProwadzenieOpis": "Koszty stałe po uruchomieniu, zł netto. Hosting i certyfikat SSL stron statycznych oraz stron, którymi się opiekujemy, są w cenie.",
   "stronaProwadzenie": [
     {
-      "pozycja": "Hosting, domena i certyfikat SSL",
-      "opis": "Hosting strony, odnowienie domeny .pl i certyfikat SSL.",
-      "cena": "430 zł",
+      "pozycja": "Domena .pl",
+      "opis": "Odnowienie domeny płacisz rejestratorowi wg jego cennika. Hosting i certyfikat SSL są w cenie strony.",
+      "cena": "wg cennika rejestratora",
       "jednostka": "rocznie"
     },
     {
@@ -68,7 +68,7 @@
   "sklepWykonanie": [
     {
       "pozycja": "Sklep na platformie abonamentowej (Shoper, IdoSell) — wdrożenie i konfiguracja",
-      "opis": "Wdrożenie i konfiguracja sklepu na platformie. Abonament platformy jest osobno (tabela niżej).",
+      "opis": "Wdrożenie i konfiguracja sklepu na platformie. Abonament i prowizje wg cennika dostawcy platformy.",
       "cena": "11 000 zł",
       "jednostka": ""
     },
@@ -98,13 +98,13 @@
     }
   ],
   "sklepProwadzenieNaglowek": "Sklep internetowy: prowadzenie",
-  "sklepProwadzenieOpis": "Koszty stałe po uruchomieniu, zł netto, o ile nie napisano inaczej.",
+  "sklepProwadzenieOpis": "Koszty stałe po uruchomieniu, zł netto, o ile nie napisano inaczej. Prowizje operatorów płatności pobierają operatorzy, nie my.",
   "sklepProwadzenie": [
     {
       "pozycja": "Abonament platformy (Shoper, IdoSell)",
-      "opis": "Pakiet Standard po pierwszym roku (3 249 zł rocznie); pierwszy rok bywa tańszy w promocji platformy. Hosting jest w cenie abonamentu.",
-      "cena": "299 zł",
-      "jednostka": "miesięcznie"
+      "opis": "Abonament i prowizje wg cennika dostawcy platformy; płacisz je dostawcy, nie nam. Hosting jest w cenie abonamentu.",
+      "cena": "wg cennika dostawcy",
+      "jednostka": ""
     },
     {
       "pozycja": "Hosting sklepu na własnym silniku (WooCommerce, PrestaShop)",
@@ -141,18 +141,6 @@
       "opis": "Integracja sklepu z hurtownią (dropshipping); cena za jedną hurtownię.",
       "cena": "3 500 zł",
       "jednostka": "jednorazowo"
-    },
-    {
-      "pozycja": "Prowizje operatora płatności (pobiera operator, nie my)",
-      "opis": "Za każdą opłaconą transakcję. Przykład: Przelewy24 w Shoper Płatności, pakiet Standard; przez pierwsze 3 miesiące 1% + 0,39 zł, aktywacja 49 zł brutto (ok. 40 zł netto).",
-      "cena": "1,58% + 0,39 zł",
-      "jednostka": "od transakcji"
-    },
-    {
-      "pozycja": "Regulamin i polityka prywatności",
-      "opis": "Regulamin sklepu i polityka prywatności z aktualizacją przy zmianie przepisów.",
-      "cena": "399 zł",
-      "jednostka": "rocznie"
     }
   ],
   "ctaNaglowek": "Dokładną cenę podamy, gdy opiszesz zakres",
@@ -162,5 +150,16 @@
   "okruszkiEtykieta": "Ścieżka",
   "kolumnaOpisu": "Zakres",
   "kolumnaJednostki": "Rozliczenie",
-  "jednostkaWykonania": "jednorazowo"
+  "jednostkaWykonania": "jednorazowo",
+  "generatoryTekst": "Regulamin i politykę prywatności przygotujesz sam w darmowych generatorach:",
+  "generatoryLinki": [
+    {
+      "tekst": "generator regulaminu",
+      "adres": "/generator-regulaminu/"
+    },
+    {
+      "tekst": "generator polityki prywatności",
+      "adres": "/generator-polityki-prywatnosci/"
+    }
+  ]
 }

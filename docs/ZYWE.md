@@ -1,4 +1,4 @@
-# Żywe elementy Ż1–Ż6 — co, gdzie, jak działa, co zapisuje (od 2026-11-06)
+# Żywe elementy Ż1–Ż5 (Ż6, pas rynku, usunięty 2026-11-06) — co, gdzie, jak działa, co zapisuje (od 2026-11-06)
 
 Sześć elementów, które pokazują, że strona „żyje”: liczby z dnia, z przeglądarki odwiedzającego i z naszego zaplecza.
 Zasady wspólne: zero skryptów z cudzych CDN, zero bibliotek poza `web-vitals` (plik lokalny), każdy nasz skrypt ≤ 2 kB
@@ -12,7 +12,6 @@ Każdy komponent wstawia się NAJWYŻEJ RAZ na stronę (skrypty szukają pierwsz
 | Ż3 | `src/components/zywe/OstatniaPublikacja.astro` | `public/zywe/publikacja.js` | API GitHuba (publiczne) | data builda |
 | Ż4 | `src/components/zywe/LicznikNarzedzi.astro` | `public/zywe/licznik.js` + `formularz/licznik.php` | `stan/licznik-*.json` na lh.pl | „Darmowe i bez logowania.” |
 | Ż5 | `src/components/zywe/CzytaTeraz.astro` | `public/zywe/obecni.js` + `formularz/obecni.php` | `stan/obecni.json` na lh.pl | zdanie o sposobie liczenia |
-| Ż6 | `src/components/zywe/PasRynku.astro` | — (zero JS) | `src/data/rynek.json` | statyczny |
 
 ## Ż1 — zegar Core Web Vitals tej strony
 Pasek nad stopką: „Ta strona otworzyła się u Ciebie w X s (LCP), przesunięcie układu Y (CLS), reakcja Z ms (INP)”.
@@ -29,7 +28,7 @@ sha256 `bc7a1a0cc6e0eab320c0eae3064eaa4c1b4da607e8f1d896c6a59cafbeccd257`). Paki
 Aktualizacja = podmiana pliku i wiersza wyżej.
 
 ## Ż2 — wykres PSI realizacji
-`WykresPsi.astro`: nagłówek „Wynik na telefonie: nasze realizacje”, średnia (`.liczba`), słupek CSS na realizację
+`WykresPsi.astro`: nagłówek „Przykładowe wyniki na telefonie” (od 2026-11-06 trzy NAJLEPSZE wyniki; remis rozstrzyga `przyklad` w `serwisy.json`, cron mierzy wszystkie), średnia (`.liczba`), słupek CSS na realizację
 (`style="--w:98%"`, wydajność mobile), „komputer N”, mini-wykres ostatnich 7 pomiarów (gdy są ≥ 2; skala 80–100,
 wartości i daty w tekście dla czytnika), link do pagespeed.web.dev. Kolejność i nazwy z `serwisy.json` (bez `ukryty`).
 Zero JS. Realizacja bez pomiaru mobile nie dostaje wiersza.
@@ -85,14 +84,6 @@ Dlaczego bez `sessionStorage` (zlecenie mówiło o nim): zapis czegokolwiek w ur
 przechowywanie informacji w urządzeniu końcowym (PKE art. 399), a licznik obecności nie jest niezbędny do usługi — wymagałby
 zgody. Id w pamięci karty + sygnał wyjścia daje tę samą dokładność bez zapisu w urządzeniu.
 Ograniczenie: kto chce, może skryptem zawyżyć liczbę (nie ma IP do limitu) — sufit 5 000 i 5 minut ogranicza skutek.
-
-## Ż6 — pas rynku
-`PasRynku.astro` czyta `src/data/rynek.json` (3–4 pozycje: `nazwa`, `wartosc` w %, `zrodlo`, `zrodloAdres`, `odczyt`).
-Dziś: Astro 71 %, WordPress 48 %, Next.js 35 % — „HTTP Archive / Chrome UX Report (CrUX), dane cytowane przez astro.build”,
-odczyt 2026-11-06, `zweryfikowaneUZrodla: false`. **Liczb NIE zweryfikowano u źródła pierwotnego:** raport technologii
-HTTP Archive (`httparchive.org/reports/techreport/`) renderuje liczby JavaScriptem (WebFetch 2026-11-06 zwrócił same
-symbole zastępcze). Weryfikacja: otworzyć raport w Chrome, technologie Astro / WordPress / Next.js, „Good Core Web Vitals”,
-urządzenie i miesiąc → wpisać liczby, miesiąc danych i `zweryfikowaneUZrodla: true`.
 
 ## Wgranie PHP na lh.pl (ręcznie, wg `docs/FORMULARZ.md §3`; robi integrator)
 Konto `serwer263249`, katalog `public_html/api.ecopowerpolska.pl/`, klucz `~/.ssh/lh-lejek`, port 40022. `konfig/` i `stan/` nietknięte

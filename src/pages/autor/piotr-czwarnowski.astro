@@ -1,5 +1,5 @@
 ---
-// /autor/piotr-czwarnowski/ — strona autora: zdjęcie | tekst, jak pracuję, zbudowane strony z wynikami PSI,
+// /autor/piotr-czwarnowski/ — strona autora: zdjęcie | tekst, jak pracuję, przykładowe strony z wynikami PSI,
 // dowody do sprawdzenia, wpisy autora. Treść: src/data/autor.json; strony: serwisy.json + pomiary.json (tylko odczyt).
 // JSON-LD: ProfilePage + Person z trwałym @id (ten sam w BlogPosting.author). Zero JS.
 import { Image } from 'astro:assets';
@@ -24,15 +24,8 @@ type Pomiar = { data?: string; mobile?: Wariant; desktop?: Wariant };
 const pomiarDla = (adres: string): Pomiar | null =>
   ((pomiary as { pomiary?: Record<string, Pomiar> }).pomiary?.[adres] ?? null);
 
-const dataKrotka = (iso?: string) => {
-  if (!iso || !/^\d{4}-\d{2}-\d{2}/.test(iso)) return '';
-  const [r, m, d] = iso.slice(0, 10).split('-');
-  return `${d}.${m}.${r}`;
-};
-
-const datyPublikacji = new Map(autor.realizacje.map((r) => [r.adres, r.dataPublikacji]));
 const strony = serwisy.serwisy
-  .filter((s) => !s.ukryty && s.adres)
+  .filter((s) => !s.ukryty && s.adres && (s as { przyklad?: boolean }).przyklad === true)
   .map((s) => {
     const p = pomiarDla(s.adres);
     return {
@@ -40,13 +33,12 @@ const strony = serwisy.serwisy
       adres: s.adres,
       domena: s.adres.replace(/^https?:\/\//, '').replace(/\/$/, ''),
       branza: s.opis ?? '',
-      publikacja: dataKrotka(datyPublikacji.get(s.adres)),
       telefon: p?.mobile?.wydajnosc,
       komputer: p?.desktop?.wydajnosc,
-      dataPomiaru: dataKrotka(p?.data ?? p?.mobile?.data),
       psi: `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(s.adres)}`,
     };
-  });
+  })
+  ;
 
 const wpisy = (await opublikowane())
   .filter((w) => w.data.autor === autor.imie)
@@ -110,12 +102,12 @@ const daneStrukturalne = {
         <p class="etykieta">{tekst(autor.podtytul, '')}</p>
         <h1 class="autor__imie">{tekst(autor.naglowek, autor.imie)}</h1>
         <p class="autor__wstep">{autor.wstep.join(' ')}</p>
-        <a class="guzik" href="/kontakt/">{tekst(autor.guzik, 'Napisz do mnie')}</a>
+        <a class="guzik" href="/kontakt/">{tekst(autor.guzik, 'Napisz do nas')}</a>
       </div>
     </section>
 
     <section class="autor__sekcja" aria-labelledby="jak-pracuje">
-      <h2 id="jak-pracuje" class="autor__h2 autor__h2--srodek">{tekst(autor.jakPracujeNaglowek, 'Jak pracuję')}</h2>
+      <h2 id="jak-pracuje" class="autor__h2 autor__h2--srodek">{tekst(autor.jakPracujeNaglowek, 'Jak pracujemy')}</h2>
       <ul class="siatka-3 autor__zasady">
         {
           autor.jakPracuje.map((z) => (
@@ -131,7 +123,7 @@ const daneStrukturalne = {
     {
       strony.length > 0 && (
         <section class="autor__sekcja" aria-labelledby="zbudowane">
-          <h2 id="zbudowane" class="autor__h2">{tekst(autor.realizacjeNaglowek, 'Strony, które zbudowałem')}</h2>
+          <h2 id="zbudowane" class="autor__h2">{tekst(autor.realizacjeNaglowek, 'Przykładowe strony')}</h2>
           <p class="autor__metoda">
             {autor.realizacjeMetoda} <a href={autor.realizacjeMetodaAdres}>{autor.realizacjeMetodaLink}</a>.
           </p>
@@ -140,10 +132,9 @@ const daneStrukturalne = {
               <tr>
                 <th scope="col">Strona</th>
                 <th scope="col">Branża</th>
-                <th scope="col">Publikacja</th>
                 <th scope="col">PageSpeed, telefon</th>
                 <th scope="col">PageSpeed, komputer</th>
-                <th scope="col">Pomiar</th>
+                <th scope="col">Sprawdź sam</th>
               </tr>
             </thead>
             <tbody>
@@ -153,11 +144,15 @@ const daneStrukturalne = {
                     <a href={s.adres}>{s.domena}</a>
                   </th>
                   <td data-label="Branża">{s.branza}</td>
-                  <td data-label="Publikacja">{s.publikacja || '—'}</td>
-                  <td data-label="PageSpeed, telefon"><span class="autor__liczba">{s.telefon ?? '—'}</span></td>
-                  <td data-label="PageSpeed, komputer"><span class="autor__liczba">{s.komputer ?? '—'}</span></td>
-                  <td data-label="Pomiar">
-                    {s.dataPomiaru || '—'}{' '}
+                  {typeof s.telefon === 'number' ? (
+                    <>
+                      <td data-label="PageSpeed, telefon"><span class="autor__liczba">{s.telefon}</span></td>
+                      <td data-label="PageSpeed, komputer"><span class="autor__liczba">{s.komputer ?? '—'}</span></td>
+                    </>
+                  ) : (
+                    <td data-label="PageSpeed" colspan="2">pomiar w toku</td>
+                  )}
+                  <td data-label="Sprawdź sam">
                     <a href={s.psi} rel="noopener">zmierz<span class="sr-only"> {s.domena} w PageSpeed Insights</span></a>
                   </td>
                 </tr>
@@ -193,7 +188,7 @@ const daneStrukturalne = {
     {
       wpisy.length > 0 && (
         <section class="autor__sekcja" aria-labelledby="wpisy">
-          <h2 id="wpisy" class="autor__h2">{tekst(autor.wpisyNaglowek, 'Moje wpisy')}</h2>
+          <h2 id="wpisy" class="autor__h2">{tekst(autor.wpisyNaglowek, 'Nasze wpisy')}</h2>
           <ul class="autor__wpisy">
             {wpisy.map((w) => (
               <li>
@@ -205,7 +200,7 @@ const daneStrukturalne = {
       )
     }
 
-    <p class="autor__koniec"><a class="guzik" href="/kontakt/">{tekst(autor.guzik, 'Napisz do mnie')}</a></p>
+    <p class="autor__koniec"><a class="guzik" href="/kontakt/">{tekst(autor.guzik, 'Napisz do nas')}</a></p>
   </main>
 
   <Stopka />

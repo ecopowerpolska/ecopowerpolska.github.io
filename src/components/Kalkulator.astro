@@ -22,7 +22,7 @@ interface Pozycja {
 
 const cena = cenaJson as Record<string, unknown>;
 const k = kalkJson as unknown as Record<string, unknown> & {
-  rodzaje: Zrodlo[]; dodatki: Zrodlo[]; dodatkiSklepu: Zrodlo[]; prowizje: Zrodlo; liczebnik: Record<string, string>;
+  rodzaje: Zrodlo[]; dodatki: Zrodlo[]; dodatkiSklepu: Zrodlo[]; liczebnik: Record<string, string>;
 };
 const naTekst = (v: unknown): string => (typeof v === 'string' ? v.trim() : v == null ? '' : String(v).trim());
 const t = (klucz: string, domyslny = '') => tekst(naTekst(k[klucz]), domyslny);
@@ -74,8 +74,6 @@ const rozwiaz = (z: Zrodlo, domyslnyOkres: Okres = 'jednorazowo'): Pozycja | nul
 const rodzaje = (k.rodzaje ?? []).map((z) => rozwiaz(z)).filter((p): p is Pozycja => p !== null);
 const dodatki = (k.dodatki ?? []).map((z) => rozwiaz(z)).filter((p): p is Pozycja => p !== null);
 const dodatkiSklepu = (k.dodatkiSklepu ?? []).map((z) => rozwiaz(z)).filter((p): p is Pozycja => p !== null);
-const wProwizji = k.prowizje ? wiersz(k.prowizje) : undefined;
-const prowizje = wProwizji ? [naTekst(wProwizji.cena), naTekst(wProwizji.jednostka)].filter(Boolean).join(' ') : '';
 
 /** 13222.5 → "13 222,50 zł" (spacja nierozdzielająca, jak w cenniku). Ta sama funkcja stoi w skrypcie niżej. */
 const zl = (x: number): string => {
@@ -162,8 +160,8 @@ const teksty = {
               </div>
             ))}
           </div>
-          {g.sklep && prowizje && (
-            <p class="kalk__pomoc"><strong>{t('prowizjeNaglowek', 'Prowizje operatora płatności')}: {prowizje}</strong>, {t('prowizjeDopisek')}</p>
+          {g.sklep && t('platformaDopisek') && (
+            <p class="kalk__pomoc">{t('platformaDopisek')}</p>
           )}
         </fieldset>
       ))}

@@ -52,15 +52,16 @@ const opis = napis('opisWyszukiwarki', '');
 const naglowek = napis('naglowek', 'Usługa');
 const lead = napis('lead', '');
 
-// Wiersz 3 faktów pod wstępem: cena z cennika, PageSpeed z pomiary.json (najniższy–najwyższy wynik na telefonie, data
-// najnowszego pomiaru), trzeci fakt z JSON. Brak danych = fakt się nie pokazuje.
+// Wiersz 3 faktów pod wstępem: cena z cennika, PageSpeed z pomiary.json (zakres trzech najlepszych wyników na telefonie), trzeci fakt z JSON. Brak danych = fakt się nie pokazuje.
 const pomiary = ((pomiaryJson as Rek).pomiary ?? {}) as Record<string, Rek>;
 const FORMAT_DATY = new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Warsaw' });
 const dataPolska = (iso: string) => (/^\d{4}-\d{2}-\d{2}/.test(iso) ? FORMAT_DATY.format(new Date(iso.slice(0, 10))) : iso);
+// Trzy najlepsze wyniki na telefonie (przykładowe realizacje, nie wszystkie), bez daty w tekście stałym.
 const wynikiTelefon = Object.values(pomiary)
   .map((p) => (p?.mobile as Rek | undefined)?.wydajnosc)
-  .filter((x): x is number => typeof x === 'number');
-const najnowszyPomiar = Object.values(pomiary).map((p) => naTekst(p?.data)).filter(Boolean).sort().pop() ?? '';
+  .filter((x): x is number => typeof x === 'number')
+  .sort((x, y) => y - x)
+  .slice(0, 3);
 const cenaOdNazwa = naTekst(d.cenaOdPozycja);
 const fakty = [
   cennik.get(cenaOdNazwa)?.cena
@@ -69,7 +70,7 @@ const fakty = [
   wynikiTelefon.length > 0
     ? {
         liczba: `${Math.min(...wynikiTelefon)}–${Math.max(...wynikiTelefon)}`,
-        podpis: `pkt PageSpeed na telefonie${najnowszyPomiar ? ` (pomiar ${dataPolska(najnowszyPomiar)})` : ''}`,
+        podpis: 'pkt PageSpeed na telefonie w przykładowych realizacjach',
       }
     : null,
   naTekst(obiekt(d.faktTrzeci).liczba)

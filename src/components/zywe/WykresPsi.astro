@@ -1,5 +1,8 @@
 ---
-// Ż2 WykresPsi — "Wynik na telefonie: nasze realizacje": słupek CSS na realizację (wydajność mobile z PSI),
+// Ż2 WykresPsi — "Przykładowe wyniki na telefonie": 3 NAJLEPSZE wyniki (faza 3, 2026-11-06, słowa Piotra: nie wywalać
+// wszystkich naszych stron — pokazujemy trzy przykładowe; cron dalej mierzy wszystkie). Remis rozstrzyga oznaczenie
+// `przyklad` w serwisy.json, potem kolejność pliku. Data pomiaru stoi tylko tutaj (żywy wykres), nie w tekście stałym.
+// Słupek CSS na realizację (wydajność mobile z PSI),
 // wynik na komputerze obok i ostatnie pomiary z `historia`. Dane: src/data/pomiary.json (cron Z440 05:30,
 // scripts/psi-realizacje.py), kolejność i nazwy z serwisy.json (bez ukrytych). Zero JS.
 import serwisy from '../../data/serwisy.json';
@@ -34,13 +37,15 @@ const dataPl = (iso?: string | null) => {
 
 const wiersze = serwisy.serwisy
   .filter((s) => !s.ukryty && s.adres)
-  .map((s) => {
+  .map((s, kolejnosc) => {
     const p = mapa[s.adres] ?? {};
     const telefon = p.mobile?.wydajnosc;
     const komputer = p.desktop?.wydajnosc;
     const historia = (p.historia ?? []).filter((h) => typeof h.telefon === 'number').slice(-7);
     return {
       nazwa: s.nazwa,
+      przyklad: (s as { przyklad?: boolean }).przyklad === true,
+      kolejnosc,
       telefon: typeof telefon === 'number' ? telefon : null,
       komputer: typeof komputer === 'number' ? komputer : null,
       historia,
@@ -48,7 +53,9 @@ const wiersze = serwisy.serwisy
       adresPsi: `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(s.adres)}&form_factor=mobile`,
     };
   })
-  .filter((w) => w.telefon !== null);
+  .filter((w) => w.telefon !== null)
+  .sort((a, b) => (b.telefon as number) - (a.telefon as number) || Number(b.przyklad) - Number(a.przyklad) || a.kolejnosc - b.kolejnosc)
+  .slice(0, 3);
 
 const najnowsza = wiersze.map((w) => w.data).sort().at(-1) ?? '';
 const srednia = wiersze.length
@@ -63,11 +70,11 @@ const wysokosc = (v: number) => `${Math.max(4, Math.min(100, (v - 80) * 5))}%`;
     <Opakowanie class={klasaOpakowania} aria-labelledby="wykres-psi-naglowek">
       <div class={klasaTresci}>
         {!osadzony && <p class="etykieta wykres__etykieta">Pomiar Google PageSpeed Insights</p>}
-        <Naglowek id="wykres-psi-naglowek" class="wykres__naglowek">Wynik na telefonie: nasze realizacje</Naglowek>
+        <Naglowek id="wykres-psi-naglowek" class="wykres__naglowek">Przykładowe wyniki na telefonie</Naglowek>
         <p class="wykres__srednia">
           <span class="liczba">{srednia}</span>
           <span class="liczba__podpis">
-            średnia wydajność {wiersze.length} stron na telefonie, skala 0–100{najnowsza && <>, pomiar z {dataPl(najnowsza)}</>}
+            średnia wydajność tych stron na telefonie, skala 0–100{najnowsza && <>, pomiar z {dataPl(najnowsza)}</>}
           </span>
         </p>
         <ol class="wykres__lista">

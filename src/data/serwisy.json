@@ -14,7 +14,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-studioagat.jpg",
       "alt": "Strona główna studioagat.pl: nagłówek „Projektant wnętrz Warszawa, architekt wnętrz” nad zdjęciem salonu z szarą sofą",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": true
     },
     {
       "nazwa": "Nadi Home",
@@ -30,7 +31,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-nadihome.jpg",
       "alt": "Strona główna nadihome.pl: nagłówek „Remonty mieszkań w Warszawie i wykończenia pod klucz” obok zdjęcia układania płytek",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": false
     },
     {
       "nazwa": "Pan Stolarz",
@@ -46,7 +48,25 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-pan-stolarz.jpg",
       "alt": "Strona główna pan-stolarz.pl: nagłówek „Meble na wymiar w Warszawie” obok zdjęcia kuchni w drewnie",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": true
+    },
+    {
+      "nazwa": "HolBud Polska",
+      "adres": "https://holbud-polska.pl/",
+      "opis": "Remonty mieszkań, domów, tarasów i balkonów w Warszawie.",
+      "teza": "strona od zera z kalkulatorem ceny remontu",
+      "tagi": [
+        "Nowa strona",
+        "Kalkulator ceny",
+        "Blog"
+      ],
+      "zakres": "Strona od zera w Astro na hostingu lh.pl\nKalkulator ceny remontu\nBlog\nFormularz chroniony Turnstile",
+      "grupa": "",
+      "obrazek": "../assets/serwisy/zrzut-holbud-polska.jpg",
+      "alt": "Strona główna holbud-polska.pl: nagłówek „Remonty mieszkań, domów, tarasów i balkonów w Warszawie” obok zdjęcia jasnego salonu z beżową sofą i drewnianym stołem",
+      "ukryty": false,
+      "przyklad": true
     },
     {
       "nazwa": "Kuchnia na wymiar Warszawa",
@@ -62,7 +82,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-kuchnia-na-wymiar-warszawa.jpg",
       "alt": "Strona główna kuchnia-na-wymiar-warszawa.pl: biały nagłówek z kreską w kolorze terakoty, tytuł „Kuchnie na wymiar w Warszawie” po lewej, terakotowy guzik „Umów pomiar i wycenę” i zdjęcie białej kuchni z drewnianym blatem po prawej",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": false
     },
     {
       "nazwa": "Szafy na wymiar Warszawa",
@@ -78,7 +99,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-szafy-na-wymiar-warszawa.jpg",
       "alt": "Strona główna szafy-na-wymiar-warszawa.pl: ciemnogranatowy nagłówek i pas otwarcia z tytułem „Szafy na wymiar w Warszawie”, mosiężny guzik w kształcie pigułki i zdjęcie sypialni z szafą do sufitu",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": false
     },
     {
       "nazwa": "Garderoba na wymiar Warszawa",
@@ -94,7 +116,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-garderoba-na-wymiar-warszawa.jpg",
       "alt": "Strona główna garderoba-na-wymiar-warszawa.pl: jasne szałwiowe tło, wyśrodkowany tytuł „Garderoby na wymiar w Warszawie”, eukaliptusowe guziki i pod nimi szerokie zdjęcie garderoby z oświetlonymi półkami",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": false
     },
     {
       "nazwa": "Pan Wylewka",
@@ -110,7 +133,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/zrzut-panwylewka.jpg",
       "alt": "Strona główna panwylewka.pl: nagłówek z logo Pan Wylewka i pomarańczowym guzikiem telefonu nad ciemnym zdjęciem z napisem „Wylewki betonowe Warszawa i okolice”",
-      "ukryty": false
+      "ukryty": false,
+      "przyklad": false
     },
     {
       "nazwa": "allegro",
@@ -122,7 +146,8 @@
       "grupa": "",
       "obrazek": "../assets/serwisy/pasted-image-1788775080217.png",
       "alt": "",
-      "ukryty": true
+      "ukryty": true,
+      "przyklad": false
     }
   ]
 }

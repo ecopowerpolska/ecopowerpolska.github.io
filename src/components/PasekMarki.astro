@@ -19,7 +19,7 @@ interface Props {
 
 const { liczbaSerwisow } = Astro.props;
 
-// Menu główne: osiem pozycji (D35, 2026-11-06): Oferta i Realizacje to kotwice strony głównej (bez aria-current),
+// Menu główne: siedem pozycji (D35, 2026-11-06): Oferta i Realizacje to kotwice strony głównej (bez aria-current),
 // „Darmowe testy” zastępuje „Test szybkości” (test jest pierwszym z 12 kafli), ostatnia pozycja „Wycena” to przycisk.
 const sciezka = Astro.url.pathname;
 const testy = ['/darmowe-narzedzia', '/narzedzia/', '/jak-sprawdzic-szybkosc-strony'].some((t) => sciezka.startsWith(t));
@@ -30,7 +30,6 @@ const menu = [
   { adres: '/cena/', napis: tekst(blog.menuCena, 'Cena'), biezaca: sciezka.startsWith('/cena') },
   { adres: '/blog/', napis: tekst(blog.menuBlog, 'Blog'), biezaca: sciezka.startsWith('/blog') },
   { adres: '/faq/', napis: tekst(blog.menuFaq, 'FAQ'), biezaca: sciezka.startsWith('/faq') },
-  { adres: '/efekty/', napis: tekst(blog.menuEfekty, 'Efekty'), biezaca: sciezka.startsWith('/efekty') },
 ];
 const wycena = {
   adres: '/kontakt/',

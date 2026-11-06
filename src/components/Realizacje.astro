@@ -5,6 +5,10 @@
 // pod nim nazwa i adres, 2–3 tagi (`tagi`), wynik „Telefon · Komputer” widoczny bez rozwijania; <details> tylko na szczegóły.
 // Zrzut w proporcji pliku (szerokość podana, wysokość z pliku). Pola `teza` i `tagi` czytane z surowego serwisy.json
 // po adresie — schemat kolekcji ich nie zna (src/content.config.ts), a parser kolekcji pomija nieznane pola.
+// Faza 3 (2026-11-06, słowa Piotra): to PRZYKŁADOWE realizacje, nigdy komplet — pokazujemy wpisy z `przyklad: true`
+// (najwyżej 3; gdy żaden nie jest oznaczony, pierwsze trzy widoczne). Pozostałe zostają w serwisy.json i w pomiarach.
+// Bez dat w tekście stałym: data pomiaru żyje wyłącznie w żywym wykresie (WykresPsi). Wpis bez pomiaru (nowa strona,
+// przed pierwszym przebiegiem crona) pokazuje „pomiar w toku”, nie pustkę. Bez przycisku do usuniętej zakładki Efekty.
 // Sekcja bez tła i szerokości: pas daje strona (.pas/.pas__tresc).
 // Runda 7 (2026-10-30, decyzja Piotra): małe kafelki po 3 w rzędzie, a opis i wynik PageSpeed w dwóch
 // rozwijanych wierszach <details> pod spodem. Kafelek zwinięty = zrzut + nazwa + adres + jedna linia o firmie
@@ -36,16 +40,19 @@ const { etykieta, naglowek, wstep, kotwica = 'realizacje', pierwszyEager = false
 
 // Pola spoza schematu kolekcji, po adresie (dosłownie).
 const surowe = new Map(
-  ((serwisyJson as { serwisy?: { adres?: string; teza?: unknown; tagi?: unknown }[] }).serwisy ?? []).map((w) => [
+  ((serwisyJson as { serwisy?: { adres?: string; teza?: unknown; tagi?: unknown; przyklad?: unknown }[] }).serwisy ?? []).map((w) => [
     String(w.adres ?? ''),
     {
+      przyklad: w.przyklad === true,
       teza: typeof w.teza === 'string' ? w.teza.trim() : '',
       tagi: (Array.isArray(w.tagi) ? w.tagi : []).map((t) => String(t ?? '').trim()).filter(Boolean).slice(0, 3),
     },
   ]),
 );
 
-const realizacje = await getCollection('serwisy', ({ data }) => !data.ukryty);
+const widoczne = await getCollection('serwisy', ({ data }) => !data.ukryty);
+const oznaczone = widoczne.filter((w) => surowe.get(w.data.adres)?.przyklad);
+const realizacje = (oznaczone.length > 0 ? oznaczone : widoczne).slice(0, 3);
 const idNaglowka = `${kotwica}-naglowek`;
 const wstepTekst = wstep?.trim() ?? '';
 const nowaKarta = tekst(blog.udostepnijNowaKarta, '(otwiera się w nowej karcie)');
@@ -89,10 +96,6 @@ const KATEGORIE: { klucz: keyof Wyniki; nazwa: string }[] = [
 // Próg jak w PageSpeed Insights: 90–100 = dobry (wypełniona akcentem), poniżej 90 = obrys bez wypełnienia.
 // Liczba jest zawsze widoczna — kolor jej nie zastępuje.
 const klasaWyniku = (w: number) => (w >= 90 ? 'pastylka--dobry' : 'pastylka--ponizej');
-const dataPomiaru = (data?: string | null) => {
-  const m = (data ?? '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  return m ? `${m[3]}.${m[2]}.${m[1]}` : '';
-};
 // Dane terenowe CrUX: `brak` albo FAST/AVERAGE/SLOW, z dopiskiem „(domena)”, gdy to wynik całej domeny.
 const KATEGORIA_TERENU: Record<string, string> = { FAST: 'szybka', AVERAGE: 'do poprawy', SLOW: 'wolna' };
 const zdanieTerenu = (terenSurowy?: string) => {
@@ -149,7 +152,7 @@ const karty = realizacje.map((wpis, i) => {
     <section class="realizacje" id={kotwica} aria-labelledby={idNaglowka}>
       {etykieta?.trim() && <span class="etykieta realizacje__etykieta">{etykieta.trim()}</span>}
       <h2 id={idNaglowka} class="realizacje__naglowek" data-ujawnij>
-        {tekst(naglowek, 'Realizacje')}
+        {tekst(naglowek, 'Przykładowe realizacje')}
       </h2>
       <ul class="realizacje__siatka">
         {karty.map((k) => (
@@ -188,6 +191,7 @@ const karty = realizacje.map((wpis, i) => {
                     {k.tagi.map((t) => <li>{t}</li>)}
                   </ul>
                 )}
+                {k.telefon === null && k.komputer === null && <p class="karta__wynik karta__wynik--w-toku">PageSpeed: pomiar w toku</p>}
                 {(k.telefon !== null || k.komputer !== null) && (
                   <p class="karta__wynik">
                     {k.telefon !== null && (
@@ -197,7 +201,6 @@ const karty = realizacje.map((wpis, i) => {
                     {k.komputer !== null && (
                       <span class="karta__wynik-pozycja">Komputer <span class="liczba karta__liczba">{k.komputer}</span></span>
                     )}
-                    {dataPomiaru(k.p?.data) && <span class="karta__wynik-data">PageSpeed, pomiar {dataPomiaru(k.p?.data)}</span>}
                   </p>
                 )}
               </div>
@@ -267,7 +270,6 @@ const karty = realizacje.map((wpis, i) => {
                         </tbody>
                       </table>
                       <p class="pomiar__nota">
-                        {dataPomiaru(k.p?.data) && <>Pomiar z {dataPomiaru(k.p?.data)}. </>}
                         {zdanieTerenu(k.p?.teren)}
                       </p>
                     </>
@@ -287,12 +289,6 @@ const karty = realizacje.map((wpis, i) => {
         ))}
       </ul>
       {wstepTekst && <p class="realizacje__wstep">{wstepTekst}</p>}
-      {/* Przycisk drugorzędny do zakładki Efekty (runda 4, 2026-10-27): dodatkowa część portfolio. */}
-      <p class="realizacje__dalej" data-ujawnij>
-        <a class="guzik guzik--drugi" href="/efekty/">
-          {tekst(blog.linkEfektyRealizacje, 'Zobacz efekty, które dodajemy do stron')}
-        </a>
-      </p>
     </section>
   )
 }
@@ -349,11 +345,6 @@ const karty = realizacje.map((wpis, i) => {
     .realizacje__siatka {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-  }
-
-  .realizacje__dalej {
-    margin: var(--o-8) 0 0;
-    text-align: center;
   }
 
   /* ── Karta (.karta.karta--link z motyw.css: tło #fff, obrys, cień). Odnośnik H3 rozpięty na kartę (::after);
@@ -494,9 +485,7 @@ const karty = realizacje.map((wpis, i) => {
     color: var(--tekst-cichy);
   }
 
-  .karta__wynik-data {
-    flex-basis: 100%;
-    font-size: var(--t-xs);
+  .karta__wynik--w-toku {
     font-weight: 400;
     color: var(--tekst-cichy);
   }

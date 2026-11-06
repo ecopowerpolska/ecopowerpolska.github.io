@@ -21,7 +21,6 @@ import stronaJson from '../data/strona.json';
 import ofertaJson from '../data/oferta.json';
 import cenaJson from '../data/cena.json';
 import narzedziaJson from '../data/narzedzia.json';
-import zdjecieAutora from '../assets/blog/autor-piotr-czwarnowski.jpg';
 
 const strona = stronaJson as Record<string, string | null | undefined>;
 const o = ofertaJson as Record<string, unknown>;
@@ -210,26 +209,6 @@ const liczby = ([
         </div>
       </section>
     )}
-
-    <section class="pas pas--jasny" id="kto-robi" aria-labelledby="autor-tytul" data-ujawnij>
-      <div class="pas__tresc autor">
-        <Image
-          class="autor__zdjecie"
-          src={zdjecieAutora}
-          alt={napis('autorZdjecieAlt', '')}
-          width={480}
-          densities={[1, 2]}
-          format="webp"
-          loading="lazy"
-          decoding="async"
-        />
-        <div class="autor__tekst">
-          <h2 id="autor-tytul">{napis('autorNaglowek', 'Mała firma, krótsza droga: piszesz bezpośrednio do osoby, która buduje Twoją stronę.')}</h2>
-          <p>{napis('autorTekst', 'Każdą stronę budujemy tak, żeby jej właściciel widział wynik w liczbach: po publikacji mierzymy ją w PageSpeed Insights i pokazujemy wynik. Dobieramy osobę do strony. Zakres, poprawki i publikację ustalasz bezpośrednio z nią.')}</p>
-          <p class="autor__podpis">{napis('autorPodpis', 'EcoPower Polska')}</p>
-        </div>
-      </div>
-    </section>
 
     <div class="pas pas--powierzchnia">
       <div class="pas__tresc">
@@ -445,41 +424,6 @@ const liczby = ([
   .test__dalej {
     font-weight: 600;
     color: var(--akcent);
-  }
-
-  /* Kto robi: zdjęcie 1/3 (kwadrat z pliku, ramka + cień), tekst 2/3; na telefonie jedno pod drugim. */
-  .autor {
-    display: grid;
-    gap: var(--o-8);
-    align-items: center;
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  @media (min-width: 48rem) {
-    .autor {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-      gap: var(--o-12);
-    }
-  }
-
-  .autor__zdjecie {
-    display: block;
-    width: 100%;
-    max-width: 24rem;
-    height: auto;
-    margin-inline: auto;
-    border: var(--obrys-karty);
-    border-radius: var(--promien-karty);
-    box-shadow: var(--cien-karty);
-  }
-
-  .autor__tekst p {
-    max-width: var(--miara);
-    margin: var(--o-4) 0 0;
-  }
-
-  .autor__podpis {
-    font-weight: 600;
   }
 
   /* Pas zamykający: H2 na środku, przycisk na ciemnym + link. */

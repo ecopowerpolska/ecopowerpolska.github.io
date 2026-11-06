@@ -84,8 +84,6 @@ const daneStrukturalne = {
         {pierwszaLista.length > 0 && <ul class="zanim__lista">{pierwszaLista.map((p) => <li>{p}</li>)}</ul>}
         {k.pierwszaUwaga && <p class="zanim__uwaga">{k.pierwszaUwaga}</p>}
         {k.formularzNota && <p>{k.formularzNota}</p>}
-        {k.podpisZdanie && <p>{k.podpisZdanie}</p>}
-        {k.podpis && <p class="podpis">{k.podpis}</p>}
       </section>
       <section class="zanim__kolumna" aria-labelledby="pasujemy-naglowek">
         <h2 id="pasujemy-naglowek" class="zanim__naglowek">{tekst(k.pasujemyNaglowek, 'Pasujemy, gdy…')}</h2>
@@ -165,8 +163,6 @@ const daneStrukturalne = {
   .zanim__uwaga { padding: var(--o-3) var(--o-4); border-left: 3px solid var(--akcent); background: var(--powierzchnia); border-radius: var(--promien-maly); }
 
   /* Podpis: miniatura 40 px w proporcji pliku (1:1), ramka 1 px i cień, bez zaokrąglenia w koło. */
-  .zanim__kolumna .podpis { margin-top: var(--o-6); }
-  .podpis { font-weight: 600; }
 
   .pasujemy { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--o-3); }
   /* Etykieta w lewej kolumnie, zdanie w prawej — wiersze nie zawijają się pod etykietę. */

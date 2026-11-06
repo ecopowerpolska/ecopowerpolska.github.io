@@ -58,8 +58,6 @@ const slowa = (wpis.body ?? '')
 const minuty = Math.max(1, Math.round(slowa / 200));
 
 // Autor wpisu = firma (podpis „EcoPower Polska” bez osoby, bez linku; BlogPosting.author = Organization).
-// Wpis z ręcznie wstawionym zdjęciem autora w treści nie dostaje drugiego podpisu.
-const podpisWTresci = /autor-piotr-czwarnowski\.jpg/.test(wpis.body ?? '');
 const zaktualizowano = dane.dataAktualizacji?.toISOString();
 const opis = dane.opisSeo || dane.wJednymZdaniu || '';
 
@@ -214,7 +212,7 @@ const daneStrukturalne = {
               )}
             </aside>
           )}
-          {!podpisWTresci && <PodpisAutora />}
+          <PodpisAutora />
         </div>
 
         <p class="wpis__udostepnij">
@@ -588,12 +586,6 @@ const daneStrukturalne = {
     height: auto;
     border: 1px solid var(--linia);
     border-radius: var(--promien);
-  }
-
-  /* Zdjęcie autora (plik src/assets/blog/autor-*.jpg) pod podpisem: małe, nie na całą kolumnę. */
-  .wpis__tresc > :global(figure:has(img[src*='/autor-'])) {
-    max-width: 12rem;
-    margin-top: var(--o-4);
   }
 
   .wpis__tresc :global(figcaption) {

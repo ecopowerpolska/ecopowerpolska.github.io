@@ -707,10 +707,6 @@ collections:
           - { name: testyWybrane, label: "Darmowe testy: identyfikatory 3 narzędzi (id z Darmowych narzędzi)", widget: list, required: false, field: { name: id, label: "id", widget: string } }
           - { name: testyOtworz, label: "Darmowe testy: napis na karcie", widget: string, required: false }
           - { name: testyLink, label: "Darmowe testy: odnośnik do wszystkich (liczba dopisuje się sama)", widget: string, required: false }
-          - { name: autorNaglowek, label: "Kto robi stronę: nagłówek", widget: string, required: false }
-          - { name: autorTekst, label: "Kto robi stronę: tekst (l. mnoga)", widget: text, required: false }
-          - { name: autorPodpis, label: "Kto robi stronę: podpis", widget: string, required: false }
-          - { name: autorZdjecieAlt, label: "Kto robi stronę: opis zdjęcia (alt)", widget: string, required: false }
           - { name: zamkniecieNaglowek, label: "Pas zamykający: nagłówek", widget: string, required: false }
           - { name: zamkniecieGuzik, label: "Pas zamykający: napis przycisku (cennik)", widget: string, required: false }
           - { name: zamkniecieLink, label: "Pas zamykający: napis odnośnika do kontaktu", widget: string, required: false }
@@ -813,8 +809,6 @@ collections:
           - { name: pierwszaTekst, label: "Nad formularzem: zdanie przed listą", widget: string, required: false }
           - { name: pierwszaLista, label: "Nad formularzem: co napisać (punkty)", widget: list, field: { name: punkt, label: "Punkt", widget: string }, required: false }
           - { name: pierwszaUwaga, label: "Nad formularzem: uwaga o hasłach", widget: text, required: false }
-          - { name: podpis, label: "Podpis pod wskazówkami", widget: string, required: false, hint: "Puste pole = podpis znika." }
-          - { name: podpisZdanie, label: "Podpis: zdanie w liczbie mnogiej", widget: string, required: false }
           - { name: formularzNota, label: "Nota o adresie, na który trafiają wiadomości z formularza", widget: text, required: false }
           - { name: pasujemyNaglowek, label: "„Pasujemy, gdy…”: nagłówek", widget: string, required: false }
           - { name: pasujemyTakEtykieta, label: "„Pasujemy”: etykieta wierszy tak", widget: string, required: false }

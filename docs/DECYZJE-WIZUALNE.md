@@ -377,7 +377,7 @@ D16 (pozycje menu), D23 (strona główna, stopka) i D25 (wejście do narzędzi) 
 
 - **D26 — Hero:** tekst, dwa przyciski (wypełniony `.guzik` i `.guzik--drugi`) i pasek liczb z repo; bez obrazu, LCP zostaje tekstem H1.
 - **D27 — Kolejność strony głównej:** hero → pasek liczb → Realizacje → „Czym się zajmujemy” (4 karty usług + lista) → Jak
-  pracujemy (01–06) → Darmowe testy (3 kafle + „wszystkie 12”) → Kto robi Twoją stronę → Z bloga → FAQ → pas zamykający →
+  pracujemy (01–06) → Darmowe testy (3 kafle + „wszystkie 12”) → Z bloga → FAQ → pas zamykający →
   Kontakt (dane spółki skrócone) → stopka. „Co dostajesz” i „Dlaczego Astro i jaki hosting” przechodzą na `/strony-internetowe-warszawa/`.
 - **D28 — Licznik liczb w pasku dowodu:** raz, ok. 1 s, przy `prefers-reduced-motion` od razu wartość; ≤ 0,6 kB JS.
 - **D29 — Własne firmy** pokazujemy jako realizacje, własności nie ujawniamy.

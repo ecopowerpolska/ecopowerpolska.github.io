@@ -25,12 +25,8 @@
       "tekst": "Po publikacji mierzymy stronę w PageSpeed Insights na telefonie i komputerze, bez parametrów omijających pamięć podręczną."
     },
     {
-      "tytul": "Zmiana od razu na żywej stronie",
-      "tekst": "Zmianę publikujemy w tym samym przebiegu, w którym ją wprowadzamy, i sprawdzamy ją na żywej stronie, nie tylko u siebie."
-    },
-    {
-      "tytul": "Prawdziwe zdjęcia",
-      "tekst": "Na strony trafiają prawdziwe zdjęcia, w proporcji pliku, bez obrazów wygenerowanych przez AI."
+      "tytul": "Zmiany na żywej stronie i prawdziwe zdjęcia",
+      "tekst": "Zmiany publikujemy w tym samym przebiegu, w którym je wprowadzamy, i sprawdzamy je na żywej stronie, nie tylko u siebie. Na strony trafiają prawdziwe zdjęcia, w proporcji pliku, bez obrazów wygenerowanych przez AI."
     }
   ],
   "realizacjeNaglowek": "Przykładowe strony",

@@ -21,7 +21,7 @@ Wyszukiwanie agentowe to wyszukiwanie, w którym asystent AI sam wykonuje zadani
 
 ## Agent wykonuje zadanie, zamiast pokazywać listę linków
 
-W zwykłym wyszukiwaniu dostajesz listę stron i sam klikasz. Agent dostaje zadanie, na przykład „znajdź stolik na czwartek na 19:00”, sam przechodzi przez strony i wraca z wynikiem albo formularzem do zatwierdzenia. Hasło [Wyszukiwanie agentowe](https://pl.wikipedia.org/wiki/Wyszukiwanie_agentowe) w polskiej Wikipedii napisaliśmy i dodaliśmy sami, 5 listopada 2026, jako krótkie wyjaśnienie tego pojęcia.
+W zwykłym wyszukiwaniu dostajesz listę stron i sam klikasz. Agent dostaje zadanie, na przykład „znajdź stolik na czwartek na 19:00”, sam przechodzi przez strony i wraca z wynikiem albo formularzem do zatwierdzenia. Szersze zjawisko, czyli sieć, w której agenci AI działają w imieniu użytkowników, opisuje hasło [Agentic web](https://pl.wikipedia.org/wiki/Agentic_web) w polskiej Wikipedii. Jego pierwszą wersję napisaliśmy sami 5 listopada 2026; redaktor Wikipedii rozszerzył ją i nadał hasłu obecną nazwę. Wyszukiwanie agentowe jest częścią tego zjawiska.
 
 Najdalej zaszedł Google AI Mode:
 
